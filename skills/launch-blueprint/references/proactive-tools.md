@@ -22,6 +22,14 @@ Motivating miss: for local-service businesses, missed calls were a core pain, ye
    acquisition · intake/phone · messaging (SMS/email/chat) · booking/scheduling · reviews/reputation · content/website · ops/back-office (invoicing, CRM, dispatch) · AI assistance.
    Each cell is either a candidate opportunity or `N/A — <reason>`.
 3. **Start with what the business already has.** List accounts, tools, and code already owned (for example an existing Twilio account, the current host, email provider, CRM, or a built feature such as missed-call text-back). Check whether extending one of them solves the pain before adding anything new.
+3b. **Fit the whole stack, now and planned.** Before comparing, write down the current and planned infrastructure: where code runs today, any announced or in-progress migration (for example Vercel to Cloudflare Workers/Containers, or one database to another), accounts already owned, and where data and secrets live. Every candidate must be checked against both the current and the planned setup:
+   - **Runtime fit:** does its SDK or webhook verification run on the target runtime (for example Workers without full Node, edge vs. serverless vs. container)? Request timeouts, background work limits (e.g. `waitUntil` caps), need for long-lived WebSockets or state (e.g. Durable Objects), cold starts, region.
+   - **Integration surface:** webhooks in and out, signature schemes, retries and idempotency, which component owns the phone number / domain / DNS.
+   - **Data and secrets:** where customer data is stored and for how long, which secrets it needs, where they are set on each host, rotation, and whether moving hosts means re-entering or re-signing anything.
+   - **Cost at scale:** per-customer cost at 1 / 10 / 100 customers on the planned host, including platform minimums (paid plans, per-request or per-minute fees).
+   - **Lock-in and exit:** what has to be rebuilt if we change host or vendor; prefer options that keep owned assets (numbers, domains, data) portable.
+   - **Migration timing:** if a migration is planned, build the new piece on the target platform first, or behind a small runtime-neutral handler, so it does not have to be ported twice.
+   State the verdict per candidate as `fits now / fits after migration / needs porting / blocks migration`, and flag any candidate that conflicts with the plan.
 4. **Survey the whole landscape for every non-N/A cell.** Do it live; do not rely on memory. Enumerate every kind:
    - APIs / developer platforms (we build on them)
    - platforms and marketplaces (app stores and integrations of tools already in use)
@@ -38,8 +46,8 @@ Motivating miss: for local-service businesses, missed calls were a core pain, ye
 
 Same style as `vendor-check.md`, with extra columns for proposals.
 
-| Pain / layer | Option | Type (API / turnkey / white-label) | What it does for the pain | Unit cost | $/month (1 customer / 10 / 100) | Commercial use / resale allowed? | Legal notes | Lock-in / export | Build vs. resell judgment | Date checked | Pricing / terms URL |
-|---|---|---|---|---|---|---|---|---|---|---|---|
+| Pain / layer | Option | Type (API / turnkey / white-label) | What it does for the pain | Unit cost | $/month (1 customer / 10 / 100) | Commercial use / resale allowed? | Legal notes | Lock-in / export | Fits current + planned stack? | Build vs. resell judgment | Date checked | Pricing / terms URL |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
 
 Close each group with: `Pick: X over Y, Z because ...`
 
@@ -64,3 +72,4 @@ Search log (required): `date | query or source | new serious options found`. Sto
 - Proposing from a short sample instead of the full landscape, or without a search log.
 - Proposing without a cost per customer.
 - Adding a new vendor before checking what the business already owns.
+- Choosing a tool against the current host only, ignoring a planned migration, runtime limits, secrets, or cost on the target platform.

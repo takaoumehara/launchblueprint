@@ -22,6 +22,7 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 - Default: one home (one provider for app, functions, storage, DB where sensible). If split, the reason and the cost of the split.
 - Per-service table: see `vendor-check.md`.
 - Proactive scan: run `proactive-tools.md` across every pain × layer and propose high-fit APIs, turnkey, or white-label options the owner has not asked about (exhaustive survey with search log; reuse owned tools first).
+- Whole-stack fit: list current and planned infrastructure (including any hosting migration) and check every tool against both: runtime limits, webhooks and signatures, data and secrets location, cost at 1/10/100 customers, lock-in and exit (`proactive-tools.md` step 3b).
 - Choose the host for the 12-month shape (payments, media, traffic, background jobs, regions), and estimate migration effort if wrong.
 - Secrets: list by name, where stored (host env, secret manager), who creates each, rotation, never in repo or chat.
 - Runaway-cost guards: global counter in a shared store; per-user and per-IP rate limits; caching; provider-side spending caps or budget alerts; kill switch (env flag or config) verified to work on this host and tested.

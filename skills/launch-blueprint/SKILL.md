@@ -47,6 +47,7 @@ Full prompts for each section are in `references/sections.md`. Read it when you 
 - Anything that sends, publishes, charges, or deletes on behalf of a customer needs a cap, a log, and an off switch.
 - Legal templates are drafts, not legal advice. Mark what a lawyer must review.
 - Before finalizing a blueprint or answering a strategy question, run `references/proactive-tools.md` and point out any high-fit tool or service not yet proposed (exhaustive survey of the full landscape with a search log, tools already owned considered first, all serious candidates compared, with live cost, resale terms, and legal notes).
+- Think across the whole stack when choosing any tool: check each candidate against the current AND planned infrastructure (hosting migrations, existing accounts, runtime limits, data and secrets, cost at scale, lock-in). See step 3b of `references/proactive-tools.md`.
 
 ## Review points
 
