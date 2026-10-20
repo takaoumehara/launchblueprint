@@ -28,6 +28,11 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 - Runaway-cost guards: global counter in a shared store; per-user and per-IP rate limits; caching; provider-side spending caps or budget alerts; kill switch (env flag or config) verified to work on this host and tested.
 - Backup frequency, retention, restore drill date; monitoring (errors, uptime, cost), alert recipients; one-command or one-toggle shutdown and maintenance mode.
 - Environments: preview vs production data separation; cleanup of preview resources.
+- Global monthly spend cap with a kill switch, checked **before** any free quota is consumed; cache keys include every input dimension (model, prompt version, locale, customer). `field-lessons.md` L14.
+- Owner-entered config: list every name the owner must enter exactly (`EXAMPLE_API_KEY`, not `EXAMPLE_API`), accept aliases in code or ship a settings-check endpoint/command, and give a verification step after every entry. `field-lessons.md` L6; `foresight.md` B.
+- One batched agent-environment request: network allowlist hosts, API tokens (narrowest scope, blast radius stated), env vars, permissions — all in one early message with "who creates / where it lives / verify with". The first credential is human-made; after that the agent automates via API. `foresight.md` F1; `field-lessons.md` L12, L13.
+- Multi-agent rules if more than one agent or person works on the repo: one branch per agent, work board with "files I touch", one coordination thread, one merger, naming prefixes in shared accounts. `foresight.md` F2; `field-lessons.md` L15.
+- Deploy/build caps on the host vs. expected agent push rate (`vendor-check.md`, L1).
 
 ## 4. Legal and money
 - Entity type and jurisdiction; registered agent; business address that is not a home (virtual office / agent address).
@@ -47,6 +52,7 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 - Funnel: entry offer → sign-up → activation event → paid → retention; metric for each step.
 - First 10 customers: named channels and people, not "social media".
 - Launch channels and what we will not do (spam, fake reviews).
+- Visual prohibitions, written before the first screen: no one-side colored accent stripes on cards, no emoji-as-icon cards, no blue-purple gradients, no generic "AI-looking" layouts. List the forbidden patterns and add an automated guard test (lint rule or snapshot grep over CSS/markup) that fails CI when one appears. `field-lessons.md` L7.
 
 ## 6. Operations
 - Manual tasks per customer and minutes each; which can be automated later.
@@ -55,8 +61,12 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 - Runbooks: incident, refund, takedown, data request, account recovery.
 - Weekly metrics review.
 - Ops tooling scan: use `proactive-tools.md` for intake/phone, messaging, booking, reviews, and back-office. Re-scan on its triggers (new pain, competitor feature, new tool release, quarterly).
+- Merge rule: merge only after every reviewer has finished — humans, review bots, CI, deploy previews. "Checks pending" means wait. One named merger. `field-lessons.md` L11; `foresight.md` F2.
+- Milestone reports end with the "Not asked but important" digest (`foresight.md` D).
 
 ## 8. Owner to-do list
 - Only things a human must do: sign contracts, create accounts, verify identity, pay, file registrations, create API keys, approve legal docs.
 - Format: `# | task | depends on | rough days (incl. waiting) | unblocks`.
 - Order by dependency, then by lead time (long-wait items like entity, EIN, 10DLC, trademark, bank first).
+- Critical-path calendar: compute the earliest launch date from the longest chain of external lead times (entity → tax ID → bank → payment processor live; SMS registration; trademark; domain; insurance; platform API applications) and state it on day one. Start every item with a lead time over a week immediately, in parallel. Update when anything slips. `foresight.md` E; `field-lessons.md` L10.
+- Before any filing or registration on this list, say where the entered address becomes public and what arrives in the mail afterwards (`lifecycle-risk.md` §17; L8, L9).

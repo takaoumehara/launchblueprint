@@ -1,6 +1,6 @@
 # Launch Blueprint — <product / feature>
 
-Date: <YYYY-MM-DD> · Author: <AI/agent> · Status: draft / agreed · Review triggers: pre-launch, 10th customer, price change, new service, incident
+Date: <YYYY-MM-DD> · Author: <AI/agent> · Status: draft / agreed · Review triggers: pre-launch, 10th customer, price change, new service, incident · §9 updated on every decision, milestone, and purchase
 
 Legend: `NEEDS CONFIRMATION` = unverified, question listed at the end. Every decision has **Rejected:** with a reason.
 
@@ -113,6 +113,59 @@ Legend: `NEEDS CONFIRMATION` = unverified, question listed at the end. Every dec
 ## 8. Owner to-do list
 | # | Task | Depends on | Rough days | Unblocks |
 |---|---|---|---|---|
+
+- Earliest launch date: <date>, set by <longest external lead time> (see §9 critical path)
+
+## 9. Foresight: proposals, pre-mortem, decision deadlines
+Updated throughout the work (`references/foresight.md`). Walk `references/field-lessons.md` at kickoff and at each review.
+
+### Decisions and deadlines (A)
+| Decision | Needed by | Who | What it unblocks | Requires next (2–3 moves) | Also changes (URLs / secrets / legal / cost / other products) | Status |
+|---|---|---|---|---|---|---|
+
+### Not asked but important (D) — current top 3
+| # | Point | Why it matters (money / legal / irreversible / lead time / security / blast radius) | Proposal | By when | Status |
+|---|---|---|---|---|---|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+
+### Pre-mortem (C) — "six months later it failed because…"
+| # | Cause | Early warning sign | Mitigation | Owner | Done? |
+|---|---|---|---|---|---|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
+
+### Critical-path calendar (E)
+| Item | Depends on | Start by | Rough duration | Earliest done | Blocks |
+|---|---|---|---|---|---|
+| Entity formation | | | | | tax ID |
+| Tax ID | entity | | | | bank |
+| Business bank account | tax ID | | | | payment processor |
+| Payment processor live | bank | | | | charging |
+| SMS registration (A2P 10DLC) | entity, website | | 1–3 weeks | | SMS sending |
+| Domain / DNS move | canonical domain decided | | | | URL registry |
+| Trademark search / filing | name | | | | brand spend |
+| Insurance | entity | | | | |
+| Platform API applications | domain, legal pages | | | | |
+
+### Domain / DNS table
+| Domain or subdomain | Role (parent brand / product / staging / email) | Registrar | DNS host | Account owner | Token can manage zone? | Canonical for product? |
+|---|---|---|---|---|---|---|
+
+### URL registry
+| Where the URL is registered (OAuth redirect / payment webhook / return URL / bot-protection hostname / API-key referrer / platform app / site URL / email links) | Service | Current value | Who can change | Last updated |
+|---|---|---|---|---|
+
+### Agent environment (F1) and multi-agent rules (F2)
+| Need | Why | Scope (narrowest) / blast radius | Who creates | Where it lives | Verify with | Status |
+|---|---|---|---|---|---|---|
+
+- Agents / people committing: <list> · one branch per agent · work board: <link> · coordination thread: <link> · merger: <who>
+- Deploy/build cap on host: <n/day> · expected agent push rate: <n/day> · mitigation:
 
 ## Open questions (NEEDS CONFIRMATION)
 1.

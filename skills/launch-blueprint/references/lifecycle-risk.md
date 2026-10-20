@@ -126,6 +126,11 @@ The "how mature services do it" notes describe common patterns at large provider
 
 ## 17. Other easily forgotten items
 - Domain and DNS ownership in the company account, auto-renew on, registrar lock.
+- **Where each domain's DNS and registrar live.** List every domain and subdomain in play (parent brand, product, staging, email) with registrar and DNS host for each. A scoped API token on the planned cloud provider cannot manage a zone hosted elsewhere. Decide the product's canonical domain before wiring any URL-dependent integration. Table in template §9; see `field-lessons.md` L2.
+- **URL registry.** Every external place a URL is registered (OAuth redirect URIs, payment webhooks and return URLs, bot-protection hostnames, API-key referrer restrictions, platform API applications, site URL settings, email links). Keep it from day one so a domain or environment change is a checklist, not a hunt. Table in template §9; `field-lessons.md` L3.
+- **Shared-account blast radius.** If the cloud, DNS, or payment account also hosts another product, say what an account-scoped token or a mistaken agent command can reach. Prefer separate accounts; otherwise strict naming prefixes and agent rules (`foresight.md` F). `field-lessons.md` L4.
+- **Where an address becomes public.** Before any filing or registration: state entity records, WHOIS, maps and business profiles, payment statement descriptors and receipts, email footers required by anti-spam law, app store listings, Terms and Privacy pages. Arrange a registered agent and a business mail address first. `field-lessons.md` L8.
+- **Post-formation solicitation mail.** Right after an entity is formed, look-alike "compliance", "certificate", and "labor poster" offers arrive by mail. Tell the owner in advance which mail is official (state agency, tax authority, registered agent) and to ask before paying anything else. `field-lessons.md` L9.
 - Bus factor: who can access everything if the owner is unavailable (password manager, documented access).
 - Vendor accounts in the company name with a role address, not personal email.
 - Your own accounts' inactivity rules (vendors close unused accounts too).

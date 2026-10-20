@@ -14,6 +14,7 @@ Motivating miss: for local-service businesses, missed calls were a core pain, ye
   - a major model, API, or tool release in a relevant category
   - a vendor in our stack changes price or terms
   - quarterly, even if nothing seems to have changed
+- Mid-work, not only at the blueprint: when a decision is made (`foresight.md` A, "Also changes"), check whether it opens a tool or service question. At every milestone report, put high-fit proposals not yet raised into the "Not asked but important" digest (`foresight.md` D), top 3 only, each with cost per customer and a first cheap test.
 
 ## Procedure
 
@@ -40,7 +41,7 @@ Motivating miss: for local-service businesses, missed calls were a core pain, ye
    Keep searching (vendor directories, "X alternatives" lists, review sites, competitor pages, community threads, changelogs) until new searches stop turning up significant options. Record every search query and source used in a `Search log` under the table. Then compare **all serious candidates**, not a sample, and list briefly the ones dropped and why.
 5. **Judge build vs. resell vs. refer.** Weigh margin, time to ship, support load, lock-in, and whether it strengthens our core offer or distracts from it.
 6. **Propose the best fit unprompted.** Write the pick, at least one rejected option with the reason, the cost per customer, the plan or price change it implies, and the first cheap test. Anything that costs money or signs up for a service waits for the owner's OK.
-7. **Record it.** Add it to the blueprint (sections 2, 3, 6, and the open questions). Picked services also go into the `vendor-check.md` table.
+7. **Record it.** Add it to the blueprint (sections 2, 3, 6, and the open questions). Picked services also go into the `vendor-check.md` table. A service picked mid-work also gets a `foresight.md` A look-ahead (URLs, secrets, legal docs, cost, blast radius) and an entry in the batched environment request (F1).
 
 ## Comparison table
 
