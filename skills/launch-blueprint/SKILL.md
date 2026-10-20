@@ -46,6 +46,7 @@ Full prompts for each section are in `references/sections.md`. Read it when you 
 - Every promise in the Terms or Privacy Policy must match what the code actually does. A policy describing a process you do not run is a liability.
 - Anything that sends, publishes, charges, or deletes on behalf of a customer needs a cap, a log, and an off switch.
 - Legal templates are drafts, not legal advice. Mark what a lawyer must review.
+- Before finalizing a blueprint or answering a strategy question, run `references/proactive-tools.md` and point out any high-fit tool or service not yet proposed (at least 3 alternatives compared, with live cost, resale terms, and legal notes).
 
 ## Review points
 
@@ -76,5 +77,6 @@ At review time, re-open vendor pricing and terms pages and update the dates.
 - `references/sections.md` — detailed prompts for sections 1–6 and 8.
 - `references/lifecycle-risk.md` — the mandatory lifecycle and risk catalog, modeled on how mature services handle each case.
 - `references/vendor-check.md` — how to verify a vendor's plan, terms, and limits, and the table format.
+- `references/proactive-tools.md` — the pain × layer scan for proposing tools and services before being asked.
 - `references/why-this-exists.md` — the anonymized case study.
 - `references/prompt.md` — copy-paste prompt for kicking off with any AI.
