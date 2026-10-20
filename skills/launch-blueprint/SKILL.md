@@ -46,7 +46,7 @@ Full prompts for each section are in `references/sections.md`. Read it when you 
 - Every promise in the Terms or Privacy Policy must match what the code actually does. A policy describing a process you do not run is a liability.
 - Anything that sends, publishes, charges, or deletes on behalf of a customer needs a cap, a log, and an off switch.
 - Legal templates are drafts, not legal advice. Mark what a lawyer must review.
-- Before finalizing a blueprint or answering a strategy question, run `references/proactive-tools.md` and point out any high-fit tool or service not yet proposed (at least 3 alternatives compared, with live cost, resale terms, and legal notes).
+- Before finalizing a blueprint or answering a strategy question, run `references/proactive-tools.md` and point out any high-fit tool or service not yet proposed (exhaustive survey of the full landscape with a search log, tools already owned considered first, all serious candidates compared, with live cost, resale terms, and legal notes).
 
 ## Review points
 

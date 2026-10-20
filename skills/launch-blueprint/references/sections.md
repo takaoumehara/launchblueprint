@@ -21,7 +21,7 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 ## 3. Tech stack
 - Default: one home (one provider for app, functions, storage, DB where sensible). If split, the reason and the cost of the split.
 - Per-service table: see `vendor-check.md`.
-- Proactive scan: run `proactive-tools.md` across every pain × layer and propose high-fit APIs, turnkey, or white-label options the owner has not asked about (at least 3 alternatives each).
+- Proactive scan: run `proactive-tools.md` across every pain × layer and propose high-fit APIs, turnkey, or white-label options the owner has not asked about (exhaustive survey with search log; reuse owned tools first).
 - Choose the host for the 12-month shape (payments, media, traffic, background jobs, regions), and estimate migration effort if wrong.
 - Secrets: list by name, where stored (host env, secret manager), who creates each, rotation, never in repo or chat.
 - Runaway-cost guards: global counter in a shared store; per-user and per-IP rate limits; caching; provider-side spending caps or budget alerts; kill switch (env flag or config) verified to work on this host and tested.

@@ -21,11 +21,15 @@ Motivating miss: for local-service businesses, missed calls were a core pain, ye
 2. **Build the pain × layer grid.** For each pain, check every product layer:
    acquisition · intake/phone · messaging (SMS/email/chat) · booking/scheduling · reviews/reputation · content/website · ops/back-office (invoicing, CRM, dispatch) · AI assistance.
    Each cell is either a candidate opportunity or `N/A — <reason>`.
-3. **Scan current options for every non-N/A cell.** Do it live; do not rely on memory. Cover three kinds:
+3. **Start with what the business already has.** List accounts, tools, and code already owned (for example an existing Twilio account, the current host, email provider, CRM, or a built feature such as missed-call text-back). Check whether extending one of them solves the pain before adding anything new.
+4. **Survey the whole landscape for every non-N/A cell.** Do it live; do not rely on memory. Enumerate every kind:
    - APIs / developer platforms (we build on them)
+   - platforms and marketplaces (app stores and integrations of tools already in use)
    - turnkey SaaS (customer buys directly; we recommend or refer)
-   - resellable / white-label / agency programs (we package and resell)
-4. **Compare at least 3 alternatives** per opportunity in the table below. Open each pricing page and terms page. If a page cannot be opened, write `NEEDS CONFIRMATION`.
+   - white-label / reseller / agency programs (we package and resell)
+   - open-source / self-hosted options
+   - existing accounts and tools already owned (from step 3)
+   Keep searching (vendor directories, "X alternatives" lists, review sites, competitor pages, community threads, changelogs) until new searches stop turning up significant options. Record every search query and source used in a `Search log` under the table. Then compare **all serious candidates**, not a sample, and list briefly the ones dropped and why.
 5. **Judge build vs. resell vs. refer.** Weigh margin, time to ship, support load, lock-in, and whether it strengthens our core offer or distracts from it.
 6. **Propose the best fit unprompted.** Write the pick, at least one rejected option with the reason, the cost per customer, the plan or price change it implies, and the first cheap test. Anything that costs money or signs up for a service waits for the owner's OK.
 7. **Record it.** Add it to the blueprint (sections 2, 3, 6, and the open questions). Picked services also go into the `vendor-check.md` table.
@@ -38,6 +42,8 @@ Same style as `vendor-check.md`, with extra columns for proposals.
 |---|---|---|---|---|---|---|---|---|---|---|---|
 
 Close each group with: `Pick: X over Y, Z because ...`
+
+Search log (required): `date | query or source | new serious options found`. Stop only when the last few searches found none.
 
 ## Legal notes to check by category
 
@@ -55,4 +61,6 @@ Close each group with: `Pick: X over Y, Z because ...`
 - Running bot or automated accounts inside communities (Facebook Groups, Nextdoor, Reddit, WhatsApp groups). Instead, have the human owner take part with their own account, and help with alerts and draft replies.
 - Proposing a tool from memory without checking its live price and terms.
 - Adding a new tool where the existing stack already covers the job. Prefer extending what exists.
-- Proposing only one option, or proposing without a cost per customer.
+- Proposing from a short sample instead of the full landscape, or without a search log.
+- Proposing without a cost per customer.
+- Adding a new vendor before checking what the business already owns.
