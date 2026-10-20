@@ -9,6 +9,8 @@ What went wrong:
 4. **Legal blanks appeared right before launch.** Business address, operator name, and terms placeholders were found late. Sign-up was briefly left open because a configuration flag was not set, and bots used it to trigger outbound emails.
 5. **Result:** a multi-day migration to another platform after the product was already built, plus rework on security and legal pages.
 
-Each of these is a single row in this skill: vendor-check (commercial use, limits, over-limit behavior), runaway-cost guards that work on this host, legal section, fail-closed configuration, and the scale-cost table. Ten minutes at kickoff would have saved days.
+A later review found more that nobody had asked about. The owner had never considered EU users, although the product was reachable from anywhere; the host's daily deploy cap, which agents pushing often could exhaust in hours; backups that held live session and OAuth tokens; and account recovery that left an attacker's linked OAuth identity in place. None of these had been a question in anyone's mind, because none of them was a feature. Each is now a row in the regions pass, the vendor check, and the security pass.
 
-The broader lesson: the owner asks about what they can see. The AI should cover what the owner cannot see yet — inactive accounts, cancellations, deceased users, takedowns, disputes, breaches, sunset — because every mature service had to learn these, and their patterns are available from day one.
+Each of these is a single row in this skill: vendor-check (commercial use, limits, over-limit behavior, deploy caps), runaway-cost guards that work on this host, legal section, fail-safe configuration, the regions pass, the security pass, and the scale-cost table. Ten minutes at kickoff would have saved days.
+
+The broader lesson: the owner asks about what they can see. The AI should cover what the owner cannot see yet — inactive accounts, cancellations, deceased users, takedowns, disputes, breaches, sunset, regions, deploy caps, backups, takeover — because every mature service had to learn these, and their patterns are available from day one.
