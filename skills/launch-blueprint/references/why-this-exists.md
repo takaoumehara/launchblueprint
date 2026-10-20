@@ -11,4 +11,6 @@ What went wrong:
 
 Each of these is a single row in this skill: vendor-check (commercial use, limits, over-limit behavior), runaway-cost guards that work on this host, legal section, fail-closed configuration, and the scale-cost table. Ten minutes at kickoff would have saved days.
 
+A checklist would have named the problems. A plan would have ordered them. The first milestone would have been the vendor check (commercial use, whether a real page fits the CPU limit, a spend cap that works on that host) plus the legal blanks, with feature work behind that milestone. Image proxying through compute would have failed the cost table before anyone built it. The planning pass exists to force that order.
+
 The broader lesson: the owner asks about what they can see. The AI should cover what the owner cannot see yet — inactive accounts, cancellations, deceased users, takedowns, disputes, breaches, sunset — because every mature service had to learn these, and their patterns are available from day one.

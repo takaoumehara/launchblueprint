@@ -40,7 +40,7 @@ Motivating miss: for local-service businesses, missed calls were a core pain, ye
    Keep searching (vendor directories, "X alternatives" lists, review sites, competitor pages, community threads, changelogs) until new searches stop turning up significant options. Record every search query and source used in a `Search log` under the table. Then compare **all serious candidates**, not a sample, and list briefly the ones dropped and why.
 5. **Judge build vs. resell vs. refer.** Weigh margin, time to ship, support load, lock-in, and whether it strengthens our core offer or distracts from it.
 6. **Propose the best fit unprompted.** Write the pick, at least one rejected option with the reason, the cost per customer, the plan or price change it implies, and the first cheap test. Anything that costs money or signs up for a service waits for the owner's OK.
-7. **Record it.** Add it to the blueprint (sections 2, 3, 6, and the open questions). Picked services also go into the `vendor-check.md` table.
+7. **Record it.** Add it to the blueprint (sections 2, 3, 6, and the open questions). Picked services also go into the `vendor-check.md` table. `planning.md` then places each pick in Now, Next, or Later. Now only if it is the cheapest test of the riskiest assumption, or the owner has already agreed. Until then it is not on the critical path.
 
 ## Comparison table
 
@@ -56,7 +56,7 @@ Search log (required): `date | query or source | new serious options found`. Sto
 ## Legal notes to check by category
 
 - **AI voice calls:** US TCPA (no AI/prerecorded calls to people without prior express consent; the FCC treats AI voices as "artificial"); state call-recording consent laws (some states require all parties to consent); AI disclosure at the start of the call; never promise prices or appointments outside fixed rules.
-- **SMS:** A2P 10DLC registration, opt-in records, STOP handling, quiet hours.
+- **SMS:** registration for the sender type in use (A2P 10DLC for US 10-digit long codes; toll-free numbers and short codes use their own process), opt-in records, STOP handling, quiet hours. If the sender type is not chosen, mark it `NEEDS CONFIRMATION` instead of assuming 10DLC.
 - **Email:** CAN-SPAM; GDPR/PECR for EU/UK.
 - **Reviews:** FTC rules on fake reviews and review gating; platform review policies (for example, no incentives).
 - **Data from platforms:** platform terms of service on scraping and automation; privacy law for any personal data collected.
