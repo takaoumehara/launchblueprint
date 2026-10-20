@@ -2,6 +2,8 @@
 
 Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATION`.
 
+After these sections and the lifecycle catalog, run `planning.md` and fill section 9. The owner to-do list is an input to that plan, not the plan itself.
+
 ## 1. Product and customer
 - One-sentence product: who, what problem, at what price.
 - First segment, first region, first plan only. Everything else is later.
@@ -35,7 +37,7 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 - Insurance: general liability, tech E&O, cyber — get quotes or mark NEEDS CONFIRMATION.
 - Sales tax / VAT / GST: where we have obligations; or use a merchant of record.
 - Documents: Terms, Privacy, Acceptable Use, Refund policy, Cookie notice, DMCA policy, Accessibility statement, Seller terms if marketplace.
-- Messaging: US SMS needs A2P 10DLC brand and campaign registration; email marketing needs CAN-SPAM (physical address, unsubscribe) and consent for EU/UK.
+- Messaging: pick the sender, then the registration that applies to it. US SMS from 10-digit long codes (10DLC) needs A2P brand and campaign registration. Toll-free numbers, short codes, and provider-verified senders follow that sender type's process, not 10DLC. Email marketing needs CAN-SPAM (physical address, unsubscribe) and consent for EU/UK. If the sender type is not chosen, mark it `NEEDS CONFIRMATION` and do not put 10DLC on the critical path by default.
 - DMCA designated agent registration (US) if hosting user content.
 - Industries and uses we refuse (also needed by payment processors).
 - Lawyer review list: liability cap, arbitration, marketplace liability, privacy, any regulated area.
@@ -59,4 +61,5 @@ Each answer: decision, rejected option(s) + reason, source or `NEEDS CONFIRMATIO
 ## 8. Owner to-do list
 - Only things a human must do: sign contracts, create accounts, verify identity, pay, file registrations, create API keys, approve legal docs.
 - Format: `# | task | depends on | rough days (incl. waiting) | unblocks`.
-- Order by dependency, then by lead time (long-wait items like entity, EIN, 10DLC, trademark, bank first).
+- Order by dependency, then by lead time. Start long-wait items first when the plan needs them (entity, EIN, bank, trademark, and sender registration for the channel actually chosen).
+- Section 9 references these row numbers. Do not duplicate the rows there. Build and research tasks belong in section 9, not here.
