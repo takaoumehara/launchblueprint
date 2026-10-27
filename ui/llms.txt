@@ -23,3 +23,6 @@
 ## 画面
 - catalog-concept.html, canvas-concept.html, compare-stripe.html, rules-ledger.html, build-vs-buy.html
 - 各画面の script#bp-data に同じ JSON。link[rel=alternate] で JSON の場所。
+
+## round 4
+- proto-round4/index.html: ノード図 第4案（script#bp-data, data/canvas.json と同じ。10軸：GTM・運用 / Scale / Exit / UI/UX チェックを追加）

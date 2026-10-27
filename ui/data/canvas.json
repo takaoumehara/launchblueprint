@@ -1,7 +1,7 @@
 {
  "meta": {
   "schema": "blueprint/canvas@1",
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "publisher": "CREATIVITY IS EVERYWHERE, LLC",
   "sources": [
    "catalog/canvas.yaml"
@@ -9,8 +9,12 @@
   "how_to_read": "catalog/ai-usage.md"
  },
  "sample": true,
- "updated": "2026-10-26",
+ "updated": "2026-10-27",
  "fields": [
+  {
+   "id": "rules",
+   "name": "Rules"
+  },
   {
    "id": "brand",
    "name": "Brand"
@@ -24,6 +28,10 @@
    "name": "UI"
   },
   {
+   "id": "uxl",
+   "name": "UI/UX チェック"
+  },
+  {
    "id": "tech",
    "name": "Tech"
   },
@@ -32,8 +40,16 @@
    "name": "Biz / Legal"
   },
   {
-   "id": "rules",
-   "name": "Rules"
+   "id": "gtm",
+   "name": "GTM・運用"
+  },
+  {
+   "id": "scale",
+   "name": "Scale"
+  },
+  {
+   "id": "exit",
+   "name": "Exit"
   }
  ],
  "nodes": [
@@ -222,6 +238,98 @@
    "state": "done",
    "rule": "R-012",
    "note": "強さは要確認"
+  },
+  {
+   "id": "x1",
+   "field": "uxl",
+   "label": "空の状態を先に描く",
+   "state": "done",
+   "note": "データ0件の画面を最初に決める。初回の人が迷わない"
+  },
+  {
+   "id": "x2",
+   "field": "uxl",
+   "label": "押せる所は44px以上",
+   "state": "done",
+   "note": "スマホで押し間違えない。はい/いいえで確認"
+  },
+  {
+   "id": "x3",
+   "field": "uxl",
+   "label": "390px で崩れない",
+   "state": "open",
+   "note": "一番細いスマホ幅で文字が切れないか"
+  },
+  {
+   "id": "g1",
+   "field": "gtm",
+   "label": "最初の100人の居場所",
+   "state": "open",
+   "note": "どのコミュニティで最初に知ってもらうか"
+  },
+  {
+   "id": "g2",
+   "field": "gtm",
+   "label": "日英同時に公開",
+   "state": "done",
+   "note": "初日から日本語と英語。海外カードの手数料も見込む"
+  },
+  {
+   "id": "g3",
+   "field": "gtm",
+   "label": "代理販売(MoR)",
+   "state": "open",
+   "note": "Paddle / Lemon Squeezy が税を肩代わり。5%+50¢",
+   "flag": true
+  },
+  {
+   "id": "g4",
+   "field": "gtm",
+   "label": "問い合わせ窓口",
+   "state": "done",
+   "note": "運用：返事は48時間以内。テンプレートを用意"
+  },
+  {
+   "id": "s1",
+   "field": "scale",
+   "label": "1万人で詰まる所",
+   "state": "open",
+   "note": "先に一番弱い部品を1つ挙げておく"
+  },
+  {
+   "id": "s2",
+   "field": "scale",
+   "label": "DB 接続数の上限",
+   "state": "open",
+   "note": "無料枠の接続数。プール方式で回避"
+  },
+  {
+   "id": "s3",
+   "field": "scale",
+   "label": "1人あたりの費用",
+   "state": "done",
+   "note": "月の費用 ÷ 利用者数。毎月記録"
+  },
+  {
+   "id": "e1",
+   "field": "exit",
+   "label": "買い手に見せる数字",
+   "state": "open",
+   "note": "MRR・解約率・獲得単価を1画面に"
+  },
+  {
+   "id": "e2",
+   "field": "exit",
+   "label": "DD 書類の置き場",
+   "state": "done",
+   "note": "契約・規約・権利の一覧を1か所に"
+  },
+  {
+   "id": "e3",
+   "field": "exit",
+   "label": "毎月の記録",
+   "state": "done",
+   "note": "数字は後から作れない。今日から残す"
   }
  ],
  "trace": [
@@ -231,7 +339,9 @@
   "u3",
   "i2",
   "i4",
-  "t5"
+  "t5",
+  "g3",
+  "e1"
  ],
  "edges": [
   [
@@ -397,6 +507,101 @@
   [
    "r2",
    "i3",
+   "candidate"
+  ],
+  [
+   "t5",
+   "g3",
+   "decided"
+  ],
+  [
+   "g3",
+   "e1",
+   "decided"
+  ],
+  [
+   "i1",
+   "x1",
+   "decided"
+  ],
+  [
+   "i3",
+   "x3",
+   "decided"
+  ],
+  [
+   "x2",
+   "x3",
+   "decided"
+  ],
+  [
+   "i4",
+   "x2",
+   "candidate"
+  ],
+  [
+   "u1",
+   "g1",
+   "candidate"
+  ],
+  [
+   "g1",
+   "g2",
+   "decided"
+  ],
+  [
+   "z1",
+   "g3",
+   "candidate"
+  ],
+  [
+   "g4",
+   "s1",
+   "candidate"
+  ],
+  [
+   "t2",
+   "s2",
+   "decided"
+  ],
+  [
+   "s1",
+   "s2",
+   "decided"
+  ],
+  [
+   "s3",
+   "e1",
+   "decided"
+  ],
+  [
+   "e2",
+   "e1",
+   "decided"
+  ],
+  [
+   "e3",
+   "e1",
+   "decided"
+  ],
+  [
+   "z2",
+   "e2",
+   "decided"
+  ],
+  [
+   "z3",
+   "s3",
+   "candidate"
+  ],
+  [
+   "b1",
+   "g2",
+   "candidate"
+  ],
+  [
+   "r3",
+   "s3",
    "candidate"
   ]
  ],
