@@ -1,0 +1,205 @@
+# UI/UX learnings v1 — generic rules from product iteration
+rules:
+  - id: primary-action-color
+    principle: "Reserve the strongest colour (solid black or brand fill) for the single primary action on a screen."
+    anti_pattern: "Several solid dark boxes and selected states all competing with the primary button."
+    why: "Users' eyes were pulled between the main action and selected options, so the main action stopped standing out."
+    check: "Is the strongest fill used by exactly one action on this screen?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: selected-state-tint
+    principle: "Show selected states with a light accent tint plus a thin ring, not a solid fill."
+    anti_pattern: "Selected chips filled solid in the same weight as the primary button."
+    why: "A solid selected option looked like a second primary action."
+    check: "Are selected states a light tint plus a thin ring, lighter than the primary action?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: borders-only-on-pressables
+    principle: "Use boxes and borders only for pressable buttons; use plain text links elsewhere."
+    anti_pattern: "Bordered boxes around labels, lists and secondary links."
+    why: "Too many framed boxes made the header feel busy and hid what was actually tappable."
+    check: "Does every bordered or boxed element respond to a tap?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: hints-on-demand
+    principle: "Keep hints off the main surface; put them behind an (i) or a one-time dismissible tip."
+    anti_pattern: "Always-on helper lines and tour buttons in section headers."
+    why: "Permanent helper text cluttered the header and was ignored after the first visit."
+    check: "Is every explanatory hint behind an (i) or shown once and dismissible?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: announce-new-features-once
+    principle: "Announce a new feature to all users, existing ones included, once, then never again."
+    anti_pattern: "Shipping an interaction change silently, or showing the tip on every visit."
+    why: "Existing users never discovered a new gesture because only new sign-ups saw guidance."
+    check: "Will existing users see one dismissible notice for this change, and only once?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: short-scannable-copy
+    principle: "Keep UI copy extremely short and scannable."
+    anti_pattern: "Sentences in buttons, labels and toasts."
+    why: "Long labels were truncated or skipped, and users missed the point."
+    check: "Can every label and toast be read in one glance (a few words)?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: plain-localized-terms
+    principle: "Use plain, recognizable terms, localized to each locale's natural word."
+    anti_pattern: "Invented feature names or literal translations (e.g. 'Contents at the top')."
+    why: "An invented label was not recognized; the standard term ('Table of contents') was."
+    check: "Is each term the one users already know, translated to the locale's natural term?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: undoable-delete
+    principle: "Delete immediately with an Undo toast, and offer Hide as a non-destructive alternative."
+    anti_pattern: "Blocking confirm sheet saying 'This can't be undone'."
+    why: "Users feared deleting and asked why it could not be undone and whether they could just hide it."
+    check: "Can a delete be undone from a toast, and is Hide offered?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: handle-only-reorder
+    principle: "Use a drag handle alone for reorder; put Move up/down in the overflow menu."
+    anti_pattern: "Drag handle plus up/down arrows plus overflow on every row."
+    why: "Rows with three reorder affordances looked cluttered and redundant."
+    check: "Does each row have only one visible reorder affordance?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: no-overlapping-inserters
+    principle: "Do not put between-item inserter buttons where they overlap content; use one Add button and 'Add below' in the overflow."
+    anti_pattern: "Floating '+' between list items."
+    why: "The between-item '+' overlapped neighbouring items and kept drawing complaints."
+    check: "Is there no insert control that overlaps or crowds list items?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: distinct-coachmarks
+    principle: "Make tour coachmarks visually distinct from the highlighted UI (dark bubble plus accent outline) with Back, swipe and progress dots."
+    anti_pattern: "A coachmark styled like the UI it points to, forward-only."
+    why: "Users confused the tour bubble with the real control and could not go back."
+    check: "Is the coachmark clearly different from the UI, and can users go back, swipe and see progress?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: celebrate-publish
+    principle: "Show publish success in clear green with a live message, Copy/Share actions and a small first-time celebration."
+    anti_pattern: "Neutral or ambiguous publish feedback."
+    why: "Users were unsure whether their page had gone live."
+    check: "After publishing, is success obvious, with copy/share right there?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: never-red-for-success
+    principle: "Never use red for a success state."
+    anti_pattern: "Red or warning colours on a successful state."
+    why: "A success state in red read as an error."
+    check: "Are all success states free of red?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: preserve-scroll-highlight
+    principle: "After closing an editor, return to the same scroll position and briefly highlight the edited item."
+    anti_pattern: "Jumping back to the top of the list."
+    why: "Users lost their place after every edit."
+    check: "After closing an editor, is scroll preserved and the edited item highlighted?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: no-ellipsis-truncation
+    principle: "Never truncate text with an ellipsis; wrap, shorten copy or resize."
+    anti_pattern: "Labels cut off with '…'."
+    why: "Cut-off labels hid meaning and looked broken."
+    check: "Is there no text ending in '…' at the narrowest supported width (e.g. 360px) in every locale?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: plain-screen-labels
+    principle: "Screen-name labels are plain text, and mode toggles state what they switch between."
+    anti_pattern: "Heavy black banner for a mode label; ambiguous toggles like 'Test links'."
+    why: "A heavy preview banner looked ugly and an unclear toggle confused users."
+    check: "Is the screen label plain text, and does every toggle name both states (e.g. 'Links: Edit / Open')?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: separate-preview-from-edit
+    principle: "Separate an inline preview clearly from the edit list (Edit/Preview switch, framed and labelled preview)."
+    anti_pattern: "Preview rendered inline with the same images as the list, with no boundary."
+    why: "Users saw the same images twice and could not tell preview from editor."
+    check: "Is the preview visibly framed or labelled, or switched separately from the edit list?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: full-focus-edit-mode
+    principle: "Item edit mode is full focus; define a show/hide matrix of controls per mode."
+    anti_pattern: "Global actions, Publish and add bars still visible while editing one item."
+    why: "Mixed global and local controls made editing mode feel unclear."
+    check: "Is there a written matrix of what shows in each mode, and does edit mode hide global actions?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: sticky-save-bar-when-dirty
+    principle: "Manual-save screens use a sticky bottom Cancel/Save bar that appears only when there are changes, the same on every manual-save screen."
+    anti_pattern: "Save and cancel as heavy boxes in the header, always visible."
+    why: "An always-on header Save made three heavy boxes and gave no sense of unsaved changes."
+    check: "Does the Save bar appear only when dirty, at the bottom, consistently across screens?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: prevent-invalid-input
+    principle: "Prevent invalid input by auto-adjusting (e.g. accent contrast) with Undo instead of showing an error."
+    anti_pattern: "Error message after the user picks an unreadable colour."
+    why: "Users hit a contrast error with no idea how to fix it."
+    check: "Is invalid input corrected automatically with an Undo, rather than blocked by an error?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: separate-concepts
+    principle: "Keep separate concepts in separate controls (publish status vs audience/visibility)."
+    anti_pattern: "A 'Private' visibility option that overlaps with draft/unpublished state."
+    why: "Users could not tell 'private' from 'not published'."
+    check: "Does each setting control one concept, with no overlap between options?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: real-media-thumbnails
+    principle: "Media embeds show the real thumbnail with a play overlay."
+    anti_pattern: "Generic placeholder for embedded video."
+    why: "Placeholder embeds made pages look broken and unfamiliar."
+    check: "Does every media embed show its real thumbnail with a play overlay?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: design-system-fonts-everywhere
+    principle: "Every dialog, sheet and toast uses design-system fonts."
+    anti_pattern: "Sheets falling back to a different (e.g. serif) font."
+    why: "A confirm sheet showed an unfamiliar font and users doubted the design system."
+    check: "Do all dialogs and sheets use only design-system type tokens?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: distinct-motion-styles
+    principle: "Offer motion styles only if each is visibly distinct, with a live mini preview per style."
+    anti_pattern: "Presets or on/off switches that look nearly identical."
+    why: "Near-identical presets were rejected; users wanted clearly different reveal styles."
+    check: "Can a user tell every offered motion style apart from its preview?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: motion-accessibility
+    principle: "Reduced-motion users get no motion; long body text uses only a soft fade; any input finishes the reveal; animate only transform, opacity, clip-path and filter."
+    anti_pattern: "Decode or typewriter effects on paragraphs, ignoring reduced-motion."
+    why: "Effects on long text hurt readability and performance."
+    check: "Does reduced-motion disable reveals, and do paragraphs use only a soft fade?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: consistent-save-model
+    principle: "Make the save model explicit per surface (auto-saved to draft vs live at once vs manual) and show a consistent indicator."
+    anti_pattern: "Some settings live instantly, others draft, others manual, all looking the same."
+    why: "An audit found mixed save behaviours that users could not predict."
+    check: "For every control, is it obvious whether a change is drafted, live or needs saving?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: tap-row-to-open
+    principle: "Tapping a list row opens it; the row shows only its name and an overflow menu."
+    anti_pattern: "An extra Edit button on every row."
+    why: "Per-row Edit buttons added noise without adding capability."
+    check: "Does tapping a row open it, with no redundant Edit button?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: scoped-help-assistant
+    principle: "An in-product help assistant answers only from the help content, cites the source page, links to screens instead of acting, and politely declines off-topic questions."
+    anti_pattern: "A general chatbot that answers anything or takes account actions."
+    why: "Off-topic answers and unsourced replies erode trust."
+    check: "Does the assistant refuse off-topic questions and cite a help page for each answer?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: collapse-long-nav
+    principle: "Long in-page navigation collapses ('Contents ▾', '+N more') instead of growing without limit."
+    anti_pattern: "An ever-growing list of links at the top of long pages."
+    why: "Long tables of contents pushed content below the fold."
+    check: "Does in-page navigation stay short on long pages?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'

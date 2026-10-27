@@ -48,3 +48,4 @@
 - `exit_dd.yaml`：売却準備の `checklist[]`（id, item, acceptance）。
 - `scale_readiness.yaml`：`tiers[]`（id, users, add/must, trigger_next, effort, cost, acceptance）。金額・工数は estimate。
 - `dd_dashboard.yaml`：`groups[]`（id, metrics, source_of_truth）。1日目から記録。
+- `ui_ux.yaml`：UI/UX の原則。`rules[]`（id, principle, anti_pattern, why, check, source, date）。`check` は はい／いいえ で判定でき、要件・設計・品質の確認で使う。固有名詞・プロダクト名は入れない。
