@@ -1,0 +1,47 @@
+# Blueprint Tech Catalog — analytics
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: analytics
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: an.vercel-analytics
+  name: Vercel Web Analytics
+  what: Cookie なしの訪問分析
+  best_for: Vercel 上のLP
+  avoid_when: ''
+  pricing_bands:
+    free: Hobby：5万イベント/月
+    usd5: —
+    usd10: Pro アドオン $10（UTM等）
+    usd100: Pro：$3/10万イベント
+  limits: —
+  lock_in: 中
+  liability_compliance: Cookie同意が不要な設計（要確認）
+  security: —
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: an.posthog
+  name: PostHog
+  what: プロダクト分析・ファネル・フラグ
+  best_for: 使われ方を知りたい
+  avoid_when: ''
+  pricing_bands:
+    free: $0：毎月 100万イベント、録画5,000、フラグ100万、エラー10万。上限で止まり課金されない
+    usd5: 従量（カード登録）：無料枠は同じ、超えた分だけ
+    usd10: 同左
+    usd100: 同左。製品ごとに上限額を設定可
+  limits: Free は1プロジェクト、データ保持1年
+  lock_in: 中
+  liability_compliance: US / EU（フランクフルト）を選べる。BAA は相談
+  security: 個人情報を送らない
+  pairs_well_with:
+  - fe.nextjs
+  source:
+    url: https://posthog.com/pricing
+    checked: '2026-10-26'
+    verified: true

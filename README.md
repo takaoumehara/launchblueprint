@@ -1,3 +1,13 @@
+# Blueprint (v3, in progress)
+
+新しい Blueprint は `skill/blueprint/` にあります。構成は [STRUCTURE.md](STRUCTURE.md)。以下は旧 launch-blueprint v0.2 の説明です。
+
+The new Blueprint lives in `skill/blueprint/`; see [STRUCTURE.md](STRUCTURE.md). The text below describes the earlier launch-blueprint v0.2.
+
+© 2026 CREATIVITY IS EVERYWHERE, LLC
+
+---
+
 # launch-blueprint
 
 A Claude Code Agent Skill that makes the AI look at a new product or big feature the way a whole company would — **before any code is written** — and raise the topics the owner did not think to ask about.

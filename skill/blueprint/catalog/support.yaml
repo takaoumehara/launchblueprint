@@ -1,0 +1,87 @@
+# Blueprint Catalog — support
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 全件 verified:false（記憶ベースの下書き）。使う前に公式ページで確認
+domain: support
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml
+entries:
+- id: sup.email
+  name: メール窓口＋共有受信箱
+  what: support@ で受けて返信
+  best_for: T1〜T2・問い合わせ少
+  avoid_when: 即時応答が必要
+  pricing_bands:
+    free: Gmail 等で無料
+    usd5: —
+    usd10: —
+    usd100: Help Scout 等（要確認）
+  limits: 担当が1人だと休めない
+  lock_in: 低
+  liability_compliance: 問い合わせ内容の保存期間
+  security: 個人情報の扱い
+  pairs_well_with:
+  - em.resend
+  source:
+    url: https://www.helpscout.com/pricing/
+    checked: '2026-10-26'
+    verified: false
+- id: sup.crisp
+  name: Crisp
+  what: アプリ内チャット＋受信箱
+  best_for: アプリ内で質問を受けたい
+  avoid_when: 24時間対応を約束できない
+  pricing_bands:
+    free: 無料プランあり（要確認）
+    usd5: —
+    usd10: —
+    usd100: 有料プラン（要確認）
+  limits: —
+  lock_in: 中
+  liability_compliance: EU企業
+  security: —
+  pairs_well_with:
+  - sup.email
+  source:
+    url: https://crisp.chat/en/pricing/
+    checked: '2026-10-26'
+    verified: false
+- id: sup.status
+  name: ステータスページ
+  what: 障害の公表ページ
+  best_for: T2以上
+  avoid_when: —
+  pricing_bands:
+    free: Instatus/Better Stack 無料枠（要確認）
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 監視と連動させる
+  lock_in: 低
+  liability_compliance: —
+  security: 別ホストで運用（本体と一緒に落ちない）
+  pairs_well_with:
+  - mon.sentry
+  source:
+    url: https://instatus.com/pricing
+    checked: '2026-10-26'
+    verified: false
+- id: sup.docs
+  name: ヘルプセンター・FAQ
+  what: 自分で解決できる文書
+  best_for: よくある質問が10件を超えた
+  avoid_when: —
+  pricing_bands:
+    free: 自社サイトで無料
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 古くなると逆効果
+  lock_in: 低
+  liability_compliance: —
+  security: —
+  pairs_well_with:
+  - gtm.seo
+  source:
+    url: https://www.mintlify.com/pricing
+    checked: '2026-10-26'
+    verified: false

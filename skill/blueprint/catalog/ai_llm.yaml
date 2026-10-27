@@ -1,0 +1,47 @@
+# Blueprint Tech Catalog — ai_llm
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: ai_llm
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: ai.gateway
+  name: AI Gateway（Vercel）
+  what: 複数モデルの切替・フォールバック・費用監視
+  best_for: モデルを後から変えたい
+  avoid_when: ''
+  pricing_bands:
+    free: Hobby で利用可（トークン実費）
+    usd5: Hobby で利用可（トークン実費）
+    usd10: Hobby で利用可（トークン実費）
+    usd100: Hobby で利用可（トークン実費）
+  limits: —
+  lock_in: 低
+  liability_compliance: モデル提供元の規約（商用・出力）
+  security: 鍵をサーバー側だけに
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: ai.firebase-ai-logic
+  name: Firebase AI Logic
+  what: アプリから Gemini を直接呼ぶ
+  best_for: モバイル・Firebase
+  avoid_when: ''
+  pricing_bands:
+    free: 無料枠（要確認）
+    usd5: 従量
+    usd10: 従量
+    usd100: 従量
+  limits: —
+  lock_in: 中
+  liability_compliance: EU AI法の透明性表示
+  security: App Check で悪用防止
+  pairs_well_with:
+  - auth.firebase
+  source:
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-26'
+    verified: true

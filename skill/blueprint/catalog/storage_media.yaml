@@ -1,0 +1,67 @@
+# Blueprint Tech Catalog — storage_media
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: storage_media
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: st.supabase-storage
+  name: Supabase Storage
+  what: ファイル保存＋CDN
+  best_for: Supabase を使っている
+  avoid_when: ''
+  pricing_bands:
+    free: Free：1GB、1ファイル50MBまで
+    usd5: —
+    usd10: —
+    usd100: Pro：100GB、画像変換100枚込み
+  limits: Free は小さい
+  lock_in: 低
+  liability_compliance: —
+  security: バケットのアクセス制御を RLS で
+  pairs_well_with:
+  - db.supabase
+  source:
+    url: https://supabase.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: st.vercel-blob
+  name: Vercel Blob
+  what: オブジェクト保存
+  best_for: Vercel 上で簡単に
+  avoid_when: ''
+  pricing_bands:
+    free: Hobby：1GB、読み1万回
+    usd5: —
+    usd10: —
+    usd100: Pro：$0.023/GB
+  limits: —
+  lock_in: 中
+  liability_compliance: —
+  security: 公開URLの推測に注意
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: st.mux
+  name: Mux
+  what: 動画配信・字幕トラック
+  best_for: 動画が主役（字幕は焼き込まない L33）
+  avoid_when: ''
+  pricing_bands:
+    free: 従量：毎月 配信10万分 無料、エンコード無料（1080p basic）
+    usd5: 保存 $0.003/分/月 → 約1,600分
+    usd10: 約3,300分の保存
+    usd100: 従量 $20クレジット込み。配信は10万分超で $0.001/分
+  limits: 保存は累積（消さない限り毎月増える）
+  lock_in: 中
+  liability_compliance: —
+  security: 署名付き再生URL
+  pairs_well_with:
+  - fe.nextjs
+  source:
+    url: https://www.mux.com/pricing
+    checked: '2026-10-26'
+    verified: true

@@ -1,0 +1,15 @@
+# Blueprint ルール台帳（機械可読版）— CREATIVITY IS EVERYWHERE, LLC
+# 画面版：rules-ledger.html（サンプル表示）。この YAML が正。
+# strength: absolute（絶対）/ default（既定）/ preference（好み：比較は必ず出す）
+# review_due を過ぎたルールは「期限切れ」。使う前にオーナーに確認する。
+updated: '2026-10-26'
+rules:
+  - {id: R-004, type: dont, text: "公開リンクにプレビュー用ドメインを使わない（必ず会社ドメイン）", applies_to: 全プロジェクト, strength: absolute, source: "オーナー明示 2026-10", status: active, review_due: '2027-01-20', implication: "公開URLを持つ＝商用・独自ドメイン前提。Vercel Hobby（非商用）は不可"}
+  - {id: R-006, type: dont, text: "決済方式を後から変更する前提で設計しない（Connect の方式は作成後に変えられない）", applies_to: 決済, strength: default, source: "AIの推測（先回りリスク調査 2026-07）", status: review_overdue, review_due: '2026-10-01'}
+  - {id: R-009, type: do, text: "動画は字幕を焼き込まず、映像＋SRT/VTTで納品", applies_to: 動画, strength: absolute, source: "オーナー明示 2026-10-23", status: active, review_due: '2027-01-21'}
+  - {id: R-012, type: preference, text: "ツールは無料を優先（ただし $5〜$10 帯も必ず比較して出す）", applies_to: 全プロジェクト, strength: preference, source: "オーナー発言（ある会話）", status: needs_confirmation, review_due: '2026-11-02'}
+  - {id: R-016, type: do, text: "通信・決済・認証は API を基本に。見た目・体験・データが差別化なら作る。差別化前なら全部入りで売上を先に確かめる", applies_to: 全プロジェクト, strength: default, source: "Blueprint v3 §16", status: active, review_due: '2027-01-26'}
+  - {id: R-017, type: dont, text: "求人検索で特定業界を対象にしない", applies_to: 求人検索ボット, strength: absolute, source: "AIの推測（引用なし）", status: needs_confirmation, review_due: '2026-10-26'}
+  - {id: R-020, type: do, text: "重い処理は共有マシンで同時に1つまで", applies_to: 共有マシン, strength: default, source: 運用ルール, status: active, review_due: '2026-12-15'}
+  - {id: R-022, type: do, text: "除外・省略した時は結果に「R-xxxにより除外」と書く", applies_to: 全ボット, strength: absolute, source: "Blueprint §10", status: active, review_due: '2027-01-26'}
+  - {id: L30, type: do, text: "ブランチと実行場所のルール（ベースブランチ・マージ先・どの作業をどのツールで回すか）をプロジェクトごとに決める", applies_to: 全プロジェクト, strength: default, source: "Blueprint v3 Part 1", status: active}

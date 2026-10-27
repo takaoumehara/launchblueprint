@@ -1,0 +1,57 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ルール台帳 — Blueprint</title>
+<meta name="color-scheme" content="light dark"><link rel="stylesheet" href="bp-tokens.css"><script src="bp-theme.js"></script><script src="bp-viz.js"></script>
+<style>
+body{background:var(--bg);color:var(--tx);font:14px/1.6 var(--font);margin:0}
+main{max-width:1240px;margin:0 auto;padding:36px 40px 80px}
+.k{font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+h1{font-size:30px;letter-spacing:-.025em;margin:10px 0 6px;font-weight:600}.lead{color:var(--mu);margin:0 0 28px;max-width:70ch}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);border:var(--hair) solid var(--ln);margin-bottom:20px}
+.stats div{padding:16px 18px;border-right:var(--hair) solid var(--ln)}.stats div:last-child{border:0}
+.stats b{display:block;font-size:28px;letter-spacing:-.03em;font-weight:600;font-variant-numeric:tabular-nums}.stats span{font-size:12px;color:var(--mu)}
+.stats .bad b{color:var(--bad,oklch(.6 .19 25))}
+.alert{display:flex;gap:14px;align-items:baseline;border-left:3px solid var(--bad,oklch(.6 .19 25));background:var(--sf);padding:12px 16px;margin-bottom:28px;font-size:13px}
+.fanw{border:var(--hair) solid var(--ln);position:relative}
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;padding:14px 20px 0}.cols span{font:500 11px/1 var(--mono);color:var(--mu);text-transform:uppercase;letter-spacing:.05em}.cols span:nth-child(2){text-align:center}.cols span:last-child{text-align:right}
+#fan{display:block;width:100%;height:460px}
+#fan text{font:12px var(--font);fill:var(--tx)}#fan text.m{font:11px var(--mono);fill:var(--mu)}
+#fan .s{fill:none;stroke-width:1;transition:opacity .25s}
+#fan g.r{cursor:pointer}#fan g.r rect.b{fill:var(--bg);stroke:var(--ln)}#fan g.r:hover rect.b,#fan g.r.on rect.b{stroke:var(--tx)}
+#fan.hov .s{opacity:.04!important}#fan.hov .s.hi{opacity:.75!important}
+.legend{display:flex;gap:20px;padding:10px 20px;border-top:var(--hair) solid var(--ln);font-size:12px;color:var(--mu)}.legend i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:6px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:36px}th,td{text-align:left;vertical-align:top;padding:11px 12px;border-bottom:var(--hair) solid var(--ln)}
+th{font:500 11px/1.3 var(--mono);color:var(--mu);text-transform:uppercase;letter-spacing:.04em}td.id{font-family:var(--mono);font-size:12px}
+.st{font:500 11px/1 var(--mono)}.st i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;background:currentColor}
+tr.hl td{background:color-mix(in oklch,var(--ac) 7%,transparent)}
+@media (prefers-reduced-motion:reduce){#fan .s{transition:none}}
+</style><script type="application/json" id="bp-data">{"meta": {"schema": "blueprint/rules@1", "generated": "2026-10-26", "publisher": "CREATIVITY IS EVERYWHERE, LLC", "sources": ["catalog/rules.yaml", "project.blueprint.yaml"], "how_to_read": "catalog/ai-usage.md"}, "today": "2026-10-26", "rules": [{"id": "R-004", "type": "dont", "text": "公開リンクにプレビュー用ドメインを使わない（必ず会社ドメイン）", "applies_to": "全プロジェクト", "strength": "absolute", "source": "オーナー明示 2026-10", "status": "active", "review_due": "2027-01-20", "implication": "公開URLを持つ＝商用・独自ドメイン前提。Vercel Hobby（非商用）は不可", "source_kind": "オーナー明示", "used_by": ["host.vercel"]}, {"id": "R-006", "type": "dont", "text": "決済方式を後から変更する前提で設計しない（Connect の方式は作成後に変えられない）", "applies_to": "決済", "strength": "default", "source": "AIの推測（先回りリスク調査 2026-07）", "status": "review_overdue", "review_due": "2026-10-01", "source_kind": "AIの推測", "used_by": ["pay.stripe-connect"]}, {"id": "R-009", "type": "do", "text": "動画は字幕を焼き込まず、映像＋SRT/VTTで納品", "applies_to": "動画", "strength": "absolute", "source": "オーナー明示 2026-10-23", "status": "active", "review_due": "2027-01-21", "source_kind": "オーナー明示", "used_by": []}, {"id": "R-012", "type": "preference", "text": "ツールは無料を優先（ただし $5〜$10 帯も必ず比較して出す）", "applies_to": "全プロジェクト", "strength": "preference", "source": "オーナー発言（ある会話）", "status": "needs_confirmation", "review_due": "2026-11-02", "source_kind": "オーナー発言", "used_by": ["host.cloudflare-pages", "an.posthog"]}, {"id": "R-016", "type": "do", "text": "通信・決済・認証は API を基本に。見た目・体験・データが差別化なら作る。差別化前なら全部入りで売上を先に確かめる", "applies_to": "全プロジェクト", "strength": "default", "source": "Blueprint v3 §16", "status": "active", "review_due": "2027-01-26", "source_kind": "Blueprint", "used_by": []}, {"id": "R-017", "type": "dont", "text": "求人検索で特定業界を対象にしない", "applies_to": "求人検索ボット", "strength": "absolute", "source": "AIの推測（引用なし）", "status": "needs_confirmation", "review_due": "2026-10-26", "source_kind": "AIの推測", "used_by": []}, {"id": "R-020", "type": "do", "text": "重い処理は共有マシンで同時に1つまで", "applies_to": "共有マシン", "strength": "default", "source": "運用ルール", "status": "active", "review_due": "2026-12-15", "source_kind": "チーム/運用", "used_by": []}, {"id": "R-022", "type": "do", "text": "除外・省略した時は結果に「R-xxxにより除外」と書く", "applies_to": "全ボット", "strength": "absolute", "source": "Blueprint §10", "status": "active", "review_due": "2027-01-26", "source_kind": "Blueprint", "used_by": []}, {"id": "L30", "type": "do", "text": "ブランチと実行場所のルール（ベースブランチ・マージ先・どの作業をどのツールで回すか）をプロジェクトごとに決める", "applies_to": "全プロジェクト", "strength": "default", "source": "Blueprint v3 Part 1", "status": "active", "source_kind": "Blueprint", "used_by": ["ci.vercel-git"]}]}</script><link rel="alternate" type="application/json" href="data/rules.json" title="machine-readable data"></head><body><header class="bp-bar"><a class="bp-mark" href="llms.txt"><i></i>Blueprint</a><nav class="bp-nav" aria-label="画面"><a href="catalog-concept.html">カタログ</a><a href="canvas-concept.html">キャンバス</a><a href="compare-stripe.html">比較</a><a href="rules-ledger.html" aria-current="page">ルール</a><a href="build-vs-buy.html">作る vs 買う</a></nav><span class="sp"></span><span class="tag">サンプルデータ</span><span data-data-slot></span><span data-theme-slot></span></header><main><div class="k">ルール台帳 · catalog/rules.yaml</div><h1>どのルールが、どこから来て、どこに効いているか</h1>
+<p class="lead">左＝ルールの出どころ、中＝ルール、右＝効いている所。線の本数＝強さ（絶対／基本／好み）。赤は見直し期限切れ、黄は要確認。ルールを押すと表の行に飛びます。</p>
+<div class="stats" id="stats"></div><div id="alert"></div>
+<div class="fanw"><div class="cols"><span>出どころ</span><span>ルール</span><span>効いている所</span></div><svg id="fan" role="img" aria-label="ルールの系譜"></svg>
+<div class="legend"><span><i style="border-color:var(--tx)"></i>有効</span><span><i style="border-color:var(--warn,oklch(.75 .15 75))"></i>要確認</span><span><i style="border-color:var(--bad,oklch(.6 .19 25))"></i>期限切れ</span><span>線の本数：絶対 9 · 基本 5 · 好み 2</span></div></div>
+<table id="tb"></table></main>
+<script>
+const D=BP.data(),$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const R=D.rules,N={absolute:9,default:5,preference:2},SL={absolute:'絶対',default:'基本',preference:'好み'},ST={active:'有効',review_overdue:'期限切れ',needs_confirmation:'要確認'};
+const col=r=>r.status=='review_overdue'?'var(--bad,oklch(.6 .19 25))':r.status=='needs_confirmation'?'var(--warn,oklch(.75 .15 75))':'var(--tx)';
+const cnt=k=>R.filter(r=>r.status==k).length;
+$('stats').innerHTML=[['ルール',R.length],['絶対',R.filter(r=>r.strength=='absolute').length],['有効',cnt('active')],['要確認',cnt('needs_confirmation')],['期限切れ',cnt('review_overdue'),'bad']].map(([a,b,c])=>`<div class="${c||''}"><b>${b}</b><span>${a}</span></div>`).join('');
+const od=R.filter(r=>r.status=='review_overdue');if(od.length)$('alert').innerHTML=`<div class="alert" role="status"><b>${od.map(r=>r.id).join(', ')}</b><span>見直し期限（${od.map(r=>r.review_due).join(', ')}）を過ぎています。使う前に出どころを確認してください。</span></div>`;
+const tgt=r=>[...new Set([r.applies_to,...(r.used_by||[])])];
+function fan(){const svg=$('fan');svg.innerHTML='';const W=svg.clientWidth||1160,H=460;
+ const S=[...new Set(R.map(r=>r.source_kind))],T=[...new Set(R.flatMap(tgt))];
+ const sy=i=>40+i*(H-80)/Math.max(1,S.length-1),ry=i=>24+i*(H-48)/Math.max(1,R.length-1),ty=i=>24+i*(H-48)/Math.max(1,T.length-1);
+ const xs=20+130,xr=W/2,xt=W-20-150,gS=BP.el('g',{},svg);
+ R.forEach((r,i)=>{const n=N[r.strength]||3,c=col(r),rr=BP.rng(BP.hash(r.id)),y=ry(i),y0=sy(S.indexOf(r.source_kind));
+  for(let s=0;s<n;s++){const a=(s-n/2)*1.4;BP.el('path',{class:'s r-'+r.id,d:BP.wire(xs,y0+a*.6,xr-110,y+a,.5),stroke:c,opacity:.16+rr()*.2},gS)}
+  tgt(r).forEach(t=>{const y1=ty(T.indexOf(t));for(let s=0;s<n;s++){const a=(s-n/2)*1.4;BP.el('path',{class:'s r-'+r.id,d:BP.wire(xr+110,y+a,xt,y1+a*.5,.5),stroke:c,opacity:.14+rr()*.2},gS)}})});
+ S.forEach((s,i)=>{const t=BP.el('text',{x:xs-10,y:sy(i)+4,'text-anchor':'end'},svg);t.textContent=s;BP.el('circle',{cx:xs,cy:sy(i),r:4,fill:'var(--tx)'},svg)});
+ T.forEach((s,i)=>{const t=BP.el('text',{x:xt+12,y:ty(i)+4},svg);t.textContent=s;BP.el('circle',{cx:xt,cy:ty(i),r:3.5,fill:'var(--bg)',stroke:'var(--tx)','stroke-width':1.2},svg)});
+ R.forEach((r,i)=>{const g=BP.el('g',{class:'r',tabindex:0,role:'button','aria-label':r.id+' '+r.text},svg),y=ry(i);
+  BP.el('rect',{class:'b',x:xr-110,y:y-15,width:220,height:30},g);BP.el('rect',{x:xr-110,y:y-15,width:3,height:30,fill:col(r)},g);
+  const a=BP.el('text',{x:xr-98,y:y+4,class:'m'},g);a.textContent=r.id;const b=BP.el('text',{x:xr-52,y:y+4},g);b.textContent=r.text.length>14?r.text.slice(0,14)+'…':r.text;
+  const on=v=>{svg.classList.toggle('hov',v);svg.querySelectorAll('.r-'+r.id).forEach(p=>p.classList.toggle('hi',v))};
+  g.onmouseenter=()=>on(true);g.onmouseleave=()=>on(false);g.onfocus=()=>on(true);g.onblur=()=>on(false);
+  g.onclick=()=>{document.querySelectorAll('tr.hl').forEach(x=>x.classList.remove('hl'));const tr=$('row-'+r.id);tr.classList.add('hl');tr.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'})};g.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();g.onclick()}}})}
+addEventListener('resize',fan);fan();
+$('tb').innerHTML='<tr><th>ID</th><th>ルール</th><th>強さ</th><th>状態</th><th>出どころ</th><th>見直し</th><th>効いている所</th></tr>'+R.map(r=>`<tr id="row-${r.id}"><td class="id">${r.id}</td><td>${esc(r.text)}${r.implication?'<br><span style="color:var(--mu);font-size:12px">'+esc(r.implication)+'</span>':''}</td><td>${SL[r.strength]||r.strength}</td><td class="st" style="color:${col(r)}"><i></i>${ST[r.status]||r.status}</td><td>${esc(r.source)}</td><td class="id">${r.review_due||'—'}</td><td class="id">${tgt(r).map(esc).join('<br>')}</td></tr>`).join('');
+</script></body></html>

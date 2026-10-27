@@ -1,0 +1,70 @@
+# Blueprint Tech Catalog — hosting
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: hosting
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: host.vercel
+  name: Vercel
+  what: Next.js 向けホスティング＋関数
+  best_for: Next.js、プレビューを多用
+  avoid_when: ''
+  pricing_bands:
+    free: Hobby $0：個人・非商用のみ。転送100GB、関数呼び出し100万
+    usd5: —
+    usd10: —
+    usd100: Pro $20/人：1TB、$20分の利用クレジット、使いすぎは上限設定可
+  limits: Hobby は商用不可。Hobby は追加購入不可で上限で止まる
+  lock_in: 中
+  liability_compliance: SOC2 Type2・ISO27001・PCI DSS・EU-US DPF。HIPAA BAA は Pro で月$350
+  security: パスワード保護は Pro で $20/プロジェクト/月
+  pairs_well_with:
+  - fe.nextjs
+  - db.supabase
+  - auth.clerk
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: host.firebase-hosting
+  name: Firebase Hosting / App Hosting
+  what: 静的・SSR ホスティング
+  best_for: Firebase 一式で統一
+  avoid_when: ''
+  pricing_bands:
+    free: Spark：10GB保存、360MB/日 転送
+    usd5: Blaze 従量
+    usd10: 従量
+    usd100: 従量
+  limits: App Hosting は Blaze 必須
+  lock_in: 中
+  liability_compliance: Google Cloud
+  security: —
+  pairs_well_with:
+  - auth.firebase
+  - db.firestore
+  source:
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: host.cloudflare-pages
+  name: Cloudflare Pages / Workers
+  what: エッジで静的＋関数
+  best_for: 静的サイト、低コスト
+  avoid_when: ''
+  pricing_bands:
+    free: Workers Free：10万リクエスト/日、CPU 10ms/回。静的ファイルは無料・無制限
+    usd5: Workers Paid $5：1,000万リクエスト/月、転送料なし
+    usd10: $5＋超過 $0.30/100万リクエスト
+    usd100: 大規模でも転送料なし（例：1億リクエストで約$45）
+  limits: Free は CPU 10ms/回
+  lock_in: 中
+  liability_compliance: 要確認
+  security: —
+  pairs_well_with:
+  - fe.astro
+  source:
+    url: https://developers.cloudflare.com/workers/platform/pricing/
+    checked: '2026-10-26'
+    verified: true

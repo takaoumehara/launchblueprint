@@ -1,0 +1,64 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>Blueprint — UI concept</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,"Noto Sans JP",sans-serif;background:#f4f2ee;color:#1d1d1f;font-size:13px}
+.app{display:grid;grid-template-columns:1fr 340px;grid-template-rows:auto 1fr auto;gap:12px;padding:12px;height:100vh}
+.card{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px #0001}
+header{grid-column:1/3;display:flex;gap:16px;align-items:center}
+.intent{flex:1}.intent small{color:#888}.intent h1{margin:2px 0 0;font-size:20px;word-break:auto-phrase}
+.tier{background:#1d1d1f;color:#fff;border-radius:8px;padding:8px 14px;font-weight:700;font-size:18px;text-align:center}.tier small{display:block;font-size:10px;font-weight:400;opacity:.7}
+.ntb{max-width:330px}.ntb span{display:inline-block;background:#fde8e8;color:#a33;border-radius:20px;padding:3px 9px;margin:2px;text-decoration:line-through}
+h2{font-size:12px;letter-spacing:.08em;color:#888;margin:0 0 8px;text-transform:uppercase}
+svg{width:100%;height:calc(100% - 50px)}.node rect{rx:8;stroke-width:2}.node text{font-size:12px;text-anchor:middle}
+.legend span{margin-right:12px}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.loop{display:flex;gap:4px;margin-bottom:10px}.loop div{flex:1;text-align:center;padding:6px;border-radius:6px;background:#eee}.loop .on{background:#2b6cb0;color:#fff;font-weight:700}
+table{width:100%;border-collapse:collapse}td,th{padding:5px 4px;border-bottom:1px solid #eee;text-align:left}
+.p{color:#18794e;font-weight:700}.f{color:#c53030;font-weight:700}.w{color:#b7791f;font-weight:700}
+footer{grid-column:1/3;display:grid;grid-template-columns:1fr 1.3fr;gap:12px}
+</style></head><body><div class="app">
+<header class="card"><div class="intent"><small>意図の一文 — どんな真実を解くのか</small><h1>電話を取りこぼす小さな店の、失う予約をゼロにする</h1><small>サンプル: Local Booking Kit ／ ループ 2 ／ 更新 2026-10-23</small></div>
+<div class="tier">T2<small>一般公開（無料）</small></div>
+<div class="ntb"><h2>作らないもの</h2><span>ネイティブアプリ</span><span>AI自動値引き</span><span>SNS自動投稿</span><span>多店舗管理</span></div></header>
+
+<section class="card"><h2>依存マップ — stack.hosting を変更した場合の影響</h2>
+<div class="legend"><span><i class="dot" style="background:#1d1d1f"></i>ロック済み</span><span><i class="dot" style="background:#e2e8f0"></i>未ロック</span><span><i class="dot" style="background:#fc8181"></i>影響を受ける</span><span><i class="dot" style="background:#f6ad55"></i>再オープン</span></div>
+<svg viewBox="0 0 800 380">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0L8,4L0,8z" fill="#999"/></marker></defs>
+<g stroke="#bbb" stroke-width="1.5" marker-end="url(#a)" fill="none">
+<path d="M130,60L250,60"/><path d="M330,60L450,60"/><path d="M530,60L640,110"/><path d="M290,80L290,160"/><path d="M490,80L490,160"/><path d="M330,180L450,180"/><path d="M530,180L640,180"/><path d="M490,200L380,290"/><path d="M490,200L600,290"/>
+</g>
+<g stroke="#e53e3e" stroke-width="3" marker-end="url(#a)" fill="none"><path d="M490,200L380,290"/><path d="M490,200L600,290"/><path d="M530,180L640,180"/></g>
+<g class="node">
+<rect x="30" y="40" width="100" height="40" fill="#1d1d1f" stroke="#1d1d1f"/><text x="80" y="65" fill="#fff">🔒 purpose</text>
+<rect x="250" y="40" width="80" height="40" fill="#1d1d1f" stroke="#1d1d1f"/><text x="290" y="65" fill="#fff">🔒 personas</text>
+<rect x="450" y="40" width="80" height="40" fill="#e2e8f0" stroke="#a0aec0"/><text x="490" y="65">ux.flows</text>
+<rect x="640" y="90" width="120" height="40" fill="#e2e8f0" stroke="#a0aec0"/><text x="700" y="115">ux.journey</text>
+<rect x="230" y="160" width="120" height="40" fill="#e2e8f0" stroke="#a0aec0"/><text x="290" y="185">service blueprint</text>
+<rect x="430" y="160" width="120" height="40" fill="#f6ad55" stroke="#dd6b20"/><text x="490" y="185">⟳ stack.hosting</text>
+<rect x="640" y="160" width="120" height="40" fill="#fc8181" stroke="#e53e3e"/><text x="700" y="185">data（影響）</text>
+<rect x="320" y="290" width="120" height="40" fill="#fc8181" stroke="#e53e3e"/><text x="380" y="315">auth（影響）</text>
+<rect x="540" y="290" width="120" height="40" fill="#fc8181" stroke="#e53e3e"/><text x="600" y="315">cost（影響）</text>
+</g>
+<text x="20" y="370" font-size="12" fill="#c53030">⚠ ロック済み決定の変更：影響3ブロック・推定やり直し 2日 → 変更プロトコルでオーナーOKが必要</text>
+</svg></section>
+
+<aside class="card"><h2>現在のループ</h2><div class="loop"><div>Establish</div><div class="on">Encode</div><div>Express</div></div>
+<table><tr><th>レンズ</th><th>なぜ</th><th>実データ</th><th>ペルソナ</th></tr>
+<tr><td>調査</td><td class="p">✓</td><td class="p">✓</td><td class="p">✓</td></tr>
+<tr><td>課題</td><td class="p">✓</td><td class="p">✓</td><td class="p">✓</td></tr>
+<tr><td>解決</td><td class="p">✓</td><td class="w">…</td><td class="p">✓</td></tr>
+<tr><td>フロー</td><td class="p">✓</td><td class="f">✗</td><td class="w">…</td></tr>
+<tr><td>ジャーニー</td><td class="w">…</td><td class="f">✗</td><td class="f">✗</td></tr>
+<tr><td><b>サービスBP ◎</b></td><td class="p">✓</td><td class="p">✓</td><td class="p">✓</td></tr>
+<tr><td>UI</td><td class="f">✗</td><td class="f">✗</td><td class="w">…</td></tr></table>
+<p><b>ゲート判定：</b><span class="f">不合格</span>（フローの実データ試験が未実施）</p>
+<h2>Day-1 チェック</h2><div>L1〜L41：<span class="p">35 合格</span> ／ <span class="w">4 保留</span> ／ <span class="f">2 未対応</span>（L25 負荷試験、L33 字幕ファイル）</div></aside>
+
+<footer><div class="card"><h2>未決の質問（一括でオーナーへ）</h2><ol style="margin:0;padding-left:18px;line-height:1.8">
+<li>SMS 送信は A2P 登録完了（約3週間）まで電話のみでよいか？</li><li>無料枠を超えたら止めるか、課金するか？</li><li>スペイン語は初期公開に含めるか？</li></ol></div>
+<div class="card"><h2>試作ブランチ × ペルソナ（物差し）</h2><table>
+<tr><th></th><th>店主・忙しい美容室</th><th>受付スタッフ</th><th>予約する客</th></tr>
+<tr><td>Path A：不在着信→SMS予約</td><td class="p">○</td><td class="p">○</td><td class="w">△</td></tr>
+<tr><td>Path B：AI音声受付</td><td class="w">△</td><td class="p">○</td><td class="f">×</td></tr>
+<tr><td>Path C：Web予約のみ</td><td class="f">×</td><td class="w">△</td><td class="p">○</td></tr></table>
+<small>実ユーザー5名・実データで試験 2026-10-21 → Path A を採用候補に</small></div></footer>
+</div></body></html>

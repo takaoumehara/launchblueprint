@@ -1,0 +1,70 @@
+# Blueprint Tech Catalog — security
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: security
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: sec.vercel-firewall
+  name: Vercel Firewall / WAF
+  what: ホスト一体のファイアウォール・ボット対策
+  best_for: Vercel 上のアプリ
+  avoid_when: ''
+  pricing_bands:
+    free: Hobby：カスタムルール3、DDoS 緩和込み
+    usd5: —
+    usd10: —
+    usd100: Pro $20：ルール40、BotID $1/1,000回
+  limits: 高度なルールは Enterprise
+  lock_in: 中
+  liability_compliance: SOC2 Type2・ISO27001（ホストとして）
+  security: レート制限をログイン・決済APIに
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: sec.turnstile
+  name: Cloudflare Turnstile
+  what: CAPTCHA の代わり
+  best_for: 登録・問い合わせフォーム
+  avoid_when: ''
+  pricing_bands:
+    free: 無料（要確認）
+    usd5: 無料（要確認）
+    usd10: 無料（要確認）
+    usd100: 無料（要確認）
+  limits: 要確認
+  lock_in: 低
+  liability_compliance: Cookie同意の要否を確認
+  security: サーバー側でトークン検証
+  pairs_well_with:
+  - auth.better-auth
+  source:
+    url: https://developers.cloudflare.com/turnstile/
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: sec.secrets
+  name: 秘密情報の置き場（ホストの環境変数／Secret Manager）
+  what: 鍵・トークンの保管
+  best_for: 全プロジェクト
+  avoid_when: ''
+  pricing_bands:
+    free: ホスト込み
+    usd5: ホスト込み
+    usd10: ホスト込み
+    usd100: ホスト込み
+  limits: —
+  lock_in: 低
+  liability_compliance: 漏えい時の通知計画（§5.1）
+  security: ローテーション日を L9 に記録
+  pairs_well_with:
+  - host.vercel
+  - be.cloud-run
+  source:
+    url: https://vercel.com/docs/environment-variables
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認

@@ -1,0 +1,48 @@
+# Blueprint Tech Catalog — email_notifications
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: email_notifications
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: mail.resend
+  name: Resend
+  what: 送信API（取引メール）
+  best_for: 登録確認・通知メール
+  avoid_when: ''
+  pricing_bands:
+    free: Free：3,000通/月・100通/日・ドメイン3
+    usd5: —
+    usd10: —
+    usd100: Pro $20：5万通、日上限なし
+  limits: Free は1日100通
+  lock_in: 低
+  liability_compliance: SOC2 Type II・GDPR
+  security: DKIM/SPF/DMARC 込み。Webhook 署名
+  pairs_well_with:
+  - fe.nextjs
+  - auth.better-auth
+  source:
+    url: https://resend.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: push.fcm
+  name: Firebase Cloud Messaging
+  what: プッシュ通知
+  best_for: モバイル・Web プッシュ
+  avoid_when: ''
+  pricing_bands:
+    free: 無料
+    usd5: 無料
+    usd10: 無料
+    usd100: 無料
+  limits: —
+  lock_in: 中
+  liability_compliance: 同意取得
+  security: トークン管理
+  pairs_well_with:
+  - fe.expo
+  source:
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-26'
+    verified: true

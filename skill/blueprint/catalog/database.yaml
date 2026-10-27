@@ -1,0 +1,71 @@
+# Blueprint Tech Catalog — database
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: database
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: db.supabase
+  name: Supabase (Postgres)
+  what: Postgres＋認証＋ストレージ＋Realtime の一式
+  best_for: リレーショナルなデータ、SQL を使いたい
+  avoid_when: ''
+  pricing_bands:
+    free: $0：500MB、1週間無操作で一時停止、2プロジェクトまで
+    usd5: —（Free と Pro の間の帯はない）
+    usd10: —
+    usd100: $25〜：Pro（8GB、毎日バックアップ7日、休止なし）。$100帯なら Compute 増強 or PITR（$100/月）
+  limits: Free は休止あり・バックアップなし
+  lock_in: 低：標準 Postgres なので移行しやすい
+  liability_compliance: Team（$599〜）で SOC2/ISO27001、HIPAA はアドオン
+  security: RLS を必ず有効化。service_role 鍵をクライアントに出さない
+  pairs_well_with:
+  - auth.supabase
+  - host.vercel
+  - fe.nextjs
+  source:
+    url: https://supabase.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: db.firestore
+  name: Cloud Firestore
+  what: ドキュメント型DB（Firebase）
+  best_for: モバイル・リアルタイム同期・スキーマが緩いデータ
+  avoid_when: ''
+  pricing_bands:
+    free: $0（Spark）：1GiB、読み5万/日、書き2万/日
+    usd5: 従量（Blaze）
+    usd10: 従量
+    usd100: 従量
+  limits: 集計・JOIN が苦手。読み取り回数で課金
+  lock_in: 高：データ構造と SDK に強く依存
+  liability_compliance: Google Cloud の DPA
+  security: セキュリティルールのテスト必須
+  pairs_well_with:
+  - auth.firebase
+  - fe.expo
+  source:
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: db.neon
+  name: Neon (Postgres)
+  what: サーバーレス Postgres、ブランチ機能
+  best_for: プレビュー環境ごとにDBを分けたい
+  avoid_when: ''
+  pricing_bands:
+    free: $0：1プロジェクト1GB（合計20GB）、100CU時間/プロジェクト、5分で自動停止、6時間の履歴
+    usd5: Launch 従量：$0.106/CU時間＋$0.35/GB月（最低料金なし）
+    usd10: 同左（小規模なら$10前後、要試算）
+    usd100: Scale：$0.222/CU時間、SOC2・HIPAA・SLA
+  limits: Free は上限到達でコンピュート停止、1GB超で書き込み不可（データは消えない）
+  lock_in: 低
+  liability_compliance: SOC2・HIPAA は Scale のみ
+  security: 接続文字列を秘密として扱う
+  pairs_well_with:
+  - host.vercel
+  - auth.better-auth
+  source:
+    url: https://neon.com/pricing
+    checked: '2026-10-26'
+    verified: true

@@ -1,0 +1,19 @@
+# 鮮度（賞味期限）— フィールドの種類ごと。CREATIVITY IS EVERYWHERE, LLC
+# 古いか = 今日 − source.checked > そのフィールドの ttl_days
+# source.checked が null、または verified:false → 「未確認」（古い以前）。数字を使う前に公式ページで確かめる。
+updated: '2026-10-26'
+ttl_days:
+  security: 7               # security, 勧告・脆弱性
+  liability_compliance: 30  # 規制・責任（A2P 10DLC, 個人情報, Connect の責任）
+  support: 30               # 機能の対応状況（passkeys など）, API仕様
+  limits: 30
+  pricing_bands: 90         # 料金・無料枠
+  pairs_well_with: 180
+  best_for: 180
+  avoid_when: 180
+  lock_in: 180
+  project_selection: null   # project.blueprint.yaml の決定は期限なし（変えた時だけ）
+answer_rules:
+  - "古さはフィールドごとに判定する。1つの item でも security は古く、pricing は新しい、がありうる"
+  - "選ばれている（selected）item の未確認・期限切れを最初に出す"
+  - "rules.yaml の review_due を過ぎたルールも期限切れとして出す"

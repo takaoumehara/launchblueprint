@@ -1,0 +1,33 @@
+# Blueprint Catalog — exit_dd（売却・サンセット時の調査準備）
+# 提供：CREATIVITY IS EVERYWHERE, LLC。法務助言ではない。売却前に弁護士確認
+domain: exit_dd
+updated: '2026-10-26'
+stale_after_days: 180
+checklist:
+- id: dd.ip
+  item: コード・デザイン・ブランド・ドメインの権利が会社にある
+  acceptance: '全コントリビューター（業務委託・AI含む利用規約）の IP譲渡書が data-room/ip/ にある。ドメイン・ストア・GitHub・Stripe の名義が会社名（個人名0件）'
+- id: dd.oss
+  item: OSSライセンス一覧
+  acceptance: 'SBOM（license付き）を生成でき、GPL/AGPL系の混入が0件または説明済み'
+- id: dd.contracts
+  item: 契約一覧（ベンダー・SaaS・顧客・紹介報酬）
+  acceptance: 'contracts.yaml に相手・期間・解約条件・譲渡可否（change of control）が全件ある'
+- id: dd.privacy
+  item: プライバシー・GDPR/PIPA/CCPA 対応
+  acceptance: 'データ所在（リージョン）・処理目的・委託先一覧・削除フローの記録があり、ポリシーの言語が提供国の数と一致'
+- id: dd.code
+  item: コード健全性
+  acceptance: 'CIが緑、テストあり、README/ARCHITECTURE/デプロイ手順あり、秘密情報のコミット0件（secret scan）、依存の既知の重大脆弱性0件'
+- id: dd.infra
+  item: インフラ構成・費用・バックアップ
+  acceptance: '構成図・月額費用・バックアップと復元テストの日付（90日以内）が記録されている'
+- id: dd.metrics
+  item: 数字のデータルーム
+  acceptance: 'MRR・解約・返金を月次でStripeから再生成できるスクリプト＋DAU/MAU・継続率ダッシュボード。過去12か月分'
+- id: dd.billing_sources
+  item: 売上の出所の整理
+  acceptance: 'Stripe／App Store／Google Play の売上が1つの表で突き合わせ可能'
+- id: dd.sunset
+  item: 買収後の終了・移行計画
+  acceptance: 'ユーザー告知・データエクスポート・削除・リダイレクト・課金停止の手順がある（12-sunset と共通）'

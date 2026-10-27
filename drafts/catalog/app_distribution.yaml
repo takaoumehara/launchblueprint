@@ -1,0 +1,80 @@
+# Blueprint Catalog — app_distribution
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ ポリシー部分は 2026-10-26 に公式ページで確認（verified:true）。費用・期間は記憶ベース（verified:false）
+domain: app_distribution
+updated: '2026-10-26'
+stale_after_days: 30   # ストア規則は rules/APIs 扱い
+freshness: freshness.yaml
+policy_checks:
+- id: policy.apple.3_1_1
+  rule: 機能・サブスクの解放は IAP 必須。独自の解放手段（ライセンスキー等）は不可
+  url: https://developer.apple.com/app-store/review/guidelines/#in-app-purchase
+  checked: '2026-10-26'
+  verified: true
+- id: policy.apple.3_1_1a
+  rule: 米国ストアでは外部購入へのボタン・リンク・CTAに entitlement 不要。その他の地域は StoreKit External Purchase Link Entitlement を申請
+  url: https://developer.apple.com/app-store/review/guidelines/#in-app-purchase
+  checked: '2026-10-26'
+  verified: true
+- id: policy.apple.3_1_3b
+  rule: マルチプラットフォーム：他で買ったサブスクをアプリで使える。ただし同じものがアプリ内IAPでも買えることが条件
+  url: https://developer.apple.com/app-store/review/guidelines/#multiplatform-services
+  checked: '2026-10-26'
+  verified: true
+- id: policy.apple.4_2
+  rule: 最小限の機能：ウェブを包んだだけのアプリは不可
+  url: https://developer.apple.com/app-store/review/guidelines/#minimum-functionality
+  checked: '2026-10-26'
+  verified: true
+- id: policy.google.payments
+  rule: アプリ内のデジタル機能・サブスクの支払いは Google Play 課金必須（Section 3/8/9 の例外を除く）。アプリ内のリンク・ボタン・WebView・登録フローで他の支払いへ誘導しない
+  url: https://support.google.com/googleplay/android-developer/answer/9858738
+  checked: '2026-10-26'
+  verified: true
+entries:
+- id: dist.pwa
+  name: PWA（ホーム画面に追加）
+  best_for: 審査なしで即日配布、Webが本体のサービス
+  avoid_when: ストアでの発見・ネイティブ機能（iOSのバックグラウンド等）が必須
+  pricing_bands: {free: 無料, usd5: —, usd10: —, usd100: —}
+  store_billing: 対象外（ウェブ決済のまま）
+  depends_on: [manifest, service worker, オフライン画面]
+  review_risk: なし
+  verified: false
+- id: dist.twa
+  name: Android TWA（Bubblewrap / PWABuilder）
+  best_for: PWAをそのまま Google Play に載せる
+  pricing_bands: {free: —, usd5: —, usd10: —, usd100: 'Play Console 初回$25'}
+  store_billing: 'ウェブ画面＝アプリ内扱い。デジタル課金はPlay課金、またはTWA内で課金導線を隠す'
+  depends_on: [dist.pwa, Digital Asset Links, Play Console組織アカウント, Android開発者本人確認]
+  review_risk: 低〜中（課金導線）
+  verified: false
+- id: dist.capacitor
+  name: iOS/Android Capacitor シェル
+  best_for: Webコードを再利用しつつネイティブ機能を足す
+  pricing_bands: {free: —, usd5: —, usd10: 'Apple $99/年 ≒ $8.25/月', usd100: —}
+  store_billing: 'policy.apple.3_1_1 / 3_1_3b に従う'
+  depends_on: [Apple Developer Program（会社名義はD-U-N-S）, ネイティブ機能で4.2回避]
+  review_risk: 中（4.2・3.1.1）
+  verified: false
+- id: dist.expo
+  name: Expo / React Native 書き直し（EAS Update でOTA）
+  best_for: ネイティブ体験が売上を左右し、Webが安定した後
+  avoid_when: Webの仕様がまだ動いている（2重保守）
+  pricing_bands: {free: 'EAS 無料枠', usd5: —, usd10: —, usd100: 'EAS 有料プラン帯'}
+  depends_on: [Web安定, 共有ロジックの切り出し]
+  review_risk: 低（ネイティブ）・課金規則は同じ
+  verified: false
+- id: dist.native
+  name: Swift / Kotlin ネイティブ
+  best_for: OS機能が中核（カメラ・センサー・ウィジェット中心）
+  pricing_bands: {free: —, usd5: —, usd10: —, usd100: 開発費が主（AIコーディング費込みでTCO比較）}
+  depends_on: [プラットフォームごとの実装・保守]
+  review_risk: 低
+  verified: false
+decision_dependencies:
+- 'IAPの有無 → 課金アーキテクチャ（Stripe単独 / Stripe＋StoreKit＋Play Billing＋権利統合） → ストア審査リスク → 手取り率'
+- '配布順 → 必要アカウント（D-U-N-S・本人確認） → 公開日'
+acceptance:
+- 'iOSビルドで課金導線を出す画面が、IAP未導入なら0件（米国外ストア）'
+- 'TWA実行時（referrer android-app://）に Stripe Checkout へのリンクが0件'
+- 'ストア開発者アカウントの名義が会社名（個人名0件）'

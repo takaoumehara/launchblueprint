@@ -1,0 +1,25 @@
+# Blueprint v3 (draft) — CREATIVITY IS EVERYWHERE, LLC
+> 「作り方の作り方」。画面はすべて下の YAML/JSON から描画。数値の多くはサンプル（sample）。
+
+## 読み方
+- catalog/ai-usage.md: AI がこのデータを使う手順
+- catalog/schema.md: 項目の定義
+- catalog/DESIGN.md: 見た目のルール
+- blueprint-v3.md: 本文
+
+## データ（画面と同じもの）
+- data/index.json: 一覧
+- data/catalog.json: 技術カタログ（catalog-concept.html）
+- data/canvas.json: ノード図（canvas-concept.html）
+- data/compare-stripe.json: Stripe Connect の方式比較（compare-stripe.html）
+- data/rules.json: ルール台帳（rules-ledger.html）
+- data/build-vs-buy.json: 作る vs 全部入り（build-vs-buy.html）
+
+## 元データ（正）
+- project.blueprint.yaml: サンプルプロジェクトの選択
+- catalog/*.yaml: 15 領域のカタログ
+- catalog/rules.yaml, catalog/freshness.yaml, catalog/build_vs_buy.yaml, catalog/canvas.yaml
+
+## 画面
+- catalog-concept.html, canvas-concept.html, compare-stripe.html, rules-ledger.html, build-vs-buy.html
+- 各画面の script#bp-data に同じ JSON。link[rel=alternate] で JSON の場所。

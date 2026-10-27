@@ -1,0 +1,46 @@
+# Build vs Buy vs Platform 標準（CREATIVITY IS EVERYWHERE, LLC）
+domain: build_vs_buy
+name_ja: 作る／API／全部入り
+paths:
+  - id: bvb.build
+    what: AIコーディングで自前で作る（例：留守電テキスト返信を自前のコード＋通信APIで）
+    best_for: 差別化の核、独自のデータや見た目、顧客数が増えるほど原価を下げたい
+    avoid_when: 検証前、保守できる人がいない、規制対応を自分で持てない
+  - id: bvb.api
+    what: 部品だけ借りる（例：Twilio、Stripe、Resend）＋つなぎは自前
+    best_for: 通信・決済など規制と信頼性が重い所。原価は従量で透明
+    avoid_when: つなぎのコードも保守したくない
+  - id: bvb.platform
+    what: 全部入りの箱（例：GoHighLevel）。CRM・サイト・自動化・電話・レビューが一体
+    best_for: 早く売り始めたい、型どおりで良い、代理店として複数社を回す
+    avoid_when: 見た目や体験が差別化、データを自社に持ちたい、月額固定を避けたい
+tco_fields:   # 比較で必ず埋める
+  - setup_usd           # 初期費用（登録料・構築費）
+  - monthly_fixed_usd   # 月額固定
+  - per_use_usd         # 1件あたり（SMS 1通、通話1分）
+  - maintenance_h_month # 保守時間/月 × 時給
+  - ai_coding_usd       # AIコーディング費（作る時と直す時）
+  - time_to_launch_weeks
+  - time_to_revenue_weeks
+  - lock_in             # 低／中／高と、抜ける時に何を作り直すか
+  - control             # 見た目・データ・価格を自分で決められるか
+formula: |
+  月の総額 = 月額固定 + 顧客数 × (番号 + キャンペーン料 + 通数 × 1通の単価) + 保守時間 × 時給 + AI費/月
+  損益分岐 = (全部入りの固定 − 自前の固定) ÷ (自前の1社原価 − 全部入りの1社原価)
+  売上開始までの差 = (自前の残り開発週 − 全部入りの構築週) × 見込み月売上 ÷ 4.3
+verified_2026_10_26:
+  twilio_sms_us: {outbound: 0.0083, inbound: 0.0083, telco_fee_out: "0.0035〜0.005", failed_fee: 0.001, local_number_month: 1.15, tollfree_month: 2.15, url: "https://www.twilio.com/en-us/sms/pricing/us"}
+  twilio_voice_us: {make_min: 0.014, receive_local_min: 0.0085, receive_tollfree_min: 0.022, conversation_relay_min: 0.07, recording_min: 0.0025, url: "https://www.twilio.com/en-us/voice/pricing/us"}
+  a2p_10dlc: {brand_low_volume: 4.50, brand_standard: 46, campaign_vetting: 15, monthly_campaign: "1.50（低量混合）／2（個人）／10（標準）", wait: "最大5営業日（実際は数週かかる例あり）", url: "https://help.twilio.com/articles/1260803965530"}
+  gohighlevel: {starter: "$97/月（年$970）・3サブアカウント", unlimited: "$297/月（年$2,970）・無制限・電話/メールの再請求（上乗せなし）", pro_saas: "$497/月（年$4,970）・SaaSモード・上乗せ再請求", trial: 14日, sms: "$0.00747/通（Twilio定価の10%引き）＋通信会社料", a2p_bundle: "$22.50（低量）〜$64", addons: "AI Employee $50〜97/サブアカウント, HIPAA $297, 白ラベルアプリ $497", url: ["https://www.gohighlevel.com/pricing", "https://help.gohighlevel.com/support/solutions/articles/48001223556", "https://help.gohighlevel.com/support/solutions/articles/155000005200"]}
+answer_rules:
+  - "自前の総額には必ず『保守時間×時給』と『AIコーディング費/月』を入れる。分からなければ下の既定値を仮定として明示する"
+  - "結果は現金だけ（時給0）と時間込みの2通りで出す。どちらが勝つかが入れ替わることが多い"
+  - "A2P 10DLC はどの道でも必要（各社ごと）。全部入りでも待ち時間は消えない"
+default_assumptions:   # 仮定。実績が分かれば置き換える
+  maintenance_h_month: {build: 10, platform: 3, range: "build 5〜20 / platform 1〜6"}
+  hourly_value_usd: {default: 50, range: "0〜150"}
+  ai_coding_usd_month: {default: 200, range: "100〜400（記録なし）"}
+  infra_usd_month: {default: 25, note: "Workers Paid $5 + ホスト Pro $20"}
+  sms_per_client_month: {default: 150, range: "20〜600"}
+reference_result: "3社・現金のみ・AI費$100：自前 約$138/月 vs GoHighLevel $97プラン 約$109/月。4社目で GoHighLevel が $297 に上がり自前が安くなる。時間込み（10h×$50）だと GoHighLevel が有利（build-vs-buy.html で再計算）"

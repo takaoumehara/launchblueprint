@@ -1,0 +1,49 @@
+# Blueprint Tech Catalog — search
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: search
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: se.postgres-fts
+  name: Postgres 全文検索 / pgvector
+  what: DB内蔵の検索・ベクトル
+  best_for: 件数が少ない〜中
+  avoid_when: ''
+  pricing_bands:
+    free: DB 料金内
+    usd5: DB 料金内
+    usd10: DB 料金内
+    usd100: DB 料金内
+  limits: 日本語の形態素は工夫が要る
+  lock_in: 低
+  liability_compliance: —
+  security: —
+  pairs_well_with:
+  - db.supabase
+  - db.neon
+  source:
+    url: https://www.postgresql.org/docs/current/textsearch.html
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: se.algolia
+  name: Algolia
+  what: ホスト型検索
+  best_for: ECなど検索が主役
+  avoid_when: ''
+  pricing_bands:
+    free: $0：検索1万回/月、5万レコード
+    usd5: Grow：超過 $0.50/1,000検索
+    usd10: 同左
+    usd100: Grow Plus（AI機能）：$1.75/1,000検索
+  limits: 入力のたびに1検索として数える（インクリメンタル検索で増えやすい）
+  lock_in: 高
+  liability_compliance: —
+  security: 検索用キーを分ける
+  pairs_well_with:
+  - fe.nextjs
+  source:
+    url: https://www.algolia.com/pricing/
+    checked: '2026-10-26'
+    verified: true

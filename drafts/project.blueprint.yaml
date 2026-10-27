@@ -1,0 +1,30 @@
+# サンプル：イベント予約プラットフォーム（サンプルデータ）
+project: sample-event-booking
+tier: T2
+catalog_version: 2026-10-26
+budget_target: usd10        # 月$10帯を目標（R-012：無料は好み）
+selections:
+  - {domain: frontend, catalog_id: fe.nextjs, status: selected, reason: "LPと予約アプリを1つで。SEOが要る", rules: []}
+  - {domain: frontend, catalog_id: fe.expo, status: rejected, reason: "Not-to-build：ネイティブアプリ", rules: []}
+  - {domain: hosting, catalog_id: host.vercel, status: selected, reason: "Next.jsと相性。ただし商用なので Pro($20)が必要", rules: [R-004], budget_band: usd100}
+  - {domain: hosting, catalog_id: host.firebase-hosting, status: candidate, reason: "Firebase一式にするなら", rules: []}
+  - {domain: database, catalog_id: db.supabase, status: selected, reason: "予約は表形式のデータ。Postgresなら移行しやすい", rules: []}
+  - {domain: database, catalog_id: db.firestore, status: rejected, reason: "集計とJOINが多い。読み取り課金が読めない", rules: []}
+  - {domain: auth, catalog_id: auth.supabase, status: selected, reason: "DBと同じ場所、5万MAU無料。Google・メールリンク・匿名で開始", methods: [google, magic_link, anonymous], rules: []}
+  - {domain: auth, catalog_id: auth.clerk, status: candidate, reason: "UIが速い。ただし無料の参加者が多いと割高", rules: []}
+  - {domain: auth, catalog_id: auth.auth0, status: rejected, reason: "無料枠超えで急に高い", rules: []}
+  - {domain: payments, catalog_id: pay.stripe-connect, option: standard, status: selected, reason: "Direct chargesなら紛争・返金は主催者。自社は場の提供", rules: [R-006]}
+  - {domain: payments, catalog_id: pay.stripe-connect, option: express, status: rejected, reason: "紛争・不正・マイナス残高が自社に来る。$2/アクティブ月", rules: [R-006]}
+  - {domain: payments, catalog_id: pay.stripe-connect, option: custom, status: rejected, reason: "KYC・サポートを全部自社で持つ", rules: [R-006]}
+  - {domain: hosting, catalog_id: host.cloudflare-pages, status: candidate, reason: "月$5で商用可・転送料なし。Next.js の一部機能は要検証", rules: [R-012]}
+  - {domain: storage_media, catalog_id: st.supabase-storage, status: selected, reason: "DBと同じ権限設定（RLS）で画像を守れる", rules: []}
+  - {domain: analytics, catalog_id: an.posthog, status: selected, reason: "毎月100万イベント無料、上限で止まり課金されない", rules: [R-012]}
+  - {domain: realtime, catalog_id: rt.supabase-realtime, status: selected, reason: "残席の表示だけ。無料の同時200接続で足りる", rules: []}
+  - {domain: ci_cd, catalog_id: ci.vercel-git, status: selected, reason: "push でプレビュー。本番は main だけ", rules: [L30]}
+  - {domain: security, catalog_id: sec.vercel-firewall, status: selected, reason: "申込と決済APIにレート制限", rules: []}
+  - {domain: search, catalog_id: se.postgres-fts, status: selected, reason: "イベントは数百件。外部検索は不要", rules: []}
+  - {domain: search, catalog_id: se.algolia, status: rejected, reason: "件数が少なく、1文字ごとに課金される", rules: []}
+  - {domain: ai_llm, catalog_id: ai.gateway, status: candidate, reason: "紹介文の下書きに使うなら", rules: []}
+  - {domain: backend, catalog_id: be.route-handlers, status: selected, reason: "Next.js と同居。長い処理はない", rules: []}
+  - {domain: email_notifications, catalog_id: mail.resend, status: selected, reason: "予約確認メール。無料3,000通/月で開始", rules: []}
+  - {domain: monitoring, catalog_id: mon.sentry, status: selected, reason: "T2で必要。無料は1人まで、チームなら$26", rules: []}

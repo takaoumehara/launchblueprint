@@ -1,0 +1,114 @@
+<!doctype html><html lang="ja" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blueprint — canvas (round 3, art-first)</title><meta name="color-scheme" content="light dark">
+<script type="application/json" id="bp-data">__CANVAS__</script>
+<link rel="alternate" type="application/json" href="../data/canvas.json" title="machine-readable data"><link rel="help" href="../llms.txt">
+<style>
+:root{--font:"Geist",ui-sans-serif,system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace;--ease:cubic-bezier(.23,1,.32,1)}
+html{--bg:#fff;--ink:oklch(.16 0 0);--mu:oklch(.5 0 0);--fa:oklch(.7 0 0);--ac:oklch(.6 .2 32);--ac-tx:oklch(.53 .2 32)}
+html[data-theme=dark]{--bg:oklch(.12 0 0);--ink:oklch(.97 0 0);--mu:oklch(.66 0 0);--fa:oklch(.42 0 0);--ac:oklch(.72 .17 40);--ac-tx:oklch(.78 .14 40)}
+*{box-sizing:border-box;border-radius:0}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:400 13px/1.5 var(--font);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:1.5px solid var(--ac);outline-offset:3px}
+svg#art{position:fixed;inset:0;width:100%;height:100%;display:block}
+.s{fill:none;stroke-linecap:round}
+#bund g{transition:opacity 180ms var(--ease)}
+#bund.focus g{opacity:.1}#bund.focus g.on{opacity:1}#bund.focus g.on path{stroke:var(--ink);stroke-opacity:.55;transition:stroke-opacity 180ms var(--ease)}
+.dot{fill:var(--ink)}.dot.open{fill:var(--bg);stroke:var(--ink);stroke-width:1}
+.nd{cursor:pointer;outline:none}.nd .hit{fill:transparent}
+.nd text{font:500 11px var(--font);fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round;opacity:0;transition:opacity 180ms var(--ease)}
+.nd text.m{font:400 9.5px var(--mono);fill:var(--mu)}
+.nd.lab text{opacity:.55}.nd.tr text{opacity:1}.nd.tr text.l{fill:var(--ac-tx)}
+.nd.tr .dot{fill:var(--ac);stroke:none}
+#art.focus .nd text{opacity:0}#art.focus .nd.on text{opacity:1}#art.focus .nd:not(.on) .dot{opacity:.25}
+.nd:focus-visible .ring{stroke:var(--ac)}
+.ring{fill:none;stroke:transparent;stroke-width:1}
+.head{font:500 10px var(--mono);letter-spacing:.08em;fill:var(--mu);text-transform:uppercase}
+.headn{font:400 10px var(--mono);fill:var(--fa)}
+.big{font:200 160px/1 var(--font);letter-spacing:-.06em;fill:var(--ink)}
+.comet{fill:none;stroke:var(--ac);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:60 3000;animation:c 3.2s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes c{from{stroke-dashoffset:60}to{stroke-dashoffset:-1700}}
+/* corner meta (frames the piece) */
+.cm{position:fixed;font:500 10px/1.6 var(--mono);letter-spacing:.06em;color:var(--mu);text-transform:uppercase;z-index:3}
+.cm a{color:inherit;text-decoration:none}@media(hover:hover){.cm a:hover{color:var(--ink)}}
+.tl{top:28px;left:40px}.tl b{color:var(--ink);font-weight:500}.tr{top:28px;right:40px;text-align:right}.bl{bottom:28px;left:40px}
+/* chrome: hidden at rest, reveals on hover/focus of the top-right zone */
+.hud{position:fixed;top:0;right:0;padding:20px 32px 24px 64px;display:flex;gap:2px;z-index:4;opacity:0;transform:translateY(-4px);transition:opacity 160ms var(--ease),transform 160ms var(--ease)}
+.hud:hover,.hud:focus-within,body.kb .hud{opacity:1;transform:none}
+.hud button{height:44px;min-width:44px;padding:0 12px;font:500 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mu);background:var(--bg)}
+.hud button[aria-pressed=true]{color:var(--ink);box-shadow:inset 0 -1px 0 var(--ink)}
+@media(hover:hover){.hud button:hover{color:var(--ink)}}
+.tr{transition:opacity 160ms var(--ease)}body:has(.hud:hover) .tr,body:has(.hud:focus-within) .tr{opacity:0}
+/* detail */
+.card{position:fixed;top:0;right:0;bottom:0;width:380px;background:var(--bg);padding:88px 40px 40px;box-shadow:inset 1px 0 0 color-mix(in oklch,var(--ink) 10%,transparent);transform:translateX(24px);opacity:0;pointer-events:none;transition:transform 220ms var(--ease),opacity 220ms var(--ease);z-index:5;overflow:auto}
+.card.open{transform:none;opacity:1;pointer-events:auto}
+.card .k{font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+.card h2{font:500 32px/1.1 var(--font);letter-spacing:-.03em;margin:14px 0 14px;text-wrap:balance}
+.card p{color:var(--mu);font-size:14px;margin:0 0 32px;text-wrap:pretty}
+.card dl{display:grid;grid-template-columns:72px 1fr;gap:12px 16px;margin:0;font-size:13px}
+.card dt{font:500 10px/20px var(--mono);letter-spacing:.06em;color:var(--mu)}.card dd{margin:0}
+.card dd i{font-style:normal;color:var(--fa);font:400 10px var(--mono);margin-left:6px}
+.card .p{margin-top:32px;font:400 10px var(--mono);color:var(--mu)}
+.card .x{position:absolute;top:20px;right:24px;width:44px;height:44px;color:var(--mu);font:500 10px var(--mono);letter-spacing:.06em}
+@media (prefers-reduced-motion:reduce){.comet{animation:none;display:none}.card,.hud,#bund g,.nd text{transition:opacity 120ms linear!important;transform:none!important}}
+</style></head><body>
+<svg id="art" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid meet" role="img" aria-label="プロジェクトのノードグラフ。データは /data/canvas.json"><defs id="defs"></defs><g id="heads"></g><g id="bund"></g><g id="cometg"></g><g id="nodes"></g><text class="head" x="1540" y="790" text-anchor="end">Trace — 選んだ道筋のステップ数</text><text id="big" class="big" x="1546" y="940" text-anchor="end"></text></svg>
+<div class="cm tl"><b>Blueprint</b> — Canvas<br>CREATIVITY IS EVERYWHERE, LLC</div>
+<div class="cm tr" aria-hidden="true">Sample · 2026-10-26<br><span id="cnt"></span></div>
+<div class="cm bl"><a href="../data/canvas.json">/data/canvas.json</a> · <a href="../llms.txt">llms.txt</a><br><span id="hint">Hover a dot · Click for detail · T trace</span></div>
+<nav class="hud" aria-label="表示"><button id="bt" aria-pressed="true">Trace</button><button id="bl" aria-pressed="false">Labels</button><button id="th" aria-pressed="false">Dark</button></nav>
+<aside class="card" id="card" aria-live="polite"></aside>
+<script>
+const D=JSON.parse(document.getElementById('bp-data').textContent),NS='http://www.w3.org/2000/svg',$=i=>document.getElementById(i),ST={done:'決定',open:'仮',lock:'ロック'};
+const q=new URLSearchParams(location.search);if(q.get('theme'))document.documentElement.dataset.theme=q.get('theme');
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function rng(s){return()=>((s=Math.imul(s^s>>>15,2246822507)^Math.imul(s^s>>>13,3266489909),(s^=s>>>16)>>>0)/4294967296)}
+function hash(t){let h=2166136261;for(const c of t)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+// composition: compact mass, left-weighted, big margins (≥70% empty)
+const X0=200,CW=232,Y0=372,GAP=70,P={},by={},cols={};
+D.fields.forEach((f,i)=>cols[f.id]={i,n:0,name:f.name});
+D.nodes.forEach(n=>{const c=cols[n.field];P[n.id]={x:X0+c.i*CW,y:Y0+c.n*GAP};c.n++;by[n.id]=n});
+const TR=new Set(D.trace),TP=new Set(D.trace.slice(1).map((b,i)=>D.trace[i]+'>'+b));
+for(const id in cols){const c=cols[id],x=X0+c.i*CW;el('text',{x,y:Y0-64,class:'headn'},$('heads')).textContent=String(c.i+1).padStart(2,'0');el('text',{x,y:Y0-48,class:'head'},$('heads')).textContent=c.name}
+$('big').textContent=String(D.trace.length).padStart(2,'0');$('cnt').textContent=`${D.nodes.length} nodes · ${D.edges.length} links · trace ${D.trace.length}`;
+// bundles: strands pinch at endpoints, fan in middle; opacity gradient along path toward target
+const defs=$('defs'),B=$('bund'),groups=[];
+D.edges.forEach(([a,b,k],ei)=>{const p=P[a],r=P[b];if(!p||!r)return;const tr=TP.has(a+'>'+b),cand=k=='candidate';
+ const n=tr?16:cand?10:20,R=rng(hash(a+b)),g=el('g',{},B);g.dataset.a=a;g.dataset.b=b;groups.push(g);
+ const gid='g'+ei,hi=tr?.9:cand?.14:.42,lo=tr?.25:cand?.02:.06,col=tr?'var(--ac)':'var(--ink)';
+ const gr=el('linearGradient',{id:gid,gradientUnits:'userSpaceOnUse',x1:p.x,y1:p.y,x2:r.x,y2:r.y},defs);
+ el('stop',{offset:0,'stop-color':col,'stop-opacity':lo},gr);el('stop',{offset:.55,'stop-color':col,'stop-opacity':(lo+hi)/2},gr);el('stop',{offset:1,'stop-color':col,'stop-opacity':hi},gr);
+ const same=p.x==r.x,dist=Math.hypot(r.x-p.x,r.y-p.y),spread=Math.min(tr?60:46,(tr?16:10)+dist*.08);
+ for(let i=0;i<n;i++){const t=n>1?i/(n-1)-.5:0,j=(R()-.5)*.6;let d;
+  if(same){const bx=p.x-20-Math.abs(r.y-p.y)*.5;d=`M${p.x},${p.y} C${bx+t*spread*.8},${p.y+t*6} ${bx+t*spread*.8},${r.y+t*6} ${r.x},${r.y}`}
+  else{const dx=Math.abs(r.x-p.x)*.5,s=r.x>p.x?1:-1;d=`M${p.x},${p.y+t*1.2} C${p.x+s*dx},${p.y+(t+j)*spread} ${r.x-s*dx},${r.y+(t-j)*spread} ${r.x},${r.y+t*.6}`}
+  el('path',{d,class:'s',stroke:`url(#${gid})`,'stroke-width':tr?.55:.4},g)}
+ if(tr){const c=g.lastChild.getAttribute('d');el('path',{d:g.children[Math.floor(n/2)].getAttribute('d'),class:'comet'},$('cometg'))}});
+// nodes: circles only
+D.nodes.forEach(n=>{const p=P[n.id],g=el('g',{class:'nd'+(TR.has(n.id)?' tr':''),tabindex:0,role:'button','aria-label':`${n.label}（${ST[n.state]}）${n.flag?' 要確認':''}`,transform:`translate(${p.x},${p.y})`},$('nodes'));g.dataset.id=n.id;
+ el('rect',{class:'hit',x:-14,y:-22,width:200,height:44},g);el('circle',{class:'ring',r:9},g);
+ el('circle',{class:'dot'+(n.state=='open'&&!TR.has(n.id)?' open':''),r:TR.has(n.id)?4:n.state=='lock'?3.5:3},g);
+ if(n.flag)el('circle',{cx:0,cy:-11,r:1.6,fill:'var(--ac)'},g);
+ el('text',{x:12,y:-2,class:'l'},g).textContent=n.label;el('text',{x:12,y:11,class:'m'},g).textContent=[ST[n.state],n.rule].filter(Boolean).join(' · ');
+ g.onmouseenter=()=>focusN(n.id);g.onmouseleave=()=>sel||focusN(null);g.onfocus=()=>focusN(n.id);g.onblur=()=>sel||focusN(null);
+ g.onclick=e=>{e.stopPropagation();openN(n.id)};g.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();openN(n.id)}}});
+let sel=null;
+function focusN(id){const art=$('art');if(!id){art.classList.remove('focus');B.classList.remove('focus');document.querySelectorAll('.nd.on').forEach(x=>x.classList.remove('on'));$('cometg').style.opacity='';return}
+ const nb=new Set([id]);groups.forEach(g=>{const on=g.dataset.a==id||g.dataset.b==id;g.classList.toggle('on',on);if(on){nb.add(g.dataset.a);nb.add(g.dataset.b)}});
+ art.classList.add('focus');B.classList.add('focus');document.querySelectorAll('.nd').forEach(x=>x.classList.toggle('on',nb.has(x.dataset.id)));$('cometg').style.opacity=TR.has(id)?'':'0'}
+function openN(id){sel=id;focusN(id);const n=by[id],f=D.fields.find(x=>x.id==n.field),ins=D.edges.filter(e=>e[1]==id),outs=D.edges.filter(e=>e[0]==id);
+ const li=(arr,ix)=>arr.map(e=>esc(by[e[ix]]?.label||e[ix])+(e[2]=='candidate'?'<i>候補</i>':'')).join('<br>')||'—';
+ $('card').innerHTML=`<button class="x" id="cx" aria-label="閉じる">ESC</button><div class="k">${String(cols[n.field].i+1).padStart(2,'0')} ${esc(f.name)} · ${ST[n.state]}${n.rule?' · '+n.rule:''}</div><h2>${esc(n.label)}</h2><p>${esc(n.note||'')}</p>
+ <dl>${n.catalog?`<dt>CATALOG</dt><dd>${esc(D.names[n.catalog]||n.catalog)}</dd>`:''}<dt>IN</dt><dd>${li(ins,0)}</dd><dt>OUT</dt><dd>${li(outs,1)}</dd>${n.flag?'<dt>FLAG</dt><dd style="color:var(--ac-tx)">AIレビューの要確認あり</dd>':''}</dl><div class="p">data/canvas.json → nodes[id="${id}"]</div>`;
+ $('card').classList.add('open');$('cx').onclick=closeN;$('cx').focus({preventScroll:true})}
+function closeN(){if(!sel)return;const id=sel;sel=null;$('card').classList.remove('open');focusN(null);document.querySelector(`.nd[data-id="${id}"]`)?.focus({preventScroll:true})}
+$('art').addEventListener('click',closeN);
+const setTrace=on=>{$('bt').setAttribute('aria-pressed',on);document.querySelectorAll('.nd.tr').forEach(x=>x.classList.toggle('tr',on));};
+let trOn=true;$('bt').onclick=()=>{trOn=!trOn;$('bt').setAttribute('aria-pressed',trOn);$('cometg').style.display=trOn?'':'none';document.querySelectorAll('.nd').forEach(x=>x.classList.toggle('tr',trOn&&TR.has(x.dataset.id)))};
+$('bl').onclick=()=>{const on=$('bl').getAttribute('aria-pressed')!='true';$('bl').setAttribute('aria-pressed',on);document.querySelectorAll('.nd').forEach(x=>x.classList.toggle('lab',on))};
+const thl=()=>{const d=document.documentElement.dataset.theme=='dark';$('th').textContent=d?'Light':'Dark';$('th').setAttribute('aria-pressed',d)};thl();
+$('th').onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme=='dark'?'light':'dark';thl()};
+addEventListener('keydown',e=>{if(e.key=='Tab')document.body.classList.add('kb');if(e.metaKey||e.ctrlKey||e.altKey)return;if(e.key=='Escape')closeN();if(e.key=='t'||e.key=='T')$('bt').click();if(e.key=='l'||e.key=='L')$('bl').click()});
+addEventListener('pointerdown',()=>document.body.classList.remove('kb'));
+</script></body></html>

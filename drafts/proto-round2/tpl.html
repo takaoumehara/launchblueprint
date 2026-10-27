@@ -1,0 +1,208 @@
+<!doctype html><html lang="ja" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blueprint — round 2 prototype (A Editorial / B Instrument / C Line art)</title>
+<meta name="color-scheme" content="light dark">
+<script type="application/json" id="bp-data">__CANVAS__</script>
+<script type="application/json" id="bp-data-compare">__COMPARE__</script>
+<link rel="alternate" type="application/json" href="../data/canvas.json" title="machine-readable data (canvas)">
+<link rel="alternate" type="application/json" href="../data/compare-stripe.json" title="machine-readable data (compare)">
+<link rel="help" href="../llms.txt">
+<style>
+@font-face{font-family:Geist;src:local("Geist")}
+:root{--font:"Geist",ui-sans-serif,system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace;
+--ease:cubic-bezier(.23,1,.32,1);--hair:1px}
+@media (min-resolution:2dppx){:root{--hair:.5px}}
+/* palettes per direction × theme. near-monochrome; one accent reserved for the selected trace */
+html{--bg:#fff;--tx:oklch(.18 0 0);--mu:oklch(.48 0 0);--fa:oklch(.66 0 0);--ln:oklch(.18 0 0/.1);--ink:oklch(.18 0 0)}
+html[data-theme=dark]{--bg:oklch(.13 0 0);--tx:oklch(.97 0 0);--mu:oklch(.7 0 0);--fa:oklch(.52 0 0);--ln:oklch(1 0 0/.11);--ink:oklch(.97 0 0)}
+body[data-v="1"]{--ac:oklch(.56 .21 28);--ac-tx:oklch(.52 .21 28)}           /* A: editorial vermilion */
+html[data-theme=dark] body[data-v="1"]{--ac:oklch(.68 .19 30);--ac-tx:oklch(.74 .16 30)}
+body[data-v="2"]{--ac:oklch(.68 .19 50);--ac-tx:oklch(.55 .17 50)}            /* B: signal orange */
+html[data-theme=dark] body[data-v="2"]{--ac:oklch(.76 .17 60);--ac-tx:oklch(.8 .15 60);--bg:oklch(.11 0 0)}
+body[data-v="3"]{--ac:oklch(.6 .19 245);--ac-tx:oklch(.5 .19 245)}            /* C: electric blue (not indigo) */
+html[data-theme=dark] body[data-v="3"]{--ac:oklch(.74 .15 230);--ac-tx:oklch(.8 .12 230)}
+*{box-sizing:border-box;border-radius:0}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:400 14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+/* top bar: no box, a hairline */
+.bar{position:fixed;inset:0 0 auto 0;height:52px;display:flex;align-items:center;gap:24px;padding:0 24px;box-shadow:inset 0 calc(-1*var(--hair)) 0 var(--ln);background:var(--bg);z-index:5}
+.mark{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em;color:var(--tx);text-decoration:none}
+.mark i{width:10px;height:10px;background:var(--ink);display:block}
+.tabs{display:flex;gap:4px}
+.tabs button{height:44px;padding:0 12px;color:var(--mu);font-size:13px;box-shadow:inset 0 -2px 0 transparent;transition:color 150ms var(--ease),box-shadow 150ms var(--ease)}
+.tabs button[aria-selected=true]{color:var(--tx);box-shadow:inset 0 -2px 0 var(--ink)}
+@media(hover:hover){.tabs button:hover{color:var(--tx)}}
+.sp{flex:1}.meta{font:500 11px var(--mono);color:var(--mu);letter-spacing:.02em;text-decoration:none}
+.th{height:44px;min-width:44px;padding:0 10px;font:500 11px var(--mono);color:var(--mu);letter-spacing:.04em;text-transform:uppercase}
+@media(hover:hover){.th:hover,.meta:hover{color:var(--tx)}}
+#stage{position:fixed;inset:52px 0 0 0}
+svg.cv{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+/* wires: 3 crisp opacity tiers */
+.w{fill:none;stroke:var(--ink);transition:stroke-opacity 200ms var(--ease)}
+.w.t1{stroke-opacity:.5}.w.t2{stroke-opacity:.16}.w.t3{stroke-opacity:.06}
+.w.hot{stroke:var(--ac);stroke-opacity:1}
+.flow{fill:none;stroke:var(--ac);stroke-dasharray:2 14;stroke-linecap:square;animation:flow 1.6s linear infinite;pointer-events:none}
+@keyframes flow{to{stroke-dashoffset:-32}}
+.nd{cursor:pointer;transition:opacity 200ms var(--ease)}.nd.dim{opacity:.42}
+.nd:focus-visible{outline:none}.nd:focus-visible .hit{stroke:var(--ac);stroke-width:2}
+.hit{fill:transparent}
+.lab{fill:var(--tx)}.sub{font-family:var(--mono);fill:var(--mu)}
+.nd.on .lab{fill:var(--ac-tx)}
+.ch{fill:var(--tx);font-weight:600}.cc{font-family:var(--mono);fill:var(--mu)}
+/* detail panel: hairline, no box shadow */
+.card{position:fixed;top:52px;right:0;bottom:0;width:360px;background:var(--bg);box-shadow:inset var(--hair) 0 0 var(--ln);padding:28px;transform:translateX(100%);transition:transform 240ms var(--ease);z-index:4;overflow:auto}
+.card.open{transform:none}
+.card .k{font:500 11px var(--mono);color:var(--mu);letter-spacing:.06em;text-transform:uppercase}
+.card h2{font-size:28px;line-height:1.15;letter-spacing:-.025em;margin:10px 0 12px;font-weight:600;text-wrap:balance}
+.card p{color:var(--mu);margin:0 0 20px;text-wrap:pretty}
+.card dl{margin:0;display:grid;grid-template-columns:88px 1fr;gap:10px 12px;font-size:13px}
+.card dt{font:500 11px/20px var(--mono);color:var(--mu)}.card dd{margin:0}
+.card .path{margin-top:24px;font:500 11px var(--mono);color:var(--mu);padding-top:12px;box-shadow:inset 0 var(--hair) 0 var(--ln)}
+.card .x{position:absolute;top:12px;right:12px;width:44px;height:44px;color:var(--mu)}
+.legend{position:fixed;left:24px;bottom:20px;display:flex;gap:20px;font:500 11px var(--mono);color:var(--mu);z-index:3}
+.legend span{display:flex;gap:8px;align-items:center}
+/* compare screen */
+.cmp{position:absolute;inset:0;overflow:auto;padding:56px 48px 120px}
+.cmp .q{max-width:900px}
+.cmp .eyebrow{font:500 11px var(--mono);color:var(--mu);letter-spacing:.06em;text-transform:uppercase}
+.cmp h1{margin:12px 0 40px;font-weight:600;letter-spacing:-.03em;text-wrap:balance}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:40px}
+.opt{padding-top:20px;box-shadow:inset 0 var(--hair) 0 var(--ln)}
+.opt.sel{box-shadow:inset 0 3px 0 var(--ac)}
+.opt .nm{font-weight:600;letter-spacing:-.02em;display:flex;align-items:baseline;gap:12px}
+.opt .st{font:500 11px var(--mono);color:var(--mu);letter-spacing:.06em;text-transform:uppercase}
+.opt.sel .st{color:var(--ac-tx)}
+.opt dl{margin:20px 0 0;font-size:13.5px}.opt dt{font:500 11px var(--mono);color:var(--mu);margin-top:16px}.opt dd{margin:4px 0 0;text-wrap:pretty}
+.opt.rej dd{color:var(--mu)}
+.rec{margin-top:48px;max-width:720px;font-size:15px;padding-left:20px;box-shadow:inset 3px 0 0 var(--ac)}
+.rec b{display:block;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ac-tx);margin-bottom:6px}
+.src{margin-top:40px;font:500 11px/1.9 var(--mono);color:var(--mu)}.src a{color:inherit}
+/* A Editorial: huge heads, serif-free editorial grid, numbered */
+body[data-v="1"] .ch{font-size:30px;letter-spacing:-.035em}
+body[data-v="1"] .cmp h1{font-size:48px;line-height:1.05}
+body[data-v="1"] .opt .nm{font-size:28px}
+/* B Instrument: mono-forward, ruler grid, small caps everywhere */
+body[data-v="2"] .ch{font-size:15px;letter-spacing:.06em;text-transform:uppercase;font-family:var(--mono);font-weight:500}
+body[data-v="2"] .cmp h1{font-size:28px;line-height:1.2;font-weight:500}
+body[data-v="2"] .opt .nm{font-size:18px;font-family:var(--mono);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+body[data-v="2"] .opts{column-gap:0}
+body[data-v="2"] .opt{padding:20px 20px 24px;box-shadow:inset var(--hair) var(--hair) 0 var(--ln)}
+body[data-v="2"] .opt.sel{box-shadow:inset var(--hair) 3px 0 var(--ac)}
+/* C Line art: light type, lines as the hero */
+body[data-v="3"] .ch{font-size:22px;font-weight:500;letter-spacing:-.02em}
+body[data-v="3"] .cmp h1{font-size:36px;font-weight:500;line-height:1.1}
+body[data-v="3"] .opt .nm{font-size:22px;font-weight:500}
+@media (prefers-reduced-motion:reduce){.flow{animation:none;stroke-dasharray:none}.card{transition:none}*{transition-duration:0ms!important}}
+@media (max-width:760px){.opts{grid-template-columns:1fr;row-gap:32px}.cmp{padding:32px 20px 120px}.card{width:100%}.legend{display:none}.tabs button{padding:0 8px}}
+/* --- picker: verbatim from emil:prototype PICKER.md (harness chrome, not part of the design) --- */
+.proto-picker{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:2147483647;display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px;background:rgba(10,10,10,.82);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 8px 24px rgba(0,0,0,.24),0 2px 6px rgba(0,0,0,.12);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px;line-height:1;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none}
+.proto-picker-highlight{position:absolute;top:4px;left:0;height:28px;border-radius:999px;background:rgba(255,255,255,.12);will-change:transform}
+.proto-picker[data-ready] .proto-picker-highlight{transition:transform 250ms cubic-bezier(.23,1,.32,1),width 250ms cubic-bezier(.23,1,.32,1)}
+@media (prefers-reduced-motion:reduce){.proto-picker[data-ready] .proto-picker-highlight{transition:none}}
+.proto-picker-item{position:relative;display:flex;align-items:center;height:28px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:rgba(255,255,255,.55);font:inherit;cursor:pointer;transition:color 150ms ease-out}
+.proto-picker-item:hover{color:rgba(255,255,255,.85)}.proto-picker-item:active{transform:scale(.97)}
+.proto-picker-item:focus-visible{outline:2px solid rgba(255,255,255,.4);outline-offset:2px}
+.proto-picker-item[data-active]{color:#fff}
+.proto-picker-divider{width:1px;height:16px;margin:0 4px;background:rgba(255,255,255,.12)}
+.proto-picker-replay{padding:0 10px;font-size:14px}
+html.shot .proto-picker{display:none}
+</style></head>
+<body data-v="1">
+<header class="bar"><a class="mark" href="../llms.txt"><i></i>Blueprint</a>
+<div class="tabs" role="tablist" aria-label="画面"><button role="tab" data-s="canvas" aria-selected="true">キャンバス</button><button role="tab" data-s="compare" aria-selected="false">比較：Stripe Connect</button></div>
+<span class="sp"></span><a class="meta" id="dl" href="../data/canvas.json" title="この画面のデータ（機械可読 JSON）">/data/canvas.json</a><span class="meta">SAMPLE</span>
+<button class="th" id="th" aria-pressed="false">Dark</button></header>
+<main id="stage"></main>
+<aside class="card" id="card" aria-live="polite"></aside>
+<nav class="proto-picker" aria-label="Prototype variants">
+<span class="proto-picker-highlight" aria-hidden="true"></span>
+<button class="proto-picker-item">Editorial</button><button class="proto-picker-item">Instrument</button><button class="proto-picker-item">Line art</button>
+<span class="proto-picker-divider" aria-hidden="true"></span>
+<button class="proto-picker-item proto-picker-replay" aria-label="Replay animation (R)">↻</button></nav>
+<script>
+const D=JSON.parse(document.getElementById('bp-data').textContent),C=JSON.parse(document.getElementById('bp-data-compare').textContent);
+const NS='http://www.w3.org/2000/svg',$=i=>document.getElementById(i),ST={done:'決定',open:'仮',lock:'ロック'};
+const qs=new URLSearchParams(location.search);let screen=qs.get('s')||'canvas';
+if(qs.get('theme'))document.documentElement.dataset.theme=qs.get('theme');if(qs.has('shot'))document.documentElement.classList.add('shot');
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e}
+function rng(s){return()=>((s=Math.imul(s^s>>>15,2246822507)^Math.imul(s^s>>>13,3266489909),(s^=s>>>16)>>>0)/4294967296)}
+function hash(t){let h=2166136261;for(const c of t)h=Math.imul(h^c.charCodeAt(0),16777619);return h>>>0}
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* direction configs: layout + node mark + bundle density */
+const CFG={
+ 1:{cw:300,gap:84,nw:220,headY:64,y0:128,strands:{decided:1,candidate:4},sw:.7,mark:'rule',lab:15,sub:10.5,cc:'',jit:8},
+ 2:{cw:270,gap:64,nw:190,headY:56,y0:112,strands:{decided:1,candidate:6},sw:.5,mark:'square',lab:12.5,sub:10,cc:'',jit:5,grid:true},
+ 3:{cw:290,gap:76,nw:24,headY:60,y0:120,strands:{decided:3,candidate:14},sw:.45,mark:'circle',lab:13,sub:10,cc:'',jit:18}};
+let V=1,selected=null,tracing=false,P={},WI=[],G;
+function canvas(){
+ const c=CFG[V],st=$('stage');st.innerHTML='';const svg=el('svg',{class:'cv',role:'img','aria-label':'プロジェクトのノードグラフ（データは /data/canvas.json）'},st);
+ G=el('g',{},svg);const gW=el('g',{},G),gF=el('g',{},G),gN=el('g',{},G),gC=el('g',{},G);
+ const cols={};D.fields.forEach((f,i)=>cols[f.id]={i,n:0,name:f.name});P={};const by={};
+ D.nodes.forEach(n=>{const k=cols[n.field];P[n.id]={x:80+k.i*c.cw,y:c.y0+k.n*c.gap};k.n++;by[n.id]=n});
+ const maxN=Math.max(...Object.values(cols).map(k=>k.n));
+ if(c.grid){for(let i=0;i<D.fields.length;i++){const x=80+i*c.cw-20;el('path',{d:`M${x},20 V${c.y0+maxN*c.gap}`,stroke:'var(--ln)','stroke-width':1},gC);for(let y=c.y0;y<c.y0+maxN*c.gap;y+=c.gap/4)el('path',{d:`M${x},${y} h${y%c.gap<1?8:4}`,stroke:'var(--fa)','stroke-width':.6},gC)}}
+ for(const id in cols){const k=cols[id],x=80+k.i*c.cw,num=String(k.i+1).padStart(2,'0');
+  const cc=el('text',{x,y:c.headY-(V==1?36:24),class:'cc','font-size':10.5},gC);cc.textContent=`${num} / ${k.n} NODES`;
+  const t=el('text',{x,y:c.headY,class:'ch'},gC);t.textContent=k.name;
+  if(V!=3)el('rect',{x,y:c.headY+14,width:c.nw,height:V==1?2:1,fill:'var(--ink)'},gC)}
+ const port=(id,out)=>{const p=P[id];return V==3?{x:p.x+12,y:p.y}:{x:out?p.x+c.nw:p.x-(V==1?0:6),y:p.y}};
+ WI=[];D.edges.forEach(([a,b,k])=>{if(!P[a]||!P[b])return;const back=P[b].x<=P[a].x,o=port(a,!back),i=port(b,back);const n=c.strands[k=='candidate'?'candidate':'decided'],r=rng(hash(a+b));
+  for(let s=0;s<n;s++){const j=n>1?(r()-.5)*c.jit:0;let d;
+   if(P[a].x==P[b].x){const bx=o.x+(V==3?-50:-40)-Math.abs(i.y-o.y)*.1+j;const x0=V==3?o.x:P[a].x-(V==1?0:6);d=`M${x0},${o.y} C${bx},${o.y+j} ${bx},${i.y+j} ${x0},${i.y}`}
+   else{const dx=Math.max(50,Math.abs(i.x-o.x)*(.42+r()*.16)),sg=i.x>=o.x?1:-1;d=`M${o.x},${o.y} C${o.x+sg*dx},${o.y+j} ${i.x-sg*dx},${i.y+j*.6} ${i.x},${i.y}`}
+   const e=el('path',{d,class:'w',stroke:'var(--ink)','stroke-width':k=='candidate'?c.sw:c.sw*1.6},gW);e.dataset.a=a;e.dataset.b=b;e.dataset.k=k;WI.push(e)}});
+ D.nodes.forEach(n=>{const p=P[n.id],g=el('g',{class:'nd',tabindex:0,role:'button','aria-label':`${n.label}（${ST[n.state]}）`,transform:`translate(${p.x},${p.y})`},gN);g.dataset.id=n.id;
+  const lx=V==3?30:V==2?8:0;
+  el('rect',{class:'hit',x:V==3?-6:-10,y:-22,width:V==3?c.cw-40:c.nw+20,height:44},g);
+  if(V==1){el('rect',{x:0,y:16,width:c.nw,height:1,fill:'var(--ln)'},g)}
+  if(V==2){el('rect',{x:-10,y:-4,width:8,height:8,fill:n.state=='open'?'var(--bg)':'var(--ink)',stroke:'var(--ink)','stroke-width':1},g);el('rect',{x:c.nw,y:-3,width:6,height:6,fill:'var(--ink)'},g)}
+  if(V==3){const rr=n.state=='done'?6:n.state=='lock'?7:5;el('circle',{cx:12,cy:0,r:rr,fill:n.state=='open'?'var(--bg)':'var(--ink)',stroke:'var(--ink)','stroke-width':1.2},g)}
+  const l=el('text',{x:lx,y:V==3?-2:-2,class:'lab','font-size':c.lab,'font-weight':V==1?600:500},g);l.textContent=n.label;
+  const s=el('text',{x:lx,y:13,class:'sub','font-size':c.sub},g);s.textContent=[ST[n.state],n.rule,n.compare?'比較':'',n.flag?'要確認':''].filter(Boolean).join('  ·  ');
+  if(n.flag)el('circle',{cx:(V==3?30:lx)+l.getComputedTextLength()+10,cy:-6,r:3,fill:'var(--ac)'},g);
+  g.onmouseenter=()=>!selected&&!tracing&&paint(nbr(n.id));g.onmouseleave=()=>!selected&&!tracing&&paint(null);
+  g.onclick=e=>{e.stopPropagation();openN(n.id)};g.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();openN(n.id)}}});
+ fit(svg,maxN);paint(null);if(qs.get('trace')!=='0')trace(true);
+ const L=document.createElement('div');L.className='legend';L.innerHTML=`<span><svg width="28" height="6"><path d="M0 3H28" stroke="currentColor" stroke-opacity=".9"/></svg>決定</span><span><svg width="28" height="6"><path d="M0 1H28M0 3H28M0 5H28" stroke="currentColor" stroke-opacity=".4" stroke-width=".6"/></svg>候補の束</span><span><svg width="28" height="6"><path d="M0 3H28" stroke="var(--ac)" stroke-width="2"/></svg>選んだ道筋</span><span>T トレース · Esc 閉じる</span>`;st.appendChild(L);
+ svg.addEventListener('click',()=>{closeN()});
+}
+function fit(svg,maxN){const c=CFG[V],w=svg.clientWidth-(selected?360:0),h=svg.clientHeight,gw=160+(D.fields.length-1)*c.cw+Math.max(c.nw,200),gh=c.y0+maxN*c.gap;const k=Math.min(w/gw,h/gh,1.6)*.97;G.setAttribute('transform',`translate(${(w-gw*k)/2},${Math.max(0,(h-gh*k)/2-10)}) scale(${k})`)}
+function nbr(id){const s=new Set([id]);D.edges.forEach(([a,b])=>{if(a==id)s.add(b);if(b==id)s.add(a)});return s}
+function paint(set){const tr=tracing?new Set(D.trace):null;const pairs=tracing?new Set(D.trace.slice(1).map((b,i)=>D.trace[i]+'>'+b)):null;
+ WI.forEach(e=>{const a=e.dataset.a,b=e.dataset.b,on=pairs?pairs.has(a+'>'+b):set&&(set.has(a)&&set.has(b))&&(a==[...set][0]||b==[...set][0]);
+  e.classList.toggle('hot',!!on);e.classList.remove('t1','t2','t3');if(!on)e.classList.add((set||pairs)?'t3':e.dataset.k=='candidate'?'t2':'t1')});
+ document.querySelectorAll('.nd').forEach(g=>{const id=g.dataset.id,act=tr?tr.has(id):set?set.has(id):true;g.classList.toggle('dim',!act);g.classList.toggle('on',!!(tr&&tr.has(id))||id==selected)});
+ const gF=G.children[1];gF.innerHTML='';if(pairs){WI.filter(e=>e.classList.contains('hot')).forEach(e=>{if(e.dataset.k!='candidate'){el('path',{d:e.getAttribute('d'),class:'flow','stroke-width':2.2},gF)}})}}
+function trace(on){tracing=on;paint(selected?nbr(selected):null)}
+function openN(id){selected=id;const n=D.nodes.find(x=>x.id==id),f=D.fields.find(x=>x.id==n.field);
+ const ins=D.edges.filter(e=>e[1]==id),outs=D.edges.filter(e=>e[0]==id),nm=i=>esc(D.nodes.find(x=>x.id==i)?.label||i);
+ $('card').innerHTML=`<button class="x" id="cx" aria-label="閉じる">✕</button><div class="k">${esc(f.name)} · ${ST[n.state]}${n.rule?' · '+n.rule:''}</div><h2>${esc(n.label)}</h2><p>${esc(n.note||'')}</p><dl>
+ ${n.catalog?`<dt>CATALOG</dt><dd>${esc(D.names[n.catalog]||n.catalog)}</dd>`:''}<dt>IN</dt><dd>${ins.map(e=>nm(e[0])+(e[2]=='candidate'?' <span style="color:var(--mu)">候補</span>':'')).join('<br>')||'—'}</dd>
+ <dt>OUT</dt><dd>${outs.map(e=>nm(e[1])+(e[2]=='candidate'?' <span style="color:var(--mu)">候補</span>':'')).join('<br>')||'—'}</dd>${n.flag?'<dt>FLAG</dt><dd style="color:var(--ac-tx)">AIレビューの要確認あり</dd>':''}</dl>
+ <div class="path">data/canvas.json → nodes[id="${id}"]</div>`;$('card').classList.add('open');$('cx').onclick=e=>{e.stopPropagation();closeN()};tracing=false;paint(nbr(id))}
+function closeN(){if(!selected)return;selected=null;$('card').classList.remove('open');paint(null)}
+function compare(){const st=$('stage');const sel=C.options.find(o=>o.status=='selected');
+ st.innerHTML=`<div class="cmp"><div class="q"><div class="eyebrow">比較 · ${esc(C.item.name)} · 確認 ${esc(C.item.source[0].checked)}</div><h1>${esc(C.question)}</h1></div>
+ <div class="opts">${C.options.map((o,i)=>`<section class="opt ${o.status=='selected'?'sel':'rej'}" aria-label="${esc(o.id)}"><div class="nm">${esc(o.id[0].toUpperCase()+o.id.slice(1))}<span class="st">${o.status=='selected'?'推奨':'見送り'}</span></div>
+ <dl><dt>責任</dt><dd>${esc(o.liability)}</dd><dt>費用</dt><dd>${esc(o.cost)}</dd><dt>理由</dt><dd>${esc(o.reason)}</dd><dt>CONTROLLER</dt><dd style="font:500 11.5px/1.6 var(--mono)">${esc(o.controller)}</dd></dl></section>`).join('')}</div>
+ <div class="rec"><b>推奨 · ${esc(sel.id)}</b>${esc(sel.reason)}。${esc(C.item.lock_in)}</div>
+ <div class="src">${C.item.source.map(s=>`<a href="${esc(s.url)}">${esc(s.url)}</a> · checked ${esc(s.checked)}`).join('<br>')}<br>data: /data/compare-stripe.json</div></div>`;
+ $('card').classList.remove('open');selected=null}
+function render(){document.body.dataset.v=V;$('dl').textContent='/data/'+(screen=='canvas'?'canvas':'compare-stripe')+'.json';$('dl').href='../data/'+(screen=='canvas'?'canvas':'compare-stripe')+'.json';
+ document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.s==screen));screen=='canvas'?canvas():compare()}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{screen=b.dataset.s;const u=new URL(location);u.searchParams.set('s',screen);history.replaceState(null,'',u);render()});
+function thLabel(){const d=document.documentElement.dataset.theme=='dark';$('th').textContent=d?'Light':'Dark';$('th').setAttribute('aria-pressed',d);$('th').setAttribute('aria-label',d?'明るい表示にする':'暗い表示にする')}
+$('th').onclick=()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme=='dark'?'light':'dark';const u=new URL(location);u.searchParams.set('theme',h.dataset.theme);history.replaceState(null,'',u);thLabel()};thLabel();
+addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;if(e.key=='Escape')closeN();if((e.key=='t'||e.key=='T')&&screen=='canvas')trace(!tracing)});
+addEventListener('resize',()=>screen=='canvas'&&canvas());
+/* picker wiring — verbatim behavior contract */
+const picker=document.querySelector('.proto-picker'),highlight=picker.querySelector('.proto-picker-highlight'),items=[...picker.querySelectorAll('.proto-picker-item:not(.proto-picker-replay)')],replay=picker.querySelector('.proto-picker-replay');let current=0;
+function moveHighlight(){const e=items[current];highlight.style.width=e.offsetWidth+'px';highlight.style.transform=`translateX(${e.offsetLeft}px)`}
+function mount(i){V=i+1;$('stage').innerHTML='';requestAnimationFrame(render)}
+function setActive(i){if(i<0||i>=items.length)return;current=i;items.forEach((e,j)=>{e.toggleAttribute('data-active',j===i);j===i?e.setAttribute('aria-current','true'):e.removeAttribute('aria-current')});moveHighlight();const u=new URL(location);u.searchParams.set('v',i+1);history.replaceState(null,'',u);mount(i)}
+items.forEach((e,i)=>e.addEventListener('click',()=>setActive(i)));replay.addEventListener('click',()=>mount(current));addEventListener('resize',moveHighlight);
+document.addEventListener('keydown',e=>{if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)||e.target.isContentEditable)return;if(e.metaKey||e.ctrlKey||e.altKey)return;const n=parseInt(e.key,10);
+ if(n>=1&&n<=items.length)setActive(n-1);else if(e.key=='ArrowRight')setActive((current+1)%items.length);else if(e.key=='ArrowLeft')setActive((current-1+items.length)%items.length);else if(e.key=='r'||e.key=='R')mount(current)});
+setActive((parseInt(qs.get('v'),10)||1)-1);requestAnimationFrame(()=>requestAnimationFrame(()=>picker.setAttribute('data-ready','')));
+</script></body></html>

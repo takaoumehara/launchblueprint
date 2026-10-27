@@ -1,0 +1,106 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>作る vs 全部入り — Local Pro Kit（社内用）</title>
+<link rel="stylesheet" href="bp-tokens.css"><script src="bp-theme.js"></script><script src="bp-viz.js"></script><meta name="color-scheme" content="light dark"><style>
+:root{--b2:var(--info);--ease:var(--ease-out)}
+body{background:var(--bg);color:var(--tx);font:14px/1.55 var(--font);min-height:100vh;display:grid;grid-template-columns:360px 1fr;grid-template-rows:auto minmax(0,1fr);height:100vh;overflow:hidden}body>.bp-bar{grid-column:1/-1}
+.num{font-variant-numeric:tabular-nums}
+aside{background:var(--sf);box-shadow:1px 0 0 var(--ln);padding:24px 22px;overflow:auto;height:100vh}
+aside h2{font-size:13px;color:var(--mu);font-weight:600;margin:18px 0 6px;letter-spacing:.03em}
+.f{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;margin:8px 0}
+.f label{font-size:12.5px}.f output{font-size:12.5px;color:var(--ac-tx);min-width:64px;text-align:end}
+.f small{grid-column:1/-1;font-size:11px;color:var(--mu)}
+input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--ac);height:24px}
+.seg{display:flex;gap:2px;background:var(--bg);border-radius:0;padding:3px;margin-top:6px}.seg button{flex:1;min-height:32px;border:0;border-radius:0;background:none;color:var(--mu);font:inherit;font-size:12px;cursor:pointer}.seg button[aria-pressed=true]{background:var(--sf2);color:var(--tx)}
+main{padding:28px 34px;overflow:auto;height:100vh}
+.top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}h1{font-size:26px;line-height:1.15;text-wrap:balance}
+.tag{font-size:11px;padding:2px 9px;border-radius:0;box-shadow:0 0 0 1px var(--ln);color:var(--mu)}.tag.in{color:var(--ac-tx);box-shadow:0 0 0 1px var(--ac)}
+.lead{color:var(--mu);margin:6px 0 18px;max-width:75ch;text-wrap:pretty}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.c{background:var(--sf);border-radius:0;padding:16px 18px;box-shadow:var(--ring),var(--shadow-1)}.c b{font-size:12px;color:var(--mu);font-weight:500}.c .v{font-size:28px;font-weight:700;line-height:1.2;margin-top:2px}.c p{font-size:12px;color:var(--mu);text-wrap:pretty}
+.c{transition:box-shadow var(--dur) var(--ease-out)}.c.win{background:var(--ac);color:var(--bg);box-shadow:none}.c.win p,.c.win b{color:var(--bg)}
+#sk{display:block;width:100%;height:230px}#sk text{font:12px var(--font);fill:var(--tx)}#sk text.m{font:11px var(--mono);fill:var(--mu)}#sk path{fill:none;transition:d .3s}@media (prefers-reduced-motion:reduce){#sk path{transition:none}}
+.rec{margin:14px 0;padding:14px 18px;border-radius:0;background:var(--acs);text-wrap:pretty}
+.row{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-top:14px}
+.panel{background:var(--sf);border-radius:0;padding:14px 18px;box-shadow:var(--ring),var(--shadow-1)}.panel h3{font-size:14px;margin-bottom:8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}td,th{padding:6px 6px;border-bottom:1px solid var(--ln);text-align:end}td:first-child,th:first-child{text-align:start;color:var(--mu)}th{font-weight:500;color:var(--mu)}
+.lg{display:flex;gap:14px;font-size:11.5px;color:var(--mu);margin-top:4px}.lg i{display:inline-block;width:10px;height:3px;border-radius:0;margin-inline-end:5px;vertical-align:middle}
+.panel table:not(.num) td,.panel table:not(.num) th{text-align:start}.src{font-size:11px;color:var(--mu);margin-top:14px;overflow-wrap:anywhere}
+svg text{fill:var(--mu);font-size:10.5px}
+</style><script type="application/json" id="bp-data">{"meta": {"schema": "blueprint/build-vs-buy@1", "generated": "2026-10-26", "publisher": "CREATIVITY IS EVERYWHERE, LLC", "sources": ["catalog/build_vs_buy.yaml"], "how_to_read": "catalog/ai-usage.md"}, "domain": "build_vs_buy", "name_ja": "作る／API／全部入り", "paths": [{"id": "bvb.build", "what": "AIコーディングで自前で作る（例：留守電テキスト返信を自前のコード＋通信APIで）", "best_for": "差別化の核、独自のデータや見た目、顧客数が増えるほど原価を下げたい", "avoid_when": "検証前、保守できる人がいない、規制対応を自分で持てない"}, {"id": "bvb.api", "what": "部品だけ借りる（例：Twilio、Stripe、Resend）＋つなぎは自前", "best_for": "通信・決済など規制と信頼性が重い所。原価は従量で透明", "avoid_when": "つなぎのコードも保守したくない"}, {"id": "bvb.platform", "what": "全部入りの箱（例：GoHighLevel）。CRM・サイト・自動化・電話・レビューが一体", "best_for": "早く売り始めたい、型どおりで良い、代理店として複数社を回す", "avoid_when": "見た目や体験が差別化、データを自社に持ちたい、月額固定を避けたい"}], "tco_fields": ["setup_usd", "monthly_fixed_usd", "per_use_usd", "maintenance_h_month", "ai_coding_usd", "time_to_launch_weeks", "time_to_revenue_weeks", "lock_in", "control"], "formula": "月の総額 = 月額固定 + 顧客数 × (番号 + キャンペーン料 + 通数 × 1通の単価) + 保守時間 × 時給 + AI費/月\n損益分岐 = (全部入りの固定 − 自前の固定) ÷ (自前の1社原価 − 全部入りの1社原価)\n売上開始までの差 = (自前の残り開発週 − 全部入りの構築週) × 見込み月売上 ÷ 4.3\n", "verified_2026_10_26": {"twilio_sms_us": {"outbound": 0.0083, "inbound": 0.0083, "telco_fee_out": "0.0035〜0.005", "failed_fee": 0.001, "local_number_month": 1.15, "tollfree_month": 2.15, "url": "https://www.twilio.com/en-us/sms/pricing/us"}, "twilio_voice_us": {"make_min": 0.014, "receive_local_min": 0.0085, "receive_tollfree_min": 0.022, "conversation_relay_min": 0.07, "recording_min": 0.0025, "url": "https://www.twilio.com/en-us/voice/pricing/us"}, "a2p_10dlc": {"brand_low_volume": 4.5, "brand_standard": 46, "campaign_vetting": 15, "monthly_campaign": "1.50（低量混合）／2（個人）／10（標準）", "wait": "最大5営業日（実際は数週かかる例あり）", "url": "https://help.twilio.com/articles/1260803965530"}, "gohighlevel": {"starter": "$97/月（年$970）・3サブアカウント", "unlimited": "$297/月（年$2,970）・無制限・電話/メールの再請求（上乗せなし）", "pro_saas": "$497/月（年$4,970）・SaaSモード・上乗せ再請求", "trial": "14日", "sms": "$0.00747/通（Twilio定価の10%引き）＋通信会社料", "a2p_bundle": "$22.50（低量）〜$64", "addons": "AI Employee $50〜97/サブアカウント, HIPAA $297, 白ラベルアプリ $497", "url": ["https://www.gohighlevel.com/pricing", "https://help.gohighlevel.com/support/solutions/articles/48001223556", "https://help.gohighlevel.com/support/solutions/articles/155000005200"]}}, "answer_rules": ["自前の総額には必ず『保守時間×時給』と『AIコーディング費/月』を入れる。分からなければ下の既定値を仮定として明示する", "結果は現金だけ（時給0）と時間込みの2通りで出す。どちらが勝つかが入れ替わることが多い", "A2P 10DLC はどの道でも必要（各社ごと）。全部入りでも待ち時間は消えない"], "default_assumptions": {"maintenance_h_month": {"build": 10, "platform": 3, "range": "build 5〜20 / platform 1〜6"}, "hourly_value_usd": {"default": 50, "range": "0〜150"}, "ai_coding_usd_month": {"default": 200, "range": "100〜400（記録なし）"}, "infra_usd_month": {"default": 25, "note": "Workers Paid $5 + ホスト Pro $20"}, "sms_per_client_month": {"default": 150, "range": "20〜600"}}, "reference_result": "3社・現金のみ・AI費$100：自前 約$138/月 vs GoHighLevel $97プラン 約$109/月。4社目で GoHighLevel が $297 に上がり自前が安くなる。時間込み（10h×$50）だと GoHighLevel が有利（build-vs-buy.html で再計算）"}</script><link rel="alternate" type="application/json" href="data/build-vs-buy.json" title="machine-readable data"></head><body>
+<header class="bp-bar"><a class="bp-mark" href="llms.txt"><i></i>Blueprint</a><nav class="bp-nav" aria-label="画面"><a href="catalog-concept.html">カタログ</a><a href="canvas-concept.html">キャンバス</a><a href="compare-stripe.html">比較</a><a href="rules-ledger.html">ルール</a><a href="build-vs-buy.html" aria-current="page">作る vs 買う</a></nav><span class="sp"></span><span class="tag">サンプル・仮定を含む</span><span data-data-slot></span><span data-theme-slot></span></header><aside aria-label="前提（スライダー）">
+<b style="font-size:15px">前提</b><p style="font-size:12px;color:var(--mu)">● 公式で確認した値は固定、<span style="color:var(--ac-tx)">■ 仮定</span>はスライダーで動かせます</p>
+<h2>お客さん</h2>
+<div class="f"><label for="n">お客さんの数</label><output id="o_n" class="num"></output><input id="n" type="range" min="0" max="40" value="5"><small>仮定。現在はお客さん0社（プレローンチ）</small></div>
+<div class="f"><label for="price">1社の月額売上</label><output id="o_price" class="num"></output><input id="price" type="range" min="39" max="299" step="10" value="99"><small>社内の料金案：Care $39／Growth $99</small></div>
+<div class="f"><label for="msg">1社あたりのSMS（送受信）/月</label><output id="o_msg" class="num"></output><input id="msg" type="range" min="20" max="600" step="10" value="150"><small>仮定：取れなかった電話の返信＋レビュー依頼＋返信</small></div>
+<h2>自前（今のやり方）</h2>
+<div class="f"><label for="ai">AIコーディング費/月</label><output id="o_ai" class="num"></output><input id="ai" type="range" min="0" max="600" step="20" value="200"><small>仮定（実績データなし）。ローンチ後の直し・追加の分</small></div>
+<div class="f"><label for="mh">保守の時間/月</label><output id="o_mh" class="num"></output><input id="mh" type="range" min="0" max="40" value="10"><small>仮定：監視・障害・依存の更新・通信会社の規則変更</small></div>
+<div class="f"><label for="wk">ローンチまでの残り週</label><output id="o_wk" class="num"></output><input id="wk" type="range" min="1" max="16" value="5"><small>仮定。ops の配備・Workers Paid・A2P 登録が残り</small></div>
+<div class="f"><label for="infra">サーバー固定費/月</label><output id="o_infra" class="num"></output><input id="infra" type="range" min="0" max="60" step="5" value="25"><small>Workers Paid $5＋ホスト Pro $20（確認済みの単価）</small></div>
+<h2>全部入り（GoHighLevel）</h2>
+<div class="seg" role="group" aria-label="プラン"><button data-p="auto" aria-pressed="true">自動</button><button data-p="97">$97</button><button data-p="297">$297</button><button data-p="497">$497 SaaS</button></div>
+<div class="f"><label for="gwk">構築にかかる週</label><output id="o_gwk" class="num"></output><input id="gwk" type="range" min="1" max="8" value="2"><small>仮定：テンプレート（Snapshot）＋A2P 待ち。A2P は両方に共通</small></div>
+<div class="f"><label for="gh">保守の時間/月</label><output id="o_gh" class="num"></output><input id="gh" type="range" min="0" max="20" value="3"><small>仮定</small></div>
+<h2>共通</h2>
+<div class="f"><label for="rate">自分の時給（機会費用）</label><output id="o_rate" class="num"></output><input id="rate" type="range" min="0" max="150" step="5" value="50"><small>仮定。0 にすると現金だけで比べられる</small></div>
+<div class="f"><label for="oh">1社あたりの運用時間/月</label><output id="o_oh" class="num"></output><input id="oh" type="range" min="0" max="5" step="0.5" value="1"><small>仮定。両方同じとする</small></div>
+</aside>
+<main>
+<div class="top"><h1>作る vs 全部入り：Local Pro Kit</h1><span class="tag in">社内用・ケーススタディ</span><span class="tag">数字は仮定を含む</span></div>
+<p class="lead">サイト＋自動化（取れなかった電話へのテキスト返信など）を、自前で作り続けるか、GoHighLevel に載せるか。月の総額＝固定費＋お客さん数×1社の原価＋時間×時給。すでに使った開発費は戻らないので、<b>これからの12か月</b>で比べます。</p>
+<div class="cards">
+<div class="c" id="cb"><b>自前：月の総額</b><div class="v num" id="vb"></div><p id="pb"></p></div>
+<div class="c" id="cg"><b>GoHighLevel：月の総額</b><div class="v num" id="vg"></div><p id="pg"></p></div>
+<div class="c"><b>損益分岐（自前が安くなるお客さん数）</b><div class="v num" id="be"></div><p id="pbe"></p></div>
+</div>
+<div class="rec" id="rec" role="status"></div>
+<div class="panel" style="margin-top:14px"><h3>お金の流れ（1か月）</h3><svg id="sk" role="img" aria-label="費用の流れ"></svg><div class="lg"><span>線の本数＝金額（1本 ≈ $20）。スライダーで流れが変わる</span></div></div>
+<div class="row">
+<div class="panel"><h3>12か月の累計利益（売上 − 総額）</h3><svg id="ch" viewBox="0 0 560 220" width="100%" role="img" aria-label="累計利益の推移"></svg>
+<div class="lg"><span><i style="background:var(--ac)"></i>自前</span><span><i style="background:var(--b2)"></i>GoHighLevel</span><span>平らな部分＝ローンチ前（売上なし、費用だけ）</span></div></div>
+<div class="panel"><h3>1か月の内訳</h3><table class="num" id="tb"></table></div>
+</div>
+<div class="panel" style="margin-top:14px"><h3>お金以外</h3><table><tr><th></th><th>自前</th><th>GoHighLevel</th></tr>
+<tr><td>見た目・体験</td><td>8つの方向、JSなしの速いサイト、多言語（作ってある）</td><td>汎用のビルダー。差がつきにくい</td></tr>
+<tr><td>ロックイン</td><td>低。番号は自社の Twilio、サイトは顧客名義</td><td>高。自動化・顧客データ・サイトを作り直し</td></tr>
+<tr><td>すぐ使える機能</td><td>テキスト返信・レビュー依頼は作ってあるが未配備</td><td>CRM・予約・レビュー・電話・AI受付（従量）まで最初からある</td></tr>
+<tr><td>A2P 10DLC 登録</td><td colspan="2" style="text-align:center">どちらも必要（各社ごと）。待ち時間は消えない</td></tr>
+<tr><td>転売</td><td>自社の値付け</td><td>$497 プランで SaaS モード（自動でアカウント作成・上乗せ再請求）</td></tr></table></div>
+<p class="src">確認 2026-10-26：GoHighLevel $97/$297/$497・SMS $0.00747/通 — gohighlevel.com/pricing, help.gohighlevel.com（LC Phone, A2P fees）／Twilio SMS $0.0083＋通信会社料 $0.0035〜0.005、番号 $1.15/月 — twilio.com/en-us/sms/pricing/us／A2P：ブランド $4.50、審査 $15、月 $1.50〜$10 — help.twilio.com。お客さん数・時間・AI費・週数は<b>仮定</b>。</p>
+</main>
+<script>
+const $=id=>document.getElementById(id),V=id=>+$(id).value,usd=x=>(x<0?'−$':'$')+Math.abs(Math.round(x)).toLocaleString();
+let plan='auto';
+const DV=BP.data().verified_2026_10_26,TS=DV.twilio_sms_us,TELCO_FEE=(()=>{const a=String(TS.telco_fee_out).split('〜').map(parseFloat);return a[a.length-1]*.9})(),TW=TS.outbound,GHL=parseFloat(String(DV.gohighlevel.sms).replace(/[^0-9.]/,'')),NUM=TS.local_number_month,CAMP=parseFloat(DV.a2p_10dlc.monthly_campaign);
+function perClient(rate){const m=V('msg');return NUM+CAMP+m*rate+m/2*TELCO_FEE}
+function calc(nn){const n=nn??V('n'),r=V('rate');
+ const b={fixed:V('infra')+V('ai'),time:(V('mh')+n*V('oh'))*r,tel:n*perClient(TW)};b.total=b.fixed+b.time+b.tel;
+ const gp=plan=='auto'?(n<=3?97:297):+plan;
+ const g={fixed:gp,time:(V('gh')+n*V('oh'))*r,tel:n*perClient(GHL)};g.total=g.fixed+g.time+g.tel;
+ return {n,b,g,gp}}
+function cum(cost,wk,n){const pts=[];let s=0;const launch=wk/4.33;for(let m=0;m<=12;m++){pts.push(s);const live=Math.max(0,Math.min(1,m+1-launch));s+=n*V('price')*live-cost}return pts}
+
+function sankey(o){const svg=$('sk'),W=svg.clientWidth||900,H=230;svg.innerHTML='';const K=[['fixed','固定'],['tel','通信'],['time','時間×時給']],S=[['b','自前',o.b],['g','GoHighLevel',o.g]];
+ const xl=120,xr=W-200,ly=i=>40+i*75,ry=i=>70+i*95,u=20;
+ K.forEach(([k,l],i)=>{const t=BP.el('text',{x:xl-14,y:ly(i)+4,'text-anchor':'end'},svg);t.textContent=l;BP.el('rect',{x:xl-6,y:ly(i)-14,width:6,height:28,fill:'var(--tx)'},svg);
+  S.forEach(([sid,,v],j)=>{const n=Math.max(v[k]>0?1:0,Math.min(40,Math.round(v[k]/u))),rr=BP.rng(i*7+j);for(let s=0;s<n;s++){const a=(s-n/2)*1.5;BP.el('path',{d:BP.wire(xl,ly(i)+a*.5+(j?6:-6),xr,ry(j)+(i-1)*14+a*.4,.5),stroke:sid=='b'?'var(--ac)':'var(--mu)','stroke-width':1,opacity:.14+rr()*.22},svg)}})});
+ S.forEach(([sid,l,v],j)=>{BP.el('rect',{x:xr,y:ry(j)-30,width:6,height:60,fill:sid=='b'?'var(--ac)':'var(--mu)'},svg);const t=BP.el('text',{x:xr+16,y:ry(j)-4},svg);t.textContent=l;const m=BP.el('text',{x:xr+16,y:ry(j)+14,class:'m'},svg);m.textContent=usd(v.total)+' / 月'})}
+function draw(){const o=calc(),n=o.n;sankey(o);
+ ['n','price','msg','ai','mh','wk','infra','gwk','gh','rate','oh'].forEach(k=>$('o_'+k).textContent={n:n+'社',price:'$'+V('price'),msg:V('msg')+'通',ai:'$'+V('ai'),mh:V('mh')+'時間',wk:V('wk')+'週',infra:'$'+V('infra'),gwk:V('gwk')+'週',gh:V('gh')+'時間',rate:'$'+V('rate'),oh:V('oh')+'時間'}[k]);
+ $('vb').textContent=usd(o.b.total);$('vg').textContent=usd(o.g.total);
+ $('pb').textContent=`現金 ${usd(o.b.fixed+o.b.tel)} ＋ 時間 ${usd(o.b.time)}`;$('pg').textContent=`現金 ${usd(o.g.fixed+o.g.tel)}（プラン $${o.gp}）＋ 時間 ${usd(o.g.time)}`;
+ $('cb').classList.toggle('win',o.b.total<o.g.total);$('cg').classList.toggle('win',o.g.total<=o.b.total);
+ let be='—';for(let k=0;k<=200;k++){const t=calc(k);if(t.b.total<t.g.total){be=k+'社';break}}
+ $('be').textContent=be;$('pbe').textContent=be=='—'?'今の前提では、200社まで自前の方が高いまま（自分の時間とAI費が固定で重い）':'この数を超えると自前が安い（GoHighLevel が $297 に上がるため）';
+ const cb=cum(o.b.total,V('wk'),n),cg=cum(o.g.total,V('gwk'),n);
+ const all=[...cb,...cg],mx=Math.max(1,...all),mn=Math.min(0,...all),X=i=>40+i*42,Y=v=>200-(v-mn)/(mx-mn)*180;
+ const path=a=>a.map((v,i)=>(i?'L':'M')+X(i)+' '+Y(v)).join(' ');
+ $('ch').innerHTML=`<line x1="40" x2="544" y1="${Y(0)}" y2="${Y(0)}" style="stroke:var(--ln-strong)"/><text x="4" y="${Y(0)+4}">$0</text><text x="4" y="${Y(mx)+8}">${usd(mx)}</text>${mn<0?`<text x="4" y="${Y(mn)-4}">${usd(mn)}</text>`:''}${[0,3,6,9,12].map(i=>`<text x="${X(i)-6}" y="216">${i}月</text>`).join('')}<path d="${path(cg)}" fill="none" style="stroke:var(--info)" stroke-width="2.2"/><path d="${path(cb)}" fill="none" style="stroke:var(--ac)" stroke-width="2.2"/><text x="${X(12)-60}" y="${Y(cb[12])-6}" style="fill:var(--ac-tx)">${usd(cb[12])}</text><text x="${X(12)-60}" y="${Y(cg[12])+14}" style="fill:var(--info)">${usd(cg[12])}</text>`;
+ $('tb').innerHTML=`<tr><th></th><th>自前</th><th>GoHighLevel</th></tr><tr><td>固定（サーバー＋AI／プラン）</td><td>${usd(o.b.fixed)}</td><td>${usd(o.g.fixed)}</td></tr><tr><td>通信（番号＋A2P月額＋SMS）</td><td>${usd(o.b.tel)}</td><td>${usd(o.g.tel)}</td></tr><tr><td>時間 × 時給</td><td>${usd(o.b.time)}</td><td>${usd(o.g.time)}</td></tr><tr><td><b>合計</b></td><td><b>${usd(o.b.total)}</b></td><td><b>${usd(o.g.total)}</b></td></tr><tr><td>売上</td><td colspan="2" style="text-align:center">${usd(n*V('price'))}</td></tr><tr><td>12か月の累計差</td><td colspan="2" style="text-align:center">${usd(cb[12]-cg[12])}（＋なら自前が有利）</td></tr>`;
+ const diff=cb[12]-cg[12];
+ $('rec').innerHTML=n==0?'<b>お客さん0社の今は、どちらも赤字。</b>先に決めるべきは道具ではなく「最初の3社」をどう取るか。':diff>=0?`<b>自前のままで良い。</b>12か月で ${usd(diff)} 有利。作ってあるサイトの質と低いロックインがそのまま効く。`:`<b>混ぜる案がおすすめ。</b>12か月で GoHighLevel が ${usd(-diff)} 有利（主に自分の時間とAI費）。サイトは自前（差別化）、取れなかった電話の返信・レビュー・CRM は最初の3社までは $97 プラン（3サブアカウント）で動かし、売上を先に確かめる。10社を超えたら自前の自動化に戻すか判断。`}
+document.querySelectorAll('input').forEach(i=>i.oninput=draw);
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{plan=b.dataset.p;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
+const q=new URLSearchParams(location.search);for(const[k,v]of q){if(k=='plan'){plan=v;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.p==v))}else if($(k))$(k).value=v}
+addEventListener('pageshow',()=>{for(const[k,v]of q)if($(k))$(k).value=v;draw()});draw();
+</script></body></html>

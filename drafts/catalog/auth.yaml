@@ -1,0 +1,198 @@
+# Blueprint Tech Catalog — auth
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: auth
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+auth:
+  methods:
+    google:
+      what: Googleアカウントでログイン
+      note: OAuth 同意画面は会社名義（L6）
+    apple:
+      what: Apple でサインイン
+      note: iOSアプリで他のソーシャルログインを出すなら Apple も求められる場合あり（App Store 審査ガイドライン 4.8 を要確認）。メールが非公開リレーになる
+    email_password:
+      what: メール＋パスワード
+      note: 漏えいパスワード検知・総当たり対策が要る
+    magic_link:
+      what: メールのリンク／コード
+      note: メール到達性に依存（L7）
+    phone_sms:
+      what: 電話番号＋SMSコード
+      note: SMS は1通ごとに課金。SMSポンピング詐欺の対策が要る。米国は A2P 10DLC
+    anonymous:
+      what: 登録なしで開始し、後で本登録
+      note: 後からのアカウント統合を設計しておく
+    passkeys:
+      what: 端末の生体認証（WebAuthn）
+      note: 最も安全。復旧手段を別に用意
+    sso_saml:
+      what: 会社のIdP（Okta 等）
+      note: B2B 向け。接続数で課金されることが多い
+  providers:
+  - id: auth.firebase
+    name: Firebase Authentication
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: 'yes'
+      phone_sms: paid（Blaze、SMSごと課金）
+      anonymous: 'yes'
+      passkeys: 未提供（公式の要望ページで 2027年Q1 プレビュー予定）
+      sso_saml: Identity Platform（50 MAUまで無料）
+    pricing_bands:
+      free: $0：Identity Platform 5万MAUまで無料、SMSは対象外
+      usd5: SMS 従量のみ
+      usd10: 同左
+      usd100: 5万MAU超は Google Cloud 料金
+    lock_in: 高：パスワードハッシュの書き出しは可能だが SDK 依存が強い
+    best_for: Firebase/Firestore と一緒に使う、モバイル
+    source:
+      url: https://firebase.google.com/pricing
+      checked: '2026-10-26'
+      verified: true
+    passkey_source:
+      url: https://firebase.uservoice.com/forums/948424-general/suggestions/46647016-support-authentication-with-passkeys
+      checked: '2026-10-26'
+      verified: true
+  - id: auth.supabase
+    name: Supabase Auth
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: 'yes'
+      phone_sms: yes（SMS業者は自前で契約）。電話MFAは Pro で月$75
+      anonymous: 'yes'
+      passkeys: beta（2026-05 公開、experimental フラグが必要）
+      sso_saml: Pro 以上：50 MAU 込み、以降 $0.015/MAU
+    pricing_bands:
+      free: $0：5万MAU
+      usd5: —
+      usd10: —
+      usd100: $25 Pro：10万MAU、以降 $0.00325/MAU
+    lock_in: 低：ユーザーは自分の Postgres にある
+    best_for: Supabase DB を使う、大量の無料ユーザー
+    source:
+      url: https://supabase.com/pricing
+      checked: '2026-10-26'
+      verified: true
+    passkey_source:
+      url: https://supabase.com/docs/guides/auth/passkeys
+      checked: '2026-10-26'
+      verified: true
+  - id: auth.clerk
+    name: Clerk
+    support:
+      google: yes（Hobby はソーシャル3つまで）
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: 'yes'
+      phone_sms: Pro 以上、米加 $0.01/通
+      anonymous: 要確認
+      passkeys: Pro 以上
+      sso_saml: Pro に1接続込み、追加 $75/月
+    pricing_bands:
+      free: $0 Hobby：アプリごと5万MRU（登録翌日以降に戻った人だけ数える）
+      usd5: —
+      usd10: —
+      usd100: $25 Pro（年払い$20）：MFA・パスキー・ブランド削除
+    lock_in: 中：データ書き出しは可能、UI部品に依存
+    best_for: Next.js で最速・UI込み、有料サービス
+    avoid_when: 無料・低単価で大量ユーザーの B2C（公式FAQも Supabase/Firebase を勧める）
+    source:
+      url: https://clerk.com/pricing
+      checked: '2026-10-26'
+      verified: true
+  - id: auth.auth0
+    name: Auth0
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: yes（Passwordless）
+      phone_sms: yes（要確認：SMS費用）
+      anonymous: 'no'
+      passkeys: 'yes'
+      sso_saml: Free に1接続
+    pricing_bands:
+      free: $0：2.5万MAU
+      usd5: —
+      usd10: —
+      usd100: B2C Essentials $35〜（500MAU）、B2B Essentials $150〜
+    lock_in: 中
+    best_for: 企業向け要件・監査ログ・Okta 連携
+    avoid_when: 無料枠を超えて伸びる B2C（MAU 段階で急に高くなる）
+    source:
+      url: https://auth0.com/pricing
+      checked: '2026-10-26'
+      verified: true
+  - id: auth.better-auth
+    name: Better Auth
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: plugin
+      phone_sms: plugin（SMS業者は自前）
+      anonymous: plugin
+      passkeys: plugin（@better-auth/passkey、確認済み）
+      sso_saml: plugin
+    pricing_bands:
+      free: OSS無料（DB・メール・SMS の費用だけ）
+      usd5: 同左
+      usd10: 同左
+      usd100: 同左
+    lock_in: 最低：自分のDBとコード
+    best_for: ベンダーに縛られたくない、TypeScript
+    avoid_when: セキュリティ運用を自分で持てない時
+    source:
+      url: https://www.better-auth.com/docs/plugins/passkey
+      checked: '2026-10-26'
+      verified: true
+  - id: auth.cognito
+    name: AWS Cognito
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: Essentials（メールのワンタイムコード）
+      phone_sms: yes（SNS課金）
+      anonymous: Identity Pool
+      passkeys: Essentials 以上
+      sso_saml: 'yes'
+    pricing_bands:
+      free: Lite/Essentials：1万MAU/月まで無料（期限なし）、SAML は50MAU
+      usd5: Essentials：$0.015/MAU → 約330人分
+      usd10: 約660人分
+      usd100: 約6,600人分（Plus は無料枠なし $0.02/MAU）
+    lock_in: 高：パスワードハッシュを書き出せない
+    best_for: AWS に寄せている
+    source:
+      url: https://aws.amazon.com/cognito/pricing/
+      checked: '2026-10-26'
+      verified: true
+  - id: auth.stytch
+    name: Stytch
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 'yes'
+      magic_link: 'yes'
+      phone_sms: 'yes'
+      anonymous: 要確認
+      passkeys: 'yes'
+      sso_saml: yes（B2B）
+    pricing_bands:
+      free: $0：1万アクティブ、SSO/SCIM 5接続、上限で急に高くならない
+      usd5: 超過分だけ従量
+      usd10: 同左
+      usd100: ブランド変更 $99（固定）、SSO追加 $125/接続
+    lock_in: 中
+    best_for: パスワードレス中心、不正対策
+    source:
+      url: https://stytch.com/pricing
+      checked: '2026-10-26'
+      verified: true

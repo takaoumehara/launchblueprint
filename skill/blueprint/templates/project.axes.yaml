@@ -1,0 +1,11 @@
+schema: blueprint.project-axes/v1
+project: <name>
+updated: 'YYYY-MM-DD'
+legend: 'status: decided | proposed | open（オーナー判断待ち。Blueprintは決めない）'
+context: {stack: '', sources: []}
+selections: []        # {domain, catalog_id, status, reason, rules, budget_band}
+axes: {}              # marketing_gtm, cross_border, app_distribution, exit_dd, scale_readiness, dd_dashboard ...
+open_decisions: []    # {id, question, options, affects}
+dependencies: []      # [from, to, why]
+risks: []
+learnings: []         # {date, lesson, applies_to, promote: yes|no}

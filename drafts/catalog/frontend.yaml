@@ -1,0 +1,73 @@
+# Blueprint Tech Catalog — frontend
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: frontend
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: fe.nextjs
+  name: Next.js
+  what: React のフルスタック・フレームワーク
+  best_for: SEO と動的機能が両方要るWeb
+  avoid_when: ''
+  pricing_bands:
+    free: OSS無料
+    usd5: OSS無料
+    usd10: OSS無料
+    usd100: OSS無料
+  limits: ホスト依存の機能あり（ISR・画像最適化）
+  lock_in: 中：Vercel 固有機能を使うほど移行が重い
+  liability_compliance: なし
+  security: サーバー側の秘密を Client Component に漏らさない
+  pairs_well_with:
+  - host.vercel
+  - auth.clerk
+  - db.supabase
+  source:
+    url: https://nextjs.org/docs
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: fe.astro
+  name: Astro
+  what: コンテンツ中心の静的サイト生成
+  best_for: LP・ドキュメント・ブログ
+  avoid_when: ログイン後のアプリ本体
+  pricing_bands:
+    free: OSS無料
+    usd5: OSS無料
+    usd10: OSS無料
+    usd100: OSS無料
+  limits: 重い対話UIには不向き
+  lock_in: 低
+  liability_compliance: なし
+  security: 静的出力は攻撃面が小さい
+  pairs_well_with:
+  - host.vercel
+  - host.cloudflare-pages
+  source:
+    url: https://docs.astro.build
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: fe.expo
+  name: Expo (React Native)
+  what: iOS/Android を1つのコードで
+  best_for: ネイティブアプリが必須の時
+  avoid_when: ''
+  pricing_bands:
+    free: $0：Android/iOS 各15ビルド/月、OTA更新 1,000MAU
+    usd5: —
+    usd10: —
+    usd100: Starter $19（ビルドクレジット$45）／Production $199
+  limits: Free は低優先キュー（混雑時90分以上待ち）、ビルド45分で打ち切り
+  lock_in: 中
+  liability_compliance: ストア規約（アプリ内課金・アカウント削除）
+  security: 鍵をアプリに埋め込まない
+  pairs_well_with:
+  - auth.firebase
+  - db.firestore
+  source:
+    url: https://expo.dev/pricing
+    checked: '2026-10-26'
+    verified: true

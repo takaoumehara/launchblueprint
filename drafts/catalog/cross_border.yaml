@@ -1,0 +1,75 @@
+# Blueprint Catalog — cross_border（海外展開モジュール）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 手数料は 2026-10-26 に公式ページで確認（verified:true）。それ以外は verified:false
+domain: cross_border
+updated: '2026-10-26'
+stale_after_days: 30   # 料金・規制は30日（freshness.yaml の rules/APIs）
+load: lazy             # 海外展開する案件だけ読む（core には入れない）
+axes:
+- id: axis.i18n
+  name: 国際化基盤（i18n/l10n）
+  category: '05'
+  checks: [翻訳キー管理（next-intl / i18next）, Intl.DateTimeFormat・NumberFormat, DBはUTC保存, 固定幅を使わない（英語は日本語の1.5〜2倍の幅）, ルールファイルに「新機能は EN と JA のキーを同時に更新」]
+  acceptance: ハードコード文字列を lint で検出して0件。全キーが en/ja の両方にある（キー差分0）
+  ai_risk: 低（AIが得意）。ただし日本語の改行（L19）は目視
+- id: axis.legal
+  name: 法規制・データ主権
+  category: '07'
+  checks: [GDPR（同意バナー・削除要求・EUリージョン）, CCPA/CPRA（オプトアウト導線）, COPPA等の年齢ゲート, 日本：個人情報保護法の外国提供・特商法表記・電気通信事業法の外部送信]
+  acceptance: 対象国×項目の表に 該当/対象外/要確認 が空欄なし。AIが書いたポリシーは弁護士またはTermly等で確認済み
+  ai_risk: 高（AIが知ったかぶりしやすい）。出典URLと確認日がない記述は不可
+- id: axis.payments_tax
+  name: 決済・通貨・税
+  category: '09'
+  checks: [現地の決済手段（Payment Element で自動切替）, 売上税・VAT・日本の消費税（国外事業者）, MoR か自社納税か]
+  acceptance: entry_strategy が決定済みで、選んだ側の手数料が出典つき
+  ai_risk: 高。手数料と納税義務は毎回公式ページで確認
+- id: axis.culturalization
+  name: カルチャライズ・トーン
+  category: '02'
+  checks: [直訳ではなく再創作（transcreation）, 社会的証明：JP＝導入実績・安心・丁寧、US＝1文の価値・顔・X投稿・速さ, brand.yaml に言語別 voice]
+  acceptance: 言語ごとに見出しを別に書き、ネイティブ1人が「直訳っぽくない」と確認した記録
+  ai_risk: 中
+- id: axis.channels
+  name: 現地チャネル
+  category: '09'
+  checks: ['US/グローバル：Product Hunt, Hacker News, Reddit, X（英語）', 'JP：X（日本語）, Zenn/Qiita, note, PR TIMES', 'EU：Product Hunt, LinkedIn, 地域コミュニティ', 'Reddit/X の現地の言い回しをAIで要約し、コピーに戻す']
+  acceptance: gtm/channels.yaml の各行に market がある
+  ai_risk: 中（規約・自己宣伝ルールは場ごとに確認）
+- id: axis.latency
+  name: インフラ・レイテンシ
+  category: '05'
+  checks: [エッジ配信（Vercel/Cloudflare）, DBリージョンと読み取りレプリカ（Neon/Supabase/Turso）]
+  acceptance: 主要市場からの TTFB が 600ms 未満（実測）
+  ai_risk: 低
+fees_verified_2026_10_26:
+- {id: pay.stripe.cards, what: 'Stripe 国内カード', fee: '2.9% + 30¢', extra: '国際カード +1%（+30¢の表記あり）、通貨換算は顧客に2%〜表示（Adaptive Pricing）、紛争 $15', url: 'https://stripe.com/pricing', verified: true}
+- {id: tax.stripe.basic, what: 'Stripe Tax Basic（計算と徴収のみ。登録・申告は自分）', fee: '登録済みの地域の取引に 0.5%（Billing/Checkout 等）または 50¢/件（API）', url: 'https://stripe.com/tax/pricing', verified: true}
+- {id: tax.stripe.complete, what: 'Stripe Tax Complete（監視・登録・計算・申告）', fee: '月額・1年契約。最小は 登録2/年・200取引/月・申告4/年。金額はページの取得で読めず要確認', url: 'https://stripe.com/tax/pricing', verified: false}
+- {id: mor.lemonsqueezy, what: 'Lemon Squeezy（MoR）', fee: '5% + 50¢/取引、月額0。米国外の取引や一部の支払い方法で追加手数料あり', url: 'https://www.lemonsqueezy.com/pricing', verified: true}
+- {id: mor.paddle, what: 'Paddle（MoR）', fee: '5% + 50¢/Checkout取引、月額0、追加手数料なしとうたう。$10未満の商品は個別相談', url: 'https://www.paddle.com/pricing', verified: true}
+- {id: mor.stripe.managed, what: 'Stripe Managed Payments（Stripe の MoR サービス）', fee: '料金ページに項目あり、手数料は未取得', url: 'https://stripe.com/pricing', verified: false}
+entry_strategies:
+- id: es.us_first
+  name: USファースト（英語のみで始め、反応があれば日本語化）
+  pros: [作る量が最小, Product Hunt/HN と相性がよい, 英語圏は単価が高い]
+  cons: [日本の既存ネットワーク・強みを使えない, 後からの日本語化で文言の作り直し]
+  risks: [後付け i18n でハードコード文字列が残る, 日本語の改行・トーンの検証が後回し]
+  cost: {free: 'Stripe 2.9%+30¢ のみ（米国内）', usd5: '同左', usd10: '同左', usd100: '+ 州の売上税対応（Stripe Tax 0.5% など）'}
+- id: es.jp_en
+  name: 日英同時（初日から i18n、LP・アプリとも日英切替）
+  pros: [両市場の反応を同時に比べられる, AI で翻訳キーの同時更新が安い, 日本の実績を英語の社会的証明に使える]
+  cons: [ローンチ作業（素材・チャネル・サポート）が2倍, 文言の再創作に手間]
+  risks: [どちらの市場にも中途半端, 日本の消費者向けは特商法表記・消費税（国外事業者）を自分で確認する必要]
+  cost: {free: 'i18n ライブラリは無料。翻訳はAI', usd5: '同左', usd10: 'ネイティブ確認を一部外注', usd100: 'ネイティブの全面レビュー＋両市場で少額広告'}
+- id: es.mor_first
+  name: MoR決済先行（最初から Paddle / Lemon Squeezy）
+  pros: [各国の VAT・売上税・日本の消費税の登録と納税を MoR が負う, 返金・請求の問い合わせも MoR, 1人スタジオでも初日から全世界で売れる]
+  cons: [手数料が高い（5%+50¢。$10の商品なら約10%）, 決済画面・請求書の名義が MoR, 審査あり（対象はデジタル商品のみ）]
+  risks: [MoR の審査落ち・規約変更（ロックイン中）, 単価の低い商品で手数料率が高くなる]
+  cost: {free: '月額0、売上ごとに 5%+50¢', usd5: '同左', usd10: '同左', usd100: '同左（量が増えたら個別料金の相談）'}
+recommendation:
+  for: 米国拠点の小さなスタジオ（NY LLC）、日英のデジタル製品（SaaS・サブスク）
+  pick: 'es.jp_en の作り方 ＋ es.mor_first の決済（コードは初日から日英、販売は MoR）。出す順は英語と日本語のどちらでもよいが、i18n の骨組みは初日に入れる'
+  why: [i18n はAIで安く後付けより安全（後付けが最も高くつく）, 日本・EU・米国各州の税登録を1人で追うのは割に合わない（MoRならゼロ）, $10の商品で Stripe+Tax Basic は約7.4%（米国内カードの場合、登録・申告は自分）、MoR は約10%。差は1件30¢前後で、税の手間と責任の移転の方が大きい]
+  switch_when: 月の売上が一定を超え、手数料差が税の外注費（Tax Complete＋会計士）を上回ったら Stripe＋Stripe Tax Complete へ移る。移行の手順を exit 計画（O11）に書いておく
+  check_first: [MoR の禁止商品リストに当たらないか, 日本の消費者向けに特商法の表記で MoR と自社の役割をどう書くか（要弁護士確認）, Stripe Managed Payments の料金（未確認）]

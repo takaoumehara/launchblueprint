@@ -1,0 +1,78 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blueprint Map · ブループリント マップ</title>
+<style>
+:root{--ink:#111;--mid:#777;--line:#ddd;--bg:#fafafa}
+*{box-sizing:border-box}body{margin:0;font:14px/1.4 -apple-system,"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;color:var(--ink);background:var(--bg);word-break:auto-phrase}
+header{padding:14px 16px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
+h1{font-size:16px;margin:0 0 8px;letter-spacing:.02em}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:6px 12px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.legend{font-size:12px;color:var(--mid)}
+main{display:flex;gap:16px;padding:16px}
+#wrap{position:relative;flex:1;min-width:0}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.area{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.area h2{font-size:12px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}
+.area.wide{grid-column:span 2}
+.blk{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;margin:0 0 6px;font:inherit;cursor:pointer;transition:opacity .15s,border-color .15s,background .15s;position:relative;z-index:2}
+.blk b{display:block;font-size:13px}.blk small{color:var(--mid);font-size:11px}
+.blk .t{position:absolute;right:6px;top:6px;font-size:10px;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.blk[data-s=done]{border-left:4px solid var(--ink)}
+.blk[data-s=needs_confirmation]{border-left:4px dashed var(--ink)}
+.blk[data-s=open]{border-left:4px solid var(--line)}
+.blk.out{opacity:.25}
+.dim .blk:not(.sel):not(.up):not(.down){opacity:.2}
+.blk.sel{background:var(--ink);color:#fff}.blk.sel small{color:#ccc}
+.blk.up{border-color:var(--ink);border-style:dashed}
+.blk.down{border-color:var(--ink);border-width:2px}
+svg{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:visible}
+#panel{width:300px;flex:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;align-self:flex-start;position:sticky;top:110px}
+#panel h3{margin:0 0 4px;font-size:16px}#panel .k{font-size:11px;color:var(--mid);margin-top:10px;text-transform:uppercase;letter-spacing:.05em}
+#panel ul{margin:4px 0;padding-left:18px}
+@media (max-width:900px){main{flex-direction:column}#panel{width:auto;position:static}#grid{grid-template-columns:1fr 1fr}.area.wide{grid-column:span 2}}
+@media (max-width:480px){#grid{grid-template-columns:1fr}.area.wide{grid-column:span 1}main{padding:10px}}
+</style></head><body>
+<header><h1>Blueprint Map <span style="color:var(--mid);font-weight:400">ブループリント マップ</span></h1>
+<div class="bar"><span class="seg" id="tiers"></span><span class="seg" id="lang"><button data-l="ja" class="on">JA</button><button data-l="en">EN</button></span>
+<span class="legend" id="leg"></span></div></header>
+<main><div id="wrap"><svg id="svg"></svg><div id="grid"></div></div><aside id="panel"></aside></main>
+<script id="data" type="application/json">/*DATA*/</script>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent),B=D.blocks,M={};B.forEach(b=>M[b.id]=b);
+const AREAS=[["purpose","目的・ポジショニング","Purpose / positioning"],["ux","UXステップ","UX steps",1],["brand","ブランド","Brand"],["tech","技術：データ・認証・ホスティング","Tech: data / auth / hosting"],["legal","法務・地域","Legal / regions"],["security","セキュリティ・アカウント","Security / account lifecycle"],["ops","コスト・運用・計測・マーケ","Cost / ops / analytics / marketing",1]];
+const ST={done:["完了","Done"],needs_confirmation:["要確認","Needs confirmation"],open:["未着手","Open"]};
+const TI={T0:["T0 スケッチ","T0 Sketch"],T1:["T1 社内・試作","T1 Internal"],T2:["T2 公開製品","T2 Public"],T3:["T3 規制・有料","T3 Regulated"]};
+let L='ja',T=D.tier||'T2',S=null;const li=a=>L=='ja'?a[0]:a[1];
+function walk(id,k){const seen=new Set,st=[...M[id][k]];while(st.length){const x=st.pop();if(seen.has(x))continue;seen.add(x);st.push(...M[x][k])}return seen}
+function render(){
+ document.documentElement.lang=L;
+ document.getElementById('tiers').innerHTML=['T0','T1','T2','T3'].map(t=>`<button data-t="${t}" class="${t==T?'on':''}">${t}</button>`).join('');
+ document.getElementById('leg').textContent=L=='ja'?'太線=完了 · 点線=要確認 · 細線=未着手 ／ クリックで依存（点線枠）と影響先（太枠）':'solid=done · dashed=needs confirmation · thin=open / click: dependencies (dashed) and impacts (bold)';
+ document.getElementById('grid').innerHTML=AREAS.map(a=>`<section class="area${a[3]?' wide':''}"><h2>${L=='ja'?a[1]:a[2]}</h2>${B.filter(b=>b.area==a[0]).map(b=>`<button class="blk${b.tier>T?' out':''}" data-id="${b.id}" data-s="${b.status}"><span class="t">${b.tier}</span><b>${L=='ja'?b.ja:b.en}</b><small>${L=='ja'?b.en:b.ja} · ${b.id}</small></button>`).join('')}</section>`).join('');
+ select(S)}
+function select(id){S=id;const g=document.getElementById('grid'),svg=document.getElementById('svg');svg.innerHTML='';
+ g.classList.toggle('dim',!!id);document.querySelectorAll('.blk').forEach(e=>e.classList.remove('sel','up','down'));
+ const P=document.getElementById('panel');
+ if(!id){P.innerHTML=`<h3>${L=='ja'?'ブロックを選んでください':'Select a block'}</h3><p style="color:var(--mid)">${L=='ja'?'選んだ段階（'+li(TI[T])+'）より上の段階のブロックは薄く表示されます。AIは同じデータ（blueprint.yaml）を読みます。':'Blocks above the selected tier ('+li(TI[T])+') are dimmed. AI reads the same data (blueprint.yaml).'}</p>`;return}
+ const b=M[id],up=new Set(b.depends_on),dn=walk(id,'impacts');
+ const el=x=>document.querySelector(`.blk[data-id="${CSS.escape(x)}"]`);
+ el(id).classList.add('sel');dn.forEach(x=>el(x).classList.add('down'));up.forEach(x=>{el(x).classList.remove('down');el(x).classList.add('up')});
+ const W=document.getElementById('wrap').getBoundingClientRect();
+ const c=e=>{const r=e.getBoundingClientRect();return[r.left-W.left+r.width/2,r.top-W.top+r.height/2]};
+ const line=(a,z,dash)=>{const[p,q]=c(el(a)),[r,s]=c(el(z));svg.insertAdjacentHTML('beforeend',`<path d="M${p},${q} C${(p+r)/2},${q} ${(p+r)/2},${s} ${r},${s}" fill="none" stroke="#111" stroke-width="${dash?1:1.6}" ${dash?'stroke-dasharray="4 3"':''} opacity=".55"/>`)};
+ up.forEach(y=>line(y,id,1));
+ [id,...dn].forEach(x=>M[x].impacts.forEach(y=>{if(dn.has(y))line(x,y,0)}));
+ const lst=s=>[...s].map(x=>`<li>${L=='ja'?M[x].ja:M[x].en} <small style="color:var(--mid)">${x}</small></li>`).join('')||'<li>—</li>';
+ P.innerHTML=`<h3>${L=='ja'?b.ja:b.en}</h3><small style="color:var(--mid)">${b.id}</small>
+ <div class="k">${L=='ja'?'合格条件':'Pass condition'}</div><div>${b.pass}</div>
+ <div class="k">${L=='ja'?'段階':'Tier'}</div><div>${li(TI[b.tier])}${b.tier>T?(L=='ja'?'（今回は対象外）':' (out of scope)'):''}</div>
+ <div class="k">${L=='ja'?'状態':'Status'}</div><div>${li(ST[b.status])}</div>
+ <div class="k">${L=='ja'?'直接依存しているもの':'Depends on (direct)'} (${up.size})</div><ul>${lst(up)}</ul>
+ <div class="k">${L=='ja'?'変えると影響が出るもの':'Impacts downstream'} (${dn.size})</div><ul>${lst(dn)}</ul>`;
+ if(innerWidth<900)P.scrollIntoView({behavior:'smooth',block:'nearest'})}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-t]'),l=e.target.closest('[data-l]'),k=e.target.closest('.blk');
+ if(t){T=t.dataset.t;render()}else if(l){L=l.dataset.l;document.querySelectorAll('#lang button').forEach(x=>x.classList.toggle('on',x==l));render()}else if(k){select(k.dataset.id==S?null:k.dataset.id)}});
+const Q=new URLSearchParams(location.search);if(Q.get('lang'))L=Q.get('lang');if(M[Q.get('sel')])S=Q.get('sel');addEventListener('resize',()=>select(S));render();
+</script></body></html>

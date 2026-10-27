@@ -1,0 +1,28 @@
+# Blueprint Catalog — dd_dashboard（買い手・投資家に見せる数字。1日目から記録）
+# 提供：CREATIVITY IS EVERYWHERE, LLC。後から作れない数字（過去の推移）を先に貯めるのが目的
+domain: dd_dashboard
+updated: '2026-10-26'
+stale_after_days: 180
+principle:
+- 過去にさかのぼって作れない数字は、ローンチ日から記録する
+- 数字ごとに「出どころ（決済・DB・監視）」を1つ決め、手入力しない
+groups:
+- id: dd.users
+  metrics: [新規登録数（日・月）, MAU（作る側のアクティブ数）, 公開ページ数, 国別・言語別の内訳]
+  source_of_truth: アプリDB＋アクセス解析
+- id: dd.money
+  metrics: [MRR, 有料会員数, 解約率（churn）, 返金件数・金額]
+  source_of_truth: 決済サービス（例：Stripe）のデータ
+- id: dd.cohort
+  metrics: [登録月別の継続率（1・3・6・12か月）]
+  source_of_truth: アプリDB
+- id: dd.infra
+  metrics: [稼働率, 障害件数と復旧時間, 月額インフラ費, DB容量]
+  source_of_truth: 監視サービス＋請求書
+- id: dd.safety
+  metrics: [バックアップ・復元訓練ログ, セキュリティ記録（脆弱性対応・権限変更・事故）]
+  source_of_truth: 運用ログ（data-room/ops/）
+acceptance:
+- 5グループすべてに、1日目からの記録がある
+- ダッシュボードは CSV/JSON で書き出せる（DD のデータルームに入れられる）
+pairs_well_with: [exit_dd, scale_readiness, analytics, monitoring]

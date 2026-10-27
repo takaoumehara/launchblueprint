@@ -1,0 +1,67 @@
+# Blueprint Tech Catalog — monitoring
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: monitoring
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: mon.sentry
+  name: Sentry
+  what: エラー監視
+  best_for: 全プロジェクト（T1+）
+  avoid_when: ''
+  pricing_bands:
+    free: $0 Developer：1人、エラー5万/月
+    usd5: —
+    usd10: —
+    usd100: Team $26（人数無制限）／Business $80
+  limits: 無料は1ユーザーのみ
+  lock_in: 低
+  liability_compliance: 個人情報のマスク
+  security: PII を送らない設定
+  pairs_well_with:
+  - fe.nextjs
+  source:
+    url: https://sentry.io/pricing/
+    checked: '2026-10-26'
+    verified: true
+- id: mon.crashlytics
+  name: Firebase Crashlytics
+  what: モバイルのクラッシュ監視
+  best_for: モバイル
+  avoid_when: ''
+  pricing_bands:
+    free: 無料
+    usd5: 無料
+    usd10: 無料
+    usd100: 無料
+  limits: —
+  lock_in: 中
+  liability_compliance: —
+  security: —
+  pairs_well_with:
+  - fe.expo
+  source:
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: mon.vercel-observability
+  name: Vercel Observability
+  what: 関数ログ・トレース
+  best_for: Vercel 上
+  avoid_when: ''
+  pricing_bands:
+    free: Hobby：ログ1時間
+    usd5: —
+    usd10: —
+    usd100: Pro：ログ1日、Plus で30日（$1.20/100万イベント）
+  limits: 保持期間が短い
+  lock_in: 中
+  liability_compliance: —
+  security: —
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true

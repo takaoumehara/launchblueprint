@@ -1,0 +1,47 @@
+# Blueprint Tech Catalog — ci_cd
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: ci_cd
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: ci.github-actions
+  name: GitHub Actions
+  what: テスト・ビルドの自動化
+  best_for: 全プロジェクト
+  avoid_when: ''
+  pricing_bands:
+    free: 公開リポジトリ無料。非公開は 2,000分/月（Free）
+    usd5: 超過 Linux 2コア $0.006/分 → 約830分
+    usd10: 約1,660分
+    usd100: 約16,600分（macOS は $0.062/分で10倍）
+  limits: 支払い方法がないと上限で停止
+  lock_in: 低
+  liability_compliance: —
+  security: 秘密は Environments に、最小権限トークン
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://docs.github.com/en/billing/concepts/product-billing/github-actions
+    checked: '2026-10-26'
+    verified: true
+- id: ci.vercel-git
+  name: Vercel Git 連携
+  what: push でプレビュー・本番デプロイ
+  best_for: Vercel 利用時
+  avoid_when: ''
+  pricing_bands:
+    free: 込み
+    usd5: 込み
+    usd10: 込み
+    usd100: 込み
+  limits: Hobby はビルド機が基本のみ
+  lock_in: 中
+  liability_compliance: —
+  security: 本番は main だけ（L30）
+  pairs_well_with:
+  - host.vercel
+  source:
+    url: https://vercel.com/pricing
+    checked: '2026-10-26'
+    verified: true

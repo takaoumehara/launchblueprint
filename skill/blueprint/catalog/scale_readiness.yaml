@@ -1,0 +1,38 @@
+# Blueprint Catalog — scale_readiness（ユーザー数ごとに、今の仕組みがどこまで持つか）
+# 提供：CREATIVITY IS EVERYWHERE, LLC。金額・工数は目安（estimate）。採用前に公式料金で確認
+domain: scale_readiness
+updated: '2026-10-26'
+stale_after_days: 180
+principle:
+- 先に大きな基盤を作らない。各段の「引き金（trigger）」に届いてから次の段へ進む
+- 売却が目的なら、買い手は自前の基盤を持つことが多い。売るために大規模インフラは要らない。要るのは「記録された数字」と「戻せる証拠」
+- 各段で決めるのは「何を足すか」「どの数字で次へ進むか」「費用と工数の目安」
+tiers:
+- id: scale.t0
+  users: '0-10k'
+  must: [日次DBバックアップ（30日保持）, 稼働監視, エラー収集, 費用の月次記録]
+  trigger_next: 'MAU 10k 到達、または DB 容量が上限の50%'
+- id: scale.t1
+  users: '10k'
+  add: [アラート（稼働・エラー率・費用急増）, 復元訓練（四半期1回、所要時間を記録）]
+  acceptance: '復元訓練ログに「開始・完了・失ったデータ量」がある'
+- id: scale.t2
+  users: '100k'
+  add: [エッジキャッシュ（公開ページ）, レート制限（API・ログイン・フォーム）]
+  acceptance: '公開ページのキャッシュヒット率と 429 件数が見える'
+- id: scale.t3
+  users: '300k-1M'
+  add: [単一DBの分割、またはマネージドPostgres（接続プール経由）へ移行, 非同期処理キュー]
+  effort: '1-2 エンジニア月（estimate）'
+  acceptance: '移行リハーサルを本番相当データで1回完了'
+- id: scale.t4
+  users: 'enterprise 顧客 / 売却交渉'
+  add: [SOC 2（Type I→II）]
+  cost: '初年度 $20-80k（estimate）'
+  note: 売却だけが目的なら、買い手側の体制に乗るため必須ではないことが多い。交渉相手に確認
+- id: scale.t5
+  users: '10M'
+  add: [複数ノードPostgres, 地域別データ所在（EU/アジア）, 24時間オンコール]
+answer_rules:
+- 今の段と次の引き金だけを示す。先の段は「いつ考えるか」だけ書く
+- 金額・工数は estimate と明記し、source.checked のない数字を確定扱いしない

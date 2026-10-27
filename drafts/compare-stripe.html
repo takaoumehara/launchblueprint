@@ -1,0 +1,67 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>比較：Stripe Connect の方式 — Blueprint</title>
+<meta name="color-scheme" content="light dark"><link rel="stylesheet" href="bp-tokens.css"><script src="bp-theme.js"></script><script src="bp-viz.js"></script>
+<style>
+body{background:var(--bg);color:var(--tx);font:14px/1.6 var(--font);margin:0}
+main{max-width:1240px;margin:0 auto;padding:36px 40px 80px;display:grid;grid-template-columns:repeat(12,1fr);gap:0 24px}
+.k{font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mu)}
+h1{grid-column:1/9;font-size:30px;line-height:1.2;letter-spacing:-.025em;margin:10px 0 8px;font-weight:600;text-wrap:balance}
+.q{grid-column:1/9;color:var(--mu);margin:0 0 28px;max-width:62ch}
+.meta{grid-column:9/13;align-self:end;margin-bottom:28px;font-size:12px;color:var(--mu);border-left:var(--hair) solid var(--ln);padding-left:16px}
+.opts{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln);border:var(--hair) solid var(--ln)}
+.opt{all:unset;cursor:pointer;background:var(--bg);padding:20px 22px 22px;display:flex;flex-direction:column;gap:10px;min-height:208px;position:relative;transition:background .2s,color .2s}
+.opt:hover{background:var(--sf)}.opt:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.opt h2{font-size:22px;letter-spacing:-.02em;margin:0;font-weight:600}
+.opt .st{display:flex;gap:8px;align-items:center;font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.opt .st i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.opt p{margin:0;font-size:13px}.opt .c{margin-top:auto;font:12px/1.5 var(--mono);opacity:.8}
+.opt.sel{background:var(--ac);color:var(--bg)}.opt.sel .st,.opt.sel p{color:var(--bg)}
+.opt.rej .st{color:var(--bad,oklch(.6 .19 25))}.opt[aria-pressed=true]:not(.sel){box-shadow:inset 0 0 0 2px var(--ac)}
+.opt.sel[aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--tx)}
+section{grid-column:1/-1;margin-top:48px}
+section>header{display:flex;align-items:baseline;gap:16px;border-bottom:var(--hair) solid var(--ln);padding-bottom:10px;margin-bottom:18px}
+section h3{font-size:17px;letter-spacing:-.015em;margin:0;font-weight:600}section header p{margin:0;color:var(--mu);font-size:13px}
+#sk{width:100%;height:340px;display:block}
+#sk text{font:12px var(--font);fill:var(--tx)}#sk text.m{fill:var(--mu);font:11px var(--mono)}
+#sk .rb path{fill:none;stroke-width:1;transition:opacity .35s,stroke .35s}
+#sk .nd{fill:var(--tx)}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:var(--hair) solid var(--ln)}
+th{font:500 11px/1.3 var(--mono);color:var(--mu);text-transform:uppercase;letter-spacing:.04em}
+td.on,th.on{background:var(--ac-wash,color-mix(in oklch,var(--ac) 8%,transparent))}th.on{color:var(--ac-tx)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.rule{border-left:3px solid var(--bad,oklch(.6 .19 25));padding:12px 16px;background:var(--sf)}.rule b{font-family:var(--mono);font-size:12px}
+ol.src{margin:0;padding-left:18px;font-size:13px}ol.src a{color:var(--ac-tx)}
+@media (prefers-reduced-motion:reduce){#sk .rb path,.opt{transition:none}}
+</style><script type="application/json" id="bp-data">{"meta": {"schema": "blueprint/compare-stripe-connect@1", "generated": "2026-10-26", "publisher": "CREATIVITY IS EVERYWHERE, LLC", "sources": ["catalog/payments.yaml", "project.blueprint.yaml", "catalog/rules.yaml"], "how_to_read": "catalog/ai-usage.md"}, "question": "主催者がイベントを作り、参加者から代金を受け取る。紛争・返金・損失の責任をプラットフォーム（自社）が負うか？", "item": {"id": "pay.stripe-connect", "name": "Stripe Connect", "lock_in": "変更不可：作成後に方式（ダッシュボード種別）は変えられない。新規は Accounts v2／controller properties 推奨", "liability_compliance": "方式で責任が移る。先回りリスク調査（§7）の必須項目", "source": [{"url": "https://docs.stripe.com/connect/accounts", "checked": "2026-10-26", "verified": true}, {"url": "https://docs.stripe.com/connect/migrate-to-controller-properties", "checked": "2026-10-26", "verified": true}, {"url": "https://stripe.com/connect/pricing", "checked": "2026-10-26", "verified": true}]}, "options": [{"id": "standard", "controller": "losses.payments=stripe, fees.payer=account, dashboard=full", "liability": "Direct charges：接続アカウント（主催者）。Destination charges：プラットフォーム", "cost": "Stripeが料金を持つ方式：プラットフォームの追加費用なし", "status": "selected", "reason": "Direct chargesなら紛争・返金は主催者。自社は場の提供", "rules": ["R-006"]}, {"id": "express", "controller": "losses.payments=application, fees.payer=application, dashboard=express", "liability": "紛争・不正・マイナス残高：プラットフォーム", "cost": "$2/アクティブ月 ＋ 0.25%+25¢/入金", "status": "rejected", "reason": "紛争・不正・マイナス残高が自社に来る。$2/アクティブ月", "rules": ["R-006"]}, {"id": "custom", "controller": "+ requirement_collection=application, dashboard=none", "liability": "全部プラットフォーム（KYC情報の管理も）", "cost": "同上＋大きな開発", "status": "rejected", "reason": "KYC・サポートを全部自社で持つ", "rules": ["R-006"]}], "rules": [{"id": "R-006", "type": "dont", "text": "決済方式を後から変更する前提で設計しない（Connect の方式は作成後に変えられない）", "applies_to": "決済", "strength": "default", "source": "AIの推測（先回りリスク調査 2026-07）", "status": "review_overdue", "review_due": "2026-10-01"}], "stack": [{"domain": "データベース", "id": "db.supabase", "name": "Supabase (Postgres)", "bands": {"free": "$0：500MB、1週間無操作で一時停止、2プロジェクトまで", "usd5": "—（Free と Pro の間の帯はない）", "usd10": "—", "usd100": "$25〜：Pro（8GB、毎日バックアップ7日、休止なし）。$100帯なら Compute 増強 or PITR（$100/月）"}}, {"domain": "認証", "id": "auth.supabase", "name": "Supabase Auth", "bands": {"free": "$0：5万MAU", "usd5": "—", "usd10": "—", "usd100": "$25 Pro：10万MAU、以降 $0.00325/MAU"}}, {"domain": "ホスト", "id": "host.vercel", "name": "Vercel", "bands": {"free": "Hobby $0：個人・非商用のみ。転送100GB、関数呼び出し100万", "usd5": "—", "usd10": "—", "usd100": "Pro $20/人：1TB、$20分の利用クレジット、使いすぎは上限設定可"}}, {"domain": "メール・通知", "id": "mail.resend", "name": "Resend", "bands": {"free": "Free：3,000通/月・100通/日・ドメイン3", "usd5": "—", "usd10": "—", "usd100": "Pro $20：5万通、日上限なし"}}], "budget_target": "usd10"}</script><link rel="alternate" type="application/json" href="data/compare-stripe.json" title="machine-readable data"></head><body><header class="bp-bar"><a class="bp-mark" href="llms.txt"><i></i>Blueprint</a><nav class="bp-nav" aria-label="画面"><a href="catalog-concept.html">カタログ</a><a href="canvas-concept.html">キャンバス</a><a href="compare-stripe.html" aria-current="page">比較</a><a href="rules-ledger.html">ルール</a><a href="build-vs-buy.html">作る vs 買う</a></nav><span class="sp"></span><span class="tag">サンプルデータ</span><span data-data-slot></span><span data-theme-slot></span></header><main>
+<div class="k" style="grid-column:1/-1">比較 · pay.stripe-connect</div>
+<h1 id="h"></h1><p class="q" id="q"></p><div class="meta" id="meta"></div>
+<div class="opts" id="opts" role="group" aria-label="方式"></div>
+<section><header><h3>責任の流れ</h3><p>線の濃さ＝その責任を持つ量。方式を押すと流れが変わる</p></header><svg id="sk" role="img" aria-label="責任の流れ"></svg></section>
+<section class="two"><div><header style="display:flex;gap:16px;border-bottom:var(--hair) solid var(--ln);padding-bottom:10px;margin-bottom:14px"><h3 style="margin:0;font-size:17px">一緒に使う構成と予算帯</h3></header><table id="stack"></table></div>
+<div><header style="border-bottom:var(--hair) solid var(--ln);padding-bottom:10px;margin-bottom:14px"><h3 style="margin:0;font-size:17px">効いているルールと出典</h3></header><div id="rules"></div><ol class="src" id="src" style="margin-top:16px"></ol></div></section>
+</main>
+<script>
+const D=BP.data(),$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const NM={standard:'Standard',express:'Express',custom:'Custom'},SL={selected:'採用',rejected:'不採用',candidate:'候補'};
+$('h').textContent=D.item.name+'：どの方式にするか';$('q').textContent=D.question;
+$('meta').innerHTML='変えられるか<br><b style="color:var(--tx)">'+esc(D.item.lock_in.split('：')[0])+'</b><br>'+esc(D.item.lock_in.split('：').slice(1).join('：'));
+let cur=(D.options.find(o=>o.status=='selected')||D.options[0]).id;
+$('opts').innerHTML=D.options.map(o=>`<button class="opt ${o.status=='selected'?'sel':o.status=='rejected'?'rej':''}" data-id="${o.id}" aria-pressed="false"><span class="st"><i></i>${SL[o.status]||o.status}</span><h2>${NM[o.id]||o.id}</h2><p>${esc(o.reason)}</p><p style="opacity:.75">${esc(o.liability)}</p><span class="c">${esc(o.cost)}</span></button>`).join('');
+/* 責任の行き先は controller の文字列から決める */
+function owners(o){const c=o.controller,app=k=>new RegExp(k+'=application').test(c);
+ const std=o.id=='standard';return [['紛争・返金',std?'org':'app'],['マイナス残高・不正',/losses\.payments=stripe/.test(c)?(std?'org':'stripe'):app('losses')||o.id=='custom'?'app':'stripe'],['手数料',/fees\.payer=account/.test(c)?'org':'app'],['本人確認(KYC)',/requirement_collection=application/.test(c)?'app':'stripe'],['サポート窓口',std?'org':'app']]}
+const T={org:'主催者（接続アカウント）',stripe:'Stripe',app:'自社（プラットフォーム）'};
+function sk(){const svg=$('sk');svg.innerHTML='';const W=svg.clientWidth||1160,H=340,o=D.options.find(x=>x.id==cur),rows=owners(o);
+ const L=rows.map((r,i)=>({y:30+i*64,r})),R=Object.keys(T).map((k,i)=>({k,y:60+i*110}));
+ const cnt={};rows.forEach(r=>cnt[r[1]]=(cnt[r[1]]||0)+1);const used={};
+ const g=BP.el('g',{class:'rb'},svg),x1=200,x2=W-260;
+ L.forEach((l,i)=>{const t=BP.el('text',{x:0,y:l.y+4},svg);t.textContent=l.r[0];BP.el('rect',{x:x1-6,y:l.y-10,width:6,height:20,class:'nd'},svg);
+  const rk=R.find(r=>r.k==l.r[1]),u=used[rk.k]=(used[rk.k]||0)+1,ty=rk.y-24+u*48/(cnt[rk.k]+1),rr=BP.rng(i+7),col=rk.k=='app'?'var(--bad,oklch(.6 .19 25))':rk.k=='org'?'var(--ac)':'var(--mu)';
+  for(let s=0;s<22;s++){const a=(s-11)*.85,b=(s-11)*(1.9/cnt[rk.k]+.4);BP.el('path',{d:BP.wire(x1,l.y+a,x2,ty+b,.5+rr()*.08),stroke:col,opacity:.18+rr()*.22},g)}});
+ R.forEach(r=>{BP.el('rect',{x:x2,y:r.y-26,width:6,height:52,class:'nd',opacity:cnt[r.k]?1:.2},svg);const t=BP.el('text',{x:x2+18,y:r.y-2},svg);t.textContent=T[r.k];const m=BP.el('text',{x:x2+18,y:r.y+16,class:'m'},svg);m.textContent=(cnt[r.k]||0)+' / '+rows.length+' 件'});
+ document.querySelectorAll('.opt').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id==cur))}
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{cur=b.dataset.id;sk()});addEventListener('resize',sk);sk();
+const B=['free','usd5','usd10','usd100'],BL={free:'無料',usd5:'〜$5',usd10:'〜$10',usd100:'〜$100'};
+$('stack').innerHTML='<tr><th>領域</th>'+B.map(b=>`<th class="${b==D.budget_target?'on':''}">${BL[b]}${b==D.budget_target?' · 目標':''}</th>`).join('')+'</tr>'+D.stack.map(s=>`<tr><td><b>${esc(s.name)}</b><br><span style="color:var(--mu);font-size:12px">${esc(s.domain)}</span></td>`+B.map(b=>`<td class="${b==D.budget_target?'on':''}">${esc(s.bands[b])}</td>`).join('')+'</tr>').join('');
+$('rules').innerHTML=D.rules.map(r=>`<div class="rule"><b>${r.id}</b> · ${r.status=='review_overdue'?'見直し期限切れ（'+r.review_due+'）':esc(r.status)}<p style="margin:6px 0 0">${esc(r.text)}</p><p style="margin:4px 0 0;color:var(--mu);font-size:12px">出どころ：${esc(r.source)}</p></div>`).join('');
+$('src').innerHTML=D.item.source.map(s=>`<li><a href="${esc(s.url)}">${esc(s.url.replace('https://',''))}</a> <span style="color:var(--mu)">確認 ${s.checked||'未'}${s.verified?'':' · 未確認'}</span></li>`).join('');
+</script></body></html>

@@ -1,0 +1,270 @@
+# Blueprint Catalog — gtm_channels
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 全件 verified:false（記憶ベースの下書き）。使う前に公式ページで確認
+domain: gtm_channels
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml
+entries:
+- id: gtm.producthunt
+  name: Product Hunt
+  what: 新製品の公開日ランキング
+  best_for: 開発者・早期採用者向けのWeb/AIツール
+  avoid_when: 一般消費者向け・地域限定サービス
+  pricing_bands:
+    free: 無料で掲載
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 1日1回の勝負。準備（ハンター・素材・初日の返信）が結果を決める
+  lock_in: 低
+  liability_compliance: 投票の依頼・水増しは規約違反
+  security: —
+  pairs_well_with:
+  - gtm.x
+  - gtm.hn
+  source:
+    url: https://www.producthunt.com/launch
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.hn
+  name: Hacker News（Show HN）
+  what: 技術者向け掲示板の自作発表枠
+  best_for: 開発者ツール・OSS
+  avoid_when: マーケ色の強い文面
+  pricing_bands:
+    free: 無料
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 宣伝文は嫌われる。作り手本人が答える
+  lock_in: 低
+  liability_compliance: 投票操作は禁止
+  security: —
+  pairs_well_with:
+  - gtm.producthunt
+  source:
+    url: https://news.ycombinator.com/showhn.html
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.x
+  name: X（旧Twitter）
+  what: 短文SNS・作りながら発信（build in public）
+  best_for: 個人開発・AI系・英語圏の早期層
+  avoid_when: 実名を出せない場合（会社アカウントで運用）
+  pricing_bands:
+    free: 無料
+    usd5: —
+    usd10: —
+    usd100: 広告は入札制（最低額は要確認）
+  limits: アルゴリズム変動が大きい
+  lock_in: 中（フォロワーは移せない）
+  liability_compliance: ステマ規制：PR表記必須
+  security: 2FA・共有ログインしない
+  pairs_well_with:
+  - gtm.producthunt
+  - gtm.content
+  source:
+    url: https://business.x.com/
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.seo
+  name: SEO（検索流入）
+  what: 検索結果からの自然流入
+  best_for: 答えを探す検索がある課題
+  avoid_when: 検索需要がない新カテゴリ
+  pricing_bands:
+    free: Search Console 無料
+    usd5: —
+    usd10: —
+    usd100: 有料ツール（Ahrefs 等）は$100帯から（要確認）
+  limits: 効果まで3〜6か月
+  lock_in: 低
+  liability_compliance: —
+  security: —
+  pairs_well_with:
+  - gtm.content
+  source:
+    url: https://developers.google.com/search/docs
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.aso
+  name: ASO（ストア最適化）
+  what: App Store / Google Play 内の検索最適化
+  best_for: アプリ
+  avoid_when: Webのみ
+  pricing_bands:
+    free: ストアの分析は無料
+    usd5: —
+    usd10: —
+    usd100: AppTweak 等は$100帯以上（要確認）
+  limits: 審査で掲載文が差し戻されることがある
+  lock_in: 中
+  liability_compliance: Apple/Google の掲載ガイドライン
+  security: —
+  pairs_well_with:
+  - gtm.seo
+  source:
+    url: https://developer.apple.com/app-store/product-page/
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.content
+  name: コンテンツ（ブログ・動画・事例）
+  what: 自社メディアでの継続発信
+  best_for: 比較・やり方を調べる層がいる
+  avoid_when: 更新を続ける人がいない
+  pricing_bands:
+    free: 自社サイトで無料
+    usd5: —
+    usd10: —
+    usd100: 外注・動画制作
+  limits: 継続しないと効かない
+  lock_in: 低
+  liability_compliance: 引用・画像の権利
+  security: —
+  pairs_well_with:
+  - gtm.seo
+  - gtm.x
+  source:
+    url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.ads.meta
+  name: Meta 広告
+  what: Instagram/Facebook 広告
+  best_for: 消費者向け・地域ビジネス・見た目で伝わる商品
+  avoid_when: B2B の高単価
+  pricing_bands:
+    free: —
+    usd5: 1日$5程度から試せる（要確認）
+    usd10: 同左
+    usd100: $100で数日分のテスト
+  limits: 学習期間がある。少額では判定がぶれる
+  lock_in: 低
+  liability_compliance: 広告ポリシー・特定業種（住宅・雇用・金融）の制限
+  security: 広告アカウントは会社名義・2FA
+  pairs_well_with:
+  - gtm.ads.google
+  source:
+    url: https://www.facebook.com/business/ads
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.ads.google
+  name: Google 広告
+  what: 検索連動・P-MAX
+  best_for: すでに検索されている課題
+  avoid_when: 検索需要がない新カテゴリ
+  pricing_bands:
+    free: —
+    usd5: 少額可（要確認）
+    usd10: 同左
+    usd100: キーワード単価次第
+  limits: キーワード単価が高い業種は$100では足りない
+  lock_in: 低
+  liability_compliance: 広告ポリシー
+  security: 会社名義・2FA
+  pairs_well_with:
+  - gtm.seo
+  source:
+    url: https://ads.google.com/
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.referral
+  name: 紹介プログラム
+  what: 既存ユーザーが招待すると双方に特典
+  best_for: 使うほど人を呼ぶ価値がある（共有・共同作業）
+  avoid_when: 特典目当ての不正が起きやすい商品
+  pricing_bands:
+    free: 自前実装は無料
+    usd5: —
+    usd10: —
+    usd100: Rewardful 等は$49〜（要確認）
+  limits: 不正（自己紹介）対策が必要
+  lock_in: 中
+  liability_compliance: 景品表示法の上限・FTC の開示
+  security: 不正検知・上限
+  pairs_well_with:
+  - pay.stripe
+  source:
+    url: https://www.rewardful.com/pricing
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.community
+  name: コミュニティ（Discord 等）
+  what: ユーザー同士の場
+  best_for: 熱心な少数がいる・作り手と話したい層
+  avoid_when: 運営の時間が取れない
+  pricing_bands:
+    free: Discord 無料
+    usd5: —
+    usd10: —
+    usd100: Circle 等は有料（要確認）
+  limits: 放置すると逆効果
+  lock_in: 中
+  liability_compliance: モデレーション責任
+  security: 管理者権限を最小に
+  pairs_well_with:
+  - gtm.x
+  source:
+    url: https://discord.com/
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.pr
+  name: PR・プレスキット
+  what: メディアへの情報提供
+  best_for: ニュース性がある（初・数字・社会性）
+  avoid_when: 中身が固まる前
+  pricing_bands:
+    free: プレスキットは無料
+    usd5: —
+    usd10: —
+    usd100: PR TIMES 等の配信は有料（要確認）
+  limits: 掲載は保証されない
+  lock_in: 低
+  liability_compliance: 誇大表示の禁止
+  security: —
+  pairs_well_with:
+  - gtm.content
+  source:
+    url: https://prtimes.jp/
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.partners
+  name: 提携・マーケットプレイス
+  what: 他社製品への掲載・連携
+  best_for: 連携先の利用者が ICP と重なる
+  avoid_when: 連携の保守が負担
+  pricing_bands:
+    free: 掲載無料が多い
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 審査に数週間
+  lock_in: 中〜高
+  liability_compliance: 相手の規約・データ共有契約
+  security: OAuth 範囲を最小に
+  pairs_well_with:
+  - gtm.content
+  source:
+    url: https://www.shopify.com/partners
+    checked: '2026-10-26'
+    verified: false
+- id: gtm.outbound
+  name: アウトバウンド営業（B2B）
+  what: メール・DM で直接接触
+  best_for: 高単価B2B
+  avoid_when: 消費者向け
+  pricing_bands:
+    free: 手作業なら無料
+    usd5: —
+    usd10: —
+    usd100: CRM・送信ツール（要確認）
+  limits: 迷惑メール判定・ドメイン評価の悪化
+  lock_in: 低
+  liability_compliance: CAN-SPAM・特定電子メール法・GDPR
+  security: 送信用サブドメインを分ける
+  pairs_well_with:
+  - em.resend
+  source:
+    url: https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business
+    checked: '2026-10-26'
+    verified: false

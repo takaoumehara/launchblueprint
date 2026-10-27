@@ -1,0 +1,56 @@
+# Blueprint Tech Catalog — payments
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: payments
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: pay.stripe-checkout
+  name: Stripe Checkout / Payments
+  what: 決済ページ・カード決済
+  best_for: 単一販売者のサービス
+  avoid_when: ''
+  pricing_bands:
+    free: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
+    usd5: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
+    usd10: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
+    usd100: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
+  limits: 国ごとに対応手段が違う。海外カード +1%
+  lock_in: 中
+  liability_compliance: チャージバックは販売者（自社）。紛争受付 $15
+  security: Webhook 署名を検証
+  pairs_well_with:
+  - fe.nextjs
+  source:
+    url: https://stripe.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: pay.stripe-connect
+  name: Stripe Connect
+  what: プラットフォームが他者の売上を扱う（マーケットプレイス・SaaS）
+  best_for: 主催者・出店者がいるサービス
+  options:
+  - id: standard
+    controller: losses.payments=stripe, fees.payer=account, dashboard=full
+    liability: Direct charges：接続アカウント（主催者）。Destination charges：プラットフォーム
+    cost: Stripeが料金を持つ方式：プラットフォームの追加費用なし
+  - id: express
+    controller: losses.payments=application, fees.payer=application, dashboard=express
+    liability: 紛争・不正・マイナス残高：プラットフォーム
+    cost: $2/アクティブ月 ＋ 0.25%+25¢/入金
+  - id: custom
+    controller: + requirement_collection=application, dashboard=none
+    liability: 全部プラットフォーム（KYC情報の管理も）
+    cost: 同上＋大きな開発
+  lock_in: 変更不可：作成後に方式（ダッシュボード種別）は変えられない。新規は Accounts v2／controller properties 推奨
+  liability_compliance: 方式で責任が移る。先回りリスク調査（§7）の必須項目
+  source:
+  - url: https://docs.stripe.com/connect/accounts
+    checked: '2026-10-26'
+    verified: true
+  - url: https://docs.stripe.com/connect/migrate-to-controller-properties
+    checked: '2026-10-26'
+    verified: true
+  - url: https://stripe.com/connect/pricing
+    checked: '2026-10-26'
+    verified: true

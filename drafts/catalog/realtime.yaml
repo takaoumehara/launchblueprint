@@ -1,0 +1,47 @@
+# Blueprint Tech Catalog — realtime
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: realtime
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: rt.supabase-realtime
+  name: Supabase Realtime
+  what: DB変更の購読・チャンネル
+  best_for: チャット・在庫表示
+  avoid_when: ''
+  pricing_bands:
+    free: Free：同時200接続、200万メッセージ
+    usd5: —
+    usd10: —
+    usd100: Pro：同時500、500万
+  limits: Free は同時200
+  lock_in: 低
+  liability_compliance: —
+  security: チャンネルの認可
+  pairs_well_with:
+  - db.supabase
+  source:
+    url: https://supabase.com/pricing
+    checked: '2026-10-26'
+    verified: true
+- id: rt.firebase-rtdb
+  name: Firebase Realtime Database
+  what: リアルタイム同期DB
+  best_for: 同時編集・プレゼンス
+  avoid_when: ''
+  pricing_bands:
+    free: Spark：同時100接続、1GB
+    usd5: Blaze 従量
+    usd10: 従量
+    usd100: 従量
+  limits: Spark は同時100
+  lock_in: 高
+  liability_compliance: —
+  security: ルールのテスト
+  pairs_well_with:
+  - auth.firebase
+  source:
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-26'
+    verified: true

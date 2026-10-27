@@ -1,0 +1,36 @@
+{
+ "meta": {
+  "schema": "blueprint/index@1",
+  "generated": "2026-10-26",
+  "publisher": "CREATIVITY IS EVERYWHERE, LLC",
+  "sources": [],
+  "how_to_read": "catalog/ai-usage.md"
+ },
+ "screens": [
+  {
+   "screen": "catalog-concept.html",
+   "data": "data/catalog.json",
+   "what": "技術カタログ（15分野・43件）と選択・鮮度"
+  },
+  {
+   "screen": "canvas-concept.html",
+   "data": "data/canvas.json",
+   "what": "プロジェクトのノードグラフ（サンプル）"
+  },
+  {
+   "screen": "compare-stripe.html",
+   "data": "data/compare-stripe.json",
+   "what": "Stripe Connect の方式比較と責任の所在"
+  },
+  {
+   "screen": "rules-ledger.html",
+   "data": "data/rules.json",
+   "what": "ルール台帳と出どころ（系譜）"
+  },
+  {
+   "screen": "build-vs-buy.html",
+   "data": "data/build-vs-buy.json",
+   "what": "作る／API／全部入りの費用比較"
+  }
+ ]
+}

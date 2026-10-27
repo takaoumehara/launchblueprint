@@ -1,0 +1,51 @@
+# Blueprint Tech Catalog — backend
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: backend
+updated: '2026-10-26'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: be.route-handlers
+  name: Next.js Route Handlers / Server Actions
+  what: フロントと同居するAPI
+  best_for: 小〜中規模、1チーム
+  avoid_when: ''
+  pricing_bands:
+    free: ホストの無料枠内
+    usd5: ホストの無料枠内
+    usd10: 同左
+    usd100: 同左
+  limits: 長時間処理に不向き（関数のタイムアウト）
+  lock_in: 中
+  liability_compliance: なし
+  security: 入力検証・認可を毎回サーバーで
+  pairs_well_with:
+  - fe.nextjs
+  - host.vercel
+  source:
+    url: https://nextjs.org/docs/app/building-your-application/routing/route-handlers
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: be.cloud-run
+  name: Google Cloud Run
+  what: コンテナをそのまま動かす
+  best_for: 長い処理・任意の言語
+  avoid_when: ''
+  pricing_bands:
+    free: 無料枠あり
+    usd5: 要確認
+    usd10: 要確認
+    usd100: 要確認
+  limits: コールドスタート
+  lock_in: 低（コンテナは持ち運べる）
+  liability_compliance: なし
+  security: サービスアカウントを最小権限に
+  pairs_well_with:
+  - db.firestore
+  - auth.firebase
+  source:
+    url: https://cloud.google.com/run/pricing
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認

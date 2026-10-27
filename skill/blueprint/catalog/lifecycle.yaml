@@ -1,0 +1,1409 @@
+schema: blueprint.lifecycle/v2
+updated: '2026-10-26'
+publisher: CREATIVITY IS EVERYWHERE, LLC
+how_to_read: 'status: covered=合格条件まで書いてある / thin=言及はあるが判断・合格条件・予算帯がない / missing=該当なし。evidence
+  はリポジトリ内のファイルと節。priority P1=公開前に必須 / category=12カテゴリー（オーナー案 2026-10-26）。ai_caution=true
+  はAIコーディング特有の注意点。acceptance はAIが機械的に確かめられる条件'
+stages:
+- discover
+- strategy
+- brand
+- design
+- build
+- legal
+- pricing
+- gtm
+- growth
+- operate
+- maintain
+- finance
+- sunset
+- exit
+items:
+- id: lc.discover.01
+  stage: discover
+  domain: validation
+  item: 課題インタビュー（5〜10人）と事実/仮説の区別
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §2.1 調査レンズ／ux/research.md
+  proposed_addition: —
+  priority: P3
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.discover.02
+  stage: discover
+  domain: validation
+  item: ペイン×ペルソナのひもづけ（根拠つき）
+  status: thin
+  evidence: gaps-2026-10-26.md『ペイン』残
+  proposed_addition: pains.md に persona_id と根拠必須（既定の残タスク）
+  priority: P1
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.discover.03
+  stage: discover
+  domain: validation
+  item: 市場規模・競合マップ・代替手段
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §2.1 調査（既存の代替手段）のみ。競合表なし
+  proposed_addition: gtm-ops §G1 競合・代替手段表
+  priority: P2
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.discover.04
+  stage: discover
+  domain: validation
+  item: 需要の検証（待機リスト／スモークテスト／事前予約）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G2 需要テスト（LP＋待機リスト、合格＝訪問→登録率）
+  priority: P1
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.discover.05
+  stage: discover
+  domain: validation
+  item: PMFの測り方（Sean Ellis 40%テスト等）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G2 PMF判定
+  priority: P2
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.strategy.06
+  stage: strategy
+  domain: strategy
+  item: 意図の一文・Not-to-build
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §1 D1/D3
+  proposed_addition: —
+  priority: P3
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.strategy.07
+  stage: strategy
+  domain: strategy
+  item: 北極星指標と成功の定義
+  status: thin
+  evidence: export/blueprint-v2-full.md §2 block1 success metric／block12 イベント3〜5
+  proposed_addition: gtm-ops §G8 北極星＋入力指標ツリー
+  priority: P1
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.strategy.08
+  stage: strategy
+  domain: strategy
+  item: ビジネスモデル（誰が払うか・単位経済）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §16 TCO はコスト側のみ
+  proposed_addition: gtm-ops §G6 単位経済（CAC/LTV/粗利）
+  priority: P1
+  category: '01'
+  source: blueprint-v2/v3（既存）
+- id: lc.n01
+  stage: 12cat
+  domain: validation
+  item: 最もリスクの高い仮説（価値・成長）と検証KPI
+  status: thin
+  evidence: v3 §2.1 調査レンズ（仮説と事実の区別のみ）
+  proposed_addition: 12cat §01
+  priority: P1
+  category: '01'
+  acceptance: 'hypotheses.yaml の各行に {type: value|growth, kpi, threshold, result}'
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n02
+  stage: 12cat
+  domain: ai_caution
+  item: 仕様を入出力・前提条件のレベルまで具体化（AIは隙間を推測で埋める）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §01
+  priority: P1
+  category: '01'
+  acceptance: 各機能に input / output / preconditions が空欄なしで書かれている
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.brand.11
+  stage: brand
+  domain: brand
+  item: 命名・商標・ドメイン・SNSハンドル
+  status: covered
+  evidence: v3-draft/blueprint-v3.md L1/L26／brand/SKILL.md §3
+  proposed_addition: —
+  priority: P3
+  category: '02'
+  source: blueprint-v2/v3（既存）
+- id: lc.brand.12
+  stage: brand
+  domain: brand
+  item: 声・トーン・言語別ルール
+  status: covered
+  evidence: brand/SKILL.md §2／v3-draft/blueprint-v3.md L14/L21
+  proposed_addition: —
+  priority: P3
+  category: '02'
+  source: blueprint-v2/v3（既存）
+- id: lc.brand.13
+  stage: brand
+  domain: brand
+  item: 色・ロゴ・アイデンティティ
+  status: covered
+  evidence: brand/SKILL.md §4／Part 2 場面×感情×トークン
+  proposed_addition: —
+  priority: P3
+  category: '02'
+  source: blueprint-v2/v3（既存）
+- id: lc.brand.14
+  stage: brand
+  domain: brand
+  item: メッセージ階層（見出し・3本柱・証拠・反論）
+  status: missing
+  evidence: Part 2 は感情とトークンのみ
+  proposed_addition: gtm-ops §G3 メッセージ階層
+  priority: P1
+  category: '02'
+  source: blueprint-v2/v3（既存）
+- id: lc.design.19
+  stage: design
+  domain: ui
+  item: UI詳細の受け入れ基準の集約
+  status: thin
+  evidence: gaps-2026-10-26.md『UI詳細』残（L20/L38 に散在）
+  proposed_addition: ux/ui-detail.md
+  priority: P2
+  category: '02'
+  source: blueprint-v2/v3（既存）
+- id: lc.design.20
+  stage: design
+  domain: design_system
+  item: デザインシステムの境界と版
+  status: covered
+  evidence: v3-draft/blueprint-v3.md L37／catalog/DESIGN.md
+  proposed_addition: —
+  priority: P3
+  category: '02'
+  source: blueprint-v2/v3（既存）
+- id: lc.n03
+  stage: 12cat
+  domain: brand
+  item: ミッション・ビジョン・CI/VI
+  status: covered
+  evidence: brand/SKILL.md §1/§4
+  proposed_addition: —
+  priority: P3
+  category: '02'
+  acceptance: —
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n04
+  stage: 12cat
+  domain: design_system
+  item: デザイントークンの数値化（色・コントラスト比・字体・余白・角丸）
+  status: covered
+  evidence: catalog/DESIGN.md／bp-tokens.css
+  proposed_addition: —
+  priority: P3
+  category: '02'
+  acceptance: tokens ファイルが存在し、全色にコントラスト比の記載
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n05
+  stage: 12cat
+  domain: context
+  item: ブランドコンテキストファイル（brand.yaml → CLAUDE.md/.cursorrules の生成節）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: templates/brand-context.md
+  priority: P1
+  category: '02'
+  acceptance: ルールファイルに <!-- brand:begin --> 節があり、brand.yaml の version と一致
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n06
+  stage: 12cat
+  domain: ai_caution
+  item: AIデフォルト臭の排除（ライブラリ既定の配色・字体を使わない）
+  status: thin
+  evidence: DESIGN.md の見た目ルール（Blueprint 自身のみ）
+  proposed_addition: templates/brand-context.md の never 欄
+  priority: P1
+  category: '02'
+  acceptance: grep でトークン外の色（#hex 直書き、bg-blue-500 等の既定色）が 0 件
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n07
+  stage: 12cat
+  domain: ai_persona
+  item: AIペルソナ（チャット機能の性格・口調・禁止事項）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: brand.yaml ai_persona
+  priority: P2
+  category: '02'
+  acceptance: AI機能があるなら ai_persona.{name,voice,never,escalate_when} がある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n48
+  stage: 12cat
+  domain: cross_border
+  item: カルチャライズ（翻訳ではなく再創作・社会的証明の出し方）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: cross_border.yaml axis.culturalization
+  priority: P2
+  category: '02'
+  acceptance: 言語ごとに見出しを別々に書き、直訳でないことをネイティブ1人が確認
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.design.15
+  stage: design
+  domain: ux
+  item: フロー・ジャーニー・サービスブループリント
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §2.1/§2.2
+  proposed_addition: —
+  priority: P3
+  category: '03'
+  source: blueprint-v2/v3（既存）
+- id: lc.design.16
+  stage: design
+  domain: ux
+  item: UXの方法の並列比較
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §8
+  proposed_addition: —
+  priority: P3
+  category: '03'
+  source: blueprint-v2/v3（既存）
+- id: lc.design.17
+  stage: design
+  domain: ux
+  item: オンボーディングとアクティベーション（Aha までの時間）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §2.1 フロー『初回』のみ。D4 の数値合格条件
+  proposed_addition: gtm-ops §G9 アクティベーション定義と初回体験
+  priority: P1
+  category: '03'
+  source: blueprint-v2/v3（既存）
+- id: lc.design.18
+  stage: design
+  domain: ui
+  item: 画面×状態マトリクス
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §13
+  proposed_addition: —
+  priority: P3
+  category: '03'
+  source: blueprint-v2/v3（既存）
+- id: lc.n08
+  stage: 12cat
+  domain: prd
+  item: MVPスコープ（Must／Nice-to-have）とPRD
+  status: thin
+  evidence: v3 D3 Not-to-build／§11 feature.yaml
+  proposed_addition: 12cat §03 prd.md
+  priority: P1
+  category: '03'
+  acceptance: prd.md の全機能に must|nice と、ユーザーストーリーがある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n09
+  stage: 12cat
+  domain: nfr
+  item: 非機能要件（同時接続・レイテンシ・対応端末・可用性）
+  status: thin
+  evidence: v3 L25（同時接続のみ）
+  proposed_addition: 12cat §03
+  priority: P1
+  category: '03'
+  acceptance: nfr.yaml に concurrency, p95_latency_ms, browsers, availability の数値
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n10
+  stage: 12cat
+  domain: ai_caution
+  item: エッジケースと例外状態をPRDに明記（AIは正常系を優先する）
+  status: thin
+  evidence: v3 §13 画面×状態（UIのみ。APIタイムアウト・検証エラーなし）
+  proposed_addition: 12cat §03
+  priority: P1
+  category: '03'
+  acceptance: 全APIに timeout / validation_error / empty の挙動が書かれている
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.strategy.10
+  stage: strategy
+  domain: team
+  item: 人とAIエージェントの役割分担（RACI）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L17/L30 AIクレジット・実行場所
+  proposed_addition: gtm-ops §O10 役割表（人／AI／承認）
+  priority: P2
+  category: '04'
+  source: blueprint-v2/v3（既存）
+- id: lc.n11
+  stage: 12cat
+  domain: tooling
+  item: AIツールの選定と役割分担（エディタ型／ターミナル型／API）
+  status: thin
+  evidence: v3 L17/L30
+  proposed_addition: 12cat §04
+  priority: P2
+  category: '04'
+  acceptance: ai-tools.md にツール×役割×クレジット
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n12
+  stage: 12cat
+  domain: rules
+  item: ルールファイル（CLAUDE.md/.cursorrules/AGENTS.md）の配備
+  status: missing
+  evidence: 該当なし（Blueprint 自身は SKILL.md）
+  proposed_addition: 12cat §04
+  priority: P1
+  category: '04'
+  acceptance: ルールファイルに規約・構成・禁止ライブラリ・命名・コミット規約の5節
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n13
+  stage: 12cat
+  domain: context
+  item: 不要ファイルの除外（.cursorignore 等）とモジュール分割
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §04
+  priority: P2
+  category: '04'
+  acceptance: ignore ファイルに build成果物・ログ・lockfile 以外の巨大ファイル
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n14
+  stage: 12cat
+  domain: ai_caution
+  item: ルールの過積載を防ぐ（短く・例つき・参照型）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §04
+  priority: P1
+  category: '04'
+  acceptance: ルールファイル本体が200行以下、詳細は参照リンク
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.design.22
+  stage: design
+  domain: i18n
+  item: 多言語・日本語改行
+  status: covered
+  evidence: v3-draft/blueprint-v3.md L19/L14
+  proposed_addition: 翻訳ワークフローと用語集を追加
+  priority: P3
+  category: '05'
+  source: blueprint-v2/v3（既存）
+- id: lc.build.23
+  stage: build
+  domain: tech
+  item: スタック選定・組み合わせ・予算帯
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §8/§9/§15／catalog/*.yaml
+  proposed_addition: —
+  priority: P3
+  category: '05'
+  source: blueprint-v2/v3（既存）
+- id: lc.build.24
+  stage: build
+  domain: tech
+  item: 作る vs 買う vs 全部入り（TCO）
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §16／catalog/build_vs_buy.yaml
+  proposed_addition: —
+  priority: P3
+  category: '05'
+  source: blueprint-v2/v3（既存）
+- id: lc.build.28
+  stage: build
+  domain: data
+  item: データ・保持・バックアップ・復元
+  status: covered
+  evidence: v3-draft/blueprint-v3.md L5／export/blueprint-v2-full.md block5
+  proposed_addition: —
+  priority: P3
+  category: '05'
+  source: blueprint-v2/v3（既存）
+- id: lc.n15
+  stage: 12cat
+  domain: api
+  item: DBスキーマ・マイグレーション・API設計の規約
+  status: thin
+  evidence: catalog/database.yaml・backend.yaml（選定のみ）
+  proposed_addition: 12cat §05
+  priority: P2
+  category: '05'
+  acceptance: schema と migrations フォルダがあり、API 型を共有する方法が書いてある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n16
+  stage: 12cat
+  domain: ai_caution
+  item: AIがよく知る型付きの普及スタックを選ぶ
+  status: missing
+  evidence: 該当なし
+  proposed_addition: catalog の各エントリに ai_familiarity を追加
+  priority: P2
+  category: '05'
+  acceptance: 選んだスタックが TypeScript 等の型付き、リリース6か月以上
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n17
+  stage: 12cat
+  domain: ai_caution
+  item: 疎結合・小さな責務（AIが修正箇所を見失わない）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §05
+  priority: P3
+  category: '05'
+  acceptance: 1ファイル400行以下（例外は理由つき）
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n45
+  stage: 12cat
+  domain: cross_border
+  item: i18n キー管理・Intl・UTC保存・可変幅UI
+  status: thin
+  evidence: v3 L19
+  proposed_addition: cross_border.yaml axis.i18n
+  priority: P1
+  category: '05'
+  acceptance: ハードコード文字列 0（lint）、DB の日時は UTC
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n50
+  stage: 12cat
+  domain: cross_border
+  item: レイテンシ（エッジ配信・DBリージョン）
+  status: thin
+  evidence: catalog/hosting.yaml
+  proposed_addition: cross_border.yaml axis.latency
+  priority: P3
+  category: '05'
+  acceptance: 主要市場からの TTFB < 600ms
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n18
+  stage: 12cat
+  domain: impl
+  item: テスト先行（AIにまずテストを書かせる）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §06
+  priority: P2
+  category: '06'
+  acceptance: 新機能のPRにテストが同時に含まれる
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n19
+  stage: 12cat
+  domain: impl
+  item: モック → ロジック → API/DB の段階実装
+  status: thin
+  evidence: v3 D4 雑でも動く試作
+  proposed_addition: 12cat §06
+  priority: P3
+  category: '06'
+  acceptance: —
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n20
+  stage: 12cat
+  domain: impl
+  item: 定期リファクタリング（スプリント単位）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §06
+  priority: P2
+  category: '06'
+  acceptance: スプリントごとに重複・any の件数を記録
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n21
+  stage: 12cat
+  domain: ai_caution
+  item: 「動くが破綻したコード」の監視（any・グローバル状態・メモリリーク・再描画）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §06
+  priority: P1
+  category: '06'
+  acceptance: 'CI で `as any`/`: any` の件数が前回以下。lint の no-explicit-any が error'
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.strategy.09
+  stage: strategy
+  domain: company
+  item: 会社・名義・口座・会計
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L6 会社名義／L8 決済アカウント
+  proposed_addition: gtm-ops §O9 会社・会計・税
+  priority: P2
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.design.21
+  stage: design
+  domain: accessibility
+  item: WCAG 2.2 AA・a11y チェック
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §2.2 UI T3／L38／§5.2
+  proposed_addition: 実機＋スクリーンリーダー試験の手順を追記
+  priority: P2
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.build.25
+  stage: build
+  domain: security
+  item: アカウントの一生・秘密情報・権限
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §5.1／L9/L10
+  proposed_addition: —
+  priority: P3
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.build.26
+  stage: build
+  domain: security
+  item: 脅威モデル・脆弱性診断・依存の脆弱性
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §5.1 セキュリティの健全性（1行）
+  proposed_addition: gtm-ops §O7 依存更新と脆弱性
+  priority: P2
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.build.27
+  stage: build
+  domain: qa
+  item: テスト戦略（単体/E2E/Visual gate）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L34 Visual gate／L25 負荷試験
+  proposed_addition: gtm-ops §O8 QAの最小セット
+  priority: P2
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.legal.30
+  stage: legal
+  domain: legal
+  item: 規約・プライバシー・国別規制
+  status: covered
+  evidence: v3-draft/blueprint-v3.md §5.2
+  proposed_addition: —
+  priority: P3
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.legal.31
+  stage: legal
+  domain: legal
+  item: 広告・マーケの法規（景表法・ステマ規制・FTC 推奨表示・CAN-SPAM）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §5.2 景品表示法・CAN-SPAM の1語のみ
+  proposed_addition: gtm-ops §G5 広告とインフルエンサーの表示ルール
+  priority: P1
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.legal.32
+  stage: legal
+  domain: tax
+  item: 税（売上税・VAT・消費税・インボイス）とMoR
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §5.2 売上税ネクサス・VAT/MoR
+  proposed_addition: gtm-ops §O9
+  priority: P2
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.legal.33
+  stage: legal
+  domain: legal
+  item: 知財（商標出願・OSSライセンス）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L26
+  proposed_addition: OSSライセンス棚卸しを追加
+  priority: P3
+  category: '07'
+  source: blueprint-v2/v3（既存）
+- id: lc.n22
+  stage: 12cat
+  domain: qa
+  item: 単体・結合・E2E とカバレッジ
+  status: thin
+  evidence: v3 L34/L25
+  proposed_addition: gtm-ops §O8
+  priority: P2
+  category: '07'
+  acceptance: CI で E2E 主要3フロー合格
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n23
+  stage: 12cat
+  domain: security
+  item: SQLi/XSS/CSRF・依存の脆弱性チェック
+  status: thin
+  evidence: v3 §5.1（1行）
+  proposed_addition: gtm-ops §O7
+  priority: P1
+  category: '07'
+  acceptance: npm audit high 以上 0、CSP 設定済み
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n24
+  stage: 12cat
+  domain: security
+  item: 秘密情報がGit履歴・プロンプト・外部ログに出ていない
+  status: thin
+  evidence: v3 L10（ルールのみ、検査なし）
+  proposed_addition: 12cat §07
+  priority: P1
+  category: '07'
+  acceptance: gitleaks 等で履歴スキャン 0 件
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n25
+  stage: 12cat
+  domain: legal
+  item: OSSライセンス（GPL 混入）確認
+  status: thin
+  evidence: v3 L26
+  proposed_addition: 12cat §07
+  priority: P2
+  category: '07'
+  acceptance: license-checker で禁止ライセンス 0
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n26
+  stage: 12cat
+  domain: ai_caution
+  item: 実在しないパッケージ（パッケージ幻覚）とサプライチェーン攻撃
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §07
+  priority: P1
+  category: '07'
+  acceptance: 新規依存はすべて公式レジストリで存在・公開日・DL数を確認した記録がある
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n46
+  stage: 12cat
+  domain: cross_border
+  item: 国別のデータ主権・同意（GDPR リージョン・CCPA オプトアウト・年齢ゲート）
+  status: thin
+  evidence: v3 §5.2
+  proposed_addition: cross_border.yaml axis.legal
+  priority: P1
+  category: '07'
+  acceptance: 対象国ごとに 該当/対象外/要確認
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n27
+  stage: 12cat
+  domain: infra
+  item: CI：Lint→型→テスト→ビルド→プレビュー
+  status: thin
+  evidence: catalog/ci_cd.yaml／v3 L29
+  proposed_addition: 12cat §08
+  priority: P2
+  category: 08
+  acceptance: CI 設定に5段がある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n28
+  stage: 12cat
+  domain: infra
+  item: ステージングで永続化・認証・Webhook を確認
+  status: thin
+  evidence: v3 L3/L4
+  proposed_addition: 12cat §08
+  priority: P1
+  category: 08
+  acceptance: staging でWebhook受信のログがある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n29
+  stage: 12cat
+  domain: infra
+  item: ドメイン・DNS・SSL
+  status: covered
+  evidence: v3 L1/L7/L23
+  proposed_addition: —
+  priority: P3
+  category: 08
+  acceptance: —
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n30
+  stage: 12cat
+  domain: ai_caution
+  item: IaC・CI設定の版を公式ドキュメントで照合（AIは古いAPIを書く）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §08
+  priority: P2
+  category: 08
+  acceptance: Action/イメージの版が固定（@vX.Y、digest）され、確認日がある
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.build.29
+  stage: build
+  domain: analytics
+  item: 計測設計（イベント辞書・同意）
+  status: thin
+  evidence: export/blueprint-v2-full.md block12（3〜5イベント）／catalog/analytics.yaml
+  proposed_addition: gtm-ops §G8 イベント辞書
+  priority: P1
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.pricing.34
+  stage: pricing
+  domain: pricing
+  item: 価格とパッケージ（無料枠・プラン・試用）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L13（JTBDからオファー）
+  proposed_addition: gtm-ops §G6 価格設計
+  priority: P1
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.pricing.35
+  stage: pricing
+  domain: pricing
+  item: 課金運用（請求・返金・チャージバック・解約）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §5.2 解約・撤回／§7 責任の所在
+  proposed_addition: gtm-ops §G6/§O3
+  priority: P2
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.pricing.36
+  stage: pricing
+  domain: pricing
+  item: アプリ内課金とストア手数料
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §5.2 アプリストア
+  proposed_addition: gtm-ops §G6
+  priority: P3
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.37
+  stage: gtm
+  domain: positioning
+  item: ポジショニング（Dunford 5要素）
+  status: missing
+  evidence: Part 1 block2『価値と位置づけ』は見出しのみ（export/blueprint-v2-full.md §2 block2）
+  proposed_addition: gtm-ops §G3
+  priority: P1
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.38
+  stage: gtm
+  domain: positioning
+  item: ICP と非対象（トリガーイベント）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md D2 ペルソナ仮説（非対象1人）
+  proposed_addition: gtm-ops §G3 ICP（トリガー必須）
+  priority: P1
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.39
+  stage: gtm
+  domain: channels
+  item: チャネル選定（Bullseye：19チャネルから3つ試す）
+  status: missing
+  evidence: export/blueprint-v2-full.md block10『最初の10人はどこから』の1行のみ
+  proposed_addition: gtm-ops §G4／catalog/gtm_channels.yaml
+  priority: P1
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.40
+  stage: gtm
+  domain: launch
+  item: ローンチ計画（T-14〜T+30・ロールバック）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G5 ローンチ計画
+  priority: P1
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.41
+  stage: gtm
+  domain: launch
+  item: Product Hunt / Hacker News / X での公開
+  status: missing
+  evidence: 該当なし
+  proposed_addition: catalog/gtm_channels.yaml ch.producthunt 等
+  priority: P2
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.42
+  stage: gtm
+  domain: store
+  item: App Store / Google Play 掲載・ASO・審査
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L8 ストアアカウント／§5.2 アプリストア規約
+  proposed_addition: gtm-ops §G7 ASO・審査
+  priority: P2
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.46
+  stage: gtm
+  domain: pr
+  item: PR・プレスキット・メディア
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G5 プレスキット
+  priority: P3
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.51
+  stage: gtm
+  domain: sales
+  item: 営業（B2B：デモ・CRM・提案書）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G4 販売モーション（PLG/SLG/MLG）
+  priority: P2
+  category: 09
+  source: blueprint-v2/v3（既存）
+- id: lc.n31
+  stage: 12cat
+  domain: launch
+  item: LP公開と Core Web Vitals
+  status: thin
+  evidence: v3 L12/L20
+  proposed_addition: gtm-ops §G7
+  priority: P1
+  category: 09
+  acceptance: LCP<2.5s、CLS<0.1（Lighthouse）
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n32
+  stage: 12cat
+  domain: assets
+  item: プロモーション素材（デモ動画・OGP・プレスキット・告知文）
+  status: thin
+  evidence: v3 L15/L22/L33（動画の作り方のみ）
+  proposed_addition: gtm-ops §G5
+  priority: P1
+  category: 09
+  acceptance: assets/ に demo, og, press-kit, launch-post がある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n33
+  stage: 12cat
+  domain: assets
+  item: 販促素材をスプリント内で生成（コードと仕様から同期）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §09 『スプリント内の販促素材』
+  priority: P1
+  category: 09
+  acceptance: 各スプリントの完了条件に『変更機能の説明文・FAQ・メタタグ更新』があり、L27 の機能状態と一致
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n47
+  stage: 12cat
+  domain: cross_border
+  item: 国別の決済手段と税（MoR か Stripe Tax か）
+  status: thin
+  evidence: v3 §5.2 VAT/MoR
+  proposed_addition: cross_border.yaml axis.payments_tax
+  priority: P1
+  category: 09
+  acceptance: entry_strategy が決定済み
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n49
+  stage: 12cat
+  domain: cross_border
+  item: 国別ローンチチャネル（US：PH/HN/Reddit/X、JP：X/Zenn/Qiita/note/PR TIMES）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: cross_border.yaml axis.channels
+  priority: P2
+  category: 09
+  acceptance: channels.yaml の各行に market
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.operate.56
+  stage: operate
+  domain: support
+  item: サポート窓口・応答目標・FAQ/ヘルプ
+  status: thin
+  evidence: export/blueprint-v2-full.md block11／gaps『運用』一部
+  proposed_addition: gtm-ops §O3／catalog/support.yaml
+  priority: P1
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.operate.57
+  stage: operate
+  domain: support
+  item: モデレーション・通報対応
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L28／§5.2 DSA
+  proposed_addition: gtm-ops §O3
+  priority: P2
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.operate.58
+  stage: operate
+  domain: ops
+  item: ランブック・障害対応・ステータスページ
+  status: thin
+  evidence: export/blueprint-v2-full.md block11 incident runbook／catalog/monitoring.yaml
+  proposed_addition: gtm-ops §O1 障害対応
+  priority: P1
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.operate.59
+  stage: operate
+  domain: ops
+  item: オンコール（誰が何時に起きるか）・SLO
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §O1 SLO
+  priority: P2
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.operate.60
+  stage: operate
+  domain: ops
+  item: コスト監視・上限・キルスイッチ
+  status: covered
+  evidence: export/blueprint-v2-full.md block4 spend caps／v3-draft/blueprint-v3.md
+    L2/L16/L17
+  proposed_addition: —
+  priority: P3
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.operate.61
+  stage: operate
+  domain: ops
+  item: 手作業の運用（管理画面・人の承認）
+  status: covered
+  evidence: v3-draft/blueprint-v3.md L28／§2.2 サービスブループリント
+  proposed_addition: —
+  priority: P3
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.maintain.62
+  stage: maintain
+  domain: maintenance
+  item: 依存更新・メジャーアップグレード・非推奨API
+  status: missing
+  evidence: v3-draft/blueprint-v3.md §5.1 に『依存関係の更新』1語
+  proposed_addition: gtm-ops §O7 保守カレンダー
+  priority: P1
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.maintain.63
+  stage: maintain
+  domain: maintenance
+  item: 外部サービスの規約・価格変更の監視
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §15.3 鮮度（カタログ側のみ）
+  proposed_addition: gtm-ops §O7 ベンダー変更監視
+  priority: P2
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.maintain.64
+  stage: maintain
+  domain: maintenance
+  item: 技術的負債・ドキュメント更新
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §O7
+  priority: P3
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.finance.65
+  stage: finance
+  domain: finance
+  item: 予算・ランウェイ・月次レビュー
+  status: thin
+  evidence: v3-draft/blueprint-v3.md §9 予算帯／export/blueprint-v2-full.md block8
+  proposed_addition: gtm-ops §O9 月次の数字
+  priority: P2
+  category: '10'
+  source: blueprint-v2/v3（既存）
+- id: lc.n34
+  stage: 12cat
+  domain: ops
+  item: エラー追跡・アップタイム監視・通知
+  status: thin
+  evidence: catalog/monitoring.yaml
+  proposed_addition: gtm-ops §O1
+  priority: P1
+  category: '10'
+  acceptance: ヘルスチェックURLとアラート先が2つ以上
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n35
+  stage: 12cat
+  domain: ops
+  item: バックアップの定期スナップショットと復元テスト
+  status: covered
+  evidence: v3 L5
+  proposed_addition: —
+  priority: P2
+  category: '10'
+  acceptance: 直近90日以内の復元テスト記録
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n36
+  stage: 12cat
+  domain: ai_caution
+  item: LLM API の無限再試行・トークン浪費（サーキットブレーカー＋上限額）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §10
+  priority: P1
+  category: '10'
+  acceptance: 再試行に最大回数と指数バックオフ、プロバイダ側の月額上限が設定済み
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.gtm.43
+  stage: gtm
+  domain: seo
+  item: SEO・技術SEO・構造化データ・llms.txt
+  status: missing
+  evidence: 該当なし（llms.txt は Blueprint 自身の画面のみ）
+  proposed_addition: gtm-ops §G7 SEO
+  priority: P1
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.44
+  stage: gtm
+  domain: content
+  item: コンテンツ計画（ブログ・動画・事例）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L15/L22/L32（制作手順のみ、計画なし）
+  proposed_addition: gtm-ops §G4 コンテンツカレンダー
+  priority: P2
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.45
+  stage: gtm
+  domain: social
+  item: SNS運用（投稿承認・頻度・アカウント）
+  status: thin
+  evidence: export/blueprint-v2-full.md block10 posting approval rules／L21
+  proposed_addition: gtm-ops §G4
+  priority: P2
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.47
+  stage: gtm
+  domain: ads
+  item: 有料広告（予算・停止条件・計測）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G4 広告テスト／catalog/gtm_channels.yaml
+  priority: P2
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.48
+  stage: gtm
+  domain: partnerships
+  item: 提携・連携・マーケットプレイス掲載
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G4
+  priority: P3
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.49
+  stage: gtm
+  domain: virality
+  item: 紹介・拡散ループ（招待・共有・UGC）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G10 成長ループ
+  priority: P1
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.gtm.50
+  stage: gtm
+  domain: community
+  item: コミュニティ（Discord・ユーザー会）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G10
+  priority: P3
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.growth.52
+  stage: growth
+  domain: lifecycle
+  item: ライフサイクルメール・通知（ナーチャリング）
+  status: thin
+  evidence: catalog/email_notifications.yaml（送信基盤のみ）
+  proposed_addition: gtm-ops §G9
+  priority: P2
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.growth.53
+  stage: growth
+  domain: retention
+  item: 継続率・コホート・解約理由
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §G9 リテンション
+  priority: P1
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.growth.54
+  stage: growth
+  domain: experiments
+  item: 実験（A/B・フラグ・判定ルール）
+  status: thin
+  evidence: v3-draft/blueprint-v3.md L19 フラグ一覧／catalog/analytics.yaml PostHog
+  proposed_addition: gtm-ops §G8 実験の書式
+  priority: P2
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.growth.55
+  stage: growth
+  domain: feedback
+  item: フィードバック収集とロードマップ公開
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §O3
+  priority: P3
+  category: '11'
+  source: blueprint-v2/v3（既存）
+- id: lc.n37
+  stage: 12cat
+  domain: feedback
+  item: フィードバックウィジェット・ユーザーインタビュー
+  status: missing
+  evidence: 該当なし
+  proposed_addition: gtm-ops §O3
+  priority: P2
+  category: '11'
+  acceptance: —
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n38
+  stage: 12cat
+  domain: ai_workflow
+  item: 学びを CLAUDE.md・プロンプトに戻す（AIワークフローの振り返り）
+  status: thin
+  evidence: v3 §15.2（Blueprint 本体への戻しのみ）
+  proposed_addition: 12cat §11
+  priority: P2
+  category: '11'
+  acceptance: 月1回 rules ファイルの更新履歴がある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n39
+  stage: 12cat
+  domain: ai_caution
+  item: AI負債の監査スプリント（デッドコード・共通化）
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §11
+  priority: P2
+  category: '11'
+  acceptance: 四半期に1回、未使用export・重複コンポーネントの件数を記録
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.sunset.66
+  stage: sunset
+  domain: exit
+  item: 撤退・移行・ピボット判断
+  status: thin
+  evidence: export/blueprint-v2-full.md block13 Exit and migration
+  proposed_addition: gtm-ops §O11 継続/ピボット/撤退の判定基準
+  priority: P2
+  category: '12'
+  source: blueprint-v2/v3（既存）
+- id: lc.n40
+  stage: 12cat
+  domain: sunset
+  item: 終了告知（1〜3か月前）・新規課金停止・返金方針
+  status: thin
+  evidence: v2 block13
+  proposed_addition: gtm-ops §O11
+  priority: P2
+  category: '12'
+  acceptance: 告知日・課金停止日・返金方針が sunset.md にある
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n41
+  stage: 12cat
+  domain: sunset
+  item: データのエクスポートと確実な削除
+  status: thin
+  evidence: v3 §5.1 削除／v2 block5
+  proposed_addition: 12cat §12
+  priority: P2
+  category: '12'
+  acceptance: エクスポート機能と削除ログ
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n42
+  stage: 12cat
+  domain: sunset
+  item: 外部SaaS・APIキー・DNS の完全解約
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §12
+  priority: P2
+  category: '12'
+  acceptance: L9 認証情報チェックリストの全行が『解約済み』
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n43
+  stage: 12cat
+  domain: ai_caution
+  item: シャドーコスト（実験用ベクトルDB・ストレージ・微調整モデル）の残存
+  status: missing
+  evidence: 該当なし
+  proposed_addition: 12cat §12
+  priority: P2
+  category: '12'
+  acceptance: 課金明細で未使用リソース 0
+  ai_caution: true
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.n44
+  stage: 12cat
+  domain: archive
+  item: リポジトリのアーカイブとプロンプト・パターンの資産化
+  status: missing
+  evidence: 該当なし
+  proposed_addition: §15.2 学びの戻し
+  priority: P3
+  category: '12'
+  acceptance: —
+  ai_caution: false
+  source: owner-input 2026-10-26（12カテゴリー案）
+- id: lc.exit.ip
+  stage: exit
+  domain: exit
+  item: IP・名義の会社集約（コード・ブランド・ドメイン・ストア・決済）
+  status: thin
+  evidence: catalog/exit_dd.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P1
+  category: '12'
+  acceptance: 全コントリビューター（業務委託・AI含む利用規約）の IP譲渡書が data-room/ip/ にある。ドメイン・ストア・GitHub・Stripe
+    の名義が会社名（個人名0件）
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+- id: lc.exit.contracts
+  stage: exit
+  domain: exit
+  item: 契約一覧と譲渡可否
+  status: thin
+  evidence: catalog/exit_dd.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P2
+  category: '12'
+  acceptance: contracts.yaml に相手・期間・解約条件・譲渡可否（change of control）が全件ある
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+- id: lc.exit.privacy
+  stage: exit
+  domain: exit
+  item: プライバシー・データ所在記録（国別）
+  status: thin
+  evidence: catalog/exit_dd.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P1
+  category: '12'
+  acceptance: データ所在（リージョン）・処理目的・委託先一覧・削除フローの記録があり、ポリシーの言語が提供国の数と一致
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+- id: lc.exit.code
+  stage: exit
+  domain: exit
+  item: コード健全性（CI・テスト・秘密0件・SBOM）
+  status: thin
+  evidence: catalog/exit_dd.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P2
+  category: '12'
+  acceptance: CIが緑、テストあり、README/ARCHITECTURE/デプロイ手順あり、秘密情報のコミット0件（secret scan）、依存の既知の重大脆弱性0件
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+- id: lc.exit.metrics
+  stage: exit
+  domain: exit
+  item: 数字のデータルーム（MRR・解約・継続率12か月）
+  status: thin
+  evidence: catalog/exit_dd.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P2
+  category: '12'
+  acceptance: MRR・解約・返金を月次でStripeから再生成できるスクリプト＋DAU/MAU・継続率ダッシュボード。過去12か月分
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+- id: lc.exit.buyers
+  stage: exit
+  domain: exit
+  item: 買い手候補と打診の道筋・KPIの目安
+  status: thin
+  evidence: catalog/exit_dd.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P3
+  category: '12'
+  acceptance: app_distribution.yaml acceptance / projects/<id>/axes の open_decisions
+    が全件 owner_decided か open と明記
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+- id: lc.dist.order
+  stage: build
+  domain: dist
+  item: アプリ配布の順番（PWA/TWA/Capacitor/Expo/ネイティブ）
+  status: thin
+  evidence: catalog/app_distribution.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P1
+  category: 08
+  acceptance: app_distribution.yaml acceptance / projects/<id>/axes の open_decisions
+    が全件 owner_decided か open と明記
+  ai_caution: true
+  source: project PO input 2026-10-26（一般化）
+- id: lc.dist.iap
+  stage: build
+  domain: dist
+  item: アプリ内課金の方針とストア規則（Apple 3.1.1/3.1.3(b)/4.2・Play支払い）
+  status: thin
+  evidence: catalog/app_distribution.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P1
+  category: 08
+  acceptance: app_distribution.yaml acceptance / projects/<id>/axes の open_decisions
+    が全件 owner_decided か open と明記
+  ai_caution: true
+  source: project PO input 2026-10-26（一般化）
+- id: lc.gtm.country
+  stage: gtm
+  domain: gtm
+  item: 国別GTM（波・言語・決済・プライバシー法・チャネル）
+  status: thin
+  evidence: catalog/cross_border.yaml
+  proposed_addition: blueprint-v3-exit-appdist.md
+  priority: P1
+  category: 09
+  acceptance: app_distribution.yaml acceptance / projects/<id>/axes の open_decisions
+    が全件 owner_decided か open と明記
+  ai_caution: false
+  source: project PO input 2026-10-26（一般化）
+categories:
+  '01': 構想・市場検証
+  '02': ブランディング・クリエイティブ
+  '03': 要件定義・プロダクト仕様
+  '04': AI開発基盤・コンテキスト設計
+  '05': システム設計・アーキテクチャ
+  '06': AI駆動実装・プロトタイピング
+  '07': 品質保証・セキュリティ・法務
+  08: インフラ・CI/CD・デプロイ
+  09: GTM・プロモーション（打ち上げ）
+  '10': 運用・オブザーバビリティ・保守
+  '11': グロース・マーケティング・反復
+  '12': エグジット・サンセット（売却準備・終了）

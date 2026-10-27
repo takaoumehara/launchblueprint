@@ -1,0 +1,78 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blueprint Map · ブループリント マップ</title>
+<style>
+:root{--ink:#111;--mid:#777;--line:#ddd;--bg:#fafafa}
+*{box-sizing:border-box}body{margin:0;font:14px/1.4 -apple-system,"Hiragino Sans","Noto Sans JP",system-ui,sans-serif;color:var(--ink);background:var(--bg);word-break:auto-phrase}
+header{padding:14px 16px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:5}
+h1{font-size:16px;margin:0 0 8px;letter-spacing:.02em}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:6px 12px;font:inherit;cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.legend{font-size:12px;color:var(--mid)}
+main{display:flex;gap:16px;padding:16px}
+#wrap{position:relative;flex:1;min-width:0}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.area{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.area h2{font-size:12px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.06em;color:var(--mid)}
+.area.wide{grid-column:span 2}
+.blk{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px;margin:0 0 6px;font:inherit;cursor:pointer;transition:opacity .15s,border-color .15s,background .15s;position:relative;z-index:2}
+.blk b{display:block;font-size:13px}.blk small{color:var(--mid);font-size:11px}
+.blk .t{position:absolute;right:6px;top:6px;font-size:10px;border:1px solid var(--line);border-radius:4px;padding:0 4px}
+.blk[data-s=done]{border-left:4px solid var(--ink)}
+.blk[data-s=needs_confirmation]{border-left:4px dashed var(--ink)}
+.blk[data-s=open]{border-left:4px solid var(--line)}
+.blk.out{opacity:.25}
+.dim .blk:not(.sel):not(.up):not(.down){opacity:.2}
+.blk.sel{background:var(--ink);color:#fff}.blk.sel small{color:#ccc}
+.blk.up{border-color:var(--ink);border-style:dashed}
+.blk.down{border-color:var(--ink);border-width:2px}
+svg{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:visible}
+#panel{width:300px;flex:none;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;align-self:flex-start;position:sticky;top:110px}
+#panel h3{margin:0 0 4px;font-size:16px}#panel .k{font-size:11px;color:var(--mid);margin-top:10px;text-transform:uppercase;letter-spacing:.05em}
+#panel ul{margin:4px 0;padding-left:18px}
+@media (max-width:900px){main{flex-direction:column}#panel{width:auto;position:static}#grid{grid-template-columns:1fr 1fr}.area.wide{grid-column:span 2}}
+@media (max-width:480px){#grid{grid-template-columns:1fr}.area.wide{grid-column:span 1}main{padding:10px}}
+</style></head><body>
+<header><h1>Blueprint Map <span style="color:var(--mid);font-weight:400">ブループリント マップ</span></h1>
+<div class="bar"><span class="seg" id="tiers"></span><span class="seg" id="lang"><button data-l="ja" class="on">JA</button><button data-l="en">EN</button></span>
+<span class="legend" id="leg"></span></div></header>
+<main><div id="wrap"><svg id="svg"></svg><div id="grid"></div></div><aside id="panel"></aside></main>
+<script id="data" type="application/json">{"project": "example", "tier": "T2", "blocks": [{"id": "purpose", "area": "purpose", "tier": "T0", "status": "done", "ja": "目的", "en": "Purpose", "pass": "One-sentence purpose + who it is for, agreed by owner", "depends_on": [], "impacts": ["positioning", "ux.research"]}, {"id": "positioning", "area": "purpose", "tier": "T0", "status": "done", "ja": "ポジショニング", "en": "Positioning", "pass": "Value, offer, name, banned words written; name/domain checked (L1, L21)", "depends_on": ["purpose", "ux.research"], "impacts": ["experience", "marketing", "brand.strategy"]}, {"id": "ux.research", "area": "ux", "tier": "T1", "status": "done", "ja": "調査", "en": "Research", "pass": "5+ real user signals with sources (L13)", "depends_on": ["purpose"], "impacts": ["ux.personas", "positioning"]}, {"id": "ux.personas", "area": "ux", "tier": "T1", "status": "done", "ja": "ペルソナ", "en": "Personas", "pass": "1–3 personas with JTBD, each traced to research", "depends_on": ["ux.research"], "impacts": ["ux.pains", "ux.journey"]}, {"id": "ux.pains", "area": "ux", "tier": "T1", "status": "open", "ja": "ペイン", "en": "Pain points", "pass": "Top pains ranked by frequency × severity", "depends_on": ["ux.personas"], "impacts": ["ux.ideas"]}, {"id": "ux.ideas", "area": "ux", "tier": "T1", "status": "open", "ja": "アイデア", "en": "Brainstorm", "pass": "≥10 ideas, 3 picked with reason", "depends_on": ["ux.pains"], "impacts": ["ux.flows"]}, {"id": "ux.flows", "area": "ux", "tier": "T1", "status": "open", "ja": "フロー", "en": "UX / flows", "pass": "Main flow clickable; owner completes it without help", "depends_on": ["ux.ideas"], "impacts": ["ux.journey", "ux.interface"]}, {"id": "ux.journey", "area": "ux", "tier": "T2", "status": "open", "ja": "CJM", "en": "Journey map", "pass": "Before/during/after stages with emotions and touchpoints", "depends_on": ["ux.personas", "ux.flows"], "impacts": ["ux.service_blueprint", "brand.touchpoints", "marketing"]}, {"id": "ux.service_blueprint", "area": "ux", "tier": "T2", "status": "open", "ja": "サービスブループリント", "en": "Service blueprint", "pass": "Front/back stage + support processes per journey step", "depends_on": ["ux.journey"], "impacts": ["ux.provider_needs", "ops"]}, {"id": "ux.provider_needs", "area": "ux", "tier": "T2", "status": "open", "ja": "提供側の要件", "en": "Provider needs", "pass": "Staff/provider tasks, data and tools listed", "depends_on": ["ux.service_blueprint"], "impacts": ["ops", "cost", "legal.privacy", "account_lifecycle"]}, {"id": "ux.interface", "area": "ux", "tier": "T1", "status": "open", "ja": "インターフェース", "en": "Interface spec", "pass": "Build spec with states; checked at 393px (L20)", "depends_on": ["ux.flows", "ux.journey", "brand.voice", "brand.identity", "brand.motion"], "impacts": ["experience"]}, {"id": "experience", "area": "ux", "tier": "T0", "status": "needs_confirmation", "ja": "体験・デザイン", "en": "Experience", "pass": "Design direction, a11y contrast, languages + JA line breaks (L19)", "depends_on": ["positioning", "ux.interface", "brand.identity"], "impacts": ["hosting", "marketing"]}, {"id": "brand.strategy", "area": "brand", "tier": "T1", "status": "done", "ja": "ブランド戦略", "en": "Brand strategy", "pass": "Owner repeats essence in ≤7 words", "depends_on": ["positioning"], "impacts": ["brand.personality"]}, {"id": "brand.personality", "area": "brand", "tier": "T1", "status": "done", "ja": "人格", "en": "Personality", "pass": "Aaker scores + 1–2 dominant traits", "depends_on": ["brand.strategy"], "impacts": ["brand.voice", "brand.motion"]}, {"id": "brand.voice", "area": "brand", "tier": "T1", "status": "needs_confirmation", "ja": "声・トーン", "en": "Voice & tone", "pass": "Tone matrix EN/JA + this-not-that + Not-to-do list", "depends_on": ["brand.personality"], "impacts": ["ux.interface", "marketing", "brand.voice_casting"]}, {"id": "brand.identity", "area": "brand", "tier": "T0", "status": "done", "ja": "アイデンティティ", "en": "Identity", "pass": "Logo set, tokens, contrast pass", "depends_on": ["brand.strategy"], "impacts": ["ux.interface", "experience"]}, {"id": "brand.motion", "area": "brand", "tier": "T2", "status": "open", "ja": "モーション", "en": "Motion", "pass": "Duration/easing tokens + reduced motion", "depends_on": ["brand.personality"], "impacts": ["ux.interface"]}, {"id": "brand.voice_casting", "area": "brand", "tier": "T2", "status": "open", "ja": "声のキャスティング", "en": "Voice casting", "pass": "Voice ID + dictionary; STT diff clean; native listen (L22)", "depends_on": ["brand.voice"], "impacts": ["marketing"]}, {"id": "brand.touchpoints", "area": "brand", "tier": "T2", "status": "open", "ja": "タッチポイント", "en": "Touchpoints", "pass": "360° map: make now / later / N/A, incl. AI agents as audience", "depends_on": ["ux.journey"], "impacts": ["marketing"]}, {"id": "data", "area": "tech", "tier": "T1", "status": "open", "ja": "データ", "en": "Data", "pass": "Schema + backup/restore tested on a copy (L5)", "depends_on": ["ux.provider_needs"], "impacts": ["hosting", "legal.privacy", "exit"]}, {"id": "auth", "area": "tech", "tier": "T1", "status": "open", "ja": "認証", "en": "Auth", "pass": "OAuth under company identity (L6); login works on real host", "depends_on": ["hosting"], "impacts": ["account_lifecycle", "security"]}, {"id": "hosting", "area": "tech", "tier": "T0", "status": "done", "ja": "ホスティング", "en": "Hosting", "pass": "Locked for 12 months; cost at 0/100/10k users; real-stack spike deployed (L2, L3)", "depends_on": ["data", "cost", "experience"], "impacts": ["auth", "analytics", "exit", "legal.privacy"]}, {"id": "exit", "area": "tech", "tier": "T2", "status": "open", "ja": "移行・撤退", "en": "Exit / migration", "pass": "Export + host-move gate rehearsed (L23)", "depends_on": ["hosting", "data"], "impacts": []}, {"id": "legal.privacy", "area": "legal", "tier": "T1", "status": "needs_confirmation", "ja": "プライバシー", "en": "Privacy", "pass": "Per-region list (GDPR, UK GDPR, APPI, CCPA…) with applies_because", "depends_on": ["data", "hosting", "ux.provider_needs", "account_lifecycle"], "impacts": ["analytics", "ops"]}, {"id": "legal.terms", "area": "legal", "tier": "T2", "status": "open", "ja": "規約", "en": "Terms", "pass": "Terms + refunds/subscriptions reviewed; lawyer if T3", "depends_on": ["security", "account_lifecycle"], "impacts": ["marketing"]}, {"id": "account_lifecycle", "area": "security", "tier": "T2", "status": "open", "ja": "アカウントの一生", "en": "Account lifecycle", "pass": "Rename, delete, takeover, death/incapacity flows defined", "depends_on": ["auth", "ux.provider_needs"], "impacts": ["legal.privacy", "ops", "legal.terms"]}, {"id": "security", "area": "security", "tier": "T1", "status": "open", "ja": "セキュリティ", "en": "Security", "pass": "Credentials checklist + secrets rules + admin excluded (L9–L11)", "depends_on": ["auth", "hosting"], "impacts": ["legal.terms", "ops"]}, {"id": "cost", "area": "ops", "tier": "T0", "status": "needs_confirmation", "ja": "コスト", "en": "Cost", "pass": "Paid-tool billing status + AI-credit table (L16, L17)", "depends_on": ["ux.provider_needs"], "impacts": ["hosting"]}, {"id": "ops", "area": "ops", "tier": "T2", "status": "open", "ja": "運用・サポート", "en": "Ops / support", "pass": "Email+DNS working (L7); support path; job queue (L18)", "depends_on": ["ux.service_blueprint", "ux.provider_needs", "security", "legal.privacy", "account_lifecycle"], "impacts": ["cost"]}, {"id": "analytics", "area": "ops", "tier": "T2", "status": "open", "ja": "計測", "en": "Analytics", "pass": "3 metrics with consent handling", "depends_on": ["hosting", "marketing", "legal.privacy"], "impacts": []}, {"id": "marketing", "area": "ops", "tier": "T1", "status": "open", "ja": "マーケティング", "en": "Marketing", "pass": "Core sentence, channel rules, script→voice→visuals (L21, L22)", "depends_on": ["positioning", "ux.journey", "brand.voice", "experience", "brand.voice_casting", "brand.touchpoints", "legal.terms"], "impacts": ["analytics"]}]}</script>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent),B=D.blocks,M={};B.forEach(b=>M[b.id]=b);
+const AREAS=[["purpose","目的・ポジショニング","Purpose / positioning"],["ux","UXステップ","UX steps",1],["brand","ブランド","Brand"],["tech","技術：データ・認証・ホスティング","Tech: data / auth / hosting"],["legal","法務・地域","Legal / regions"],["security","セキュリティ・アカウント","Security / account lifecycle"],["ops","コスト・運用・計測・マーケ","Cost / ops / analytics / marketing",1]];
+const ST={done:["完了","Done"],needs_confirmation:["要確認","Needs confirmation"],open:["未着手","Open"]};
+const TI={T0:["T0 スケッチ","T0 Sketch"],T1:["T1 社内・試作","T1 Internal"],T2:["T2 公開製品","T2 Public"],T3:["T3 規制・有料","T3 Regulated"]};
+let L='ja',T=D.tier||'T2',S=null;const li=a=>L=='ja'?a[0]:a[1];
+function walk(id,k){const seen=new Set,st=[...M[id][k]];while(st.length){const x=st.pop();if(seen.has(x))continue;seen.add(x);st.push(...M[x][k])}return seen}
+function render(){
+ document.documentElement.lang=L;
+ document.getElementById('tiers').innerHTML=['T0','T1','T2','T3'].map(t=>`<button data-t="${t}" class="${t==T?'on':''}">${t}</button>`).join('');
+ document.getElementById('leg').textContent=L=='ja'?'太線=完了 · 点線=要確認 · 細線=未着手 ／ クリックで依存（点線枠）と影響先（太枠）':'solid=done · dashed=needs confirmation · thin=open / click: dependencies (dashed) and impacts (bold)';
+ document.getElementById('grid').innerHTML=AREAS.map(a=>`<section class="area${a[3]?' wide':''}"><h2>${L=='ja'?a[1]:a[2]}</h2>${B.filter(b=>b.area==a[0]).map(b=>`<button class="blk${b.tier>T?' out':''}" data-id="${b.id}" data-s="${b.status}"><span class="t">${b.tier}</span><b>${L=='ja'?b.ja:b.en}</b><small>${L=='ja'?b.en:b.ja} · ${b.id}</small></button>`).join('')}</section>`).join('');
+ select(S)}
+function select(id){S=id;const g=document.getElementById('grid'),svg=document.getElementById('svg');svg.innerHTML='';
+ g.classList.toggle('dim',!!id);document.querySelectorAll('.blk').forEach(e=>e.classList.remove('sel','up','down'));
+ const P=document.getElementById('panel');
+ if(!id){P.innerHTML=`<h3>${L=='ja'?'ブロックを選んでください':'Select a block'}</h3><p style="color:var(--mid)">${L=='ja'?'選んだ段階（'+li(TI[T])+'）より上の段階のブロックは薄く表示されます。AIは同じデータ（blueprint.yaml）を読みます。':'Blocks above the selected tier ('+li(TI[T])+') are dimmed. AI reads the same data (blueprint.yaml).'}</p>`;return}
+ const b=M[id],up=new Set(b.depends_on),dn=walk(id,'impacts');
+ const el=x=>document.querySelector(`.blk[data-id="${CSS.escape(x)}"]`);
+ el(id).classList.add('sel');dn.forEach(x=>el(x).classList.add('down'));up.forEach(x=>{el(x).classList.remove('down');el(x).classList.add('up')});
+ const W=document.getElementById('wrap').getBoundingClientRect();
+ const c=e=>{const r=e.getBoundingClientRect();return[r.left-W.left+r.width/2,r.top-W.top+r.height/2]};
+ const line=(a,z,dash)=>{const[p,q]=c(el(a)),[r,s]=c(el(z));svg.insertAdjacentHTML('beforeend',`<path d="M${p},${q} C${(p+r)/2},${q} ${(p+r)/2},${s} ${r},${s}" fill="none" stroke="#111" stroke-width="${dash?1:1.6}" ${dash?'stroke-dasharray="4 3"':''} opacity=".55"/>`)};
+ up.forEach(y=>line(y,id,1));
+ [id,...dn].forEach(x=>M[x].impacts.forEach(y=>{if(dn.has(y))line(x,y,0)}));
+ const lst=s=>[...s].map(x=>`<li>${L=='ja'?M[x].ja:M[x].en} <small style="color:var(--mid)">${x}</small></li>`).join('')||'<li>—</li>';
+ P.innerHTML=`<h3>${L=='ja'?b.ja:b.en}</h3><small style="color:var(--mid)">${b.id}</small>
+ <div class="k">${L=='ja'?'合格条件':'Pass condition'}</div><div>${b.pass}</div>
+ <div class="k">${L=='ja'?'段階':'Tier'}</div><div>${li(TI[b.tier])}${b.tier>T?(L=='ja'?'（今回は対象外）':' (out of scope)'):''}</div>
+ <div class="k">${L=='ja'?'状態':'Status'}</div><div>${li(ST[b.status])}</div>
+ <div class="k">${L=='ja'?'直接依存しているもの':'Depends on (direct)'} (${up.size})</div><ul>${lst(up)}</ul>
+ <div class="k">${L=='ja'?'変えると影響が出るもの':'Impacts downstream'} (${dn.size})</div><ul>${lst(dn)}</ul>`;
+ if(innerWidth<900)P.scrollIntoView({behavior:'smooth',block:'nearest'})}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-t]'),l=e.target.closest('[data-l]'),k=e.target.closest('.blk');
+ if(t){T=t.dataset.t;render()}else if(l){L=l.dataset.l;document.querySelectorAll('#lang button').forEach(x=>x.classList.toggle('on',x==l));render()}else if(k){select(k.dataset.id==S?null:k.dataset.id)}});
+const Q=new URLSearchParams(location.search);if(Q.get('lang'))L=Q.get('lang');if(M[Q.get('sel')])S=Q.get('sel');addEventListener('resize',()=>select(S));render();
+</script></body></html>

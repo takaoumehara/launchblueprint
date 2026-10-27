@@ -1,0 +1,131 @@
+{
+ "meta": {
+  "schema": "blueprint/compare-stripe-connect@1",
+  "generated": "2026-10-26",
+  "publisher": "CREATIVITY IS EVERYWHERE, LLC",
+  "sources": [
+   "catalog/payments.yaml",
+   "project.blueprint.yaml",
+   "catalog/rules.yaml"
+  ],
+  "how_to_read": "catalog/ai-usage.md"
+ },
+ "question": "主催者がイベントを作り、参加者から代金を受け取る。紛争・返金・損失の責任をプラットフォーム（自社）が負うか？",
+ "item": {
+  "id": "pay.stripe-connect",
+  "name": "Stripe Connect",
+  "lock_in": "変更不可：作成後に方式（ダッシュボード種別）は変えられない。新規は Accounts v2／controller properties 推奨",
+  "liability_compliance": "方式で責任が移る。先回りリスク調査（§7）の必須項目",
+  "source": [
+   {
+    "url": "https://docs.stripe.com/connect/accounts",
+    "checked": "2026-10-26",
+    "verified": true
+   },
+   {
+    "url": "https://docs.stripe.com/connect/migrate-to-controller-properties",
+    "checked": "2026-10-26",
+    "verified": true
+   },
+   {
+    "url": "https://stripe.com/connect/pricing",
+    "checked": "2026-10-26",
+    "verified": true
+   }
+  ]
+ },
+ "options": [
+  {
+   "id": "standard",
+   "controller": "losses.payments=stripe, fees.payer=account, dashboard=full",
+   "liability": "Direct charges：接続アカウント（主催者）。Destination charges：プラットフォーム",
+   "cost": "Stripeが料金を持つ方式：プラットフォームの追加費用なし",
+   "status": "selected",
+   "reason": "Direct chargesなら紛争・返金は主催者。自社は場の提供",
+   "rules": [
+    "R-006"
+   ]
+  },
+  {
+   "id": "express",
+   "controller": "losses.payments=application, fees.payer=application, dashboard=express",
+   "liability": "紛争・不正・マイナス残高：プラットフォーム",
+   "cost": "$2/アクティブ月 ＋ 0.25%+25¢/入金",
+   "status": "rejected",
+   "reason": "紛争・不正・マイナス残高が自社に来る。$2/アクティブ月",
+   "rules": [
+    "R-006"
+   ]
+  },
+  {
+   "id": "custom",
+   "controller": "+ requirement_collection=application, dashboard=none",
+   "liability": "全部プラットフォーム（KYC情報の管理も）",
+   "cost": "同上＋大きな開発",
+   "status": "rejected",
+   "reason": "KYC・サポートを全部自社で持つ",
+   "rules": [
+    "R-006"
+   ]
+  }
+ ],
+ "rules": [
+  {
+   "id": "R-006",
+   "type": "dont",
+   "text": "決済方式を後から変更する前提で設計しない（Connect の方式は作成後に変えられない）",
+   "applies_to": "決済",
+   "strength": "default",
+   "source": "AIの推測（先回りリスク調査 2026-07）",
+   "status": "review_overdue",
+   "review_due": "2026-10-01"
+  }
+ ],
+ "stack": [
+  {
+   "domain": "データベース",
+   "id": "db.supabase",
+   "name": "Supabase (Postgres)",
+   "bands": {
+    "free": "$0：500MB、1週間無操作で一時停止、2プロジェクトまで",
+    "usd5": "—（Free と Pro の間の帯はない）",
+    "usd10": "—",
+    "usd100": "$25〜：Pro（8GB、毎日バックアップ7日、休止なし）。$100帯なら Compute 増強 or PITR（$100/月）"
+   }
+  },
+  {
+   "domain": "認証",
+   "id": "auth.supabase",
+   "name": "Supabase Auth",
+   "bands": {
+    "free": "$0：5万MAU",
+    "usd5": "—",
+    "usd10": "—",
+    "usd100": "$25 Pro：10万MAU、以降 $0.00325/MAU"
+   }
+  },
+  {
+   "domain": "ホスト",
+   "id": "host.vercel",
+   "name": "Vercel",
+   "bands": {
+    "free": "Hobby $0：個人・非商用のみ。転送100GB、関数呼び出し100万",
+    "usd5": "—",
+    "usd10": "—",
+    "usd100": "Pro $20/人：1TB、$20分の利用クレジット、使いすぎは上限設定可"
+   }
+  },
+  {
+   "domain": "メール・通知",
+   "id": "mail.resend",
+   "name": "Resend",
+   "bands": {
+    "free": "Free：3,000通/月・100通/日・ドメイン3",
+    "usd5": "—",
+    "usd10": "—",
+    "usd100": "Pro $20：5万通、日上限なし"
+   }
+  }
+ ],
+ "budget_target": "usd10"
+}

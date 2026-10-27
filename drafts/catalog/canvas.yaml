@@ -1,0 +1,71 @@
+# Blueprint キャンバス（サンプル：イベント予約プラットフォーム）— CREATIVITY IS EVERYWHERE, LLC
+# state: done（決定）/ open（仮）/ lock（ロック）。edges.kind: decided（決まった流れ）/ candidate（検討中の候補）
+sample: true
+updated: '2026-10-26'
+fields:
+  - {id: brand, name: Brand}
+  - {id: ux, name: UX・体験}
+  - {id: ui, name: UI}
+  - {id: tech, name: Tech}
+  - {id: biz, name: Biz / Legal}
+  - {id: rules, name: Rules}
+nodes:
+  - {id: b1, field: brand, label: 意図の一文, state: done, note: "主催者が当日の集金をせずに済む予約ページ"}
+  - {id: b2, field: brand, label: 声とトーン, state: open, note: "やさしく、急かさない。数字ははっきり"}
+  - {id: b3, field: brand, label: brand.yaml, state: done, note: "場面×感じ×トークン×やらないこと"}
+  - {id: u1, field: ux, label: ペルソナ仮説, state: done, note: "主催者（小規模）と参加者（スマホ）"}
+  - {id: u2, field: ux, label: ペイン上位3, state: done, note: "当日の現金集め／無断キャンセル／参加者の連絡先管理"}
+  - {id: u5, field: ux, label: アイデア：当日払いをなくす, state: done, note: "申込時に決済まで済ませる"}
+  - {id: u6, field: ux, label: UX方法A：決済ページ遷移, state: done, compare: true, note: "Stripe のページに移る。実装が小さく信頼感がある"}
+  - {id: u3, field: ux, label: 申込フロー A/B/C, state: open, note: "A 遷移／B 埋め込み／C 後日請求を比較中"}
+  - {id: u4, field: ux, label: サービスブループリント, state: done, compare: true, note: "表の行動・裏の仕組み・失敗時を1枚に"}
+  - {id: i1, field: ui, label: 画面×状態, state: open, note: "空・エラー・読み込み・権限なし・オフライン"}
+  - {id: i2, field: ui, label: 決済画面, state: open, flag: true, note: "AIレビュー：返金の文言が未定"}
+  - {id: i3, field: ui, label: 390px確認, state: done, note: "スマホ幅で全画面を確認済み"}
+  - {id: i4, field: ui, label: 部品：PayButton, state: open, rule: R-022, note: "押した後は二重送信を止め、状態を文字で出す"}
+  - {id: t1, field: tech, label: ホスト, state: lock, rule: R-004, catalog: host.vercel, note: "商用なので Pro。公開は会社ドメインのみ"}
+  - {id: t2, field: tech, label: DB, state: lock, catalog: db.supabase, note: "Supabase。無料は1週間で停止するので本番は Pro"}
+  - {id: t3, field: tech, label: 認証, state: done, catalog: auth.supabase, note: "Google・メールリンク・匿名"}
+  - {id: t4, field: tech, label: メール送信, state: open, catalog: mail.resend, note: "無料は1日100通。告知が増えたら Pro"}
+  - {id: t5, field: tech, label: Stripe Checkout, state: done, compare: true, catalog: pay.stripe-checkout, note: "カード 2.9%+30¢"}
+  - {id: z1, field: biz, label: 決済：接続方式, state: open, flag: true, catalog: pay.stripe-connect, note: "Standard 推奨。作成後に方式は変えられない"}
+  - {id: z2, field: biz, label: 特商法・規約, state: open, note: "返金ポリシーと表示義務"}
+  - {id: z3, field: biz, label: 予算帯 $10/月, state: done, rule: R-012, note: "無料は好み。$5〜$10帯も必ず比較"}
+  - {id: r1, field: rules, label: R-017 要確認, state: open, flag: true, rule: R-017, note: "AIの推測で登録。オーナー確認待ち"}
+  - {id: r2, field: rules, label: R-004 公開ドメイン, state: lock, rule: R-004, note: "公開リンクは必ず会社ドメイン"}
+  - {id: r3, field: rules, label: R-012 無料は好み, state: done, rule: R-012, note: "強さは要確認"}
+trace: [u2, u5, u6, u3, i2, i4, t5]
+edges:
+  - [u2, u5, decided]
+  - [u5, u6, decided]
+  - [u6, u3, decided]
+  - [u3, i2, decided]
+  - [i2, i4, decided]
+  - [i4, t5, decided]
+  - [b1, u1, decided]
+  - [u1, u2, decided]
+  - [u4, t1, decided]
+  - [u4, t2, decided]
+  - [u3, u4, decided]
+  - [i2, z1, decided]
+  - [z1, t3, candidate]
+  - [z1, z2, decided]
+  - [t1, z3, decided]
+  - [t4, z3, candidate]
+  - [b3, i1, decided]
+  - [b2, i1, candidate]
+  - [r2, t1, decided]
+  - [r3, z3, decided]
+  - [i1, i3, decided]
+  - [u4, z1, candidate]
+  - [r1, b2, candidate]
+  - [u3, i1, candidate]
+  - [u6, t5, candidate]
+  - [b1, u5, candidate]
+  - [i4, t3, candidate]
+  - [u2, i2, candidate]
+  - [t2, t3, decided]
+  - [t5, z1, candidate]
+  - [b2, u3, candidate]
+  - [z2, i2, candidate]
+  - [r2, i3, candidate]
