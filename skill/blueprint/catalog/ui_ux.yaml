@@ -203,3 +203,45 @@ rules:
     check: "Does in-page navigation stay short on long pages?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+  - id: toast-never-covers-controls
+    principle: "Show transient messages in their own reserved space (above a bottom bar, clear of the safe area), never on top of tappable controls."
+    anti_pattern: "A floating toast laid over list items and buttons near the bottom of the screen."
+    why: "A toast covered a button users were about to tap, so taps were missed or hit the toast."
+    check: "While a toast is visible, is every control on screen still fully visible and tappable?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: header-title-wraps-to-own-row
+    principle: "Let a header title wrap (a few lines at most) or move to its own full-width row; never cut it off."
+    anti_pattern: "A page title truncated with an ellipsis or squeezed to one word per line beside header buttons."
+    why: "People could not tell which page they were editing, and truncated titles looked broken."
+    check: "At the narrowest supported width, is the full title readable in the header without an ellipsis?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: icon-only-secondary-on-narrow
+    principle: "On narrow screens, collapse secondary header actions to labelled icons (accessible name, 44px target) before squeezing the title."
+    anti_pattern: "Text labels on every header button so a short title wraps into two cramped lines."
+    why: "Short titles wrapped needlessly because secondary buttons took the space."
+    check: "At 390px, does a short title fit on one line, and do icon-only buttons keep an accessible name and a 44px target?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: decorative-motion-once
+    principle: "Play decorative motion (a sheen, a shimmer) once on load and once per press, never on a loop, and not at all under reduced motion."
+    anti_pattern: "A shine that repeats forever on the primary button."
+    why: "Looping decoration distracted from content and ignored people who asked for less motion."
+    check: "Does every decorative animation have a finite iteration count and a prefers-reduced-motion off switch?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: selected-vs-primary-color
+    principle: "Keep selected states visibly lighter than the primary action, and draw focus rings in the brand colour at 3:1 or more."
+    anti_pattern: "Selected chips, focus rings and the primary button sharing one solid fill, or rings left in an old accent."
+    why: "Selected options were mistaken for buttons, and old-accent rings looked like a different product."
+    check: "Are selected states a tint, the primary action a fill, and focus rings brand-coloured at 3:1 or more?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: clean-build-before-deploy
+    principle: "Clear the build cache before a production build when design tokens or global CSS changed, then verify the deployed CSS."
+    anti_pattern: "Deploying from an incremental build whose cached CSS still held the old tokens."
+    why: "A stale cache shipped old colours even though the source had changed."
+    check: "Was the build cache cleared, and does the deployed CSS contain the new token values?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'

@@ -9,12 +9,15 @@ Generic rules learned while iterating on a mobile-first page editor (Oct 2026). 
 - **borders-only-on-pressables**: Use boxes and borders only for pressable buttons; use plain text links elsewhere. *Why:* Too many framed boxes made the header feel busy and hid what was actually tappable.
 - **plain-screen-labels**: Screen-name labels are plain text, and mode toggles state what they switch between. *Why:* A heavy preview banner looked ugly and an unclear toggle confused users.
 - **never-red-for-success**: Never use red for a success state. *Why:* A success state in red read as an error.
+- **icon-only-secondary-on-narrow**: On narrow screens, collapse secondary header actions to labelled icons (accessible name, 44px target) before squeezing the title. *Why:* Short titles wrapped needlessly because secondary buttons took the space. *Check:* At 390px, does a short title fit on one line, and do icon-only buttons keep an accessible name and a 44px target?
+- **selected-vs-primary-color**: Keep selected states visibly lighter than the primary action, and draw focus rings in the brand colour at 3:1 or more. *Why:* Selected options were mistaken for buttons, and old-accent rings looked like a different product. *Check:* Are selected states a tint, the primary action a fill, and focus rings brand-coloured at 3:1 or more?
 
 ## Copy and terminology
 
 - **short-scannable-copy**: Keep UI copy extremely short and scannable. *Why:* Long labels were truncated or skipped, and users missed the point.
 - **plain-localized-terms**: Use plain, recognizable terms, localized to each locale's natural word. *Why:* An invented label was not recognized; the standard term ('Table of contents') was.
 - **no-ellipsis-truncation**: Never truncate text with an ellipsis; wrap, shorten copy or resize. *Why:* Cut-off labels hid meaning and looked broken.
+- **header-title-wraps-to-own-row**: Let a header title wrap (a few lines at most) or move to its own full-width row; never cut it off. *Why:* People could not tell which page they were editing, and truncated titles looked broken. *Check:* At the narrowest supported width, is the full title readable in the header without an ellipsis?
 
 ## Guidance and discovery
 
@@ -41,6 +44,7 @@ Generic rules learned while iterating on a mobile-first page editor (Oct 2026). 
 - **prevent-invalid-input**: Prevent invalid input by auto-adjusting (e.g. accent contrast) with Undo instead of showing an error. *Why:* Users hit a contrast error with no idea how to fix it.
 - **separate-concepts**: Keep separate concepts in separate controls (publish status vs audience/visibility). *Why:* Users could not tell 'private' from 'not published'.
 - **celebrate-publish**: Show publish success in clear green with a live message, Copy/Share actions and a small first-time celebration. *Why:* Users were unsure whether their page had gone live.
+- **toast-never-covers-controls**: Show transient messages in their own reserved space (above a bottom bar, clear of the safe area), never on top of tappable controls. *Why:* A toast covered a button users were about to tap, so taps were missed or hit the toast. *Check:* While a toast is visible, is every control on screen still fully visible and tappable?
 
 ## Visual system, media and motion
 
@@ -48,3 +52,5 @@ Generic rules learned while iterating on a mobile-first page editor (Oct 2026). 
 - **real-media-thumbnails**: Media embeds show the real thumbnail with a play overlay. *Why:* Placeholder embeds made pages look broken and unfamiliar.
 - **distinct-motion-styles**: Offer motion styles only if each is visibly distinct, with a live mini preview per style. *Why:* Near-identical presets were rejected; users wanted clearly different reveal styles.
 - **motion-accessibility**: Reduced-motion users get no motion; long body text uses only a soft fade; any input finishes the reveal; animate only transform, opacity, clip-path and filter. *Why:* Effects on long text hurt readability and performance.
+- **decorative-motion-once**: Play decorative motion (a sheen, a shimmer) once on load and once per press, never on a loop, and not at all under reduced motion. *Why:* Looping decoration distracted from content and ignored people who asked for less motion. *Check:* Does every decorative animation have a finite iteration count and a prefers-reduced-motion off switch?
+- **clean-build-before-deploy**: Clear the build cache before a production build when design tokens or global CSS changed, then verify the deployed CSS. *Why:* A stale cache shipped old colours even though the source had changed. *Check:* Was the build cache cleared, and does the deployed CSS contain the new token values?
