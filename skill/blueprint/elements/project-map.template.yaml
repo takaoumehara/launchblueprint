@@ -1,0 +1,14 @@
+# 層3：プロジェクトの地図。最初に全要素を一度に並べ（status: open）、ゴールに合わせて埋める
+domain: project_map
+goal: ""
+elements: [el.experience, el.product, el.business, el.marketing, el.brand, el.maintenance, el.security]
+choices:
+  - element: el.business
+    topic: payments
+    status: open            # open / decided / deferred
+    options: []             # tactics.yaml の options から
+    ai_pick: ""
+    reason: ""
+    rejected:
+      - {option: "", why: ""}
+    decided_by: ""          # human / ai
