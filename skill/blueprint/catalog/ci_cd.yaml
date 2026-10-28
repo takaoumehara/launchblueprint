@@ -45,3 +45,16 @@ entries:
     url: https://vercel.com/pricing
     checked: '2026-10-26'
     verified: true
+lessons:
+- id: ci.preview-per-pr-first
+  principle: "Set up per-PR preview URLs before development starts."
+  anti_pattern: "Discovering at review time that previews are disabled (build uploaded but no reachable URL)."
+  why: "Without a preview, QA and design review stall."
+  check: "Does every PR get a working preview link automatically?"
+  verified: false
+- id: ci.preview-db-isolation
+  principle: "If previews share the production DB, don't preview PRs with migrations and tell reviewers not to write data; ideally use a separate staging DB."
+  anti_pattern: "Running migration PRs or test writes on a preview wired to production data."
+  why: "Risk of corrupting production data."
+  check: "Does the preview use a non-production DB, or are migration PRs excluded from preview?"
+  verified: false
