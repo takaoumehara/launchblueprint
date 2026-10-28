@@ -6,100 +6,583 @@
 domain: stack_comparisons
 updated: '2026-10-28'
 comparisons:
-  - topic: database
-    services:
-      - {id: db.supabase, free_tier: "500MB の DB・5GB 転送・1GB ファイル。1週間使わないと一時停止。無料は2プロジェクトまで", paid_entry: "Pro $25/月（8GB・毎日バックアップ7日分・停止なし）", url: "https://supabase.com/pricing", checked: '2026-10-28', verified: true}
-      - {id: db.neon, free_tier: "1プロジェクト 1GB（合計 20GB）・計算 100時間/月・5分で自動停止・転送 5GB", paid_entry: "Launch 使った分だけ（計算 $0.106/時・保存 $0.35/GB月。最低料金なし）", url: "https://neon.com/pricing", checked: '2026-10-28', verified: true}
-      - {id: db.firestore, free_tier: "1GB 保存・読み取り 5万回/日・書き込み 2万回/日（記憶。要確認）", paid_entry: "使った分だけ（読み書き回数で課金）", url: "https://firebase.google.com/pricing", checked: null, verified: false}
-    combine:
-      single: "Supabase 1社でデータ・ログイン・ファイル・すぐ反映がそろう。権限の仕組みが1つで、障害時に見る所も1か所。"
-      combined: "Neon（DB）＋別のログイン＋別のファイル置き場で無料枠を足すと、合計の無料量は増える。"
-      risks: "ユーザーIDを3か所でそろえる手間、権限の書き方がサービスごとに違う、どれか1つの障害で全体が止まる、請求と上限の管理が3つになる。"
-    switch_points:
-      - {when: "本番で使い始めた日（1週間止まると困る）", upgrade_to: "Supabase Pro $25/月", why: "無料は1週間使わないと停止し、自動バックアップもない。お客さんがいる時点で払う方が安全。"}
-      - {when: "DB が 400MB を超えた（無料 500MB の8割）", upgrade_to: "Supabase Pro（8GB 込み）", why: "上限に当たると書き込みが止まる。"}
-      - {when: "時点を指定した復元が必要（売上データなど）", upgrade_to: "PITR $100/月〜（7日分）", why: "毎日のバックアップだけでは直前の状態に戻せない。"}
-    recommendation:
-      pick: db.supabase
-      reason: "1社でそろい、AIも書き慣れている。本番開始と同時に Pro $25/月にする前提で、運用の手間が一番少ない。"
-      rejected:
-        - {option: db.neon, why: "DB だけなら安いが、ログインやファイルを別に用意する手間が増える。DB だけ使う時やプレビューごとに DB を分けたい時は候補。"}
-        - {option: db.firestore, why: "表をつないだ集計が苦手。スマホアプリ中心なら候補。"}
-  - topic: auth
-    services:
-      - {id: auth.supabase, free_tier: "月 5万人（MAU）まで。メール・SNSログイン・匿名・基本の二段階認証", paid_entry: "Pro $25/月で月 10万人まで（その後 1人 $0.00325）", url: "https://supabase.com/pricing", checked: '2026-10-28', verified: true}
-      - {id: auth.clerk, free_tier: "1アプリ 月 5万人（翌日以降も戻った人だけ数える）。SNS 3種まで。二段階認証・パスキーは無し", paid_entry: "Pro $25/月（年払い $20）。パスキー・二段階認証・ロゴ非表示", url: "https://clerk.com/pricing", checked: '2026-10-28', verified: true}
-      - {id: auth.firebase, free_tier: "メール・SNS ログインは大きな無料枠（記憶。要確認）。電話の SMS は有料", paid_entry: "使った分だけ", url: "https://firebase.google.com/pricing", checked: null, verified: false}
-      - {id: auth.auth0, free_tier: "月 2.5万人（他社の料金ページの記載。要確認）", paid_entry: "Essentials $35/月〜（同上・要確認）", url: "https://auth0.com/pricing", checked: null, verified: false}
-    combine:
-      single: "データの置き場所と同じ会社のログインを使うと、ユーザーIDと権限が自動でつながる。"
-      combined: "ログイン画面の見た目が良い Clerk ＋ DB は別、もよくある。"
-      risks: "ユーザー情報を2か所で同期する仕組み（自動のお知らせ）が必要、同期が遅れると権限がずれる、退会処理を2回やる。"
-    switch_points:
-      - {when: "管理者にパスキーや二段階認証を必須にしたい（攻撃への守り）", upgrade_to: "Supabase は無料で基本の二段階認証あり／Clerk は Pro $25/月", why: "管理者アカウントの乗っ取りは被害が大きい。"}
-      - {when: "月のログイン人数が 4万人（無料 5万人の8割）", upgrade_to: "Supabase Pro（10万人込み）", why: "上限を超えると追加料金かログイン停止。"}
-      - {when: "電話番号の SMS ログインを使う", upgrade_to: "SMS は従量課金", why: "SMS は1通ごとに費用。なりすましにも弱いので本当に必要か確認。"}
-    recommendation:
-      pick: auth.supabase
-      reason: "DB と同じ所で無料 5万人、追加の同期がいらない。"
-      rejected:
-        - {option: auth.clerk, why: "画面は一番きれいだが、無料ではパスキー・二段階認証が無く、DB との同期が別に要る。"}
-        - {option: auth.firebase, why: "データの置き場所が Firebase の時だけ一体になる。"}
-        - {option: auth.auth0, why: "会社向けの機能は強いが、有料になると高い。無料枠は未確認。"}
-  - topic: email
-    services:
-      - {id: mail.resend, free_tier: "月 3,000通・1日 100通まで・独自ドメイン 3つ", paid_entry: "Pro $20/月で月 5万通（1日の上限なし）", url: "https://resend.com/pricing", checked: '2026-10-28', verified: true}
-      - {id: mail.postmark, name: "Postmark", free_tier: "月 100通（記憶。要確認）", paid_entry: "$15/月〜（要確認）", url: "https://postmarkapp.com/pricing", checked: null, verified: false}
-      - {id: mail.ses, name: "Amazon SES", free_tier: "条件つきの無料枠（要確認）", paid_entry: "1,000通 $0.10 前後（要確認）。設定と審査の手間が大きい", url: "https://aws.amazon.com/ses/pricing/", checked: null, verified: false}
-    combine:
-      single: "登録確認とお知らせを1社で送ると、迷惑メール対策の設定（ドメイン認証）が1回で済む。"
-      combined: "無料枠を足すために2社で送り分けると、同じドメインの認証設定が2重になる。"
-      risks: "片方の設定ミスで両方の到達率が落ちる、どこで止まったか追いにくい、配信停止リストが2つに分かれる。"
-    switch_points:
-      - {when: "1日 100通を超える日が出た（イベント前の一斉連絡など）", upgrade_to: "Resend Pro $20/月", why: "無料は1日 100通で止まる。ログイン用メールが届かないと誰も入れない。"}
-      - {when: "ニュースレターなど宣伝メールを送る", upgrade_to: "宣伝メールは別枠（Resend は連絡先 1,000件まで無料）", why: "取引メールと宣伝メールを分けると、到達率と法律の配信停止義務を守りやすい。"}
-    recommendation:
-      pick: mail.resend
-      reason: "無料で月 3,000通、設定が簡単。1日 100通を超えたら $20/月。"
-      rejected:
-        - {option: mail.postmark, why: "到達率の評判は高いが無料枠が小さい（未確認）。"}
-        - {option: mail.ses, why: "量が多いと最安だが、設定・審査・監視を自分でやる時間がかかる。"}
-        - {option: push.fcm, why: "スマホへの通知用で、メールは送れない。"}
-  - topic: hosting
-    services:
-      - {id: host.vercel, free_tier: "Hobby 無料：転送 100GB/月・関数 100万回/月。個人・非商用のみ", paid_entry: "Pro $20/月（1人。転送 1TB 込み・商用可）", url: "https://vercel.com/pricing", checked: '2026-10-28', verified: true}
-      - {id: host.cloudflare-pages, free_tier: "静的配信の転送は大きい無料枠・ビルド回数に上限（記憶。要確認）", paid_entry: "Workers Paid $5/月〜（要確認）", url: "https://developers.cloudflare.com/pages/platform/limits/", checked: null, verified: false}
-      - {id: host.firebase-hosting, free_tier: "保存 10GB・転送 360MB/日（記憶。要確認）", paid_entry: "使った分だけ（Blaze）", url: "https://firebase.google.com/pricing", checked: null, verified: false}
-    combine:
-      single: "画面・関数・確認用ページを1社に置くと、公開作業が1回で、ログも1か所。"
-      combined: "画面は Cloudflare の無料枠、関数は別、と分けると無料で長く持つ。"
-      risks: "公開作業が2系統になり、片方だけ古い版が出る事故、ドメインとキャッシュの設定が2重、障害の切り分けに時間がかかる。"
-    switch_points:
-      - {when: "お金を受け取る・会社として使う（商用）", upgrade_to: "Vercel Pro $20/月", why: "Hobby は非商用だけ。商用で使うと規約違反になる（R-004 も参照）。"}
-      - {when: "転送が月 80GB（無料 100GB の8割）", upgrade_to: "Vercel Pro（1TB 込み）／または静的部分を Cloudflare へ", why: "無料は上限で止まり、追加購入できない。"}
-    recommendation:
-      pick: host.vercel
-      reason: "変更ごとに確認用ページが自動で出て、作業が一番少ない。商用で使う日から Pro $20/月。"
-      rejected:
-        - {option: host.cloudflare-pages, why: "静的サイトは無料で強いが、Next.js の一部機能が動かないことがある（無料枠は未確認）。"}
-        - {option: host.firebase-hosting, why: "アプリのデータ置き場を Firebase でそろえる時だけ一体になる。"}
-  - topic: payments
-    services:
-      - {id: pay.stripe-checkout, free_tier: "月額なし。米国カード 2.9%＋30¢／件・チャージバック $15／件", paid_entry: "同じ（手数料だけ）。税の自動計算は別料金", url: "https://stripe.com/pricing", checked: '2026-10-26', verified: true}
-      - {id: pay.stripe-connect, free_tier: "月額なし。売り手ごとの口座・本人確認つき（追加手数料は要確認）", paid_entry: "使った分だけ", url: "https://stripe.com/connect/pricing", checked: null, verified: false}
-      - {id: pay.paddle, free_tier: "月額なし。5%＋50¢／件（販売代行・各国の税込み。要確認）", paid_entry: "同じ", url: "https://www.paddle.com/pricing", checked: null, verified: false}
-      - {id: pay.square, free_tier: "月額なし（手数料は要確認）。対面販売に強い", paid_entry: "同じ", url: "https://squareup.com/us/en/pricing", checked: null, verified: false}
-    combine:
-      single: "支払いは1社にまとめると、返金・売上・税の記録が1か所。"
-      combined: "カードは Stripe、別の支払い方法を別会社で足すと、払い方は増える。"
-      risks: "売上の照合が2つ、返金の手順が2つ、税の計算がずれる。手数料も2社分の最低額がかかることがある。"
-    switch_points:
-      - {when: "ユーザー同士でお金が動く（チケット販売の主催者など）", upgrade_to: "Stripe Connect", why: "他人の売上を自分の口座で受けるのは危険。売り手ごとの口座と本人確認が要る。"}
-      - {when: "3か国以上の消費税の登録が必要になった", upgrade_to: "販売代行（Paddle など）または Stripe Tax", why: "国ごとの税の申告を自分でやる時間が、手数料の差より高くつく。"}
-      - {when: "月の売上が $10万を超えた", upgrade_to: "Stripe に手数料の相談（要確認）", why: "量が多いと個別の料金が出ることがある。"}
-    recommendation:
-      pick: pay.stripe-checkout
-      reason: "月額なしで始められ、カード・Apple Pay・Google Pay がそろう。ユーザー同士で売り買いするなら最初から Connect。"
-      rejected:
-        - {option: pay.paddle, why: "海外の税は任せられるが、手数料が高く、ユーザー同士の売り買いには向かない。"}
-        - {option: pay.square, why: "対面販売なら候補。ネットだけなら Stripe の方が部品が多い。"}
+- topic: database
+  services:
+  - id: db.supabase
+    free_tier: 500MB の DB・5GB 転送・1GB ファイル。1週間使わないと一時停止。無料は2プロジェクトまで
+    paid_entry: Pro $25/月（8GB・毎日バックアップ7日分・停止なし）
+    url: https://supabase.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: db.neon
+    free_tier: 1プロジェクト 1GB（合計 20GB）・計算 100時間/月・5分で自動停止・転送 5GB
+    paid_entry: Launch 使った分だけ（計算 $0.106/時・保存 $0.35/GB月。最低料金なし）
+    url: https://neon.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: db.firestore
+    free_tier: 1GiB 保存・読み取り 5万回/日・書き込み 2万回/日・削除 2万回/日・転送 10GiB/月
+    paid_entry: Blaze（使った分だけ。無料分は差し引き）
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: Supabase 1社でデータ・ログイン・ファイル・すぐ反映がそろう。権限の仕組みが1つで、障害時に見る所も1か所。
+    combined: Neon（DB）＋別のログイン＋別のファイル置き場で無料枠を足すと、合計の無料量は増える。
+    risks: ユーザーIDを3か所でそろえる手間、権限の書き方がサービスごとに違う、どれか1つの障害で全体が止まる、請求と上限の管理が3つになる。
+  switch_points:
+  - when: 本番で使い始めた日（1週間止まると困る）
+    upgrade_to: Supabase Pro $25/月
+    why: 無料は1週間使わないと停止し、自動バックアップもない。お客さんがいる時点で払う方が安全。
+  - when: DB が 400MB を超えた（無料 500MB の8割）
+    upgrade_to: Supabase Pro（8GB 込み）
+    why: 上限に当たると書き込みが止まる。
+  - when: 時点を指定した復元が必要（売上データなど）
+    upgrade_to: PITR $100/月〜（7日分）
+    why: 毎日のバックアップだけでは直前の状態に戻せない。
+  recommendation:
+    pick: db.supabase
+    reason: 1社でそろい、AIも書き慣れている。本番開始と同時に Pro $25/月にする前提で、運用の手間が一番少ない。
+    rejected:
+    - option: db.neon
+      why: DB だけなら安いが、ログインやファイルを別に用意する手間が増える。DB だけ使う時やプレビューごとに DB を分けたい時は候補。
+    - option: db.firestore
+      why: 表をつないだ集計が苦手。スマホアプリ中心なら候補。
+- topic: auth
+  services:
+  - id: auth.supabase
+    free_tier: 月 5万人（MAU）まで。メール・SNSログイン・匿名・基本の二段階認証
+    paid_entry: Pro $25/月で月 10万人まで（その後 1人 $0.00325）
+    url: https://supabase.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: auth.clerk
+    free_tier: 1アプリ 月 5万人（翌日以降も戻った人だけ数える）。SNS 3種まで。二段階認証・パスキーは無し
+    paid_entry: Pro $25/月（年払い $20）。パスキー・二段階認証・ロゴ非表示
+    url: https://clerk.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: auth.firebase
+    free_tier: 月 5万人（Identity Platform）まで。電話の SMS は1通ごとに課金
+    paid_entry: 5万人を超えた分は Google Cloud の料金
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: auth.auth0
+    free_tier: 月 2.5万人・SNS ログイン無制限・パスキー・独自ドメイン1つ
+    paid_entry: Essentials $35/月〜（500人まで。1,000人で $70、1万人で $700）
+    url: https://auth0.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: データの置き場所と同じ会社のログインを使うと、ユーザーIDと権限が自動でつながる。
+    combined: ログイン画面の見た目が良い Clerk ＋ DB は別、もよくある。
+    risks: ユーザー情報を2か所で同期する仕組み（自動のお知らせ）が必要、同期が遅れると権限がずれる、退会処理を2回やる。
+  switch_points:
+  - when: 管理者にパスキーや二段階認証を必須にしたい（攻撃への守り）
+    upgrade_to: Supabase は無料で基本の二段階認証あり／Clerk は Pro $25/月
+    why: 管理者アカウントの乗っ取りは被害が大きい。
+  - when: 月のログイン人数が 4万人（無料 5万人の8割）
+    upgrade_to: Supabase Pro（10万人込み）
+    why: 上限を超えると追加料金かログイン停止。
+  - when: 電話番号の SMS ログインを使う
+    upgrade_to: SMS は従量課金
+    why: SMS は1通ごとに費用。なりすましにも弱いので本当に必要か確認。
+  recommendation:
+    pick: auth.supabase
+    reason: DB と同じ所で無料 5万人、追加の同期がいらない。
+    rejected:
+    - option: auth.clerk
+      why: 画面は一番きれいだが、無料ではパスキー・二段階認証が無く、DB との同期が別に要る。
+    - option: auth.firebase
+      why: データの置き場所が Firebase の時だけ一体になる。
+    - option: auth.auth0
+      why: 無料 2.5万人は十分だが、有料になると 1,000人で $70/月と高い。
+- topic: email
+  services:
+  - id: mail.resend
+    free_tier: 月 3,000通・1日 100通まで・独自ドメイン 3つ
+    paid_entry: Pro $20/月で月 5万通（1日の上限なし）
+    url: https://resend.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: mail.postmark
+    name: Postmark
+    free_tier: 月 100通（期限なし）
+    paid_entry: Basic $15/月で月1万通（超過 1,000通 $1.80）
+    url: https://postmarkapp.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: mail.ses
+    name: Amazon SES
+    free_tier: 新規 AWS アカウントに最大 $200 の無料クレジット（6〜12か月）
+    paid_entry: 1,000通 $0.10（プランなし）／Essentials プランは 1,000通 $0.16。設定と審査の手間が大きい
+    url: https://aws.amazon.com/ses/pricing/
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: 登録確認とお知らせを1社で送ると、迷惑メール対策の設定（ドメイン認証）が1回で済む。
+    combined: 無料枠を足すために2社で送り分けると、同じドメインの認証設定が2重になる。
+    risks: 片方の設定ミスで両方の到達率が落ちる、どこで止まったか追いにくい、配信停止リストが2つに分かれる。
+  switch_points:
+  - when: 1日 100通を超える日が出た（イベント前の一斉連絡など）
+    upgrade_to: Resend Pro $20/月
+    why: 無料は1日 100通で止まる。ログイン用メールが届かないと誰も入れない。
+  - when: ニュースレターなど宣伝メールを送る
+    upgrade_to: 宣伝メールは別枠（Resend は連絡先 1,000件まで無料）
+    why: 取引メールと宣伝メールを分けると、到達率と法律の配信停止義務を守りやすい。
+  recommendation:
+    pick: mail.resend
+    reason: 無料で月 3,000通、設定が簡単。1日 100通を超えたら $20/月。
+    rejected:
+    - option: mail.postmark
+      why: 届く速さの評判は高いが、無料は月100通だけで、次は $15/月（1万通）。
+    - option: mail.ses
+      why: 量が多いと最安（1,000通 $0.10）だが、設定・審査・監視を自分でやる時間がかかる。
+    - option: push.fcm
+      why: スマホへの通知用で、メールは送れない。
+- topic: hosting
+  services:
+  - id: host.vercel
+    free_tier: Hobby 無料：転送 100GB/月・関数 100万回/月。個人・非商用のみ
+    paid_entry: Pro $20/月（1人。転送 1TB 込み・商用可）
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: host.cloudflare-pages
+    free_tier: ビルド 月500回・同時1つ・1サイト2万ファイル・確認用ページ無制限。関数は 1日10万回まで
+    paid_entry: Workers Paid $5/月〜（月1,000万回込み）
+    url: https://www.cloudflare.com/plans/developer-platform/
+    checked: '2026-10-28'
+    verified: true
+  - id: host.firebase-hosting
+    free_tier: 保存 10GB・転送 1日 360MB
+    paid_entry: Blaze：保存 $0.026/GB・転送 $0.15/GB
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: 画面・関数・確認用ページを1社に置くと、公開作業が1回で、ログも1か所。
+    combined: 画面は Cloudflare の無料枠、関数は別、と分けると無料で長く持つ。
+    risks: 公開作業が2系統になり、片方だけ古い版が出る事故、ドメインとキャッシュの設定が2重、障害の切り分けに時間がかかる。
+  switch_points:
+  - when: お金を受け取る・会社として使う（商用）
+    upgrade_to: Vercel Pro $20/月
+    why: Hobby は非商用だけ。商用で使うと規約違反になる（R-004 も参照）。
+  - when: 転送が月 80GB（無料 100GB の8割）
+    upgrade_to: Vercel Pro（1TB 込み）／または静的部分を Cloudflare へ
+    why: 無料は上限で止まり、追加購入できない。
+  recommendation:
+    pick: host.vercel
+    reason: 変更ごとに確認用ページが自動で出て、作業が一番少ない。商用で使う日から Pro $20/月。
+    rejected:
+    - option: host.cloudflare-pages
+      why: 静的サイトは無料で強い（ビルド月500回・確認用ページ無制限）が、Next.js の一部機能が動かないことがある。
+    - option: host.firebase-hosting
+      why: アプリのデータ置き場を Firebase でそろえる時だけ一体になる。
+- topic: payments
+  services:
+  - id: pay.stripe-checkout
+    free_tier: 月額なし。米国カード 2.9%＋30¢／件・チャージバック $15／件
+    paid_entry: 同じ（手数料だけ）。税の自動計算は別料金
+    url: https://stripe.com/pricing
+    checked: '2026-10-26'
+    verified: true
+  - id: pay.stripe-connect
+    free_tier: Stripe が手数料を売り手から取る方式なら、プラットフォームの追加料金なし
+    paid_entry: 自分で料金を決める方式：お金を受け取る売り手1人 $2/月＋送金ごとに 0.25%＋25¢
+    url: https://stripe.com/connect/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: pay.paddle
+    free_tier: 月額なし。5%＋50¢／件（販売代行・各国の税・チャージバック対応込み）
+    paid_entry: 大口は個別見積もり。$10 未満の商品は相談
+    url: https://www.paddle.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: pay.square
+    free_tier: 月額なし。ネット決済 3.3%＋30¢（自分のアプリから API なら 2.9%＋30¢）。対面 2.6%＋15¢
+    paid_entry: Plus $49/月・店舗（ネット 2.9%＋30¢）
+    url: https://squareup.com/us/en/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: 支払いは1社にまとめると、返金・売上・税の記録が1か所。
+    combined: カードは Stripe、別の支払い方法を別会社で足すと、払い方は増える。
+    risks: 売上の照合が2つ、返金の手順が2つ、税の計算がずれる。手数料も2社分の最低額がかかることがある。
+  switch_points:
+  - when: ユーザー同士でお金が動く（チケット販売の主催者など）
+    upgrade_to: Stripe Connect
+    why: 他人の売上を自分の口座で受けるのは危険。売り手ごとの口座と本人確認が要る。
+  - when: 3か国以上の消費税の登録が必要になった
+    upgrade_to: 販売代行（Paddle など）または Stripe Tax
+    why: 国ごとの税の申告を自分でやる時間が、手数料の差より高くつく。
+  - when: 月の売上が $10万を超えた
+    upgrade_to: Stripe に手数料の相談（要確認）
+    why: 量が多いと個別の料金が出ることがある。
+  recommendation:
+    pick: pay.stripe-checkout
+    reason: 月額なしで始められ、カード・Apple Pay・Google Pay がそろう。ユーザー同士で売り買いするなら最初から Connect。
+    rejected:
+    - option: pay.paddle
+      why: 海外の税は任せられるが、手数料が高く、ユーザー同士の売り買いには向かない。
+    - option: pay.square
+      why: 対面販売なら候補。ネットだけだと手数料 3.3%＋30¢ と高め（API なら 2.9%＋30¢）。
+- topic: frontend
+  services:
+  - id: fe.nextjs
+    free_tier: 無料（オープンソース）。公開先の無料枠に従う
+    paid_entry: ホスティング側の料金（例：Vercel Pro $20/月）
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: fe.astro
+    free_tier: 無料（オープンソース）。文章中心のサイトは静的に出せて、ほぼどこでも無料で置ける
+    paid_entry: ホスティング側の料金
+    url: https://www.cloudflare.com/plans/developer-platform/
+    checked: '2026-10-28'
+    verified: true
+  - id: fe.expo
+    free_tier: 無料（オープンソース）。EAS 無料：月 iOS 15回・Android 15回のビルド、更新配信 1,000人まで
+    paid_entry: Starter $19/月（ビルド代 $45 分・優先キュー・更新 3,000人）
+    url: https://expo.dev/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: ウェブは Next.js 1つで画面もサーバー処理も書く。AI が一番書き慣れている。
+    combined: ウェブは Next.js、アプリは Expo と2本立てにすると、両方に最適な形で出せる。
+    risks: 同じ画面を2回作る、直す時も2か所、ログインやデータの扱いを2回つなぐ。小さいうちは手間が倍になる。
+  switch_points:
+  - when: スマホアプリが必須になった（通知・カメラ・ストア掲載）
+    upgrade_to: Expo（無料から）
+    why: ウェブのままでは通知や一部の端末機能が弱い。
+  - when: アプリのビルド待ちが毎回長い・月15回を超える
+    upgrade_to: Expo Starter $19/月
+    why: 無料は待ち時間が長いことがあり、出したい時に出せない。
+  recommendation:
+    pick: fe.nextjs
+    reason: 画面・ログイン・決済のつなぎ込みが1つで済み、AI がうまく書ける。アプリが必要になってから Expo を足す。
+    rejected:
+    - option: fe.astro
+      why: 文章中心のサイトには最適だが、ログインや決済のある画面には向かない。
+    - option: fe.expo
+      why: アプリ必須でなければ作る量が増える。
+- topic: storage
+  services:
+  - id: st.supabase-storage
+    free_tier: 1GB・転送 5GB・1ファイル 50MB まで
+    paid_entry: Pro $25/月（100GB・1ファイル 500GB まで）
+    url: https://supabase.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: st.vercel-blob
+    free_tier: 1GB・読み取り 1万回/月・書き込み 2千回/月・転送 10GB
+    paid_entry: Pro：保存 $0.023/GB
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: st.r2
+    name: Cloudflare R2
+    free_tier: 10GB・書き込み 100万回/月・読み取り 1,000万回/月・転送はずっと無料
+    paid_entry: 保存 $0.015/GB
+    url: https://developers.cloudflare.com/r2/pricing/
+    checked: '2026-10-28'
+    verified: true
+  - id: st.mux
+    free_tier: 動画の取り込み無料・視聴 月10万分無料・毎月 $20 分の利用枠
+    paid_entry: 保存 1分 $0.003/月・視聴 10万分を超えたら 1分 $0.001
+    url: https://www.mux.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: データの置き場所（Supabase）にファイルも置くと、誰が見られるかの決まりを1つで書ける。
+    combined: 画像は R2（転送ずっと無料・10GB 無料）、動画は Mux と分けると、無料で大きく持つ。
+    risks: 見られる人の決まりを2か所に書く、消す時に両方消す必要（消し忘れは個人情報の残り）、鍵の管理が増える。
+  switch_points:
+  - when: 画像が合計 800MB を超えた（無料 1GB の8割）
+    upgrade_to: Supabase Pro（100GB 込み）か、画像だけ R2 へ
+    why: 上限でアップロードが止まる。
+  - when: たくさん見られる画像や大きなファイルを配る
+    upgrade_to: Cloudflare R2（転送無料）
+    why: 転送量の課金がないので、急に見られても請求が跳ねない。
+  - when: 動画が主役になった
+    upgrade_to: Mux（使った分だけ）
+    why: 動画の変換・配信・字幕を自分で組む時間が一番高くつく。
+  recommendation:
+    pick: st.supabase-storage
+    reason: データと同じ場所・同じ権限の仕組みで、最初は一番手間が少ない。大きく配るものだけ R2 に移す。
+    rejected:
+    - option: st.vercel-blob
+      why: 手軽だが、ファイルごとの細かい閲覧権限を自分で作る必要がある。
+    - option: st.r2
+      why: 転送無料は強いが、最初から別の場所に分けると権限と削除の管理が2つになる。
+    - option: st.mux
+      why: 動画を扱わないなら不要。
+- topic: search
+  services:
+  - id: se.postgres-fts
+    free_tier: 追加料金なし（データの置き場所の中で動く）
+    paid_entry: DB のプランに含まれる
+    url: https://supabase.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: se.algolia
+    free_tier: 検索 月1万回・5万件・おすすめ 5千回
+    paid_entry: Grow：1万回を超えたら 1,000回 $0.50・10万件を超えたら 1,000件 $0.40
+    url: https://www.algolia.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: データの置き場所の中で検索すると、データを写す仕組みがいらない。
+    combined: 検索だけ Algolia に写すと、速くて「もしかして」も出せる。
+    risks: データを2か所に写す処理が必要、写し漏れで検索結果が古くなる、削除した個人情報が検索側に残る。
+  switch_points:
+  - when: 1文字打つごとに結果を出したい・何十万件
+    upgrade_to: Algolia Grow（使った分だけ）
+    why: DB 内の検索では遅くなり、利用者が離れる。
+  - when: 検索が売上に直結する（お店の商品検索など）
+    upgrade_to: Algolia
+    why: 並べ方の調整や分析がそのまま売上になる。
+  recommendation:
+    pick: se.postgres-fts
+    reason: 追加の契約も写す仕組みもいらない。数万件までは十分速い。
+    rejected:
+    - option: se.algolia
+      why: 一文字ごとに打つ検索は1回と数えるので、無料の月1万回はすぐ超える。検索が主役になってから。
+- topic: realtime
+  services:
+  - id: rt.supabase-realtime
+    free_tier: 同時接続 200・メッセージ 月200万
+    paid_entry: Pro $25/月（同時 500・月500万。その後 1,000接続 $10）
+    url: https://supabase.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: rt.firebase-rtdb
+    free_tier: 同時接続 100・保存 1GB・転送 月10GB
+    paid_entry: Blaze：保存 $5/GB・転送 $1/GB
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: rt.ably
+    name: Ably
+    free_tier: 同時接続 200・メッセージ 月600万
+    paid_entry: Standard $29/月（同時1万）
+    url: https://ably.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: データの置き場所と同じ所の仕組みを使うと、データが変わったらそのまま画面に届く。
+    combined: リアルタイムだけ専門サービスに出すと、同時接続の無料枠が増える。
+    risks: データの変更を専門サービスへ送る処理を自分で作る、届かなかった時の作り直しが2か所、ログインの仕組みを2回つなぐ。
+  switch_points:
+  - when: 同時に開いている人が 160人（無料 200の8割）を超える日がある
+    upgrade_to: Supabase Pro $25/月
+    why: 上限を超えた人には更新が届かない。
+  - when: ライブ配信の同時視聴など、数千人が同時につながる
+    upgrade_to: Ably Standard $29/月
+    why: 大人数の同時接続は専門サービスの方が安定する。
+  recommendation:
+    pick: rt.supabase-realtime
+    reason: データと同じ所で、追加の契約も同期の仕組みもいらない。
+    rejected:
+    - option: rt.firebase-rtdb
+      why: 無料の同時接続が 100 と少ない。データの置き場所が Firebase の時だけ一体になる。
+    - option: rt.ably
+      why: 大人数には強いが、データの変更を送る仕組みを自分で作る必要がある。
+- topic: ai
+  services:
+  - id: ai.gateway
+    free_tier: 毎月の無料クレジットあり（使えるモデルは一部・回数制限あり）
+    paid_entry: AI 会社の定価そのまま（上乗せなし）。予算の上限を設定できる
+    url: https://vercel.com/docs/ai-gateway/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: ai.firebase-ai-logic
+    free_tier: Gemini の無料枠に従う
+    paid_entry: Google Cloud／Gemini の定価
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: ai.direct
+    name: AI 会社に直接つなぐ
+    free_tier: 各 AI 会社の無料枠（会社ごとに違う・要確認）
+    paid_entry: 各社の定価
+    url: https://vercel.com/docs/ai-gateway/pricing
+    checked: null
+    verified: false
+  combine:
+    single: 1つの窓口を通すと、AI 会社を後から切り替えても書き直しが少なく、使いすぎの上限も1か所。
+    combined: 各社の無料枠を足すために直接つなぐと、無料で試せる量は増える。
+    risks: 鍵が会社の数だけ増える（漏れる場所が増える）、使いすぎの上限を各社で設定、1社が止まった時の切り替えを自分で作る。
+  switch_points:
+  - when: 無料クレジットのモデルでは品質が足りない
+    upgrade_to: AI Gateway のクレジットを購入（上乗せなし）
+    why: 有料にしても単価は同じで、使えるモデルと回数が増える。
+  - when: 公開した AI 機能が誰でも使える
+    upgrade_to: 予算の上限＋1人あたりの回数制限
+    why: 悪用されると一晩で請求が膨らむ。
+  recommendation:
+    pick: ai.gateway
+    reason: 定価のまま、会社の切り替え・予備への自動切り替え・予算上限が1か所でできる。
+    rejected:
+    - option: ai.firebase-ai-logic
+      why: スマホアプリから直接呼ぶなら候補。ウェブ中心なら不要。
+    - option: ai.direct
+      why: 鍵と上限の管理が会社ごとに増える。
+- topic: ci
+  services:
+  - id: ci.vercel-git
+    free_tier: Hobby に含まれる（変更ごとの確認用ページ・自動公開）
+    paid_entry: Pro $20/月に含まれる
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: ci.github-actions
+    free_tier: 公開リポジトリは無料。非公開は月 $12 分（Linux で約2,000分）・成果物 500MB
+    paid_entry: 超えた分：Linux 1分 $0.006
+    url: https://docs.github.com/en/billing/concepts/product-billing/github-actions
+    checked: '2026-10-28'
+    verified: true
+  - id: ci.eas-workflows
+    name: Expo EAS Workflows
+    free_tier: 月60分・ビルド iOS/Android 各15回
+    paid_entry: Starter $19/月〜
+    url: https://expo.dev/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: 公開先の自動公開だけで始めると、設定ゼロで確認用ページが出る。
+    combined: テストは GitHub Actions、公開は Vercel と分けるのが定番。
+    risks: テストが落ちても公開が進む設定ミス、2か所で鍵（環境変数）を管理、失敗した時にどちらを見るか迷う。
+  switch_points:
+  - when: テストを書き始めた・2人以上で開発する
+    upgrade_to: GitHub Actions を追加（無料枠内）
+    why: 壊れた変更が本番に出るのを自動で止められる。
+  - when: 非公開リポジトリでテストが月 1,500分を超える
+    upgrade_to: GitHub の従量課金（Linux 1分 $0.006）
+    why: 無料分を使い切ると支払い方法がない場合テストが止まる。
+  recommendation:
+    pick: ci.vercel-git
+    reason: つなぐだけで変更ごとに確認用ページが出る。テストを書いたら GitHub Actions を足す。
+    rejected:
+    - option: ci.github-actions
+      why: テストを書くまでは設定の手間だけが増える。
+    - option: ci.eas-workflows
+      why: スマホアプリのビルド用。ウェブだけなら不要。
+- topic: monitoring
+  services:
+  - id: mon.sentry
+    free_tier: 1人・エラー 月5万件・トレース・メール通知
+    paid_entry: Team $26/月（人数無制限・外部連携）
+    url: https://sentry.io/pricing/
+    checked: '2026-10-28'
+    verified: true
+  - id: mon.crashlytics
+    free_tier: 無料（アプリの落ち方の収集）
+    paid_entry: —
+    url: https://firebase.google.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: mon.vercel-observability
+    free_tier: Hobby に含まれる（関数ログは1時間分）
+    paid_entry: Pro で1日分。Observability Plus 30日分（イベント 100万件 $1.20）
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: エラーは Sentry 1つに集めると、画面とサーバーの両方の失敗を1か所で見られる。
+    combined: アプリは Crashlytics（無料）、ウェブは Sentry（無料）と分けると、無料のまま広く見張れる。
+    risks: 通知が2系統に分かれて見落とす、同じ不具合を2か所で追う。
+  switch_points:
+  - when: 2人以上で不具合を見る
+    upgrade_to: Sentry Team $26/月
+    why: 無料は1人だけ。共有できないと対応が遅れる。
+  - when: エラーが月4万件（無料 5万の8割）
+    upgrade_to: Sentry Team か、エラーの間引き設定
+    why: 上限を超えると新しいエラーが記録されない。
+  recommendation:
+    pick: mon.sentry
+    reason: 無料でエラー月5万件、ウェブもアプリも1か所で見られる。2人目が入ったら $26/月。
+    rejected:
+    - option: mon.crashlytics
+      why: アプリだけなら無料で十分。ウェブは見られない。
+    - option: mon.vercel-observability
+      why: 無料はログが1時間しか残らず、後から原因を追えない。
+- topic: protection
+  services:
+  - id: sec.turnstile
+    free_tier: 無料：確認回数無制限・20個まで・1つにつき 10ドメイン
+    paid_entry: Enterprise（要相談）
+    url: https://developers.cloudflare.com/turnstile/plans/
+    checked: '2026-10-28'
+    verified: true
+  - id: sec.vercel-firewall
+    free_tier: Hobby：自動の DDoS 対策・AI ボット/ボット対策ルール・独自ルール3つ・IP 遮断10件
+    paid_entry: Pro：独自ルール40・回数制限 100万回 $0.50〜
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: sec.secrets
+    free_tier: ホストの環境変数は無料
+    paid_entry: —
+    url: https://vercel.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  combine:
+    single: ホスト付属の防火壁だけでも、ボット対策と大量アクセス対策はできる。
+    combined: フォームには Turnstile、入口は ホストの防火壁、と重ねるのが基本。
+    risks: 重ねすぎると本物のお客さんや支払い・メールの自動のお知らせ（Webhook）まで止める。設定を変えたら必ず確かめる。
+  switch_points:
+  - when: ログインや問い合わせに回数制限を細かくかけたい
+    upgrade_to: Vercel Pro（回数制限 100万回 $0.50〜）
+    why: 無料は独自ルール3つだけで足りない。
+  - when: 攻撃を受けた・管理画面を守りたい
+    upgrade_to: Pro の独自ルールと IP 遮断の追加
+    why: 無料の上限では対処しきれない。
+  recommendation:
+    pick: sec.turnstile
+    reason: 無料・回数無制限で、公開フォームへのロボット投稿を止められる。ホストの防火壁（無料）と重ねる。
+    rejected:
+    - option: sec.vercel-firewall
+      why: 選ぶものではなく重ねるもの。フォームのロボット対策は Turnstile の方が確実。
+    - option: sec.secrets
+      why: 選ぶものではなく必ずやること（鍵をコードに書かない）。
+- topic: build_vs_buy
+  services:
+  - id: bvb.platform
+    free_tier: 多くの全部入りサービスに無料枠（上の各比較を参照）
+    paid_entry: 月 $20〜$25 前後から（例：Supabase Pro $25、Vercel Pro $20）
+    url: https://supabase.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: bvb.api
+    free_tier: API ごとの無料枠（例：メール 月3,000通、検索 月1万回）
+    paid_entry: 使った分だけ
+    url: https://resend.com/pricing
+    checked: '2026-10-28'
+    verified: true
+  - id: bvb.build
+    free_tier: サービス代はゼロ。代わりに作る時間・直す時間・夜中の障害対応
+    paid_entry: 自分の時間（例：月10時間の保守 × 時給）
+    url: null
+    checked: null
+    verified: false
+  combine:
+    single: 全部入りサービス1つなら、作る量も保守も最小。
+    combined: 強みになる所だけ自分で作り、残りは借りるのが定番。
+    risks: 自分で作った部分は、セキュリティ更新・障害対応・引き継ぎがずっと自分の仕事になる。
+  switch_points:
+  - when: サービス代が、自分で作って保守する時間の費用を超えた（例：月 $500 超と保守 月10時間以内）
+    upgrade_to: その部分だけ自作に切り替え
+    why: 規模が大きくなると原価が下がる部分がある。
+  - when: その部分がお客さんに選ばれる理由（強み）になった
+    upgrade_to: 自作
+    why: 借り物では差がつかない。
+  recommendation:
+    pick: bvb.platform
+    reason: 確かめる前は借りるのが最速で最安。強みと分かった所だけ後で作る。
+    rejected:
+    - option: bvb.api
+      why: 部品ごとに契約が増え、つなぎの手間が増える。足りない機能だけ足す時に使う。
+    - option: bvb.build
+      why: 確かめる前に作ると、使われない物に時間を使う。保守もずっと続く。
