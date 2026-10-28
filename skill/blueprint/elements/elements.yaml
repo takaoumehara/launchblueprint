@@ -4,36 +4,50 @@ updated: '2026-10-28'
 version: '0.1'
 elements:
   - id: el.experience
+    name_ja: 体験
+    principle_ja: "どの画面も「次にやること」が1つはっきりしていて、明るい画面でも暗い画面でも見やすい。"
     name: Digital experience
     principle: "Every screen has one obvious next action, and works in light and dark mode."
     categories: ['03', '06', '11']
     tactics_file: tactics.yaml
   - id: el.product
+    name_ja: プロダクト
+    principle_ja: "確かめた1つの困りごとを、決めた1種類の人のために解く。広げるのはその後。"
     name: Product
     principle: "Solve one validated problem for one defined user before adding scope."
     categories: ['01', '03', '05']
     tactics_file: tactics.yaml
   - id: el.business
+    name_ja: ビジネス
+    principle_ja: "最初の売上の前に、1件あたりの儲けと、お金・税・責任を誰が持つかを決める。"
     name: Business
     principle: "Know the unit economics and who carries money, tax and liability before the first sale."
     categories: ['01', '07', '10', '12']
     tactics_file: tactics.yaml
   - id: el.marketing
+    name_ja: マーケティング
+    principle_ja: "宣伝の素材は作りながら用意し、使う人がもういる場所で発表する。"
     name: Marketing
     principle: "Build promo assets during development and launch where the defined user already is."
     categories: ['09', '11']
     tactics_file: tactics.yaml
   - id: el.brand
+    name_ja: ブランド
+    principle_ja: "声と見た目を1つに決め、AIへの指示ファイルまで同じにする。"
     name: Brand
     principle: "One voice and visual system, applied everywhere down to AI instruction files."
     categories: ['02', '04']
     tactics_file: tactics.yaml
   - id: el.maintenance
+    name_ja: 保守
+    principle_ja: "出したものは、様子が見えて、直せて、きれいに終われるようにする。"
     name: Maintenance
     principle: "Whatever ships must be observable, updatable and able to be shut down cleanly."
     categories: ['08', '10', '12']
     tactics_file: tactics.yaml
   - id: el.security
+    name_ja: セキュリティ
+    principle_ja: "権限は最小、鍵はコードに書かない、個人情報は必要な分だけ。"
     name: Security
     principle: "Least privilege, no secrets in code, and personal data collected only when needed."
     categories: ['05', '07', '08']

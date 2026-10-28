@@ -1,0 +1,5 @@
+node_modules
+dist
+public/data.json
+public/llms.txt
+.vercel

@@ -1,6 +1,8 @@
 # 層3：プロジェクトの地図。最初に全要素を一度に並べ（status: open）、ゴールに合わせて埋める
 domain: project_map
+name: ""
 goal: ""
+profile: {audience: "", platform: "", money: "", country: ""}   # 始める画面の答え
 elements: [el.experience, el.product, el.business, el.marketing, el.brand, el.maintenance, el.security]
 choices:
   - element: el.business
@@ -12,3 +14,5 @@ choices:
     rejected:
       - {option: "", why: ""}
     decided_by: ""          # human / ai
+    pick: ""                # 決まった option（checklist なら checked: [...]）
+    last_checked: ""        # tactics.yaml から
