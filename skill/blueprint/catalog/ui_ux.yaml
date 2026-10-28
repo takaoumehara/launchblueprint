@@ -325,3 +325,111 @@ rules:
     see_also: "catalog/payments.yaml"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+  - id: desktop-is-not-a-stretched-phone
+    category: layout
+    principle: "Give wide screens their own layout: a capped frame, a hero band and two-column sections, while the phone layout stays unchanged."
+    anti_pattern: "One narrow mobile column centred in empty space on a laptop."
+    why: "A phone column on a desktop made a business site look like an unfinished link page."
+    check: "At 1440px, does the page use a frame wider than a phone column with text capped near 68 characters per line?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: auto-layout-before-layout-controls
+    category: layout
+    principle: "Derive wide-screen arrangement from content order and length automatically; offer at most one escape hatch."
+    anti_pattern: "A grid builder asking users to place every block for each screen size."
+    why: "Non-designers stall when asked to lay out the same page twice."
+    check: "Can a user get a good desktop layout without touching any layout control?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: reading-order-equals-visual-order
+    category: accessibility
+    principle: "Keep source, tab and screen-reader order identical to the visual order at every breakpoint."
+    anti_pattern: "Reordering columns with CSS so the screen order differs from the DOM."
+    why: "Keyboard and screen-reader users jumped around the page unpredictably."
+    check: "At each breakpoint, does tabbing move in the same order the eye reads?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: nav-wraps-never-hides
+    category: navigation
+    principle: "Let site navigation wrap to a second row, then switch to a labelled Menu button; never clip or silently hide items."
+    anti_pattern: "Nav labels cut with ellipsis or items pushed into an unlabelled overflow icon."
+    why: "Visitors could not find pages whose links were cut off or hidden."
+    check: "With a 60-character label, is every nav item fully visible or reachable from a labelled Menu?"
+    see_also: "no-ellipsis-truncation, collapse-long-nav"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: no-dead-nav-links
+    category: navigation
+    principle: "Build navigation only from items that are currently public; skip anything private, unpublished or deleted at render time."
+    anti_pattern: "A menu that links to draft or removed pages."
+    why: "Dead links in a header make a small business look closed."
+    check: "Does unpublishing a page remove it from every menu without any extra step?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: time-driven-content-updates-itself
+    category: content
+    principle: "Lists driven by dates (upcoming items, next item) update with time on the server, with no republish."
+    anti_pattern: "Hand-maintained event lists that keep showing past dates."
+    why: "Past events on a homepage made visitors doubt the business was active."
+    check: "Does an item vanish from the list after its end time without anyone editing the page?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: show-event-zone-not-viewer-zone
+    category: content
+    principle: "Show event times in the event's own time zone with a short zone label when it differs from the viewer's."
+    anti_pattern: "Silently converting times to the viewer's zone or showing times with no zone."
+    why: "Visitors travelling or out of town arrived at the wrong hour."
+    check: "Does every displayed event time carry a zone label when the viewer's zone differs?"
+    see_also: "time-inputs-for-novices"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: designed-empty-states
+    category: content
+    principle: "Every auto-filled module has a written empty state the owner can edit."
+    anti_pattern: "A blank gap or a heading with nothing under it when there is no data."
+    why: "An empty section reads as a broken site."
+    check: "With zero items, does the module show a short, editable message?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: form-keeps-input-on-error
+    category: forms
+    principle: "On send failure, keep everything typed, show the error inline next to the action, and focus the first problem."
+    anti_pattern: "Clearing the form or showing a generic error page after a failed send."
+    why: "Visitors who lose a long message rarely type it again."
+    check: "After a simulated network error, is every typed character still there?"
+    see_also: "prevent-invalid-input"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: invisible-spam-protection-first
+    category: forms
+    principle: "Stop spam with invisible checks (managed challenge, honeypot, rate limit) before adding any visible puzzle."
+    anti_pattern: "A visible captcha on every contact form submit."
+    why: "Visible puzzles cost real enquiries more than they save in spam."
+    check: "Can a real visitor send a message without solving anything visible?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: never-expose-owner-contact
+    category: privacy
+    principle: "Deliver contact messages to the owner with the visitor as reply-to; never print the owner's address in the page."
+    anti_pattern: "A mailto link or address in the HTML of a contact block."
+    why: "Published addresses get harvested and flooded with spam."
+    check: "Is the owner's email absent from the page source?"
+    see_also: "agreement-snapshot-and-retention"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: maps-load-on-intent
+    category: performance
+    principle: "Show a static map and real address text; load an interactive map or third-party script only after a tap."
+    anti_pattern: "An embedded interactive map that loads on page view and traps scrolling on phones."
+    why: "Map embeds slowed pages and hijacked scrolling on mobile."
+    check: "Before any tap, are there zero third-party map requests and is the address selectable text?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
+  - id: paid-plans-unbranded-by-default
+    category: monetisation
+    principle: "When a plan includes removing platform branding, apply it automatically on upgrade and restore it on downgrade."
+    anti_pattern: "Requiring paying users to find a separate switch to remove a badge they paid to remove."
+    why: "Paying customers kept the badge because they never found the setting."
+    check: "After upgrading, is the badge gone with no extra action?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-28'
