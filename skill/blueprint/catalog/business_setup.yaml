@@ -1,0 +1,53 @@
+# Blueprint Catalog — business_setup（会社・ブランド・住所・決済アカウントの立ち上げ）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 現場の教訓。法律・税の助言ではない。全件 verified:false
+domain: business_setup
+updated: '2026-10-27'
+stale_after_days: 90
+freshness: freshness.yaml
+lessons:
+  - id: biz.public-support-address
+    jurisdiction: US
+    principle: "Payment processors print the support address on receipts and card statements; use a CMRA / virtual-mailbox street address, set up before the first sale."
+    anti_pattern: "Entering a home address as the processor's public support address."
+    why: "Buyers, disputes and the public can see it, and changing it after launch touches every account."
+    check: "Is the processor's public support address a non-home street address, set before the first sale?"
+    see_also: [ui_ux.public-support-address-not-home, pay.stripe-checkout, pay.stripe-connect]
+    verified: false
+  - id: biz.multi-brand-dba-1583
+    jurisdiction: US
+    principle: "For several brands under one entity, register each brand as a DBA / assumed name and list every DBA on USPS Form 1583 (additional recipients) at the mailbox provider; get the provider's written answer on whether a separate address and 1583 per business is required before buying."
+    anti_pattern: "Buying a mailbox under the entity name only and assuming mail for other brand names will be accepted."
+    why: "Mail addressed to names not on the 1583 is usually returned to sender."
+    check: "Is every brand a registered DBA and listed on the 1583, with the provider's policy confirmed in writing?"
+    see_also: [biz.public-support-address]
+    verified: false
+  - id: biz.other-person-business-separate
+    jurisdiction: US
+    principle: "Another person's business (e.g. a spouse's sole proprietorship) is a separate business with its own Form 1583 and ID."
+    anti_pattern: "Running someone else's business as a DBA of your entity for convenience."
+    why: "A DBA moves its revenue, tax and liability onto your entity."
+    check: "Does each person's business have its own 1583/ID, or has moving its revenue, tax and liability to your entity been explicitly accepted?"
+    see_also: [biz.multi-brand-dba-1583]
+    verified: false
+  - id: biz.processor-account-per-brand
+    principle: "Use one payment-processor account per brand: legal name and tax ID come from the entity; public name, statement descriptor and support address are set per account."
+    anti_pattern: "One processor account shared by several brands with a single descriptor."
+    why: "Buyers who don't recognise the descriptor file chargebacks, and per-brand reporting becomes impossible."
+    check: "Does each brand have its own processor account with its own public name, descriptor and support address?"
+    see_also: [ui_ux.statement-descriptor-preflight, pay.stripe-checkout, pay.stripe-connect]
+    verified: false
+  - id: biz.llc-full-formation-cost
+    jurisdiction: US
+    principle: "Advertised low LLC formation prices ('$1', '$39') are only the provider's fee; budget state filing fees and any required publication (e.g. New York) first."
+    anti_pattern: "Choosing a formation service or state from the headline price."
+    why: "State fees plus publication can cost far more than the advertised price."
+    check: "Has the total cost (provider + state filing + publication + annual fees) been written down before ordering?"
+    verified: false
+  - id: biz.events-start-sole-prop
+    jurisdiction: US
+    principle: "Start a new small offline-events business as a sole proprietor with an EIN, a DBA, a business bank account and per-event insurance; form an LLC when revenue or risk grows."
+    anti_pattern: "Forming an LLC on day one before there is revenue, or running events with no insurance and personal accounts."
+    why: "Keeps fixed costs low while still separating money and covering event liability."
+    check: "Are EIN, DBA, business bank account and per-event insurance in place, with a stated revenue/risk trigger for forming an LLC?"
+    see_also: [biz.llc-full-formation-cost]
+    verified: false
