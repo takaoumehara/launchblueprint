@@ -9,7 +9,7 @@ entries:
   name: Supabase (Postgres)
   what: Postgres＋認証＋ストレージ＋Realtime の一式
   best_for: リレーショナルなデータ、SQL を使いたい
-  avoid_when: ''
+  avoid_when: スマホアプリ中心で電波の弱い所でも動かしたい時、表の形にしにくいデータが多い時
   pricing_bands:
     free: $0：500MB、1週間無操作で一時停止、2プロジェクトまで
     usd5: —（Free と Pro の間の帯はない）
@@ -31,7 +31,7 @@ entries:
   name: Cloud Firestore
   what: ドキュメント型DB（Firebase）
   best_for: モバイル・リアルタイム同期・スキーマが緩いデータ
-  avoid_when: ''
+  avoid_when: 表どうしをつないで集計したい時（売上の一覧など）、あとで別の場所へ移したい時
   pricing_bands:
     free: $0（Spark）：1GiB、読み5万/日、書き2万/日
     usd5: 従量（Blaze）
@@ -52,7 +52,7 @@ entries:
   name: Neon (Postgres)
   what: サーバーレス Postgres、ブランチ機能
   best_for: プレビュー環境ごとにDBを分けたい
-  avoid_when: ''
+  avoid_when: ログインやファイル置き場まで1か所でそろえたい時（別に用意が要る）
   pricing_bands:
     free: $0：1プロジェクト1GB（合計20GB）、100CU時間/プロジェクト、5分で自動停止、6時間の履歴
     usd5: Launch 従量：$0.106/CU時間＋$0.35/GB月（最低料金なし）

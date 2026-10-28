@@ -43,6 +43,7 @@ entries:
 - id: dist.twa
   name: Android TWA（Bubblewrap / PWABuilder）
   best_for: PWAをそのまま Google Play に載せる
+  avoid_when: iPhone にも出したい時（Android だけ）
   pricing_bands: {free: —, usd5: —, usd10: —, usd100: 'Play Console 初回$25'}
   store_billing: 'ウェブ画面＝アプリ内扱い。デジタル課金はPlay課金、またはTWA内で課金導線を隠す'
   depends_on: [dist.pwa, Digital Asset Links, Play Console組織アカウント, Android開発者本人確認]
@@ -51,6 +52,7 @@ entries:
 - id: dist.capacitor
   name: iOS/Android Capacitor シェル
   best_for: Webコードを再利用しつつネイティブ機能を足す
+  avoid_when: ウェブのコードがまだない時（最初から Expo の方が早い）
   pricing_bands: {free: —, usd5: —, usd10: 'Apple $99/年 ≒ $8.25/月', usd100: —}
   store_billing: 'policy.apple.3_1_1 / 3_1_3b に従う'
   depends_on: [Apple Developer Program（会社名義はD-U-N-S）, ネイティブ機能で4.2回避]
@@ -67,6 +69,7 @@ entries:
 - id: dist.native
   name: Swift / Kotlin ネイティブ
   best_for: OS機能が中核（カメラ・センサー・ウィジェット中心）
+  avoid_when: 小さく早く確かめたい時（iPhone 用と Android 用を2回作ることになる）
   pricing_bands: {free: —, usd5: —, usd10: —, usd100: 開発費が主（AIコーディング費込みでTCO比較）}
   depends_on: [プラットフォームごとの実装・保守]
   review_risk: 低

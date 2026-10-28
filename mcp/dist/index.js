@@ -13,20 +13,60 @@ const ROOT = process.env.BLUEPRINT_DIR ?? path.resolve(HERE, "../../skill/bluepr
 const INBOX = process.env.BLUEPRINT_INBOX ?? path.resolve(HERE, "../inbox/learnings.jsonl");
 const CAT = path.join(ROOT, "catalog");
 const REF = path.join(ROOT, "reference");
+const ELE = path.join(ROOT, "elements");
 const safe = (s) => s.replace(/[^a-zA-Z0-9_\-.]/g, "");
 const text = (t) => ({ content: [{ type: "text", text: t }] });
 const json = (o) => text(JSON.stringify(o, null, 2));
 const err = (t) => ({ ...text(t), isError: true });
 const domains = () => fs.readdirSync(CAT).filter(f => f.endsWith(".yaml")).map(f => f.slice(0, -5)).sort();
+const layers = () => fs.existsSync(ELE) ? fs.readdirSync(ELE).filter(f => f.endsWith(".yaml")).map(f => f.slice(0, -5)).sort() : [];
+const fileOf = (d) => domains().includes(d) ? path.join(CAT, d + ".yaml") : layers().includes(d) ? path.join(ELE, d + ".yaml") : null;
+// Normalize every item shape (entries / lessons / rules / providers / axes / elements / tactics) to one flat list.
+function items(d) {
+    const f = fileOf(d);
+    if (!f)
+        return [];
+    let doc;
+    try {
+        doc = yaml.load(fs.readFileSync(f, "utf8"));
+    }
+    catch {
+        return [];
+    }
+    const out = [];
+    const visit = (node, kind) => {
+        if (!Array.isArray(node))
+            return;
+        for (const it of node)
+            if (it && typeof it === "object" && (it.id || it.topic)) {
+                const id = it.id ?? `${d}.${it.topic}`;
+                out.push({ domain: d, kind, id: String(id).includes(".") ? id : `${d}.${id}`, name: it.name_ja ?? it.label_ja ?? it.name ?? null,
+                    summary: it.what ?? it.principle_ja ?? it.principle ?? it.question_ja ?? null,
+                    avoid: it.avoid_when ?? it.anti_pattern ?? null, why: it.why ?? null, check: it.check ?? null,
+                    depends_on: it.depends_on ?? undefined, options: it.options ?? undefined,
+                    verified: it.source?.verified ?? it.verified ?? null, checked: it.source?.checked ?? it.last_checked ?? it.date ?? null });
+            }
+    };
+    for (const [k, v] of Object.entries(doc ?? {}))
+        visit(v, k);
+    if (doc?.auth?.providers)
+        visit(doc.auth.providers, "providers");
+    return out;
+}
 const references = () => fs.readdirSync(REF).filter(f => f.endsWith(".md")).map(f => f.slice(0, -3)).sort();
 const loadYaml = (d) => yaml.load(fs.readFileSync(path.join(CAT, d + ".yaml"), "utf8"));
 const server = new McpServer({ name: "blueprint", version: "0.1.0" });
-server.tool("list_domains", "List catalog domains and reference documents.", {}, async () => json({ domains: domains(), references: references() }));
-server.tool("get_catalog", "Return a catalog domain's YAML as-is.", { domain: z.string() }, async ({ domain }) => {
+server.tool("list_domains", "List catalog domains, elements-layer files and reference documents.", {}, async () => json({ domains: domains(), layers: layers(), references: references() }));
+server.tool("get_catalog", "Return a catalog domain or elements-layer file (elements / tactics / project-map.template). format=yaml (default, as-is) or items (normalized list incl. lesson-format entries).", { domain: z.string(), format: z.enum(["yaml", "items"]).optional() }, async ({ domain, format = "yaml" }) => {
     const d = safe(domain).replace(/\.yaml$/, "");
-    if (!domains().includes(d))
+    const f = fileOf(d);
+    if (!f)
         return err(`Unknown domain "${domain}". Use list_domains.`);
-    return text(fs.readFileSync(path.join(CAT, d + ".yaml"), "utf8"));
+    if (format === "items") {
+        const it = items(d);
+        return json({ domain: d, count: it.length, items: it });
+    }
+    return text(fs.readFileSync(f, "utf8"));
 });
 server.tool("get_reference", "Return a reference markdown document.", { name: z.string() }, async ({ name }) => {
     const n = safe(name).replace(/\.md$/, "");
@@ -37,7 +77,7 @@ server.tool("get_reference", "Return a reference markdown document.", { name: z.
 server.tool("get_skill", "Return the Blueprint SKILL.md.", {}, async () => text(fs.readFileSync(path.join(ROOT, "SKILL.md"), "utf8")));
 server.tool("search", "Case-insensitive search across catalog YAML and reference docs. Returns matching lines.", { query: z.string().min(1), limit: z.number().int().positive().max(500).optional() }, async ({ query, limit = 50 }) => {
     const q = query.toLowerCase();
-    const files = [...domains().map(d => `catalog/${d}.yaml`), ...references().map(r => `reference/${r}.md`), "SKILL.md"];
+    const files = [...domains().map(d => `catalog/${d}.yaml`), ...layers().map(l => `elements/${l}.yaml`), ...references().map(r => `reference/${r}.md`), "SKILL.md"];
     const hits = [];
     for (const f of files) {
         fs.readFileSync(path.join(ROOT, f), "utf8").split("\n").forEach((l, i) => {
@@ -45,7 +85,8 @@ server.tool("search", "Case-insensitive search across catalog YAML and reference
                 hits.push({ file: f, line: i + 1, text: l.trim() });
         });
     }
-    return json({ query, count: hits.length, hits });
+    const matched = [...domains(), ...layers()].flatMap(items).filter(i => JSON.stringify(i).toLowerCase().includes(q)).slice(0, limit);
+    return json({ query, count: hits.length, hits, item_count: matched.length, items: matched });
 });
 function walkEntries(node, domain, out) {
     if (Array.isArray(node)) {

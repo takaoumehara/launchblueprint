@@ -9,7 +9,7 @@ entries:
   name: AI Gateway（Vercel）
   what: 複数モデルの切替・フォールバック・費用監視
   best_for: モデルを後から変えたい
-  avoid_when: ''
+  avoid_when: スマホアプリから直接 AI を呼びたい時
   pricing_bands:
     free: Hobby で利用可（トークン実費）
     usd5: Hobby で利用可（トークン実費）
@@ -29,7 +29,7 @@ entries:
   name: Firebase AI Logic
   what: アプリから Gemini を直接呼ぶ
   best_for: モバイル・Firebase
-  avoid_when: ''
+  avoid_when: AI の会社をあとで切り替えたい時、ウェブ中心の時
   pricing_bands:
     free: 無料枠（要確認）
     usd5: 従量

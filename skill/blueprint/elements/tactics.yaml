@@ -2,162 +2,415 @@
 # depends_on：この決定の前に決めておくべき topic（地図の線はこれだけから引く）
 # kind：choose（1つ選ぶ）／ checklist（全部確かめる）
 # ai_pick / ai_reason_ja：既定のおすすめ。pick_when は「始める」画面の答えで上書き
+# lane：地図の列（BRAND / UX / UI / TECH / BIZ・LEGAL / RULES）
 domain: tactics
 updated: '2026-10-28'
-check_cadence_values:
-  daily_new_options: "毎日：新しい選択肢が出たかだけ見る（料金・規約は見ない）"
-  deep_when_used: "プロジェクトで selected の時だけ、料金・規約を公式で深く確認"
+check_cadence_values: {daily_new_options: 毎日：新しい選択肢が出たかだけ見る（料金・規約は見ない）, deep_when_used: プロジェクトで selected の時だけ、料金・規約を公式で深く確認}
 tactics:
-  - element: el.product
-    topic: database
-    label_ja: データの置き場所
-    question_ja: "ユーザーの情報や投稿をどこに保存する？"
-    kind: choose
-    options: [db.supabase, db.firestore, db.neon]
-    ai_pick: db.supabase
-    ai_reason_ja: "表の形で扱えて、ログインや画像保存も同じ場所でそろう。あとで別の場所へ移しやすい。"
-    pick_when: [{if: {platform: app}, pick: db.firestore, reason_ja: "スマホアプリと相性がよく、電波が弱くても動く。"}]
-    depends_on: []
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.product
-    topic: analytics
-    label_ja: 使われ方の計測
-    question_ja: "何人が来て、どこで止まったかをどう見る？"
-    kind: choose
-    options: [an.posthog, an.vercel-analytics]
-    ai_pick: an.posthog
-    ai_reason_ja: "どの画面で離れたかまで見られる。無料枠が大きい。"
-    depends_on: [hosting]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.experience
-    topic: ui_patterns
-    label_ja: 画面づくりの約束
-    question_ja: "迷わない画面にするための確認"
-    kind: checklist
-    options: [ui_ux.primary-action-color, ui_ux.selected-state-tint, ui_ux.hints-on-demand, ui_ux.short-scannable-copy]
-    depends_on: []
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.business
-    topic: business_setup
-    label_ja: 事業の立ち上げ
-    question_ja: "住所・ブランド名・決済アカウントの準備"
-    kind: checklist
-    options: [biz.public-support-address, biz.processor-account-per-brand, biz.llc-full-formation-cost]
-    depends_on: []
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.business
-    topic: payments
-    label_ja: お金の受け取り
-    question_ja: "お客さんからどう支払ってもらう？"
-    kind: choose
-    options: [pay.stripe-checkout, pay.stripe-connect, pay.paddle, pay.ryft]
-    ai_pick: pay.stripe-checkout
-    ai_reason_ja: "月額なしで始められ、カード・Apple Pay・Google Pay がそろう。"
-    pick_when:
-      - {if: {money: marketplace}, pick: pay.stripe-connect, reason_ja: "ユーザー同士でお金が動くので、受け取り手ごとの口座と本人確認が要る。"}
-      - {if: {country: global}, pick: pay.paddle, reason_ja: "海外の消費税の計算と納付を代わりにやってくれる。"}
-    depends_on: [business_setup, auth]
-    last_checked: '2026-10-28'
-    check_cadence: deep_when_used
-  - element: el.marketing
-    topic: launch_channels
-    label_ja: 発表する場所
-    question_ja: "最初のユーザーにどこで知ってもらう？"
-    kind: choose
-    options: [gtm.producthunt, gtm.hn, gtm.x, gtm.seo]
-    ai_pick: gtm.x
-    ai_reason_ja: "作りながら途中経過を出せ、費用ゼロで反応がすぐ分かる。"
-    depends_on: [ui_patterns, analytics]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.brand
-    topic: cross_border
-    label_ja: 海外向けの準備
-    question_ja: "言葉・法律・支払いを国に合わせる確認"
-    kind: checklist
-    options: [axis.i18n, axis.legal, axis.payments_tax]
-    depends_on: [payments]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.maintenance
-    topic: hosting
-    label_ja: 公開する場所
-    question_ja: "作ったものをどこに置いて公開する？"
-    kind: choose
-    options: [host.vercel, host.cloudflare-pages, host.firebase-hosting]
-    ai_pick: host.vercel
-    ai_reason_ja: "変更ごとに確認用のURLが自動で出て、無料で始められる。"
-    pick_when: [{if: {platform: app}, pick: host.firebase-hosting, reason_ja: "アプリのデータ置き場と同じ所でそろう。"}]
-    depends_on: []
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.maintenance
-    topic: monitoring
-    label_ja: 不具合の見張り
-    question_ja: "エラーが起きたらどう気づく？"
-    kind: choose
-    options: [mon.sentry, mon.vercel-observability, mon.crashlytics]
-    ai_pick: mon.sentry
-    ai_reason_ja: "ウェブでもアプリでも、どこで落ちたかを知らせてくれる。"
-    pick_when: [{if: {platform: app}, pick: mon.crashlytics, reason_ja: "スマホアプリの落ち方を無料で集められる。"}]
-    depends_on: [hosting]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.maintenance
-    topic: email
-    label_ja: お知らせメール
-    question_ja: "登録確認やお知らせをどう送る？"
-    kind: choose
-    options: [mail.resend, push.fcm]
-    ai_pick: mail.resend
-    ai_reason_ja: "送るのが簡単で、迷惑メールに入りにくい設定を案内してくれる。"
-    depends_on: [hosting]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.maintenance
-    topic: support
-    label_ja: 問い合わせ窓口
-    question_ja: "困った人がどこに連絡する？"
-    kind: choose
-    options: [sup.email, sup.crisp, sup.docs, sup.status]
-    ai_pick: sup.email
-    ai_reason_ja: "最初はメール1本で十分。件数が増えたらチャットへ。"
-    depends_on: [email]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.security
-    topic: auth
-    label_ja: ログイン
-    question_ja: "ユーザーにどうログインしてもらう？"
-    kind: choose
-    options: [auth.supabase, auth.firebase, auth.clerk, auth.auth0]
-    ai_pick: auth.supabase
-    ai_reason_ja: "データの置き場所と同じ所でそろい、無料枠が大きい。"
-    pick_when: [{if: {platform: app}, pick: auth.firebase, reason_ja: "アプリのデータ置き場と同じ所でそろう。"}]
-    depends_on: [database]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.security
-    topic: protection
-    label_ja: 攻撃からの守り
-    question_ja: "ロボットや不正アクセスをどう防ぐ？"
-    kind: choose
-    options: [sec.turnstile, sec.vercel-firewall, sec.secrets]
-    ai_pick: sec.turnstile
-    ai_reason_ja: "無料で、公開フォームへのロボット投稿を止められる。"
-    depends_on: [hosting]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
-  - element: el.security
-    topic: data_protection
-    label_ja: バックアップ
-    question_ja: "データが消えても戻せる？"
-    kind: checklist
-    options: [dp.backup-3-2-1, dp.backup-bucket-lock, dp.backup-verify-alert, dp.restore-test-monthly]
-    depends_on: [database]
-    last_checked: '2026-10-28'
-    check_cadence: daily_new_options
+- element: el.product
+  topic: database
+  lane: tech
+  label_ja: データの置き場所
+  question_ja: ユーザーの情報や投稿をどこに保存する？
+  kind: choose
+  options: [db.supabase, db.firestore, db.neon]
+  ai_pick: db.supabase
+  ai_reason_ja: 表の形で扱えて、ログインや画像保存も同じ場所でそろう。あとで別の場所へ移しやすい。
+  pick_when:
+  - if: {platform: app}
+    pick: db.firestore
+    reason_ja: スマホアプリと相性がよく、電波が弱くても動く。
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: analytics
+  lane: ux
+  label_ja: 使われ方の計測
+  question_ja: 何人が来て、どこで止まったかをどう見る？
+  kind: choose
+  options: [an.posthog, an.vercel-analytics]
+  ai_pick: an.posthog
+  ai_reason_ja: どの画面で離れたかまで見られる。無料枠が大きい。
+  depends_on: [hosting]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: ui_patterns
+  lane: ui
+  label_ja: 画面づくりの約束
+  question_ja: 迷わない画面にするための確認
+  kind: checklist
+  options: [ui_ux.primary-action-color, ui_ux.selected-state-tint, ui_ux.hints-on-demand, ui_ux.short-scannable-copy]
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: business_setup
+  lane: biz
+  label_ja: 事業の立ち上げ
+  question_ja: 住所・ブランド名・決済アカウントの準備
+  kind: checklist
+  options: [biz.public-support-address, biz.processor-account-per-brand, biz.llc-full-formation-cost]
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: payments
+  lane: biz
+  label_ja: お金の受け取り
+  question_ja: お客さんからどう支払ってもらう？
+  kind: choose
+  options: [pay.stripe-checkout, pay.stripe-connect, pay.paddle, pay.ryft]
+  ai_pick: pay.stripe-checkout
+  ai_reason_ja: 月額なしで始められ、カード・Apple Pay・Google Pay がそろう。
+  pick_when:
+  - if: {money: marketplace}
+    pick: pay.stripe-connect
+    reason_ja: ユーザー同士でお金が動くので、受け取り手ごとの口座と本人確認が要る。
+  - if: {country: global}
+    pick: pay.paddle
+    reason_ja: 海外の消費税の計算と納付を代わりにやってくれる。
+  depends_on: [business_setup, auth]
+  last_checked: '2026-10-28'
+  check_cadence: deep_when_used
+- element: el.marketing
+  topic: launch_channels
+  lane: brand
+  label_ja: 発表する場所
+  question_ja: 最初のユーザーにどこで知ってもらう？
+  kind: choose
+  options: [gtm.producthunt, gtm.hn, gtm.x, gtm.seo]
+  ai_pick: gtm.x
+  ai_reason_ja: 作りながら途中経過を出せ、費用ゼロで反応がすぐ分かる。
+  depends_on: [ui_patterns, analytics]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.brand
+  topic: cross_border
+  lane: biz
+  label_ja: 海外向けの準備
+  question_ja: 言葉・法律・支払いを国に合わせる確認
+  kind: checklist
+  options: [axis.i18n, axis.legal, axis.payments_tax]
+  depends_on: [payments]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: hosting
+  lane: tech
+  label_ja: 公開する場所
+  question_ja: 作ったものをどこに置いて公開する？
+  kind: choose
+  options: [host.vercel, host.cloudflare-pages, host.firebase-hosting]
+  ai_pick: host.vercel
+  ai_reason_ja: 変更ごとに確認用のURLが自動で出て、無料で始められる。
+  pick_when:
+  - if: {platform: app}
+    pick: host.firebase-hosting
+    reason_ja: アプリのデータ置き場と同じ所でそろう。
+  depends_on: [frontend]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: monitoring
+  lane: tech
+  label_ja: 不具合の見張り
+  question_ja: エラーが起きたらどう気づく？
+  kind: choose
+  options: [mon.sentry, mon.vercel-observability, mon.crashlytics]
+  ai_pick: mon.sentry
+  ai_reason_ja: ウェブでもアプリでも、どこで落ちたかを知らせてくれる。
+  pick_when:
+  - if: {platform: app}
+    pick: mon.crashlytics
+    reason_ja: スマホアプリの落ち方を無料で集められる。
+  depends_on: [hosting]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: email
+  lane: ux
+  label_ja: お知らせメール
+  question_ja: 登録確認やお知らせをどう送る？
+  kind: choose
+  options: [mail.resend, push.fcm]
+  ai_pick: mail.resend
+  ai_reason_ja: 送るのが簡単で、迷惑メールに入りにくい設定を案内してくれる。
+  depends_on: [hosting]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: support
+  lane: ux
+  label_ja: 問い合わせ窓口
+  question_ja: 困った人がどこに連絡する？
+  kind: choose
+  options: [sup.email, sup.crisp, sup.docs, sup.status]
+  ai_pick: sup.email
+  ai_reason_ja: 最初はメール1本で十分。件数が増えたらチャットへ。
+  depends_on: [email]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.security
+  topic: auth
+  lane: tech
+  label_ja: ログイン
+  question_ja: ユーザーにどうログインしてもらう？
+  kind: choose
+  options: [auth.supabase, auth.firebase, auth.clerk, auth.auth0]
+  ai_pick: auth.supabase
+  ai_reason_ja: データの置き場所と同じ所でそろい、無料枠が大きい。
+  pick_when:
+  - if: {platform: app}
+    pick: auth.firebase
+    reason_ja: アプリのデータ置き場と同じ所でそろう。
+  depends_on: [database]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.security
+  topic: protection
+  lane: tech
+  label_ja: 攻撃からの守り
+  question_ja: ロボットや不正アクセスをどう防ぐ？
+  kind: choose
+  options: [sec.turnstile, sec.vercel-firewall, sec.secrets]
+  ai_pick: sec.turnstile
+  ai_reason_ja: 無料で、公開フォームへのロボット投稿を止められる。
+  depends_on: [hosting]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.security
+  topic: data_protection
+  lane: rules
+  label_ja: バックアップ
+  question_ja: データが消えても戻せる？
+  kind: checklist
+  options: [dp.backup-3-2-1, dp.backup-bucket-lock, dp.backup-verify-alert, dp.restore-test-monthly]
+  depends_on: [database]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.brand
+  topic: brand_basics
+  lane: brand
+  label_ja: ブランドの土台
+  question_ja: 名前・声・色・伝える順番を決めたか
+  kind: checklist
+  options: [lc.brand.11, lc.brand.12, lc.brand.13, lc.brand.14]
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.marketing
+  topic: growth_channels
+  lane: brand
+  label_ja: 続けて増やす方法
+  question_ja: 発表のあと、どう人を増やし続ける？
+  kind: choose
+  options: [gtm.content, gtm.referral, gtm.community, gtm.seo, gtm.ads.meta]
+  ai_pick: gtm.community
+  ai_reason_ja: 最初の熱心な人たちが集まる場所を作ると、紹介と声が自然に増える。
+  pick_when:
+  - if: {audience: business}
+    pick: gtm.content
+    reason_ja: 仕事で使う人は事例や解説を読んで決める。
+  depends_on: [launch_channels, analytics]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: app_distribution
+  lane: ux
+  label_ja: 届け方
+  question_ja: スマホでどう使ってもらう？
+  kind: choose
+  options: [dist.pwa, dist.capacitor, dist.expo, dist.native, dist.twa]
+  ai_pick: dist.pwa
+  ai_reason_ja: ストア審査なしで、ウェブのままホーム画面に置ける。
+  pick_when:
+  - if: {platform: app}
+    pick: dist.expo
+    reason_ja: 1つのコードで iPhone と Android のアプリを出せる。
+  depends_on: [frontend]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: ui_copy
+  lane: ui
+  label_ja: 画面の言葉
+  question_ja: 誰でも分かる言葉になっているか
+  kind: checklist
+  options: [ui_ux.short-scannable-copy, ui_ux.plain-localized-terms, ui_ux.plain-screen-labels, ui_ux.no-ellipsis-truncation]
+  depends_on: [brand_basics]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: frontend
+  lane: tech
+  label_ja: 画面の作り方
+  question_ja: 画面を何で作る？
+  kind: choose
+  options: [fe.nextjs, fe.astro, fe.expo]
+  ai_pick: fe.nextjs
+  ai_reason_ja: ページもログインも1つでそろい、AIが一番うまく書ける。
+  pick_when:
+  - if: {platform: app}
+    pick: fe.expo
+    reason_ja: スマホアプリをそのまま作れる。
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: storage
+  lane: tech
+  label_ja: 画像・動画の置き場所
+  question_ja: 写真や動画をどこに置く？
+  kind: choose
+  options: [st.supabase-storage, st.vercel-blob, st.mux]
+  ai_pick: st.supabase-storage
+  ai_reason_ja: データの置き場所と同じ所で、権限も同じ仕組みで守れる。
+  depends_on: [database]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: search
+  lane: tech
+  label_ja: 検索
+  question_ja: 中身を探せるようにする？
+  kind: choose
+  options: [se.postgres-fts, se.algolia]
+  ai_pick: se.postgres-fts
+  ai_reason_ja: 追加のサービスなしで、今のデータのまま探せる。
+  depends_on: [database]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: realtime
+  lane: tech
+  label_ja: すぐに反映
+  question_ja: 他の人の変更がすぐ見える必要は？
+  kind: choose
+  options: [rt.supabase-realtime, rt.firebase-rtdb]
+  ai_pick: rt.supabase-realtime
+  ai_reason_ja: データの置き場所と同じ所で、追加の契約がいらない。
+  pick_when:
+  - if: {platform: app}
+    pick: rt.firebase-rtdb
+    reason_ja: アプリのデータ置き場と同じ所でそろう。
+  depends_on: [database]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: ai
+  lane: tech
+  label_ja: AIの組み込み
+  question_ja: アプリの中でAIを使う？
+  kind: choose
+  options: [ai.gateway, ai.firebase-ai-logic]
+  ai_pick: ai.gateway
+  ai_reason_ja: AIの会社を後から切り替えられ、使いすぎの上限も1か所で決められる。
+  pick_when:
+  - if: {platform: app}
+    pick: ai.firebase-ai-logic
+    reason_ja: アプリから直接、安全な形でAIを呼べる。
+  depends_on: [hosting]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: ci
+  lane: tech
+  label_ja: 自動チェック
+  question_ja: 直すたびに自動で確かめる？
+  kind: choose
+  options: [ci.vercel-git, ci.github-actions]
+  ai_pick: ci.vercel-git
+  ai_reason_ja: つなぐだけで、変更ごとに確認用のページが出る。
+  depends_on: [hosting]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: build_vs_buy
+  lane: tech
+  label_ja: 作るか借りるか
+  question_ja: 自分で作る？サービスを使う？
+  kind: choose
+  options: [bvb.platform, bvb.api, bvb.build]
+  ai_pick: bvb.platform
+  ai_reason_ja: 最初は全部入りのサービスで早く確かめ、強みになる所だけ後で作る。
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: market_entry
+  lane: biz
+  label_ja: どの国から始めるか
+  question_ja: 最初にどこで売る？
+  kind: choose
+  options: [es.us_first, es.jp_en, es.mor_first]
+  ai_pick: es.us_first
+  ai_reason_ja: 作る量が一番少なく、反応を早く確かめられる。
+  pick_when:
+  - if: {country: jp}
+    pick: es.jp_en
+    reason_ja: 日本の人に使ってもらうので、最初から日本語と英語を用意する。
+  - if: {country: global}
+    pick: es.mor_first
+    reason_ja: 国ごとの税金の手続きを、販売代行の会社に任せられる。
+  depends_on: []
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: exit_dd
+  lane: biz
+  label_ja: 売却・終了の備え
+  question_ja: 会社を売る・やめる時に困らないか
+  kind: checklist
+  options: [dd.ip, dd.oss, dd.contracts, dd.privacy]
+  depends_on: [business_setup]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.security
+  topic: ai_defense
+  lane: rules
+  label_ja: AIを使った攻撃への守り
+  question_ja: ロボットや乗っ取りへの基本の守り
+  kind: checklist
+  options: [dp.rate-limit-auth-forms, dp.bot-challenge-server-verified, dp.admin-phishing-resistant-mfa, dp.prompt-injection-untrusted-input, dp.ai-usage-caps]
+  depends_on: [auth, protection]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: preview_rules
+  lane: rules
+  label_ja: 確認用ページの約束
+  question_ja: 確認用ページで本番データを壊さないか
+  kind: checklist
+  options: [ci.preview-per-pr-first, ci.preview-db-isolation]
+  depends_on: [ci, database]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: store_rules
+  lane: rules
+  label_ja: アプリストアの決まり
+  question_ja: ストアのお金のルールを守れているか
+  kind: checklist
+  options: [policy.apple.3_1_1, policy.apple.3_1_1a, policy.google.payments]
+  depends_on: [app_distribution, payments]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: scale_plan
+  lane: rules
+  label_ja: 増えた時の備え
+  question_ja: 利用者が増えても止まらないか
+  kind: checklist
+  options: [scale.t0, scale.t1]
+  depends_on: [monitoring, data_protection]
+  last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+lanes:
+- {id: brand, label: BRAND, ja: ブランド・発信}
+- {id: ux, label: UX, ja: 体験・届け方}
+- {id: ui, label: UI, ja: 画面}
+- {id: tech, label: TECH, ja: しくみ}
+- {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律}
+- {id: rules, label: RULES, ja: 守ること}

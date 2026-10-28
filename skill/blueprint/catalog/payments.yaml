@@ -6,7 +6,7 @@ entries:
   name: Stripe Checkout / Payments
   what: 決済ページ・カード決済
   best_for: 単一販売者のサービス
-  avoid_when: ''
+  avoid_when: ユーザー同士でお金が動く場（受け取り手ごとの口座と本人確認が要る）
   pricing_bands:
     free: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
     usd5: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
@@ -26,6 +26,7 @@ entries:
   name: Stripe Connect
   what: プラットフォームが他者の売上を扱う（マーケットプレイス・SaaS）
   best_for: 主催者・出店者がいるサービス
+  avoid_when: 自分だけが売る普通のお店（仕組みが大きすぎ、手間が増える）
   options:
   - id: standard
     controller: losses.payments=stripe, fees.payer=account, dashboard=full

@@ -9,7 +9,7 @@ entries:
   name: Sentry
   what: エラー監視
   best_for: 全プロジェクト（T1+）
-  avoid_when: ''
+  avoid_when: スマホアプリだけで、無料のクラッシュ集計で足りる時
   pricing_bands:
     free: $0 Developer：1人、エラー5万/月
     usd5: —
@@ -29,7 +29,7 @@ entries:
   name: Firebase Crashlytics
   what: モバイルのクラッシュ監視
   best_for: モバイル
-  avoid_when: ''
+  avoid_when: ウェブだけのサービス（ウェブのエラーは集められない）
   pricing_bands:
     free: 無料
     usd5: 無料
@@ -49,7 +49,7 @@ entries:
   name: Vercel Observability
   what: 関数ログ・トレース
   best_for: Vercel 上
-  avoid_when: ''
+  avoid_when: Vercel 以外に置いている時、画面側のエラーも集めたい時
   pricing_bands:
     free: Hobby：ログ1時間
     usd5: —
