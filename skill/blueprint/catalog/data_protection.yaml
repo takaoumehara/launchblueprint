@@ -48,10 +48,85 @@ lessons:
     check: "Is the backup job isolated with its own credentials?"
     see_also: [dp.ai-keys-no-backup-delete]
     verified: false
-  - id: dp.ai-assisted-attack-defenses
-    status: TODO
-    principle: "TODO — research in progress: defenses against AI-assisted attacks."
-    anti_pattern: "TODO"
-    why: "TODO"
-    check: "TODO"
+  - id: dp.rate-limit-auth-forms
+    tier: now-free
+    principle: "Rate-limit login, signup, magic-link, contact and domain-connect endpoints."
+    anti_pattern: "Leaving auth and form endpoints unlimited."
+    why: "AI-driven credential stuffing and form abuse scale cheaply."
+    check: "Do all of these endpoints have rate limits?"
+    sources: [https://developers.cloudflare.com/waf/rate-limiting-rules/best-practices/]
+    verified: false
+  - id: dp.bot-challenge-server-verified
+    tier: now-free
+    principle: "Put a bot challenge on public forms and AI widgets and verify the token server-side."
+    anti_pattern: "Client-only challenges or none."
+    why: "Bots skip client-side checks and abuse forms or burn AI cost."
+    check: "Is the challenge token verified on the server?"
+    sources: []
+    tactics_note: "e.g. a CAPTCHA-alternative widget"
+    verified: false
+  - id: dp.bot-block-keep-webhooks
+    tier: now-free
+    principle: "Turn on bot-fight / AI-crawler blocking, then confirm payment and email webhooks still get through."
+    anti_pattern: "Enabling bot blocking without testing webhooks."
+    why: "Blocked webhooks silently break payments and mail."
+    check: "Were payment and email webhooks tested after enabling bot blocking?"
+    sources: []
+    verified: false
+  - id: dp.agent-least-privilege-keys
+    tier: now-free
+    principle: "Give each agent/job its own least-privilege, expiring key with no delete rights; rotate all keys after an incident."
+    anti_pattern: "One shared admin key for every agent and script."
+    why: "A leaked or hijacked agent key should not unlock everything."
+    check: "Is every agent key scoped, expiring and without delete rights, with a rotate-all plan?"
+    sources: []
+    verified: false
+  - id: dp.admin-phishing-resistant-mfa
+    tier: now-free
+    principle: "Put admin accounts on passkeys or hardware keys."
+    anti_pattern: "SMS or authenticator-app codes for admins."
+    why: "SMS and app codes get phished; AI makes phishing cheaper."
+    check: "Do all admin accounts use passkeys or hardware keys?"
+    sources: [https://blog.cloudflare.com/2022-07-sms-phishing-attacks/]
+    verified: false
+  - id: dp.prompt-injection-untrusted-input
+    tier: now-free
+    principle: "Treat inbound mail and user input as untrusted data; keep FAQ AI read-only with no tools or personal data; require human approval before AI drafts are sent."
+    anti_pattern: "Letting an AI that reads outside input also hold tools, private data or send rights."
+    why: "Private data + untrusted input + a way out lets injected text leak data."
+    check: "Is the FAQ AI tool-less and data-free, and does a human approve every AI draft before sending?"
+    sources: [https://genai.owasp.org/llm-top-10/, https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/]
+    verified: false
+  - id: dp.ai-usage-caps
+    tier: now-free
+    principle: "Cap tokens and requests per IP and per user."
+    anti_pattern: "Unlimited AI calls behind a public endpoint."
+    why: "Abuse can run up cost or exhaust quota overnight."
+    check: "Are per-IP and per-user token/request caps set?"
+    sources: []
+    verified: false
+  - id: dp.custom-domains-covered
+    tier: next
+    principle: "Confirm WAF and rate limits also apply on customers' custom domains."
+    anti_pattern: "Protecting only the main domain."
+    why: "Attackers use the unprotected custom-domain path."
+    check: "Do WAF and rate limits cover customer custom domains?"
+    sources: []
+    verified: false
+  - id: dp.retire-unused-keys
+    tier: next
+    principle: "Retire keys from old setups you no longer use."
+    anti_pattern: "Leaving keys from abandoned projects active."
+    why: "Forgotten keys are unmonitored entry points."
+    check: "Are keys from unused setups revoked?"
+    sources: []
+    verified: false
+  - id: dp.later-paid-defenses
+    tier: later-paid
+    principle: "At scale, add an AI firewall, higher-tier bot protection, and a twice-yearly key inventory and rotation drill."
+    anti_pattern: "Buying paid tools before the free basics are done."
+    why: "Paid layers pay off only once traffic and risk justify them."
+    check: "Are the free basics done and the paid triggers written down?"
+    sources: []
+    tactics_note: "e.g. a CDN's AI firewall or enterprise bot management"
     verified: false
