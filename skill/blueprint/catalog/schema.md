@@ -49,3 +49,8 @@
 - `scale_readiness.yaml`：`tiers[]`（id, users, add/must, trigger_next, effort, cost, acceptance）。金額・工数は estimate。
 - `dd_dashboard.yaml`：`groups[]`（id, metrics, source_of_truth）。1日目から記録。
 - `ui_ux.yaml`：UI/UX の原則。`rules[]`（id, principle, anti_pattern, why, check, source, date）。`check` は はい／いいえ で判定でき、要件・設計・品質の確認で使う。固有名詞・プロダクト名は入れない。
+
+## Elements 層（2026-10-28 追加、`elements/`）
+- `elements.yaml`：`elements[]`＝id, name, principle, categories（12カテゴリー番号）, tactics_file
+- `tactics.yaml`：`tactics[]`＝element, topic, options（catalog の id）, last_checked, check_cadence（daily_new_options / deep_when_used）
+- `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by。理由のない ai_pick・rejected は書かない

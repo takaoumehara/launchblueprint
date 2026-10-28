@@ -1,0 +1,47 @@
+# Blueprint Tactics v0.1 — 要素ごとの選択肢（層2）。中身は catalog/*.yaml の id を指すだけ（重複させない）
+domain: tactics
+updated: '2026-10-28'
+check_cadence_values:
+  daily_new_options: "毎日：新しい選択肢が出たかだけ見る（料金・規約は見ない）"
+  deep_when_used: "プロジェクトで selected の時だけ、料金・規約を公式で深く確認"
+tactics:
+  - element: el.experience
+    topic: ui_patterns
+    options: [ui_ux.primary-action-color, ui_ux.selected-state-tint, ui_ux.hints-on-demand]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options
+  - element: el.product
+    topic: analytics
+    options: [an.posthog, an.vercel-analytics]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options
+  - element: el.business
+    topic: payments
+    options: [pay.stripe-checkout, pay.stripe-connect, pay.ryft]
+    last_checked: '2026-10-28'
+    check_cadence: deep_when_used
+  - element: el.business
+    topic: business_setup
+    options: [biz.public-support-address, biz.domain-resale-rights]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options
+  - element: el.marketing
+    topic: launch_channels
+    options: [gtm.producthunt, gtm.hn, gtm.x]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options
+  - element: el.brand
+    topic: cross_border_voice
+    options: [axis.i18n]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options
+  - element: el.maintenance
+    topic: monitoring_support
+    options: [mon.sentry, mon.vercel-observability, sup.status, sup.email]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options
+  - element: el.security
+    topic: protection
+    options: [sec.secrets, sec.turnstile, sec.vercel-firewall]
+    last_checked: '2026-10-28'
+    check_cadence: daily_new_options

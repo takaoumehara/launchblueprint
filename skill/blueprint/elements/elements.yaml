@@ -1,0 +1,40 @@
+# Blueprint Elements v0.1 — 変わりにくい原則（層1）。提供：CREATIVITY IS EVERYWHERE, LLC
+domain: elements
+updated: '2026-10-28'
+version: '0.1'
+elements:
+  - id: el.experience
+    name: Digital experience
+    principle: "Every screen has one obvious next action, and works in light and dark mode."
+    categories: ['03', '06', '11']
+    tactics_file: tactics.yaml
+  - id: el.product
+    name: Product
+    principle: "Solve one validated problem for one defined user before adding scope."
+    categories: ['01', '03', '05']
+    tactics_file: tactics.yaml
+  - id: el.business
+    name: Business
+    principle: "Know the unit economics and who carries money, tax and liability before the first sale."
+    categories: ['01', '07', '10', '12']
+    tactics_file: tactics.yaml
+  - id: el.marketing
+    name: Marketing
+    principle: "Build promo assets during development and launch where the defined user already is."
+    categories: ['09', '11']
+    tactics_file: tactics.yaml
+  - id: el.brand
+    name: Brand
+    principle: "One voice and visual system, applied everywhere down to AI instruction files."
+    categories: ['02', '04']
+    tactics_file: tactics.yaml
+  - id: el.maintenance
+    name: Maintenance
+    principle: "Whatever ships must be observable, updatable and able to be shut down cleanly."
+    categories: ['08', '10', '12']
+    tactics_file: tactics.yaml
+  - id: el.security
+    name: Security
+    principle: "Least privilege, no secrets in code, and personal data collected only when needed."
+    categories: ['05', '07', '08']
+    tactics_file: tactics.yaml
