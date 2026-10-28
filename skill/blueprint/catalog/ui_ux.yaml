@@ -245,3 +245,83 @@ rules:
     check: "Was the build cache cleared, and does the deployed CSS contain the new token values?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+  - id: external-setup-roundtrip
+    category: flows
+    principle: "Before sending users to an external setup step mid-flow (e.g. payment onboarding), auto-save, deep-link straight to the setup screen, and return them to the exact item they left."
+    anti_pattern: "Leaving through a generic settings/profile page and showing 'Leave without saving?' after the work was already saved."
+    why: "A saved draft plus a detour and a false unsaved-changes warning made the flow feel broken."
+    check: "After finishing external setup, is the user back on the same item with no unsaved warning?"
+    see_also: "consistent-save-model, preserve-scroll-highlight"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: single-status-location
+    category: feedback
+    principle: "Show each status (progress, sync, error) in exactly one place on a screen."
+    anti_pattern: "The same upload progress rendered in a row and again in a banner or toast."
+    why: "Duplicate progress indicators confused users about whether two uploads were running."
+    check: "Is any state shown twice on the same screen?"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: migration-numbers-by-merge-order
+    category: engineering
+    principle: "When several branches add database migrations in parallel, assign migration numbers by planned merge order before review ends, and ship each migration to every environment's database."
+    anti_pattern: "Each branch picking the next free number on its own and assuming production migrates itself."
+    why: "Three changes claimed the same migration number, and one never got its production migration."
+    check: "Is there a merge-order table with unique numbers, and a migration applied for every database?"
+    see_also: "clean-build-before-deploy"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: offline-payment-holds-expire
+    category: payments
+    principle: "Seats or stock held for manual/offline payment need an expiry, an organizer cancel action, and a per-buyer cap."
+    anti_pattern: "Unpaid holds that count against capacity indefinitely."
+    why: "Unpaid holds blocked capacity forever and real buyers were turned away."
+    check: "Do holds have an expiry, an organizer cancel, and a per-buyer cap?"
+    see_also: "catalog/payments.yaml"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: money-summary-integrity
+    category: payments
+    principle: "Money summaries subtract refunds once, exclude cancelled/expired orders from gross, store the processor's real fees, and label anything estimated."
+    anti_pattern: "Subtracting a refund from gross and again from net, or computing fees from a formula and showing them as fact."
+    why: "A fully refunded order showed a negative net amount."
+    check: "Does a fully refunded order show exactly $0 net, with estimates labelled?"
+    see_also: "catalog/payments.yaml"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: public-support-address-not-home
+    category: onboarding
+    principle: "A public-facing support/business address must never default to the user's home address; warn that it is public and suggest a virtual or business address."
+    anti_pattern: "Prefilling the account's personal address into a field buyers can see."
+    why: "Onboarding exposed a home address to buyers without the user realising."
+    check: "Does onboarding warn that the support address is public and offer alternatives?"
+    see_also: "catalog/payments.yaml"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: agreement-snapshot-and-retention
+    category: privacy
+    principle: "For agreements accepted at checkout, snapshot the exact text plus a hash per order, collect the minimum personal data (no IP unless required), scrub personal data when the stated retention ends, and update the privacy policy in the same change."
+    anti_pattern: "Linking to a live, editable agreement, logging IPs by default, and keeping data past the stated retention."
+    why: "Personal data was kept beyond the retention period the policy promised."
+    check: "Is data cleared at expiry, and does the privacy policy match what is collected and kept?"
+    see_also: "catalog/cross_border.yaml"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: time-inputs-for-novices
+    category: forms
+    principle: "Date/time inputs offer a 12h/24h toggle, prefill End from Start, label optional fields consistently, and explain inline when blank means unlimited."
+    anti_pattern: "Bare time fields where End starts empty, optional markers vary, and blank's meaning is undocumented."
+    why: "First-time users had to guess formats and what an empty field meant."
+    check: "Can a first-time user fill every time field without guessing?"
+    see_also: "prevent-invalid-input"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
+  - id: statement-descriptor-preflight
+    category: payments
+    principle: "Ask for the trading (DBA) name first and explain that the card statement descriptor must match the legal name or website before the processor validates it."
+    anti_pattern: "Letting users type any descriptor and surfacing the processor's rejection mid-setup."
+    why: "Setup failed with an unexplained processor rejection error."
+    check: "Does setup explain the descriptor rule before any error can occur?"
+    see_also: "catalog/payments.yaml"
+    source: 'product iteration 2026-10'
+    date: '2026-10-27'
