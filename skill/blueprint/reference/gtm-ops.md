@@ -98,7 +98,16 @@ Tier の目安：T0 は省略可。T1 は G2・G3・O3。T2 以上は全部。
 | dp.backup-verify-alert | 毎晩のバックアップを検証し失敗で通知 | 黙って動くバックアップ | 止まっていても必要な時まで気づかない | 失敗・空のバックアップで通知が来る？ |
 | dp.restore-test-monthly | 毎月復元テスト | 成功表示を信じる | テストしていないバックアップは戻らないことが多い | 30日以内に復元を試した？ |
 | dp.backup-worker-isolated | バックアップは本体と別のワーカー＋専用の認証情報 | 本体アプリの中で同じ認証情報で動かす | デプロイやバグで止まらず、権限も絞れる | 独立したジョブで専用の認証情報？ |
-| dp.ai-assisted-attack-defenses | TODO（AI を使った攻撃への防御・調査中） | — | — | — |
+| dp.rate-limit-auth-forms（今・無料） | Rate-limit login, signup, magic-link, contact and domain-connect endpoints. | Leaving auth and form endpoints unlimited. | AI-driven credential stuffing and form abuse scale cheaply. | Do all of these endpoints have rate limits? |
+| dp.bot-challenge-server-verified（今・無料） | Put a bot challenge on public forms and AI widgets and verify the token server-side. | Client-only challenges or none. | Bots skip client-side checks and abuse forms or burn AI cost. | Is the challenge token verified on the server? |
+| dp.bot-block-keep-webhooks（今・無料） | Turn on bot-fight / AI-crawler blocking, then confirm payment and email webhooks still get through. | Enabling bot blocking without testing webhooks. | Blocked webhooks silently break payments and mail. | Were payment and email webhooks tested after enabling bot blocking? |
+| dp.agent-least-privilege-keys（今・無料） | Give each agent/job its own least-privilege, expiring key with no delete rights; rotate all keys after an incident. | One shared admin key for every agent and script. | A leaked or hijacked agent key should not unlock everything. | Is every agent key scoped, expiring and without delete rights, with a rotate-all plan? |
+| dp.admin-phishing-resistant-mfa（今・無料） | Put admin accounts on passkeys or hardware keys. | SMS or authenticator-app codes for admins. | SMS and app codes get phished; AI makes phishing cheaper. | Do all admin accounts use passkeys or hardware keys? |
+| dp.prompt-injection-untrusted-input（今・無料） | Treat inbound mail and user input as untrusted data; keep FAQ AI read-only with no tools or personal data; require human approval before AI drafts are sent. | Letting an AI that reads outside input also hold tools, private data or send rights. | Private data + untrusted input + a way out lets injected text leak data. | Is the FAQ AI tool-less and data-free, and does a human approve every AI draft before sending? |
+| dp.ai-usage-caps（今・無料） | Cap tokens and requests per IP and per user. | Unlimited AI calls behind a public endpoint. | Abuse can run up cost or exhaust quota overnight. | Are per-IP and per-user token/request caps set? |
+| dp.custom-domains-covered（次） | Confirm WAF and rate limits also apply on customers' custom domains. | Protecting only the main domain. | Attackers use the unprotected custom-domain path. | Do WAF and rate limits cover customer custom domains? |
+| dp.retire-unused-keys（次） | Retire keys from old setups you no longer use. | Leaving keys from abandoned projects active. | Forgotten keys are unmonitored entry points. | Are keys from unused setups revoked? |
+| dp.later-paid-defenses（後・有料） | At scale, add an AI firewall, higher-tier bot protection, and a twice-yearly key inventory and rotation drill. | Buying paid tools before the free basics are done. | Paid layers pay off only once traffic and risk justify them. | Are the free basics done and the paid triggers written down? |
 
 ## O8 QA の最小セット
 - **決めること**：主要フロー3本の E2E テスト、Visual gate（L34）、負荷試験（L25）、公開前のチェックリスト。
