@@ -212,6 +212,24 @@ function viewMap() {
 addEventListener('keydown', e => { if (e.key.toLowerCase() === 't' && !/input|textarea/i.test(e.target.tagName) && $('#strands')) { traceOnly = !traceOnly; $('#strands').classList.toggle('traceonly', traceOnly); } });
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (location.hash.startsWith('#/map')) viewMap(); }, 120); });
 
+// ---------- スタック比較（R-030） ----------
+function compareHtml(c, used) {
+  const nm = s => D.items[s.id]?.name || s.name || s.id;
+  const v = s => s.verified ? `<span class="tagv ok">確認済み ${esc(s.checked)}</span>` : `<span class="tagv">未確認</span>`;
+  return `<div class="cmp"><div class="mono m3">スタック比較 — 無料枠・組み合わせ・切り替えの境目</div>
+    <div class="cmp-h">1 同じ・似た機能のサービスと無料枠</div>
+    <table><thead><tr><th>サービス</th><th>無料でできること</th><th>安い有料プラン</th><th>出典</th></tr></thead><tbody>
+    ${c.services.map(s => `<tr><td><b>${esc(nm(s))}</b></td><td>${gloss(s.free_tier, used)}</td><td>${gloss(s.paid_entry, used)}</td><td>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">公式 ↗</a><br>` : ''}${v(s)}</td></tr>`).join('')}</tbody></table>
+    <div class="cmp-h">2 1社でそろえる か 無料枠を組み合わせる か</div>
+    <dl class="cmp-dl"><dt>1社</dt><dd>${gloss(c.combine.single, used)}</dd><dt>組み合わせ</dt><dd>${gloss(c.combine.combined, used)}</dd><dt>増える手間・危険</dt><dd>${gloss(c.combine.risks, used)}</dd></dl>
+    <div class="cmp-h">3 お金を払った方が楽になる境目</div>
+    <ol class="cmp-sw">${c.switch_points.map(w => `<li><b>${gloss(w.when, used)}</b><span>→ ${gloss(w.upgrade_to, used)}</span><small>${gloss(w.why, used)}</small></li>`).join('')}</ol>
+    <div class="cmp-h">4 おすすめ</div>
+    <div class="pick" style="margin:0"><div class="nm">${esc(itemName(c.recommendation.pick))}</div><div class="m1">${gloss(c.recommendation.reason, used)}</div></div>
+    <ul class="cmp-rej">${c.recommendation.rejected.map(r => `<li><b>${esc(D.items[r.option]?.name || c.services.find(s => s.id === r.option)?.name || r.option)}</b><span>${gloss(r.why, used)}</span></li>`).join('')}</ul>
+  </div>`;
+}
+
 // ---------- 画面3：決める ----------
 function viewTopic(topic) {
   const t = T[topic]; if (!t) { location.hash = '#/map'; return; }
@@ -242,6 +260,7 @@ function viewTopic(topic) {
       <div class="mono m3" style="margin-bottom:8px">${choose ? '選択肢 — 1つ選ぶ' : '確認すること — 全部チェック'}</div>
       <div class="opts" role="${choose ? 'radiogroup' : 'group'}">${opts}</div>
       ${choose ? `<div class="rej"><div class="mono m3" style="margin-bottom:8px">選ばなかったものと理由</div><ul id="rej"></ul></div>` : ''}
+      ${D.comparisons[topic] ? compareHtml(D.comparisons[topic], used) : ''}
     </div>
     <aside class="side">
       <div><div class="mono m3">状態</div><div style="display:flex;gap:10px;align-items:center;margin-top:6px"><span class="dot ${s}"></span>${STATUS_LONG[s]}</div></div>

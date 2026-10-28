@@ -26,6 +26,8 @@ test("all tools respond", async () => {
     const tac = JSON.parse(await call("get_catalog", { domain: "tactics", format: "items" }));
     assert.ok(tac.items.some(i => i.id === "tactics.payments" && Array.isArray(i.depends_on)));
     assert.match(await call("get_catalog", { domain: "elements" }), /domain: elements/);
+    const sc = JSON.parse(await call("get_catalog", { domain: "stack_comparisons", format: "items" }));
+    assert.ok(sc.items.some(i => i.id === "stack_comparisons.payments"));
     const sr = JSON.parse(await call("search", { query: "restore" }));
     assert.ok(sr.items.some(i => i.id === "dp.restore-test-monthly"));
     assert.ok(JSON.parse(await call("search", { query: "el.security" })).hits.some(h => h.file.startsWith("elements/")));

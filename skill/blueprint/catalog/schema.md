@@ -57,3 +57,4 @@
 - `elements.yaml` には name_ja / principle_ja もある。Web アプリは `app/`（`npm run build` で `/data.json` と `/llms.txt` を出す）
 - `glossary.yaml`：`terms[]`＝term, plain, one_line。アプリは専門用語を「plain（term）」に置き換え、説明を横に出す
 - MCP：`get_catalog` は elements/ のファイルも読める。`format: items` で lesson 形式も含めた一覧を返す。`search` は `items` も返す
+- `stack_comparisons.yaml`（R-030）：`comparisons[]`＝topic, services[{id, name?, free_tier, paid_entry, url, checked, verified}], combine{single, combined, risks}, switch_points[{when, upgrade_to, why}], recommendation{pick, reason, rejected[{option, why}]}。技術の topic は全部これを持つ（まず payments / database / auth / email / hosting）
