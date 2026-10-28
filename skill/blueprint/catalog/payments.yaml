@@ -286,3 +286,34 @@ entries:
     url: https://pay.jp/pricing
     checked: '2026-10-27'
     verified: false
+payment_roles:
+  updated: '2026-10-27'
+  what: 決済の「役割」ごとの選び方（汎用）。1つのサービスに複数の役割がある時は役割ごとに選ぶ
+  roles:
+  - id: role.own_subscription
+    role: 自社のサブスク・課金（自社が売り手）
+    pick: Stripe Billing
+    alternatives: ['MoR（Paddle / Lemon Squeezy）：各国の税の登録・納税を任せたい時（5%+50¢）', 'iOS/Android アプリ内のデジタル機能は各ストアのアプリ内課金（IAP）が原則（app_distribution.yaml）']
+    check: 税を自分で扱うか MoR に任せるかを決めたか — はい／いいえ
+  - id: role.platform_take_rate
+    role: プラットフォームの手数料（他者の売上から一部を取る）
+    pick: Stripe Connect（接続アカウント＋application fee）
+    why: 売上の分配・本人確認・送金を Connect が持つ。自社で預かって配ると送金業の規制に触れうる
+  - id: role.creator_tickets
+    role: 主催者・出品者がチケットを売る
+    pick: Stripe Connect の接続アカウント（主催者ごと）
+    note: チケットの在庫・QR・払い戻しは自社で作るかチケットサービスを使う
+  - id: role.venmo_addon
+    role: Venmo を追加の支払い方法として足す
+    pick: PayPal Checkout / Braintree の支払い方法の1つ（pay.venmo）
+    limits:
+    - 米国のみ（米国の事業者・米国の利用者）
+    - 売上の分配（主催者への送金）には使わない。Stripe Connect の分配とは別系統で、PayPal 側のマーケットプレイス機能は審査・実装が重い（要確認）
+    - 'Braintree では Venmo アカウントを Vault に保存して再利用できる（定期・再請求に使える）。利用者はアプリから接続をいつでも解除でき、Webhook PaymentMethodRevokedByCustomer で通知される'
+    - アプリ内の WebView で Venmo の画面を開くのは禁止（SDK かシステムブラウザ）
+    fees: 'PayPal 経由 Pay with Venmo 3.49%+49¢、Venmo ビジネスプロフィール 1.9%+10¢、Tap to Pay 2.29%+9¢'
+    source:
+    - {url: 'https://developer.paypal.com/braintree/docs/guides/venmo/server-side', what: 'Vault 保存・解除', checked: '2026-10-27', verified: true}
+    - {url: 'https://developer.paypal.com/braintree/docs/guides/venmo/overview', what: '米国の事業者のみ・WebView 禁止', checked: '2026-10-27', verified: true}
+    - {url: 'https://venmo.com/resources/our-fees', what: 'ビジネス手数料', checked: '2026-10-27', verified: true}
+    - {url: 'https://www.paypal.com/us/business/paypal-business-fees', what: 'Pay with Venmo 手数料', checked: '2026-10-27', verified: true}
