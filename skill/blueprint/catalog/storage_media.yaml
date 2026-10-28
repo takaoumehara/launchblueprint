@@ -9,7 +9,7 @@ entries:
   name: Supabase Storage
   what: ファイル保存＋CDN
   best_for: Supabase を使っている
-  avoid_when: ''
+  avoid_when: 動画配信が主役の時、データの置き場所が Supabase でない時
   pricing_bands:
     free: Free：1GB、1ファイル50MBまで
     usd5: —
@@ -29,7 +29,7 @@ entries:
   name: Vercel Blob
   what: オブジェクト保存
   best_for: Vercel 上で簡単に
-  avoid_when: ''
+  avoid_when: ファイルごとに細かく見られる人を決めたい時
   pricing_bands:
     free: Hobby：1GB、読み1万回
     usd5: —
@@ -49,7 +49,7 @@ entries:
   name: Mux
   what: 動画配信・字幕トラック
   best_for: 動画が主役（字幕は焼き込まない L33）
-  avoid_when: ''
+  avoid_when: 動画を扱わない時（費用が無駄になる）
   pricing_bands:
     free: 従量：毎月 配信10万分 無料、エンコード無料（1080p basic）
     usd5: 保存 $0.003/分/月 → 約1,600分

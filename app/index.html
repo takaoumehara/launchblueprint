@@ -5,17 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blueprint — 作り方の地図</title>
 <meta name="description" content="プロダクトを作る前に、決めることを全部ひと目で。AI も読める作り方の地図。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23f2541b'/%3E%3C/svg%3E">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
 <link rel="alternate" type="application/json" href="/data.json" title="Blueprint data">
 <script>try{const t=localStorage.getItem('bp.theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.theme='dark'}catch(e){}</script>
 </head>
 <body>
-<header class="top">
-  <a class="brand" href="#/"><span class="mark" aria-hidden="true"></span>Blueprint</a>
-  <nav class="steps" aria-label="画面">
-    <a href="#/" data-r="start">1 始める</a><a href="#/map" data-r="map">2 地図</a><span data-r="topic">3 決める</span>
-  </nav>
-  <button class="icon" id="theme" aria-label="明るさを切り替える" title="明るさを切り替える"></button>
+<header class="top mono">
+  <a class="brand" href="#/"><i aria-hidden="true"></i>BLUEPRINT</a>
+  <nav class="steps" aria-label="画面"><a href="#/" data-r="start">01 始める</a><a href="#/map" data-r="map">02 地図</a><span data-r="topic">03 決める</span></nav>
+  <button class="tbtn mono" id="theme" aria-label="明るさを切り替える">LIGHT / DARK</button>
 </header>
 <main id="app"></main>
 <script type="module" src="/src/main.js"></script>

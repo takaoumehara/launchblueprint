@@ -9,7 +9,7 @@ entries:
   name: GitHub Actions
   what: テスト・ビルドの自動化
   best_for: 全プロジェクト
-  avoid_when: ''
+  avoid_when: 変更ごとの確認用ページだけ欲しい時（Vercel 連携で足りる）
   pricing_bands:
     free: 公開リポジトリ無料。非公開は 2,000分/月（Free）
     usd5: 超過 Linux 2コア $0.006/分 → 約830分
@@ -29,7 +29,7 @@ entries:
   name: Vercel Git 連携
   what: push でプレビュー・本番デプロイ
   best_for: Vercel 利用時
-  avoid_when: ''
+  avoid_when: テストを細かく自動で回したい時（GitHub Actions と組み合わせる）
   pricing_bands:
     free: 込み
     usd5: 込み

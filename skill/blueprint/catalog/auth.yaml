@@ -49,6 +49,7 @@ auth:
       usd100: 5万MAU超は Google Cloud 料金
     lock_in: 高：パスワードハッシュの書き出しは可能だが SDK 依存が強い
     best_for: Firebase/Firestore と一緒に使う、モバイル
+    avoid_when: データの置き場所が Supabase の時（2か所に分かれる）
     source:
       url: https://firebase.google.com/pricing
       checked: '2026-10-26'
@@ -75,6 +76,7 @@ auth:
       usd100: $25 Pro：10万MAU、以降 $0.00325/MAU
     lock_in: 低：ユーザーは自分の Postgres にある
     best_for: Supabase DB を使う、大量の無料ユーザー
+    avoid_when: データの置き場所が Firebase の時（2か所に分かれる）
     source:
       url: https://supabase.com/pricing
       checked: '2026-10-26'

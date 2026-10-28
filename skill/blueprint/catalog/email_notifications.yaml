@@ -9,7 +9,7 @@ entries:
   name: Resend
   what: 送信API（取引メール）
   best_for: 登録確認・通知メール
-  avoid_when: ''
+  avoid_when: スマホへの通知（プッシュ）を送りたい時
   pricing_bands:
     free: Free：3,000通/月・100通/日・ドメイン3
     usd5: —
@@ -30,7 +30,7 @@ entries:
   name: Firebase Cloud Messaging
   what: プッシュ通知
   best_for: モバイル・Web プッシュ
-  avoid_when: ''
+  avoid_when: 登録確認などのメールを送りたい時（メールは送れない）
   pricing_bands:
     free: 無料
     usd5: 無料

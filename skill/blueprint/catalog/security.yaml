@@ -9,7 +9,7 @@ entries:
   name: Vercel Firewall / WAF
   what: ホスト一体のファイアウォール・ボット対策
   best_for: Vercel 上のアプリ
-  avoid_when: ''
+  avoid_when: Vercel 以外に置いている時
   pricing_bands:
     free: Hobby：カスタムルール3、DDoS 緩和込み
     usd5: —
@@ -29,7 +29,7 @@ entries:
   name: Cloudflare Turnstile
   what: CAPTCHA の代わり
   best_for: 登録・問い合わせフォーム
-  avoid_when: ''
+  avoid_when: フォームが1つもない時（守る入口がない）
   pricing_bands:
     free: 無料（要確認）
     usd5: 無料（要確認）
@@ -50,7 +50,7 @@ entries:
   name: 秘密情報の置き場（ホストの環境変数／Secret Manager）
   what: 鍵・トークンの保管
   best_for: 全プロジェクト
-  avoid_when: ''
+  avoid_when: 「選ぶ」ものではなく必ずやること。鍵をコードに書かない
   pricing_bands:
     free: ホスト込み
     usd5: ホスト込み

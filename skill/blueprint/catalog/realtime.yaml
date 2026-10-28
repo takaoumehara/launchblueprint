@@ -9,7 +9,7 @@ entries:
   name: Supabase Realtime
   what: DB変更の購読・チャンネル
   best_for: チャット・在庫表示
-  avoid_when: ''
+  avoid_when: データの置き場所が Firebase の時
   pricing_bands:
     free: Free：同時200接続、200万メッセージ
     usd5: —
@@ -29,7 +29,7 @@ entries:
   name: Firebase Realtime Database
   what: リアルタイム同期DB
   best_for: 同時編集・プレゼンス
-  avoid_when: ''
+  avoid_when: データの置き場所が Supabase の時
   pricing_bands:
     free: Spark：同時100接続、1GB
     usd5: Blaze 従量

@@ -9,7 +9,7 @@ entries:
   name: Postgres 全文検索 / pgvector
   what: DB内蔵の検索・ベクトル
   best_for: 件数が少ない〜中
-  avoid_when: ''
+  avoid_when: 検索がサービスの主役で、何十万件を一瞬で絞りたい時
   pricing_bands:
     free: DB 料金内
     usd5: DB 料金内
@@ -31,7 +31,7 @@ entries:
   name: Algolia
   what: ホスト型検索
   best_for: ECなど検索が主役
-  avoid_when: ''
+  avoid_when: 件数が少ない時（月額が無駄になる）、データの置き場所で足りる時
   pricing_bands:
     free: $0：検索1万回/月、5万レコード
     usd5: Grow：超過 $0.50/1,000検索

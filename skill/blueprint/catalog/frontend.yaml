@@ -9,7 +9,7 @@ entries:
   name: Next.js
   what: React のフルスタック・フレームワーク
   best_for: SEO と動的機能が両方要るWeb
-  avoid_when: ''
+  avoid_when: スマホアプリが必須の時、動きのない文章中心のサイト（もっと軽い道具で足りる）
   pricing_bands:
     free: OSS無料
     usd5: OSS無料
@@ -54,7 +54,7 @@ entries:
   name: Expo (React Native)
   what: iOS/Android を1つのコードで
   best_for: ネイティブアプリが必須の時
-  avoid_when: ''
+  avoid_when: ウェブだけで十分な時（作る量が増える）
   pricing_bands:
     free: $0：Android/iOS 各15ビルド/月、OTA更新 1,000MAU
     usd5: —

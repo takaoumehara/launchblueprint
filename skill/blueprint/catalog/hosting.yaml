@@ -9,7 +9,7 @@ entries:
   name: Vercel
   what: Next.js 向けホスティング＋関数
   best_for: Next.js、プレビューを多用
-  avoid_when: ''
+  avoid_when: 商用なのに無料プランのまま使う時、アプリのデータ置き場を Firebase でそろえたい時
   pricing_bands:
     free: Hobby $0：個人・非商用のみ。転送100GB、関数呼び出し100万
     usd5: —
@@ -31,7 +31,7 @@ entries:
   name: Firebase Hosting / App Hosting
   what: 静的・SSR ホスティング
   best_for: Firebase 一式で統一
-  avoid_when: ''
+  avoid_when: 変更ごとの確認用ページを手軽に出したいウェブ中心の時
   pricing_bands:
     free: Spark：10GB保存、360MB/日 転送
     usd5: Blaze 従量
@@ -52,7 +52,7 @@ entries:
   name: Cloudflare Pages / Workers
   what: エッジで静的＋関数
   best_for: 静的サイト、低コスト
-  avoid_when: ''
+  avoid_when: Next.js の機能をそのまま全部使いたい時（一部が動かないことがある）
   pricing_bands:
     free: Workers Free：10万リクエスト/日、CPU 10ms/回。静的ファイルは無料・無制限
     usd5: Workers Paid $5：1,000万リクエスト/月、転送料なし
