@@ -51,3 +51,45 @@ lessons:
     check: "Are EIN, DBA, business bank account and per-event insurance in place, with a stated revenue/risk trigger for forming an LLC?"
     see_also: [biz.llc-full-formation-cost]
     verified: false
+  - id: biz.domain-price-per-name
+    principle: "When reselling domains in-app, fetch the live wholesale price per name right before registration."
+    anti_pattern: "Showing a flat price per TLD."
+    why: "Premium names in the same TLD vary widely and may renew at the premium price."
+    check: "Is the live wholesale price re-fetched for the exact name at checkout?"
+    see_also: [biz.domain-renewal-funding]
+    verified: false
+  - id: biz.domain-resale-rights
+    principle: "Confirm in the registrar's terms that reselling registrations is allowed."
+    anti_pattern: "Assuming that having an API means you may resell."
+    why: "At-cost registrars may ban selling access to, or signing up on behalf of, third parties."
+    check: "Is there a terms clause or written permission allowing resale?"
+    see_also: [biz.domain-supplier-not-by-convenience]
+    verified: false
+  - id: biz.domain-collect-before-register
+    principle: "Collect payment from the customer before calling the registrar."
+    anti_pattern: "Buying the domain first and billing later."
+    why: "Registrations are non-refundable, so uncollected money is a direct loss."
+    check: "Is payment confirmed before the register call?"
+    see_also: [biz.domain-no-refund-consent, pay.stripe-checkout]
+    verified: false
+  - id: biz.domain-no-refund-consent
+    principle: "Get explicit consent to the no-refund-after-registration rule on the purchase screen."
+    anti_pattern: "Hiding refund terms deep in the legal pages."
+    why: "The supplier won't refund, so customer expectations mismatch."
+    check: "Is there a checkbox on the purchase screen, with the same text in the terms?"
+    see_also: [biz.domain-collect-before-register]
+    verified: false
+  - id: biz.domain-supplier-not-by-convenience
+    principle: "Choose the domain supplier on terms and API, not because it is the same platform as hosting."
+    anti_pattern: "Picking a registrar for convenience alone."
+    why: "Terms, API maturity and renewal/transfer rules can block production."
+    check: "Have resale rights, API renewal, the transfer lock period and registrant ownership all been checked?"
+    see_also: [biz.domain-resale-rights]
+    verified: false
+  - id: biz.domain-renewal-funding
+    principle: "Plan renewal money: collect renewal from the customer before the registrar charges."
+    anti_pattern: "Letting registrar auto-renew charge the platform's card."
+    why: "The platform ends up paying for customers who have left."
+    check: "Is renewal collected from the customer before the registrar charges?"
+    see_also: [biz.domain-price-per-name]
+    verified: false
