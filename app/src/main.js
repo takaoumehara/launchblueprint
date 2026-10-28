@@ -22,9 +22,14 @@ function gloss(text, used) {
   for (const g of TERMS) {
     const ascii = /^[\x00-\x7f]+$/.test(g.term);
     const re = new RegExp((ascii ? '(?<![A-Za-z])' : '') + g.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + (ascii ? '(?![A-Za-z])' : ''), 'g');
-    s = s.replace(re, () => { used?.add(g.term); slots.push(g); return `\u0000${slots.length - 1}\u0000`; });
+    s = s.replace(re, (m, off, str) => {
+      used?.add(g.term);
+      const pl = esc(g.plain), after = str.slice(off + m.length), before = str.slice(0, off);
+      // すでに言いかえが隣にある（「販売代行（Merchant of Record）」や「Merchant of Record（販売代行」）なら重ねない
+      const near = after.startsWith('（' + pl) || after.startsWith('(' + pl) || /^[（(]/.test(after) && after.slice(1, 40).includes(pl) || before.endsWith(pl + '（') || before.endsWith(pl + '(') || before.endsWith(pl);
+      slots.push({ ...g, bare: near }); return `\u0000${slots.length - 1}\u0000`; });
   }
-  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => { const g = slots[i]; return `<abbr title="${esc(g.one_line)}">${esc(g.plain)}（${esc(g.term)}）</abbr>`; });
+  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => { const g = slots[i]; if (g.bare) return `<abbr title="${esc(g.one_line)}">${esc(g.term)}</abbr>`; return `<abbr title="${esc(g.one_line)}">${esc(g.plain)}（${esc(g.term)}）</abbr>`; });
 }
 
 // ---------- おすすめと状態 ----------
