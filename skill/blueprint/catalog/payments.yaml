@@ -1,9 +1,3 @@
-# Blueprint Tech Catalog — payments
-# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
-domain: payments
-updated: '2026-10-26'
-stale_after_days: 90
-freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
 - id: pay.stripe-checkout
   name: Stripe Checkout / Payments
@@ -54,3 +48,217 @@ entries:
   - url: https://stripe.com/connect/pricing
     checked: '2026-10-26'
     verified: true
+- id: pay.ryft
+  name: Ryft
+  what: 英国発の決済（カード・Apple/Google Pay・定期課金・マーケットプレイスの分配とエスクロー）
+  best_for: 英国・EU のマーケットプレイス／プラットフォーム。出店者の KYC 自動化、分割払い（Split Payments）、手数料の取り方を細かく決めたい、個別担当がほしい場合
+  avoid_when: 米国中心の販売、日本向け、公開料金で即日始めたい小規模、Stripe 並みの周辺機能（Billing/Tax/Radar 等）を一式で使いたい場合
+  pricing_bands:
+    free: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
+    usd5: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
+    usd10: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
+    usd100: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
+  limits: 営業経由の契約（審査あり）。定期課金は日次／月次サイクル。対応国：英国＋EU 各国（公式の一覧は未確認）。米国対応は第三者ページの記載のみで未確認。通貨・入金サイクル・SDK
+    言語は未確認
+  lock_in: 中〜高：サブアカウント（出店者）と KYC 情報の移行が重い
+  liability_compliance: FCA 規制の英国事業者（未確認）。PSD2/3DS2 対応。Sub-Account の返金・チャージバックはプラットフォームが回収可能＝最終責任の分担は契約で確認。米国NYのLLCが契約できるかは未確認（問い合わせ必須）
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+  - url: https://www.ryftpay.com/pricing
+    checked: '2026-10-27'
+    verified: true
+  - url: https://developer.ryftpay.com/documentation/overview/marketplaces
+    checked: '2026-10-27'
+    verified: true
+  - url: https://developer.ryftpay.com/documentation/overview/payment_types/platform_fee_split_payments
+    checked: '2026-10-27'
+    verified: true
+  - url: https://developer.ryftpay.com/documentation/get_started/initiate_payments/subscriptions
+    checked: '2026-10-27'
+    verified: true
+  - url: https://www.gonnaorder.com/help/store-settings/payment-settings/ryft-payments/
+    checked: '2026-10-27'
+    verified: false
+    note: 対応国（米国含む）は第三者記載
+  vs_stripe: Stripe Connect の代替。強み：個別料金交渉・エスクロー・担当者。弱み：公開料金なし、周辺製品と開発者エコシステムが小さい、英国・EU
+    中心
+- id: pay.adyen
+  name: Adyen
+  what: 大企業向けの統合決済（オンライン・店頭・多国）
+  best_for: 高取扱高・多国展開・店頭も含む
+  avoid_when: 小規模（最低取扱・審査が重い）
+  pricing_bands:
+    free: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
+    usd5: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
+    usd10: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
+    usd100: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
+  limits: 営業経由
+  lock_in: 高
+  liability_compliance: 販売者が責任。PCI DSS L1
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://www.adyen.com/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.checkout-com
+  name: Checkout.com
+  what: 大企業向けの多国決済
+  best_for: 高取扱高・多通貨
+  avoid_when: 小規模（個別見積・審査）
+  pricing_bands:
+    free: 個別見積
+    usd5: 個別見積
+    usd10: 個別見積
+    usd100: 個別見積
+  limits: 営業経由
+  lock_in: 高
+  liability_compliance: 販売者が責任
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://www.checkout.com/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.paddle
+  name: Paddle
+  what: Merchant of Record（販売代行。消費税・VATの納付も代行）
+  best_for: SaaS・ソフトの世界販売で税務を丸投げしたい
+  avoid_when: 物販・マーケットプレイス。料率を下げたい場合
+  pricing_bands:
+    free: 5%+50¢／件（公開値・要確認）
+    usd5: 5%+50¢／件（公開値・要確認）
+    usd10: 5%+50¢／件（公開値・要確認）
+    usd100: 5%+50¢／件（公開値・要確認）
+  limits: MoR なので請求書・顧客との契約主体は Paddle
+  lock_in: 中〜高
+  liability_compliance: 税と紛争の主体は Paddle（MoR）
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://www.paddle.com/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.lemonsqueezy
+  name: Lemon Squeezy
+  what: MoR 型のデジタル販売（Stripe 傘下）
+  best_for: 個人・小規模のデジタル商品／SaaS
+  avoid_when: 物販・マーケットプレイス・大規模
+  pricing_bands:
+    free: 5%+50¢／件（要確認）
+    usd5: 5%+50¢／件（要確認）
+    usd10: 5%+50¢／件（要確認）
+    usd100: 5%+50¢／件（要確認）
+  limits: Stripe 傘下で今後の方針に注意
+  lock_in: 中
+  liability_compliance: 税と紛争の主体は Lemon Squeezy（MoR）
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://www.lemonsqueezy.com/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.polar
+  name: Polar
+  what: 開発者向け MoR（SaaS・デジタル商品）
+  best_for: 開発者向けプロダクト、オープンソース収益化
+  avoid_when: 物販・マーケットプレイス
+  pricing_bands:
+    free: 4%+40¢／件（要確認）
+    usd5: 4%+40¢／件（要確認）
+    usd10: 4%+40¢／件（要確認）
+    usd100: 4%+40¢／件（要確認）
+  limits: 新しめのサービス
+  lock_in: 中
+  liability_compliance: 税の主体は Polar（MoR）
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://polar.sh/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.mollie
+  name: Mollie
+  what: 欧州向けの決済（iDEAL・SEPA 等の地域手段に強い）
+  best_for: オランダ・ベルギー・ドイツ等の欧州 B2C
+  avoid_when: 米国・日本向け
+  pricing_bands:
+    free: 固定費なし、手段別の件数課金（要確認）
+    usd5: 固定費なし、手段別の件数課金（要確認）
+    usd10: 固定費なし、手段別の件数課金（要確認）
+    usd100: 固定費なし、手段別の件数課金（要確認）
+  limits: 欧州の事業者が対象
+  lock_in: 中
+  liability_compliance: 販売者が責任
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://www.mollie.com/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.square
+  name: Square
+  what: 店頭＋オンラインの決済
+  best_for: 店舗・イベント・対面販売がある
+  avoid_when: マーケットプレイスの分配・複雑な課金
+  pricing_bands:
+    free: オンライン 2.9%+30¢／件（米国・要確認）
+    usd5: オンライン 2.9%+30¢／件（米国・要確認）
+    usd10: オンライン 2.9%+30¢／件（米国・要確認）
+    usd100: オンライン 2.9%+30¢／件（米国・要確認）
+  limits: 対応国が限定
+  lock_in: 中
+  liability_compliance: 販売者が責任
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://squareup.com/us/en/payments/pricing
+    checked: '2026-10-27'
+    verified: false
+- id: pay.paypal-braintree
+  name: PayPal / Braintree
+  what: PayPal ウォレット＋カード決済（Braintree は開発者向け）
+  best_for: PayPal 利用者が多い市場・海外購入者
+  avoid_when: 手数料を最小化したい場合
+  pricing_bands:
+    free: 米国カード 2.59%+49¢〜（要確認）
+    usd5: 米国カード 2.59%+49¢〜（要確認）
+    usd10: 米国カード 2.59%+49¢〜（要確認）
+    usd100: 米国カード 2.59%+49¢〜（要確認）
+  limits: アカウント凍結リスクの評判あり
+  lock_in: 中
+  liability_compliance: 販売者が責任
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://www.paypal.com/us/business/paypal-business-fees
+    checked: '2026-10-27'
+    verified: false
+- id: pay.komoju
+  name: KOMOJU
+  what: 日本の決済手段（コンビニ・PayPay・銀行振込など）をまとめて扱う
+  best_for: 日本市場（カード以外の手段が必要）
+  avoid_when: 日本以外が主
+  pricing_bands:
+    free: 手段別（カード 3.6% 前後・要確認）
+    usd5: 手段別（カード 3.6% 前後・要確認）
+    usd10: 手段別（カード 3.6% 前後・要確認）
+    usd100: 手段別（カード 3.6% 前後・要確認）
+  limits: 日本の手段中心
+  lock_in: 中
+  liability_compliance: 販売者が責任
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://ja.komoju.com/pricing/
+    checked: '2026-10-27'
+    verified: false
+- id: pay.payjp
+  name: PAY.JP
+  what: 日本向けのシンプルなカード決済 API
+  best_for: 日本の小規模サービス・定期課金
+  avoid_when: 海外販売・マーケットプレイス分配
+  pricing_bands:
+    free: カード 3.0%〜（プランにより・要確認）
+    usd5: カード 3.0%〜（プランにより・要確認）
+    usd10: カード 3.0%〜（プランにより・要確認）
+    usd100: カード 3.0%〜（プランにより・要確認）
+  limits: 日本法人／個人事業主向け（海外法人可否は要確認）
+  lock_in: 中
+  liability_compliance: 販売者が責任
+  security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
+  source:
+    url: https://pay.jp/pricing
+    checked: '2026-10-27'
+    verified: false
