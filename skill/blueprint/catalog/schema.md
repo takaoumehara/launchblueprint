@@ -52,5 +52,6 @@
 
 ## Elements 層（2026-10-28 追加、`elements/`）
 - `elements.yaml`：`elements[]`＝id, name, principle, categories（12カテゴリー番号）, tactics_file
-- `tactics.yaml`：`tactics[]`＝element, topic, options（catalog の id）, last_checked, check_cadence（daily_new_options / deep_when_used）
-- `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by。理由のない ai_pick・rejected は書かない
+- `tactics.yaml`：`tactics[]`＝element, topic, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）
+- `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by, pick, last_checked。先頭に name, goal, profile。理由のない ai_pick・rejected は書かない
+- `elements.yaml` には name_ja / principle_ja もある。Web アプリは `app/`（`npm run build` で `/data.json` と `/llms.txt` を出す）
