@@ -6,7 +6,7 @@
 | キー | 意味 |
 |---|---|
 | `domain` | frontend / backend / database / auth / security / hosting / payments / storage_media / email_notifications / analytics / ai_llm / search / realtime / ci_cd / monitoring |
-| （追加 2026-10-26） | gtm_channels / support / cross_border / app_distribution / exit_dd / scale_readiness / dd_dashboard / business_setup（2026-10-27、`lessons[]`＝id, jurisdiction, principle, anti_pattern, why, check, see_also, verified）。工程の網羅表は `lifecycle.yaml`（stage, domain, item, status, evidence, proposed_addition, priority） |
+| （追加 2026-10-26） | data_protection（2026-10-28、lessons[]） / gtm_channels / support / cross_border / app_distribution / exit_dd / scale_readiness / dd_dashboard / business_setup（2026-10-27、`lessons[]`＝id, jurisdiction, principle, anti_pattern, why, check, see_also, verified）。工程の網羅表は `lifecycle.yaml`（stage, domain, item, status, evidence, proposed_addition, priority） |
 | `updated` | 最後に直した日 |
 | `stale_after_days` | この日数を過ぎた `source.checked` は「古い」扱い（既定90） |
 

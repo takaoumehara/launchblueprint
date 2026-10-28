@@ -1,0 +1,57 @@
+# Blueprint Catalog — data_protection（バックアップ・データ保護）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 現場の教訓。小規模ならコストはほぼゼロ。全件 verified:false
+domain: data_protection
+updated: '2026-10-28'
+stale_after_days: 90
+freshness: freshness.yaml
+note: "At small scale the cost of all of this is near zero (object storage for a small DB is cents per month)."
+lessons:
+  - id: dp.backup-3-2-1
+    principle: "3-2-1: point-in-time restore on the primary DB, a nightly copy to object storage in the same cloud, and an off-provider copy with a delete/object lock."
+    anti_pattern: "Relying only on the provider's built-in restore or a consumer drive."
+    why: "A single account or provider failure or compromise loses everything."
+    check: "Is there an off-provider, delete-locked copy?"
+    see_also: [dp.backup-bucket-lock]
+    verified: false
+  - id: dp.backup-bucket-lock
+    principle: "Lock the backup bucket with retention (about 90 days)."
+    anti_pattern: "A backup bucket anyone with write access can empty."
+    why: "Ransomware or a mistaken script can delete backups."
+    check: "Is a retention/bucket lock on?"
+    see_also: [dp.backup-3-2-1]
+    verified: false
+  - id: dp.ai-keys-no-backup-delete
+    principle: "Keys used by AI or automation get no delete permission on backup storage."
+    anti_pattern: "Giving agents or scripts an admin key that can also delete backups."
+    why: "One wrong or hijacked automated command should not be able to erase recovery."
+    check: "Does any AI-held key have delete rights on backup storage?"
+    see_also: [dp.backup-worker-isolated]
+    verified: false
+  - id: dp.backup-verify-alert
+    principle: "Verify every nightly backup and alert on failure."
+    anti_pattern: "Silent backup jobs."
+    why: "A backup that quietly stopped is discovered only when you need it."
+    check: "Does a failed or empty backup send an alert?"
+    see_also: [dp.restore-test-monthly]
+    verified: false
+  - id: dp.restore-test-monthly
+    principle: "Test a restore every month."
+    anti_pattern: "Assuming backups work because the job reports success."
+    why: "Untested backups often don't restore."
+    check: "Was a restore tested in the last 30 days?"
+    see_also: [dp.backup-verify-alert]
+    verified: false
+  - id: dp.backup-worker-isolated
+    principle: "Run backups as a separate worker/service from the main app, with its own credentials."
+    anti_pattern: "Running the backup inside the main app process with the app's credentials."
+    why: "App deploys or bugs shouldn't break backups, and permissions stay scoped."
+    check: "Is the backup job isolated with its own credentials?"
+    see_also: [dp.ai-keys-no-backup-delete]
+    verified: false
+  - id: dp.ai-assisted-attack-defenses
+    status: TODO
+    principle: "TODO — research in progress: defenses against AI-assisted attacks."
+    anti_pattern: "TODO"
+    why: "TODO"
+    check: "TODO"
+    verified: false
