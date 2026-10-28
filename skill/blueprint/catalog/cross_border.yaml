@@ -73,3 +73,61 @@ recommendation:
   why: [i18n はAIで安く後付けより安全（後付けが最も高くつく）, 日本・EU・米国各州の税登録を1人で追うのは割に合わない（MoRならゼロ）, $10の商品で Stripe+Tax Basic は約7.4%（米国内カードの場合、登録・申告は自分）、MoR は約10%。差は1件30¢前後で、税の手間と責任の移転の方が大きい]
   switch_when: 月の売上が一定を超え、手数料差が税の外注費（Tax Complete＋会計士）を上回ったら Stripe＋Stripe Tax Complete へ移る。移行の手順を exit 計画（O11）に書いておく
   check_first: [MoR の禁止商品リストに当たらないか, 日本の消費者向けに特商法の表記で MoR と自社の役割をどう書くか（要弁護士確認）, Stripe Managed Payments の料金（未確認）]
+# --- 2026-10-27 追加：域外事業者の「現地代理人」ルール（米国の小さな会社が EU/UK/アジアに出す場合）
+privacy_representatives:
+  summary_for_small_us_company: >-
+    EU/UK に拠点（支店・社員・事務所）がなくても、EU/UK の人に向けてサービスを出す
+    （現地語・現地通貨・現地向け広告・配送）か、行動を追跡（分析・広告の追跡）するなら GDPR/UK GDPR がかかり、
+    原則として EU 代理人と UK 代理人をそれぞれ書面で指定する。例外は「たまにしか扱わない・機微データを大量に扱わない・リスクが低い」の全部を満たす場合だけで、
+    継続的に会員登録やログを扱うウェブ/アプリはほぼ当たらない。費用は代行サービスで年 €420〜€2,000 程度（各地域ごと）。
+  entries:
+  - id: rep.eu_gdpr_art27
+    name: EU 代理人（GDPR 27条）
+    who_must: 'EU に拠点のない管理者・処理者で、3条2項に当たる者（EU の人への商品・サービスの提供＝無料も含む、または EU 内での行動の監視）'
+    trigger_signals: [EU の言語・通貨で表示, EU 向け広告・配送, EU 内ユーザーの追跡（分析・広告ID・位置）, EU から登録できるアプリ/ウェブで継続的に個人データを持つ]
+    exemption: '27条2項(a)：①たまにしか処理しない ②9条の機微データ・10条の犯罪データを大規模に扱わない ③個人の権利へのリスクが低い、の3つを全部満たす場合（または公的機関）。EDPB 指針3/2018は「たまに」を狭く読み、継続的・定型的な処理は当たらないとする。会員制サービスはほぼ対象'
+    rep_does: [EU 当局と本人の窓口（連絡先を通知・プライバシーポリシーに明記）, 30条の処理記録を保持し当局に提示, 本人の利用者がいる加盟国のどこかに置く, 執行手続きの宛先になる（ただし管理者自身の責任は消えない）]
+    not_same_as: 'DPO（データ保護責任者）とは別物。兼任は EDPB が不適切とする'
+    penalties: '指定しないことは83条4項の違反：最大 €1,000万 または 全世界年間売上の2%（高い方）'
+    cost_bands: {free: '— （自社で EU 拠点を持たない限り外部委託が要る）', usd5: '—', usd10: '—', usd100: '代行サービス €35〜€79/月（年契約 €420〜€852/年、小規模）'}
+    providers: [{name: Prighter, price: 'Growth €35/月(年€420)・Small €71/月(年€852)・Medium €170/月 税別', url: 'https://prighter.com/pricing/', checked: '2026-10-27', verified: true}, {name: 'その他（DataRep, VeraSafe 等）', price: '要見積もり', verified: false}]
+    source:
+    - {url: 'https://eur-lex.europa.eu/eli/reg/2016/679/oj', what: 'GDPR 3条2項・27条・83条4項', checked: '2026-10-27', verified: false}
+    - {url: 'https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-32018-territorial-scope-gdpr-article-3-version_en', what: 'EDPB 指針3/2018（域外適用と代理人）', checked: '2026-10-27', verified: false}
+  - id: rep.uk_gdpr_art27
+    name: UK 代理人（UK GDPR 27条）
+    who_must: 'UK に拠点がなく、UK の人に商品・サービスを提供するか行動を監視する管理者・処理者。Brexit 後は EU 代理人とは別に必要'
+    exemption: 'EU と同じ3条件（たまに・機微データを大規模に扱わない・低リスク）の全部。または公的機関'
+    rep_does: 'ICO と UK の本人の窓口、処理記録の保持。連絡先をプライバシーポリシーに書く'
+    penalties: 'UK GDPR の下位の上限：最大 £870万（£8.7m）または 全世界売上の2%（高い方）'
+    cost_bands: {free: '—', usd5: '—', usd10: '—', usd100: '代行 €35〜€79/月（年 €420〜€852）。EU とセット割あり'}
+    providers: [{name: Prighter, price: 'UK Rep Growth €35/月(年€420)・Small €71/月(年€852)', url: 'https://prighter.com/pricing/', checked: '2026-10-27', verified: true}]
+    source: [{url: 'https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/', what: 'ICO の代理人ガイダンス', checked: '2026-10-27', verified: false}]
+  - id: rep.uk_ico_fee
+    name: ICO データ保護料（UK）
+    what: 'UK で個人データを使う組織が ICO に払う年会費（Data Protection (Charges and Information) Regulations 2018）'
+    applies_to_non_uk: 'UK に拠点のない事業者は原則対象外とされる（ICO の自己診断で確認）。UK 法人・UK 拠点を作ったら対象'
+    fee: '段階制：Tier1 小（売上£632万以下 または 従業員10人以下）／Tier2 中／Tier3 大。金額はおよそ £52／£78／£3,000（2025年改定、要確認）。口座振替で £5 割引'
+    source: {url: 'https://ico.org.uk/for-organisations/data-protection-fee/', checked: '2026-10-27', verified: false}
+  - id: rep.ch_revfadp
+    name: スイス代理人（新データ保護法 revFADP 14条）
+    who_must: 'スイスに拠点のない管理者で、スイスの人に商品・サービスを提供するか行動を監視し、かつ処理が「大規模・定期的・高リスク」のすべてに当たる場合'
+    note: 'EU より範囲が狭い。小さなサービスは対象外のことが多いが、利用者が増えたら再判定。罰則は個人（責任者）に最大 CHF 25万'
+    cost_bands: {usd100: '代行 €35〜€79/月（Prighter Swiss Rep、税別）'}
+    source: [{url: 'https://www.fedlex.admin.ch/eli/cc/2022/491/en', what: 'revFADP 14条', checked: '2026-10-27', verified: false}, {url: 'https://prighter.com/pricing/', what: '代行価格', checked: '2026-10-27', verified: true}]
+  - id: rep.tr_kvkk
+    name: トルコ代理人（KVKK・VERBIS 登録）
+    who_must: 'トルコ外の管理者は、規模に関係なく VERBIS（管理者登録）とトルコ居住の代理人指定が求められる'
+    cost_bands: {usd100: '代行 €35〜€79/月 ＋ 初期費用 €2,000（Prighter）'}
+    source: [{url: 'https://prighter.com/pricing/', what: '代行価格', checked: '2026-10-27', verified: true}, {url: 'https://www.kvkk.gov.tr/', what: 'KVKK 公式', checked: '2026-10-27', verified: false}]
+  asia:
+  - {id: rep.kr_pipa, market: 韓国, rule: 'PIPA 31条の2：国内に住所のない事業者のうち、前年売上 1兆ウォン以上・韓国内売上 100億ウォン以上・韓国内の利用者 100万人以上（1日平均）などに当たる場合は国内代理人が必要。2025年改正で代理人は韓国内の関連法人が原則に。小規模なら当面は対象外', verified: false, url: 'https://www.pipc.go.kr/eng/'}
+  - {id: rep.jp_appi, market: 日本, rule: '個人情報保護法に代理人の義務はない。ただし域外適用（日本の人への提供）あり。外国にある第三者への提供は本人同意または体制整備＋情報提供。漏えい時は委員会への報告と本人通知', verified: false, url: 'https://www.ppc.go.jp/'}
+  - {id: rep.cn_pipl, market: 中国, rule: 'PIPL 3条2項に当たる域外事業者は、中国国内に専門機関または代表者を指定し当局に届け出る（53条）', verified: false, url: 'http://www.npc.gov.cn/'}
+  - {id: rep.th_pdpa, market: タイ, rule: 'PDPA 37条(5)：タイ域外の管理者がタイの人に提供・監視する場合、書面で代理人を指定（小規模・低リスクの例外は委員会告示による）', verified: false, url: 'https://www.pdpc.or.th/'}
+  - {id: rep.sg_au_tw, market: 'シンガポール・オーストラリア・台湾など', rule: '一般的な代理人義務は確認できず（要確認）。法令の域外適用と漏えい通知は別途確認', verified: false}
+phase_gate_checks:
+- id: gate.privacy_rep
+  phase: 要件（海外の利用者を受け入れる前）／ローンチ前
+  check: 'EU・UK（・トルコ・該当するアジア市場）の人が登録・購入できる場合、代理人を指定し、その連絡先をプライバシーポリシーに書いたか（または例外に当たる理由を記録したか）— はい／いいえ'
+  why: '拠点がなくても法律がかかり、指定漏れだけで罰金対象になるうえ、後から指定すると過去分の説明に困るため'

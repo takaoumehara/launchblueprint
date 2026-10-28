@@ -210,22 +210,46 @@ entries:
     verified: false
 - id: pay.paypal-braintree
   name: PayPal / Braintree
-  what: PayPal ウォレット＋カード決済（Braintree は開発者向け）
+  what: PayPal ウォレット＋カード決済（Braintree は開発者向け）。Venmo ボタンもここから出す
   best_for: PayPal 利用者が多い市場・海外購入者
   avoid_when: 手数料を最小化したい場合
   pricing_bands:
-    free: 米国カード 2.59%+49¢〜（要確認）
-    usd5: 米国カード 2.59%+49¢〜（要確認）
-    usd10: 米国カード 2.59%+49¢〜（要確認）
-    usd100: 米国カード 2.59%+49¢〜（要確認）
-  limits: アカウント凍結リスクの評判あり
+    free: 月額0。PayPal Checkout 3.49%+49¢、通常カード 2.99%+49¢、Advanced カード 2.89%+29¢、国際 +1.5%、紛争 $15
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左（Payments Pro は月 $30）
+  limits: アカウント凍結リスクの評判あり。返金しても受取手数料は戻らない
   lock_in: 中
-  liability_compliance: 販売者が責任
+  liability_compliance: 販売者が責任。チャージバック $20、紛争 $15
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.paypal.com/us/business/paypal-business-fees
     checked: '2026-10-27'
-    verified: false
+    verified: true
+- id: pay.venmo
+  name: Venmo（Pay with Venmo / ビジネスプロフィール）
+  what: 米国の個人間送金アプリ。ウェブ販売では PayPal/Braintree の決済画面の支払い方法の1つとして使う
+  best_for: 米国の若い層向けに、既存の決済（Stripe・PayPal）へ追加の払い方として足す
+  avoid_when: 単独の決済基盤にしたい場合・米国外の購入者がいる場合・チケット販売（在庫・QR・払い戻しの仕組みがない）
+  recommendation: 単独では使わない。追加の支払い方法として足す
+  pricing_bands:
+    free: 'ウェブ（PayPal 経由の Pay with Venmo）3.49%+49¢。アプリ内ビジネスプロフィール 1.9%+10¢（$1超）、Tap to Pay 2.29%+9¢'
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
+  limits: 米国のみ（米国の銀行口座・電話番号）。スマホ前提でパソコンからは払いにくい。送金上限は Venmo の P2P 上限に従う
+  lock_in: 低（追加手段なので外しやすい）
+  liability_compliance: '個人アカウントで売上を受け取るのは規約違反（停止のおそれ）。販売にはビジネスプロフィールか PayPal 経由の統合が必要。個人アカウントで「商品・サービス」として受けると 2.99%'
+  security: PayPal/Braintree の SDK とホスト型の決済画面を使い、Webhook 署名を検証
+  pairs_well_with:
+  - pay.paypal-braintree
+  - pay.stripe-checkout
+  source:
+    url: https://venmo.com/resources/our-fees
+    also: [https://www.paypal.com/us/business/paypal-business-fees, https://venmo.com/business/profiles]
+    checked: '2026-10-27'
+    verified: true
+    note: 'Tap to Pay は料金表 2.29%+9¢、ビジネス紹介ページは 2.9%+9¢ と食い違い。料金表を優先'
 - id: pay.komoju
   name: KOMOJU
   what: 日本の決済手段（コンビニ・PayPay・銀行振込など）をまとめて扱う
