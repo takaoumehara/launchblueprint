@@ -4,6 +4,7 @@ const root = path.resolve(import.meta.dirname, '../../skill/blueprint');
 const load = f => yaml.load(fs.readFileSync(path.join(root, f), 'utf8'));
 const elements = load('elements/elements.yaml').elements;
 const tactics = load('elements/tactics.yaml').tactics;
+const comparisons = Object.fromEntries(load('elements/stack_comparisons.yaml').comparisons.map(c => [c.topic, c]));
 const glossary = load('elements/glossary.yaml').terms;
 const lanes = load('elements/tactics.yaml').lanes;
 const template = fs.readFileSync(path.join(root, 'elements/project-map.template.yaml'), 'utf8');
@@ -27,7 +28,7 @@ const cats = {};
 for (const m of fs.readFileSync(path.join(root, 'reference/12-categories.md'), 'utf8').matchAll(/^## (\d\d) (.+)$/gm)) cats[m[1]] = m[2];
 const missing = tactics.flatMap(t => t.options.filter(o => !items[o]).map(o => `${t.topic}:${o}`));
 if (missing.length) console.warn('見つからない catalog id:', missing.join(', '));
-const data = { generated: new Date().toISOString().slice(0, 10), elements, lanes, glossary, tactics, categories: cats,
+const data = { generated: new Date().toISOString().slice(0, 10), elements, lanes, glossary, comparisons, tactics, categories: cats,
   items: Object.fromEntries(tactics.flatMap(t => t.options).filter(o => items[o]).map(o => [o, items[o]])), template };
 fs.mkdirSync(path.resolve(import.meta.dirname, '../public'), { recursive: true });
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/data.json'), JSON.stringify(data, null, 1));
@@ -35,6 +36,7 @@ const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わ�
   `- データ全体（JSON）: /data.json`, `- 地図の書式: project-map.template.yaml（下に全文）`, `- アプリで「YAMLで書き出す」を押すと、この書式のプロジェクト地図が出る`, '',
   '## 要素', ...elements.map(e => `- ${e.id} ${e.name_ja}: ${e.principle_ja}（カテゴリー ${e.categories.join(',')}）`), '',
   '## 決めること（topic）。depends_on が先に決めるもの', ...tactics.map(t => `- ${t.topic}（${t.element}, lane=${t.lane}, ${t.kind}）${t.label_ja}: options=${t.options.join(',')}${t.ai_pick ? ' pick=' + t.ai_pick : ''} depends_on=[${t.depends_on.join(',')}]`), '',
+  '## スタック比較（R-030）。技術の選択ごと', ...Object.values(comparisons).map(c => `- ${c.topic}: pick=${c.recommendation.pick} 切り替え=${c.switch_points.map(w => w.when + '→' + w.upgrade_to).join(' / ')}`), '',
   '## ことば（専門用語の言い換え）', ...glossary.map(g => `- ${g.term} → ${g.plain}：${g.one_line}`), '',
   '## project-map.template.yaml', '```yaml', template.trim(), '```', ''].join('\n');
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/llms.txt'), llms);

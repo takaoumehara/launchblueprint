@@ -129,3 +129,21 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 .lrow small{display:block;color:var(--m2);font-size:12px}
 .steps a,.steps span{white-space:nowrap}
 @media (max-width:900px){.top .brand{font-size:0;gap:0}.top .brand i{width:9px;height:9px}.steps{gap:12px}.tbtn{font-size:0;width:26px;padding:0;position:relative}.tbtn:after{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid var(--fg);background:linear-gradient(90deg,var(--fg) 50%,transparent 50%)}}
+
+.cmp{margin-top:56px;border-top:1px solid var(--fg);padding-top:14px}
+.cmp-h{font-weight:600;font-size:13px;margin:28px 0 10px}
+.cmp table{width:100%;border-collapse:collapse;font-size:12.5px}
+.cmp th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--m3);text-align:left;font-weight:400;padding:6px 12px 6px 0;border-bottom:1px solid var(--hair)}
+.cmp td{padding:10px 12px 10px 0;border-bottom:1px solid var(--hair);vertical-align:top;color:var(--m1)}
+.cmp td b{color:var(--fg);font-weight:500}
+.cmp-dl{display:grid;grid-template-columns:120px 1fr;gap:8px 16px;font-size:12.5px;margin:0}
+.cmp-dl dt{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--m3);padding-top:2px}
+.cmp-dl dd{margin:0;color:var(--m1)}
+.cmp-sw{margin:0;padding:0;list-style:none;counter-reset:s}
+.cmp-sw li{counter-increment:s;display:grid;grid-template-columns:28px 1fr;column-gap:8px;padding:10px 0;border-top:1px solid var(--hair);font-size:12.5px}
+.cmp-sw li:before{content:counter(s);grid-row:span 3;width:18px;height:18px;border-radius:50%;border:1px solid var(--acc);color:var(--acc);font-size:10px;display:grid;place-items:center;font-family:var(--mono)}
+.cmp-sw span{color:var(--acc)}.cmp-sw small{color:var(--m2);font-size:12px}
+.cmp-rej{margin:12px 0 0;padding:0;list-style:none}
+.cmp-rej li{display:grid;grid-template-columns:200px 1fr;gap:16px;padding:10px 0;border-top:1px solid var(--hair);font-size:12.5px;color:var(--m1)}
+.cmp-rej b{color:var(--fg);font-weight:500}
+@media (max-width:900px){.cmp table,.cmp thead,.cmp tbody,.cmp tr,.cmp td{display:block}.cmp thead{display:none}.cmp td{border:0;padding:2px 0}.cmp tr{border-bottom:1px solid var(--hair);padding:8px 0}.cmp-rej li{grid-template-columns:1fr;gap:2px}}

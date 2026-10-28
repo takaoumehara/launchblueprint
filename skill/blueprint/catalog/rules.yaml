@@ -12,4 +12,5 @@ rules:
   - {id: R-017, type: dont, text: "求人検索で特定業界を対象にしない", applies_to: 求人検索ボット, strength: absolute, source: "AIの推測（引用なし）", status: needs_confirmation, review_due: '2026-10-26'}
   - {id: R-020, type: do, text: "重い処理は共有マシンで同時に1つまで", applies_to: 共有マシン, strength: default, source: 運用ルール, status: active, review_due: '2026-12-15'}
   - {id: R-022, type: do, text: "除外・省略した時は結果に「R-xxxにより除外」と書く", applies_to: 全ボット, strength: absolute, source: "Blueprint §10", status: active, review_due: '2027-01-26'}
+  - {id: R-030, type: do, text: "技術の選択には必ず「スタック比較」を付ける：①同じ・似た機能のサービスと無料枠（公式ページ・確認日。未確認は verified:false）②1社でそろえる vs 無料枠を組み合わせる時の手間・不整合・故障のリスク ③安い有料プランと、払った方が運用が楽になる境目（人数・データ量・運用時間）④おすすめ・理由・選ばなかったもの", applies_to: 全プロジェクト, strength: absolute, source: "オーナー明示 2026-10-28", status: active, review_due: '2027-01-28', implication: "elements/stack_comparisons.yaml に書く。アプリの「決める」画面に出る"}
   - {id: L30, type: do, text: "ブランチと実行場所のルール（ベースブランチ・マージ先・どの作業をどのツールで回すか）をプロジェクトごとに決める", applies_to: 全プロジェクト, strength: default, source: "Blueprint v3 Part 1", status: active}
