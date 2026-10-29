@@ -198,3 +198,61 @@ auth:
       url: https://stytch.com/pricing
       checked: '2026-10-26'
       verified: true
+  - id: auth.authjs
+    name: Auth.js（旧 NextAuth.js）
+    support:
+      google: 'yes'
+      apple: 'yes'
+      email_password: 自前
+      magic_link: yes（メール送信は別）
+      phone_sms: 'no'
+      anonymous: 'no'
+      passkeys: 実験的（要確認）
+      sso_saml: 'no'
+    pricing_bands:
+      free: OSS無料
+      usd5: 同左
+      usd10: 同左
+      usd100: 同左
+    lock_in: 最低
+    best_for: Next.js で SNS ログイン中心
+    avoid_when: パスワード・二段階認証・管理画面まで要る時
+    source:
+      url: https://authjs.dev/
+      checked: null
+      verified: false
+  - id: auth.passkeys
+    name: Passkeys（SimpleWebAuthn）
+    support:
+      passkeys: yes（仕様＋ライブラリ。他の認証に足す）
+    pricing_bands:
+      free: OSS無料（MIT）
+      usd5: 同左
+      usd10: 同左
+      usd100: 同左
+    lock_in: 最低
+    best_for: 今の認証に生体認証ログインを足す
+    avoid_when: 端末をなくした時の復旧手段がない
+    source:
+      url: https://simplewebauthn.dev/
+      checked: null
+      verified: false
+  - id: auth.magic
+    name: Magic（magic.link）
+    support:
+      email_password: 'no'
+      magic_link: 'yes'
+      phone_sms: 'yes'
+      google: 'yes'
+    pricing_bands:
+      free: Developer $0：月1,000ウォレット
+      usd5: 超過 $0.045/人
+      usd10: 同左
+      usd100: $99/月で 2,500人
+    lock_in: 中
+    best_for: 暗号資産ウォレットつきのログイン
+    avoid_when: 普通のウェブのログイン（今は財布向けの料金体系）
+    source:
+      url: https://magic.link/pricing
+      checked: '2026-10-29'
+      verified: true

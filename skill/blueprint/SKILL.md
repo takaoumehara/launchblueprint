@@ -41,6 +41,7 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 | 規模への備え | `catalog/scale_readiness.yaml` | 公開プロダクト（今の段と次の引き金だけ示す） |
 | 売却準備 | `catalog/exit_dd.yaml`, `catalog/dd_dashboard.yaml` | 出口に「売る」がある、または投資を受ける |
 | UI/UX の原則 | `catalog/ui_ux.yaml`, `reference/ui-ux.md` | 画面がある（要件・設計・品質の確認で毎回） |
+| CMS・編集画面・部品集 | `catalog/cms.yaml`, `catalog/editor_ui.yaml`, `catalog/ui_libraries.yaml`, `reference/design-resources.md` | お客さんが更新する／画面を作る |
 
 規模：大きな基盤を先に作らない。段ごとの引き金に届いたら次へ。売却が目的なら、要るのは大規模インフラより「記録された数字」と「戻せる証拠」。
 DD ダッシュボード：ユーザー・お金・コホート・インフラ・安全の5グループを1日目から記録（過去の推移は後から作れない）。
@@ -77,6 +78,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - `reference/12-categories.md`：12カテゴリーの中身、フェーズ別チェック、AI特有の注意、海外展開（6軸・入り方3案）
 - `reference/gtm-ops.md`：GTM・運用・保守
 - `reference/exit-appdist.md`：売却準備とアプリ配信
+- `reference/design-resources.md`：デザインの参考サイト・素材・部品集の使い分け
 - `reference/ui-ux.md`：UI/UX の原則（理由つき）。チェックは `catalog/ui_ux.yaml`
 - `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`
 - `catalog/schema.md`：全 YAML の書式
