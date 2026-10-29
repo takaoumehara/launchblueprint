@@ -4,7 +4,7 @@
 #        switch_points（安い有料プランと、払った方が運用が楽になる境目：人数・データ量・運用時間）
 #        recommendation（おすすめ・理由・選ばなかったもの）
 domain: stack_comparisons
-updated: '2026-10-28'
+updated: '2026-10-29'
 comparisons:
 - topic: database
   services:
@@ -74,6 +74,36 @@ comparisons:
     url: https://auth0.com/pricing
     checked: '2026-10-28'
     verified: true
+  - id: auth.better-auth
+    free_tier: OSS 無料。ユーザーは自分の DB に残る
+    paid_entry: —（DB・メール代だけ）
+    url: https://www.better-auth.com/
+    checked: null
+    verified: false
+  - id: auth.authjs
+    free_tier: OSS 無料。SNS ログイン中心
+    paid_entry: —
+    url: https://authjs.dev/
+    checked: null
+    verified: false
+  - id: auth.passkeys
+    free_tier: SimpleWebAuthn（MIT）で他の認証にパスキーを足す
+    paid_entry: —
+    url: https://simplewebauthn.dev/
+    checked: null
+    verified: false
+  - id: auth.stytch
+    free_tier: 1万アクティブ・SSO/SCIM 5接続まで無料。急に高くならない従量
+    paid_entry: ブランド変更 $99・SSO追加 $125/接続
+    url: https://stytch.com/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: auth.magic
+    free_tier: 月1,000ウォレットまで無料（暗号資産ウォレット向けの料金体系）
+    paid_entry: $99/月で2,500人
+    url: https://magic.link/pricing
+    checked: '2026-10-29'
+    verified: true
   combine:
     single: データの置き場所と同じ会社のログインを使うと、ユーザーIDと権限が自動でつながる。
     combined: ログイン画面の見た目が良い Clerk ＋ DB は別、もよくある。
@@ -98,6 +128,16 @@ comparisons:
       why: データの置き場所が Firebase の時だけ一体になる。
     - option: auth.auth0
       why: 無料 2.5万人は十分だが、有料になると 1,000人で $70/月と高い。
+    - option: auth.better-auth
+      why: 無料で縛られないが、漏えい対策・パスワード再設定・更新を自分で持つ。DB が Supabase 以外の時や、ユーザー情報を手元に置きたい時の第一候補。
+    - option: auth.authjs
+      why: SNS ログインだけなら軽いが、パスワード・二段階認証・管理画面が弱い。新規なら Better Auth の方が機能が多い。
+    - option: auth.passkeys
+      why: 選ぶものではなく足すもの。Supabase / Better Auth に後からパスキーを足す時に使う。
+    - option: auth.stytch
+      why: メールリンク・不正対策に強く無料1万人。B2B で SSO が要る時の候補。
+    - option: auth.magic
+      why: 今は暗号資産ウォレット向け。普通のログインには合わない。
 - topic: email
   services:
   - id: mail.resend
@@ -586,3 +626,206 @@ comparisons:
       why: 部品ごとに契約が増え、つなぎの手間が増える。足りない機能だけ足す時に使う。
     - option: bvb.build
       why: 確かめる前に作ると、使われない物に時間を使う。保守もずっと続く。
+- topic: cms
+  services:
+  - id: cms.microcms
+    free_tier: Hobby 0円：API 5個・3人・転送 20GB/月（超えると翌月までAPI停止）・1万件
+    paid_entry: Team（有料・金額は料金ページで要確認）：転送 200GB・ファイル添付
+    url: https://microcms.io/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: cms.sanity
+    free_tier: Free：20人・1万件・API 25万回/月・公開データのみ・編集者ロールなし
+    paid_entry: Growth $15/人/月
+    url: https://www.sanity.io/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: cms.storyblok
+    free_tier: Starter：1人（+$15で2人まで）・API 10万回/月
+    paid_entry: Growth $99/月（年払い $90.75）・5人
+    url: https://www.storyblok.com/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: cms.tina
+    free_tier: Free：2人・100GB
+    paid_entry: Team $29/月（年払い $24）・3人
+    url: https://tina.io/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: cms.sheets
+    free_tier: Sheets API 無料（回数制限は要確認）／SheetDB Free：月500回
+    paid_entry: SheetDB $29.99/月で月1万回
+    url: https://sheetdb.io/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: cms.notion
+    free_tier: API 無料（Notion のプラン内）
+    paid_entry: Notion のプラン
+    url: https://developers.notion.com/
+    checked: null
+    verified: false
+  combine:
+    single: CMS 1つに文章・画像・予約公開をまとめると、お客さんが見る管理画面も1つで迷わない。
+    combined: お知らせ・価格表はシート、記事は CMS、と無料枠を分けると $0 のまま長く使える。
+    risks: 更新場所が2つになり、お客さんがどこを直すか迷う。シートは誰でも列を消せて表示が壊れる。Notion の画像URLは時間で切れる。権限・下書き・履歴がバラバラ。
+  switch_points:
+  - when: 更新する人が4人以上（microCMS 無料は3人）
+    upgrade_to: microCMS Team
+    why: 人数の上限。アカウントの使い回しは事故のもと。
+  - when: 月の転送が 16GB（無料 20GB の8割）を超えた
+    upgrade_to: microCMS Team（200GB）
+    why: 無料は超えると翌月まで表示が止まる。
+  - when: 間違えて消した時に戻したい・権限を分けたい
+    upgrade_to: microCMS Business／Sanity Growth $15/人
+    why: 無料には過去の版への復元と細かい権限がない。
+  recommendation:
+    pick: cms.microcms
+    reason: 管理画面が日本語で、入力欄を絞れるのでお客さんが崩せない。無料3人から始め、4人目か転送8割で有料へ。
+    rejected:
+    - option: cms.sanity
+      why: 自由度は最高だが管理画面をコードで作る手間。英語の管理画面。海外向けや複雑なデータの時は第一候補。
+    - option: cms.storyblok
+      why: 見たまま編集は良いが無料は実質1人、有料は $99/月と高い。スマホ編集に向かない。
+    - option: cms.tina
+      why: Git 管理の文章サイト向け。お客さんに Git の概念が漏れやすい。
+    - option: cms.sheets
+      why: 少量の表（お知らせ・価格表）だけなら最安。権限・画像・下書きが弱い。
+    - option: cms.notion
+      why: 社内がすでに Notion の時だけ。回数制限と画像URLの期限があり、表示は別に保存が要る。
+- topic: editor_ui
+  services:
+  - id: edit.vaul
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://github.com/emilkowalski/vaul
+    checked: null
+    verified: false
+  - id: edit.dnd-kit
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://dndkit.com/
+    checked: null
+    verified: false
+  - id: edit.puck
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://puckeditor.com/
+    checked: null
+    verified: false
+  - id: edit.tiptap
+    free_tier: エディタ本体 MIT・無料
+    paid_entry: Start $59/月（年払い $49）：共同編集・履歴・コメント
+    url: https://tiptap.dev/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: edit.blocknote
+    free_tier: MPL-2.0・無料（一部拡張は有料の可能性・要確認）
+    paid_entry: —
+    url: https://www.blocknotejs.org/
+    checked: null
+    verified: false
+  combine:
+    single: Puck 1つに乗れば、部品の登録・並べ替え・設定欄が最初からそろう。
+    combined: vaul（下からの入力パネル）＋ dnd-kit（並べ替え）＋ Tiptap（文字）を自分で組むと、スマホの操作感を細かく作れる。どれも無料。
+    risks: ライブラリ同士のタッチ操作がぶつかる（並べ替え中にパネルが閉じる、スクロールと誤認）。更新のたびに3つの互換を確かめる。Puck はパソコン前提の画面なので、スマホでは結局作り直しが要る。
+  switch_points:
+  - when: 2人以上で同じページを同時に編集したい
+    upgrade_to: Tiptap Start $49/月（年払い）
+    why: 共同編集と履歴を自前で作ると数週間かかる。
+  - when: 並べ替えの誤操作の問い合わせが続く
+    upgrade_to: （お金ではなく）上下ボタンに置き換え
+    why: スマホではドラッグより確実。
+  recommendation:
+    pick: edit.vaul
+    reason: スマホ編集の核は「タップ→下から入力パネル」。vaul を土台に、並べ替えは dnd-kit（＋上下ボタン）、文字は Tiptap を足す。全部無料。
+    rejected:
+    - option: edit.puck
+      why: 早いが画面がパソコン前提。パソコン用の管理画面を作る時は第一候補。
+    - option: edit.blocknote
+      why: Notion 風がすぐ出るが見た目の自由度が低い。長文を書かせる時の候補。
+    - option: edit.dnd-kit
+      why: 選ぶものではなく足すもの。
+    - option: edit.tiptap
+      why: 選ぶものではなく足すもの（文字の編集）。
+- topic: ui_library
+  services:
+  - id: ui.shadcn
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://ui.shadcn.com/
+    checked: null
+    verified: false
+  - id: ui.base-ui
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://base-ui.com/
+    checked: null
+    verified: false
+  - id: ui.react-aria
+    free_tier: Apache-2.0・無料
+    paid_entry: —
+    url: https://react-spectrum.adobe.com/react-aria/
+    checked: null
+    verified: false
+  - id: ui.untitled
+    free_tier: React FREE（商用可・1人）
+    paid_entry: React PRO SOLO $349・Figma PRO SOLO $129（買い切り。似た部品集の再販禁止）
+    url: https://www.untitledui.com/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: ui.magicui
+    free_tier: 無料版 MIT
+    paid_entry: Pro $49（買い切り・商用可・再販不可）
+    url: https://pro.magicui.design/
+    checked: '2026-10-29'
+    verified: true
+  - id: ui.aceternity
+    free_tier: 無料部品あり
+    paid_entry: 1年 $169／チーム10人 $1,590
+    url: https://ui.aceternity.com/pricing
+    checked: '2026-10-29'
+    verified: true
+  - id: ui.heroui
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://www.heroui.com/
+    checked: null
+    verified: false
+  - id: ui.daisyui
+    free_tier: MIT・無料
+    paid_entry: —
+    url: https://daisyui.com/
+    checked: null
+    verified: false
+  combine:
+    single: shadcn/ui（土台は Base UI）1つなら見た目のルールが1つで、AI も一番書き慣れている。
+    combined: 土台 shadcn＋Base UI／React Aria、LP の大きな演出だけ Aceternity・SmoothUI・React Bits、細かい動きは Magic UI・transitions.dev を見本に、足りない部品は 21st.dev から。
+    risks: ライブラリごとに角丸・影・動きの速さが違い、画面がちぐはぐになる。動きのライブラリが重くなる。21st.dev は作者ごとに品質とライセンスが違う。動きを減らす設定（reduced-motion）を守らない部品がある。
+  switch_points:
+  - when: LP を1週間以内に何本も出す
+    upgrade_to: Magic UI Pro $49（買い切り）
+    why: 安く、商用可。自作より早い。
+  - when: デザイナーと Figma で同じ部品を使う・2人以上
+    upgrade_to: Untitled UI（Figma $129〜／React $349〜、人数で上がる）
+    why: Figma とコードが一致し、引き継ぎが楽。
+  - when: LP の大きな演出を量産する
+    upgrade_to: Aceternity 1年 $169
+    why: 演出の作り込みは時間がかかる。ただしアプリ画面には使わない。
+  recommendation:
+    pick: ui.shadcn
+    reason: アプリ画面は shadcn/ui＋Base UI（読み上げ厳密なら React Aria）を土台に、スマホ編集は vaul・dnd-kit。動きは Magic UI・transitions.dev を見本にし、reduced-motion を必ず守る。Aceternity・SmoothUI・React Bits・21st.dev は LP のファーストビューだけ。
+    rejected:
+    - option: ui.base-ui
+      why: 選ぶものではなく shadcn の下に敷くもの。
+    - option: ui.react-aria
+      why: アクセシビリティ最重視の時は Base UI の代わりに。
+    - option: ui.untitled
+      why: Figma 連携は最強だが有料で人数課金。デザイナーがいる時の候補。
+    - option: ui.heroui
+      why: 見た目が既に決まっていて独自ブランドを出しにくい。
+    - option: ui.daisyui
+      why: React 以外でも使えるが細かい動きが弱い。
+    - option: ui.aceternity
+      why: LP 演出専用。アプリ画面に入れると重く、うるさい。
+    - option: ui.magicui
+      why: 小さな動きの見本・足し。土台ではない。

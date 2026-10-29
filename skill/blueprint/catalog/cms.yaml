@@ -1,0 +1,98 @@
+# Blueprint Tech Catalog — cms
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: cms
+updated: '2026-10-29'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: cms.microcms
+  name: microCMS
+  what: 日本語の管理画面で、決めた入力欄だけを埋めてもらうCMS
+  best_for: 日本語のお客さんに更新してもらう、崩れない入力欄
+  avoid_when: 見たまま編集したい時
+  pricing_bands:
+    free: Hobby 0円：API 5個・3人・転送 20GB/月（超えると翌月までAPI停止）・1万件
+    usd5: Team（有料。料金ページで金額要確認）：転送 200GB・ファイル添付・CSV 書き出し。Business は権限・復元つき
+    usd10: Team（有料。料金ページで金額要確認）：転送 200GB・ファイル添付・CSV 書き出し。Business は権限・復元つき
+    usd100: Team（有料。料金ページで金額要確認）：転送 200GB・ファイル添付・CSV 書き出し。Business は権限・復元つき
+  lock_in: 中
+  source:
+    url: https://microcms.io/pricing
+    checked: '2026-10-29'
+    verified: true
+- id: cms.sanity
+  name: Sanity
+  what: 管理画面を自由に作れる開発者向けCMS
+  best_for: データ構造が複雑、見たまま編集も欲しい
+  avoid_when: 設定をコードで書ける人がいない時
+  pricing_bands:
+    free: Free $0：20人・ロール2つ・1万件・公開データのみ・API 25万回/月
+    usd5: Growth $15/人/月：非公開データ・編集者ロール・予約公開
+    usd10: Growth $15/人/月：非公開データ・編集者ロール・予約公開
+    usd100: Growth $15/人/月：非公開データ・編集者ロール・予約公開
+  lock_in: 中
+  source:
+    url: https://www.sanity.io/pricing
+    checked: '2026-10-29'
+    verified: true
+- id: cms.storyblok
+  name: Storyblok
+  what: 画面を見ながら文字や写真を差し替えるCMS
+  best_for: パソコンで見たまま編集したい会社サイト
+  avoid_when: スマホでの編集、無料で2人超
+  pricing_bands:
+    free: Starter 無料：1人（最大2人、+$15/人）・API 10万回/月・100GB
+    usd5: Growth $99/月（年払い $90.75）：5人・100万回
+    usd10: Growth $99/月（年払い $90.75）：5人・100万回
+    usd100: Growth $99/月（年払い $90.75）：5人・100万回
+  lock_in: 中
+  source:
+    url: https://www.storyblok.com/pricing
+    checked: '2026-10-29'
+    verified: true
+- id: cms.tina
+  name: TinaCMS
+  what: Git のファイルを見たまま編集するCMS
+  best_for: 文章中心のサイトをGitで管理
+  avoid_when: DBの動的データ
+  pricing_bands:
+    free: Free：2人・100GB
+    usd5: Team $29/月（年払い $24）：3人〜
+    usd10: Team $29/月（年払い $24）：3人〜
+    usd100: Team $29/月（年払い $24）：3人〜
+  lock_in: 低
+  source:
+    url: https://tina.io/pricing
+    checked: '2026-10-29'
+    verified: true
+- id: cms.sheets
+  name: Google スプレッドシート（Sheets API / SheetDB）
+  what: お客さんが慣れたシートを、そのままお知らせ・FAQ・価格表に使う
+  best_for: 少量・表の形の情報
+  avoid_when: 画像が多い、権限や下書きが要る
+  pricing_bands:
+    free: Sheets API は無料（回数制限あり・要確認）／SheetDB Free：2シート・月500回
+    usd5: SheetDB $29.99/月（年払い $25.49）：月1万回
+    usd10: SheetDB $29.99/月（年払い $25.49）：月1万回
+    usd100: SheetDB $29.99/月（年払い $25.49）：月1万回
+  lock_in: 低
+  source:
+    url: https://sheetdb.io/pricing
+    checked: '2026-10-29'
+    verified: true
+- id: cms.notion
+  name: Notion API
+  what: Notion のデータベースを記事の元データにする
+  best_for: 社内がすでに Notion を使っている
+  avoid_when: 表示を速くしたい（画像URLが期限切れになる・回数制限あり）
+  pricing_bands:
+    free: API 無料（Notion の各プラン内）
+    usd5: Notion のプランに準ずる
+    usd10: Notion のプランに準ずる
+    usd100: Notion のプランに準ずる
+  lock_in: 中
+  source:
+    url: https://developers.notion.com/
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認

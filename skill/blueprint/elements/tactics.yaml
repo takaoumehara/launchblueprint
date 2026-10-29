@@ -158,7 +158,7 @@ tactics:
   label_ja: ログイン
   question_ja: ユーザーにどうログインしてもらう？
   kind: choose
-  options: [auth.supabase, auth.firebase, auth.clerk, auth.auth0]
+  options: [auth.supabase, auth.firebase, auth.clerk, auth.auth0, auth.better-auth, auth.authjs, auth.stytch, auth.passkeys, auth.magic]
   ai_pick: auth.supabase
   ai_reason_ja: データの置き場所と同じ所でそろい、無料枠が大きい。
   pick_when:
@@ -406,6 +406,77 @@ tactics:
   options: [scale.t0, scale.t1]
   depends_on: [monitoring, data_protection]
   last_checked: '2026-10-28'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: cms
+  lane: tech
+  label_ja: お客さんが更新する仕組み
+  question_ja: エンジニアでない人に、文章や写真をどこで直してもらう？
+  kind: choose
+  options:
+  - cms.microcms
+  - cms.sanity
+  - cms.storyblok
+  - cms.tina
+  - cms.sheets
+  - cms.notion
+  ai_pick: cms.microcms
+  ai_reason_ja: 日本語の管理画面で、入力欄を絞れるので崩れない。無料3人から。
+  pick_when:
+  - if:
+      country: global
+    pick: cms.sanity
+    reason_ja: 海外の編集者や複雑なデータに強い。
+  depends_on:
+  - frontend
+  last_checked: '2026-10-29'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: editor_ui
+  lane: ui
+  label_ja: スマホで編集する画面の部品
+  question_ja: スマホで部品を選んで直す画面を何で作る？
+  kind: choose
+  options:
+  - edit.vaul
+  - edit.dnd-kit
+  - edit.puck
+  - edit.tiptap
+  - edit.blocknote
+  ai_pick: edit.vaul
+  ai_reason_ja: タップ→下から入力パネルがスマホ編集の核。並べ替えと文字は足す。
+  depends_on:
+  - ui_library
+  last_checked: '2026-10-29'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: ui_library
+  lane: ui
+  label_ja: 画面の部品集
+  question_ja: ボタンや入力欄などの部品を何でそろえる？
+  kind: choose
+  options:
+  - ui.shadcn
+  - ui.base-ui
+  - ui.react-aria
+  - ui.heroui
+  - ui.untitled
+  - ui.coss
+  - ui.daisyui
+  - ui.tremor
+  - ui.magicui
+  - ui.aceternity
+  - ui.smoothui
+  - ui.transitions
+  - ui.reactbits
+  - ui.21st
+  - ui.kibo
+  ai_pick: ui.shadcn
+  ai_reason_ja: AI が一番書き慣れ、コードが自分の物になる。演出系は LP だけ。
+  depends_on:
+  - frontend
+  - brand_basics
+  last_checked: '2026-10-29'
   check_cadence: daily_new_options
 lanes:
 - {id: brand, label: BRAND, ja: ブランド・発信}

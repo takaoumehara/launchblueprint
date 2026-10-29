@@ -1,0 +1,91 @@
+# Blueprint Tech Catalog — editor_ui
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
+domain: editor_ui
+updated: '2026-10-29'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: edit.vaul
+  name: vaul
+  what: 下からせり上がる入力パネル（ボトムシート）
+  best_for: スマホでパーツをタップ→編集
+  avoid_when: パソコン中心
+  pricing_bands:
+    free: MIT・無料
+    usd5: —
+    usd10: —
+    usd100: —
+  lock_in: 低
+  license: MIT
+  source:
+    url: https://github.com/emilkowalski/vaul
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: edit.dnd-kit
+  name: dnd-kit
+  what: タッチ対応のドラッグで並べ替え
+  best_for: ブロックの上下入れ替え
+  avoid_when: 上下ボタンで足りる時（その方が誤操作が少ない）
+  pricing_bands:
+    free: MIT・無料
+    usd5: —
+    usd10: —
+    usd100: —
+  lock_in: 低
+  license: MIT
+  source:
+    url: https://dndkit.com/
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: edit.puck
+  name: Puck
+  what: 自作の部品を並べられる見たまま編集の土台
+  best_for: ページビルダーを早く作る
+  avoid_when: 画面の動きを全部自分で決めたい
+  pricing_bands:
+    free: MIT・無料（本体）
+    usd5: —
+    usd10: —
+    usd100: —
+  lock_in: 中
+  license: MIT
+  source:
+    url: https://puckeditor.com/
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
+- id: edit.tiptap
+  name: Tiptap
+  what: 文字の編集エディタ（太字・リンク・メニュー）
+  best_for: 本文の装飾
+  avoid_when: 共同編集や履歴まで要る時は有料
+  pricing_bands:
+    free: エディタ本体 MIT・無料
+    usd5: Start $59/月（年払い $49）：共同編集・履歴・コメント
+    usd10: Start $59/月（年払い $49）：共同編集・履歴・コメント
+    usd100: Start $59/月（年払い $49）：共同編集・履歴・コメント
+  lock_in: 中
+  license: MIT
+  source:
+    url: https://tiptap.dev/pricing
+    checked: '2026-10-29'
+    verified: true
+- id: edit.blocknote
+  name: BlockNote
+  what: Notion のようなブロック型エディタ（Tiptap ベース）
+  best_for: すぐ使えるブロック編集
+  avoid_when: 細かく見た目を決めたい
+  pricing_bands:
+    free: 本体 MPL-2.0・無料（一部拡張は有料ライセンスの可能性・要確認）
+    usd5: —
+    usd10: —
+    usd100: —
+  lock_in: 中
+  license: MPL-2.0（要確認）
+  source:
+    url: https://www.blocknotejs.org/
+    checked: null
+    verified: false
+    note: 未確認：使う前に公式ページで確認
