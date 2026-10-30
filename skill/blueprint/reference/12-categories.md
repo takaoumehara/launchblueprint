@@ -35,6 +35,7 @@
 ## 01 構想・市場検証
 - 既存：Day1 D1 意図／D2 ペルソナ仮説／D3 Not-to-build、§2.1 調査・課題・解決レンズ
 - 追加：gtm-ops G1 競合と代替手段、G2 需要とPMF、リスクの高い仮説と KPI（`hypotheses.yaml`）
+- **最初のゲート（i18n）**：Intake で提供言語を決めたら、多言語の可能性が少しでもあれば初日から文言をキーにし、直書きを lint/CI で禁止（`catalog/ui_ux.yaml` の `gate.i18n_keys`、比較は `elements/stack_comparisons.yaml` の i18n）。
 - **AI注意**：仕様は入力・出力・前提条件まで書く。AIは仕様の隙間を推測で埋めるからです。合格条件は、全機能の input / output / preconditions が空欄なしで書かれていること。
 
 ## 02 ブランディング・クリエイティブ（縦の軸）
