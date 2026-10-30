@@ -19,6 +19,7 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 ### 1. 入口（2〜5問、AI から聞く）
 深さを決める：試作 / 社内ツール / 公開プロダクト / 課金・規制あり。
 聞くこと：誰の何を解決するか、提供する国と言語、お金の取り方、締め切り、月の予算帯（free/$5/$10/$100）、将来の出口（続ける・売る・閉じる）。
+提供言語が2つ以上になりうるなら、最初の画面を作る前に `gate.i18n_keys`（文言はキー経由・直書きは lint/CI で禁止）を通す。
 深さに合わないカテゴリーは「対象外（理由）」と明記して飛ばす。空欄にしない。
 
 ### 2. 裏で調べる（話しながら並行）
@@ -35,7 +36,7 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 ### 4. 横断モジュール（該当するときだけ）
 | モジュール | 開くファイル | いつ |
 |---|---|---|
-| 海外展開 | `catalog/cross_border.yaml`, `reference/12-categories.md`（海外展開） | 2か国以上 or 多言語 |
+| 海外展開・多言語 | `catalog/cross_border.yaml`, `catalog/i18n.yaml`, `reference/12-categories.md`（海外展開） | 2か国以上 or 多言語 |
 | GTM・運用 | `reference/gtm-ops.md`, `catalog/gtm_channels.yaml`, `catalog/support.yaml` | 公開プロダクト |
 | アプリ配信 | `catalog/app_distribution.yaml`, `reference/exit-appdist.md` | ストアに出す |
 | 規模への備え | `catalog/scale_readiness.yaml` | 公開プロダクト（今の段と次の引き金だけ示す） |

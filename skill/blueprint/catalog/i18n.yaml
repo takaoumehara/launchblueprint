@@ -1,0 +1,17 @@
+# Blueprint Tech Catalog — i18n（多言語化ライブラリ・lint・翻訳管理）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ ライセンスは npm レジストリ、価格は公式ページで 2026-10-30 確認。verified:false は使う前に要確認
+domain: i18n
+updated: '2026-10-30'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- {id: i18n.next-intl, name: next-intl, what: Next.js 専用の多言語化（App Router・サーバー部品・ICU・型付きキー）, best_for: Next.js, avoid_when: Next.js 以外, license: MIT, pricing_bands: {free: MIT・無料}, lock_in: 中（Next.js 前提）, source: {url: 'https://www.npmjs.com/package/next-intl', checked: '2026-10-30', verified: true, note: 'v4.14.9 MIT'}}
+- {id: i18n.i18next, name: i18next / react-i18next, what: 最も普及した多言語化（React・React Native・Node・Vue）, best_for: Expo・Vite・複数の枠組み, avoid_when: ICU を標準で使いたい（プラグインが要る）, license: MIT, pricing_bands: {free: MIT・無料, usd100: 公式の翻訳管理 Locize は有料（未確認）}, lock_in: 低, source: {url: 'https://www.npmjs.com/package/i18next', checked: '2026-10-30', verified: true, note: 'i18next 26.5.12 / react-i18next 17.1.9 MIT'}}
+- {id: i18n.formatjs, name: FormatJS / react-intl, what: ICU MessageFormat の本家系。Intl に忠実, best_for: ICU を厳密に使う大規模アプリ, avoid_when: 小さく始めたい（書き方が冗長）, license: BSD-3-Clause, pricing_bands: {free: 無料}, lock_in: 低, source: {url: 'https://www.npmjs.com/package/react-intl', checked: '2026-10-30', verified: true, note: 'v12.1.6 BSD-3-Clause'}}
+- {id: i18n.lingui, name: Lingui, what: 文中マクロで書き、抽出・コンパイルする ICU 対応ライブラリ。小さい, best_for: 抽出ワークフロー重視, avoid_when: キーを手で設計したい, license: MIT, pricing_bands: {free: MIT・無料}, lock_in: 中, source: {url: 'https://www.npmjs.com/package/@lingui/core', checked: '2026-10-30', verified: true, note: 'v6.11.0 MIT'}}
+- {id: i18n.paraglide, name: Paraglide JS（inlang）, what: メッセージを関数にコンパイル。型安全・使う文言だけ配信され軽い, best_for: 表示速度重視・Vite/SvelteKit/Astro, avoid_when: 実績や情報量を重視（比較的新しい）, license: MIT, pricing_bands: {free: MIT・無料}, lock_in: 中, source: {url: 'https://www.npmjs.com/package/@inlang/paraglide-js', checked: '2026-10-30', verified: true, note: 'v2.29.3 MIT'}}
+- {id: i18n.lint-i18next, name: eslint-plugin-i18next（no-literal-string）, what: JSX の直書き文字列を lint で禁止, best_for: どのライブラリでも使える汎用の禁止ルール, license: ISC, pricing_bands: {free: 無料}, lock_in: 低, source: {url: 'https://www.npmjs.com/package/eslint-plugin-i18next', checked: '2026-10-30', verified: true, note: 'v6.1.5 ISC'}}
+- {id: i18n.lint-formatjs, name: eslint-plugin-formatjs, what: FormatJS 用。ICU 構文・説明の必須化・直書き禁止など, best_for: FormatJS を使う時, license: MIT, pricing_bands: {free: 無料}, lock_in: 低, source: {url: 'https://www.npmjs.com/package/eslint-plugin-formatjs', checked: '2026-10-30', verified: true, note: 'v8.1.2 MIT'}}
+- {id: i18n.tms-tolgee, name: Tolgee, what: 翻訳管理（オープンソース・自前運用可・画面内編集）, best_for: 小さく始める・人数無制限, pricing_bands: {free: 'Cloud 無料 3人・30,000語', usd100: 'Translate €58/月（年払い・人数無制限）／Optimise €133／Manage €373'}, lock_in: 低, source: {url: 'https://tolgee.io/pricing', checked: '2026-10-30', verified: true}}
+- {id: i18n.tms-crowdin, name: Crowdin, what: 翻訳管理（翻訳者の人数無制限・700以上の連携・OSS 無料）, best_for: 外部翻訳者やコミュニティ翻訳, pricing_bands: {free: '無料あり（OSS 向け無料。個人向けプランの上限は未確認）', usd100: 未確認（料金表がページ上で読めず）}, lock_in: 低, source: {url: 'https://crowdin.com/pricing', checked: '2026-10-30', verified: false, note: 'プラン金額は未確認'}}
+- {id: i18n.tms-lokalise, name: Lokalise, what: 翻訳管理（大きなチーム・複数製品向け）, best_for: 翻訳チームを持つ組織, pricing_bands: {usd100: 'Explorer $149/月（年払い・月払い $169）／Growth $379／Advanced $1,049'}, lock_in: 中, source: {url: 'https://lokalise.com/pricing', checked: '2026-10-30', verified: true, note: '無料プランの有無は未確認'}}

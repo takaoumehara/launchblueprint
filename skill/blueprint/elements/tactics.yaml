@@ -478,6 +478,22 @@ tactics:
   - brand_basics
   last_checked: '2026-10-29'
   check_cadence: daily_new_options
+- element: el.product
+  topic: i18n
+  lane: tech
+  label_ja: 多言語化のしくみ
+  question_ja: 画面の文言をどうやって言語ごとに出し分ける？
+  kind: choose
+  options: [i18n.next-intl, i18n.i18next, i18n.formatjs, i18n.lingui, i18n.paraglide]
+  ai_pick: i18n.next-intl
+  ai_reason_ja: Next.js で一番自然に書け、複数形や日付も標準で扱える。初日から文言をキーにし、直書きは lint で禁止。
+  pick_when:
+  - if: {platform: app}
+    pick: i18n.i18next
+    reason_ja: スマホアプリ（Expo）と Web で同じ仕組みを使える。
+  depends_on: [frontend]
+  last_checked: '2026-10-30'
+  check_cadence: daily_new_options
 lanes:
 - {id: brand, label: BRAND, ja: ブランド・発信}
 - {id: ux, label: UX, ja: 体験・届け方}

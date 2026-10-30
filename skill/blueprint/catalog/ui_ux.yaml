@@ -325,3 +325,81 @@ rules:
     see_also: "catalog/payments.yaml"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+  - id: i18n-message-keys-day-one
+    category: i18n
+    principle: "Products that may go multilingual must put all UI text behind message keys from day one and ban hardcoded strings via lint/CI."
+    anti_pattern: "Writing English UI strings directly in components and planning to 'translate later'."
+    why: "Retrofitting hardcoded strings into translation files later is a large, error-prone sweep across every screen."
+    check: "Does lint/CI fail on a hardcoded UI string, and is every visible string read from a message key?"
+    see_also: "elements/stack_comparisons.yaml#i18n"
+    source: 'product iteration 2026-10'
+    date: '2026-10-30'
+  - id: i18n-icu-plurals
+    category: i18n
+    principle: "Write plurals, gender and selects as ICU MessageFormat inside the message, not as if/else in code."
+    anti_pattern: "count === 1 ? 'item' : 'items' in components."
+    why: "Many languages have more than two plural forms (e.g. Russian, Arabic), and code-level branches cannot express them."
+    check: "Is every count-dependent string an ICU plural message?"
+    date: '2026-10-30'
+  - id: i18n-intl-formatting
+    category: i18n
+    principle: "Format dates, times, numbers, currency and relative times with Intl APIs (or the i18n library's wrappers) using the active locale."
+    anti_pattern: "Hand-built date strings, fixed '$' symbols, toFixed(2) for money."
+    why: "Order, separators, currency position and calendars differ per locale; hand formatting is wrong somewhere."
+    check: "Is any date, number or price formatted without Intl or the library formatter?"
+    date: '2026-10-30'
+  - id: i18n-no-concatenation
+    category: i18n
+    principle: "Never build sentences by concatenating translated fragments; use one message with named placeholders."
+    anti_pattern: "t('hello') + ' ' + name + t('welcome_back')."
+    why: "Word order differs by language (Japanese puts the verb last), so fragments cannot be reordered by translators."
+    check: "Is any visible sentence assembled from more than one key or string piece?"
+    date: '2026-10-30'
+  - id: i18n-text-expansion
+    category: i18n
+    principle: "Design layouts to tolerate ~30-40% longer text (more for short labels) and wrapping; no fixed-width buttons or labels."
+    anti_pattern: "Pixel-fitted buttons and tabs sized to the English word."
+    why: "German/French text is often 30%+ longer and short labels can double, which breaks or truncates layouts."
+    check: "Does every screen still work with pseudo-localized text that is 40% longer?"
+    see_also: "no-ellipsis-truncation"
+    date: '2026-10-30'
+  - id: i18n-cjk-fonts-line-breaking
+    category: i18n
+    principle: "For CJK locales, set a per-locale font stack (subset or system fonts) and line-breaking rules (word-break / line-break: strict, or keep-all for Korean); check by eye."
+    anti_pattern: "One Latin web font for all locales and default breaking."
+    why: "Missing glyphs fall back inconsistently (Han unification shows wrong regional glyphs) and lines break before punctuation or mid-word."
+    check: "Has each CJK locale been checked by eye for font, glyphs and line breaks (lang attribute set)?"
+    date: '2026-10-30'
+  - id: i18n-locale-fallback
+    category: i18n
+    principle: "Define a locale fallback chain (e.g. zh-Hant-TW → zh-Hant → default) and a default locale; missing keys fall back, never show raw keys."
+    anti_pattern: "Showing 'checkout.title' to users when a translation is missing."
+    why: "New keys always ship before all translations; without fallback, users see broken text."
+    check: "Does a missing translation show the fallback language rather than the key?"
+    date: '2026-10-30'
+  - id: i18n-key-naming
+    category: i18n
+    principle: "Name keys by screen/feature and meaning (checkout.payButton), not by the English text; give translators context/descriptions."
+    anti_pattern: "Keys equal to the English sentence, or reusing one key for two meanings."
+    why: "Text-as-key breaks when copy changes, and shared keys force one translation where languages need two."
+    check: "Are keys namespaced by feature, unique in meaning, and described for translators?"
+    date: '2026-10-30'
+  - id: i18n-ci-completeness
+    category: i18n
+    principle: "CI checks every locale file has every key, no unused keys, and valid ICU syntax; release-blocking for shipped locales."
+    anti_pattern: "Finding missing translations from user reports."
+    why: "Keys are added daily; only an automatic check keeps locales in sync."
+    check: "Does CI fail when a shipped locale is missing a key or has broken ICU syntax?"
+    date: '2026-10-30'
+  - id: i18n-pseudo-localization
+    category: i18n
+    principle: "Run a pseudo-locale (accented, ~40% longer, bracketed text) in dev/QA before real translations exist."
+    anti_pattern: "Waiting for real translations to find hardcoded strings and clipped layouts."
+    why: "Pseudo-localization exposes hardcoded strings, concatenation and overflow on day one at zero cost."
+    check: "Can the app be switched to a pseudo-locale, and has every screen been viewed in it?"
+    date: '2026-10-30'
+phase_gate_checks:
+  - id: gate.i18n_keys
+    phase: 最初のゲート（01 構想・Intake で「提供言語」を決めた直後／最初の画面を作る前）
+    check: "多言語にする可能性が少しでもあるなら、i18n ライブラリを入れ、画面の文言を全部キー経由にし、ハードコード文字列を lint/CI で禁止したか（可能性ゼロなら理由を記録）— はい／いいえ"
+    why: "後から英語の直書きを翻訳ファイルへ移すのは、全画面にわたる大きくミスの出やすい作業になるため"

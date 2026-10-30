@@ -829,3 +829,38 @@ comparisons:
       why: LP 演出専用。アプリ画面に入れると重く、うるさい。
     - option: ui.magicui
       why: 小さな動きの見本・足し。土台ではない。
+- topic: i18n
+  services:
+  - {id: i18n.next-intl, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/next-intl', checked: '2026-10-30', verified: true}
+  - {id: i18n.i18next, free_tier: MIT・無料（react-i18next も MIT）, paid_entry: 公式 TMS の Locize は有料（金額未確認）, url: 'https://www.npmjs.com/package/i18next', checked: '2026-10-30', verified: true}
+  - {id: i18n.formatjs, free_tier: BSD-3-Clause・無料, paid_entry: —, url: 'https://www.npmjs.com/package/react-intl', checked: '2026-10-30', verified: true}
+  - {id: i18n.lingui, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/@lingui/core', checked: '2026-10-30', verified: true}
+  - {id: i18n.paraglide, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/@inlang/paraglide-js', checked: '2026-10-30', verified: true}
+  - {id: i18n.lint-i18next, name: eslint-plugin-i18next, free_tier: ISC・無料, paid_entry: —, url: 'https://www.npmjs.com/package/eslint-plugin-i18next', checked: '2026-10-30', verified: true}
+  - {id: i18n.lint-formatjs, name: eslint-plugin-formatjs, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/eslint-plugin-formatjs', checked: '2026-10-30', verified: true}
+  - {id: i18n.tms-tolgee, name: Tolgee, free_tier: Cloud 無料 3人・30,000語（自前運用も可）, paid_entry: Translate €58/月（年払い・人数無制限）, url: 'https://tolgee.io/pricing', checked: '2026-10-30', verified: true}
+  - {id: i18n.tms-crowdin, name: Crowdin, free_tier: OSS 向け無料・翻訳者人数無制限（個人向け無料枠の上限は未確認）, paid_entry: 未確認, url: 'https://crowdin.com/pricing', checked: '2026-10-30', verified: false}
+  - {id: i18n.tms-lokalise, name: Lokalise, free_tier: 未確認, paid_entry: Explorer $149/月（年払い。月払い $169）, url: 'https://lokalise.com/pricing', checked: '2026-10-30', verified: true}
+  combine:
+    single: 1つのライブラリ＋その lint だけ。翻訳はリポジトリの JSON を AI と人で直し、CI で抜けを検査。費用ゼロで、AI がファイルを直接直せる。
+    combined: ライブラリ＋lint＋翻訳管理（TMS）の無料枠。翻訳者が画面で直し、GitHub 連携で JSON に戻る。
+    risks: TMS とリポジトリの二重管理で、どちらが正か分からなくなる（同期の衝突・消えた翻訳）。無料枠の語数は「語×言語数」で数えるのですぐ超える。ライブラリを混ぜる（例：Web は next-intl、アプリは i18next）とキーの形式と ICU の扱いがずれる。
+  switch_points:
+  - when: 開発者以外の翻訳者・校正者が1人でも入る、または3言語以上
+    upgrade_to: Tolgee 無料（3人・3万語）→ Translate €58/月
+    why: JSON を直接触らせると壊れる。画面で文脈つきに直せ、人数無制限で安い。
+  - when: 総語数（語×言語）が3万を超える、または翻訳の手作業が週2時間を超える
+    upgrade_to: Tolgee Translate €58/月（または Crowdin の有料プラン・金額未確認）
+    why: 機械翻訳・用語集・作業割当で運用時間が減る。
+  - when: 翻訳チームと複数製品・SSO が必要
+    upgrade_to: Lokalise Explorer $149/月〜
+    why: ワークフローと権限管理。小規模には高い。
+  recommendation:
+    pick: i18n.next-intl
+    reason: Next.js なら next-intl＋eslint-plugin-i18next（no-literal-string）＋CI のキー抜け検査を初日に入れる。ICU の複数形・Intl の日付通貨が標準で、型でキーの打ち間違いも防げる。Expo などアプリもあるなら i18next/react-i18next に統一（Web とアプリで1つ）。翻訳は最初リポジトリの JSON で十分、翻訳者が入ったら Tolgee。
+    rejected:
+    - {option: i18n.formatjs, why: ICU に最も忠実だが書き方が冗長。大規模・厳密な時の候補。}
+    - {option: i18n.lingui, why: 抽出型で軽いが、キーを設計する運用と AI 編集にやや合わない。}
+    - {option: i18n.paraglide, why: 軽さと型安全は最良だが比較的新しく情報が少ない。表示速度最優先なら候補。}
+    - {option: i18n.tms-lokalise, why: 小規模には高い（$149/月〜）。}
+    - {option: i18n.tms-crowdin, why: コミュニティ翻訳・OSS なら有力。料金は未確認。}
