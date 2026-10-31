@@ -398,6 +398,26 @@ rules:
     why: "Pseudo-localization exposes hardcoded strings, concatenation and overflow on day one at zero cost."
     check: "Can the app be switched to a pseudo-locale, and has every screen been viewed in it?"
     date: '2026-10-30'
+  - id: server-auth-redirect
+    principle: "Redirect signed-out visitors away from protected pages on the server (an HTTP 302 before any HTML is sent), and keep the client check only as a fallback that shows nothing protected."
+    anti_pattern: "Serving the protected page, then checking the session in client script and redirecting."
+    why: "The protected layout flashed for a moment before the redirect, which looked broken and briefly exposed private UI."
+    check: "With no session, does a protected URL return a 302 to sign-in (with a safe same-origin return path) before any page content loads?"
+    see_also: "single-status-location"
+    date: '2026-10-31'
+  - id: one-toast-region
+    principle: "Send every global status message (saved, sent, failed) through one shared toast in one fixed place; keep only field-level errors next to their field."
+    anti_pattern: "Each screen writing its own status text into its own inline spot."
+    why: "Messages appeared in many different places, so people missed them and screen readers announced them inconsistently."
+    check:
+      - "Is there exactly one toast component for global status messages?"
+      - "Do success and info messages use a polite live region?"
+      - "Do errors use an assertive live region?"
+      - "Can every error toast be dismissed with a labelled button?"
+      - "Is there no toast motion under prefers-reduced-motion?"
+      - "Errors are never pushed out by the cap; they merge with a count."
+    see_also: "single-status-location, toast-never-covers-controls"
+    date: '2026-10-31'
 phase_gate_checks:
   - id: gate.i18n_keys
     phase: 最初のゲート（01 構想・Intake で「提供言語」を決めた直後／最初の画面を作る前）
