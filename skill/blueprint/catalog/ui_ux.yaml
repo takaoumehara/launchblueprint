@@ -409,7 +409,12 @@ rules:
     principle: "Send every global status message (saved, sent, failed) through one shared toast in one fixed place; keep only field-level errors next to their field."
     anti_pattern: "Each screen writing its own status text into its own inline spot."
     why: "Messages appeared in many different places, so people missed them and screen readers announced them inconsistently."
-    check: "Is there exactly one toast component, with a polite live region for success/info, an assertive one for errors, dismissible errors, and no motion under reduced motion?"
+    check:
+      - "Is there exactly one toast component for global status messages?"
+      - "Do success and info messages use a polite live region?"
+      - "Do errors use an assertive live region?"
+      - "Can every error toast be dismissed with a labelled button?"
+      - "Is there no toast motion under prefers-reduced-motion?"
     see_also: "single-status-location, toast-never-covers-controls"
     date: '2026-10-31'
 phase_gate_checks:
