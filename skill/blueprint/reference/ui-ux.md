@@ -73,6 +73,7 @@ Generic rules learned while iterating on a mobile-first page editor (Oct 2026). 
   - *Check:* Do errors use an assertive live region?
   - *Check:* Can every error toast be dismissed with a labelled button?
   - *Check:* Is there no toast motion under prefers-reduced-motion?
+  - *Check:* Errors are never pushed out by the cap; they merge with a count.
 
 ## Internationalization (i18n)
 

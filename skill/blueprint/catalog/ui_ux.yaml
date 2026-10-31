@@ -415,6 +415,7 @@ rules:
       - "Do errors use an assertive live region?"
       - "Can every error toast be dismissed with a labelled button?"
       - "Is there no toast motion under prefers-reduced-motion?"
+      - "Errors are never pushed out by the cap; they merge with a count."
     see_also: "single-status-location, toast-never-covers-controls"
     date: '2026-10-31'
 phase_gate_checks:
