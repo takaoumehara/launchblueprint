@@ -425,10 +425,10 @@ rules:
   - id: preview-state-switcher
     category: design_system
     phase: [design, qa]
-    principle: "Preview builds have a state switcher panel (device, theme, signed-in/out, role, empty/loading/error states); it is excluded from production builds."
+    principle: "Preview builds have a state switcher panel (device, theme, signed-in/out, role, empty/loading/error states); switching sign-in or role only changes the displayed UI using mock data or test accounts and can never change server-side permissions; the panel is compiled out of production builds."
     anti_pattern: "Reviewing only the happy path on one device, or shipping the debug panel to users."
     why: "Reviews only see the happy path, so breakage in other states reaches production."
-    check: "Can reviewers switch every listed state in preview, and is the panel absent from the production bundle?"
+    check: "Can reviewers switch every listed state in preview using mock data or test accounts only (no server-side permission change), and is the panel removed from the production bundle at build time (tree-shaken/compiled out, not merely hidden by a runtime flag)?"
     date: '2026-11-02'
   - id: annotation-to-fix
     category: design_system
@@ -441,10 +441,10 @@ rules:
   - id: generative-ui-within-schema
     category: design_system
     phase: [design, qa]
-    principle: "In-app AI-generated UI may use only components, tokens and config allowed by a schema derived from the component map, and output is validated before display."
+    principle: "In-app AI-generated UI may use only components, tokens and config allowed by a schema derived from the component map, and output (components, props, text and URLs) is validated before display."
     anti_pattern: "Letting a model emit free HTML/CSS or arbitrary props shown directly to users."
     why: "Free generation produces off-design or broken output."
-    check: "Is generated UI validated against a schema of allowed components/tokens, with a safe fallback when validation fails?"
+    check: "Is generated UI validated against a schema of allowed components/tokens, with max text lengths enforced, javascript: and data: links rejected, raw HTML never rendered, and a safe fallback when validation fails?"
     date: '2026-11-02'
 phase_gate_checks:
   - id: gate.i18n_keys
@@ -469,5 +469,5 @@ phase_gate_checks:
     why: "うまくいく場合だけを見たレビューでは、他の状態の崩れを見逃すため"
   - id: gate.state_switcher_release
     phase: リリースのゲート（本番公開前）
-    check: "状態切り替えパネルが本番ビルドに含まれていないことを確認したか — はい／いいえ"
+    check: "状態切り替えパネルがビルド時に本番から取り除かれている（tree-shake／コンパイルで除外。実行時フラグで隠すだけは不可）ことを確認したか — はい／いいえ"
     why: "デバッグ用の切り替えが本番に出ると、利用者が権限や状態を操作できてしまうため"
