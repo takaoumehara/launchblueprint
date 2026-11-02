@@ -9,16 +9,26 @@ A small MCP server that lets any AI session read Blueprint's catalog and referen
 
 ## ツール / Tools
 
+AI が使う順（典型）/ typical agent flow: `list_topics` → `draft_project_map(profile)` → 次に決めることごとに `get_comparison` か `get_item` → オーナーが決めたら `draft_project_map(..., decided)` → `propose_learning`。
+サーバーの `instructions` にも同じ手順が入っているので、対応するクライアントなら自動で読まれます。
+
 | Tool | 内容 / What it does |
 |---|---|
-| `list_domains` | カタログの分野と参考資料の一覧 / list catalog domains and references |
-| `get_catalog(domain)` | 分野の YAML をそのまま返す / raw YAML for a domain |
-| `search(query, limit?)` | カタログ・参考資料・SKILL.md を全文検索 / full-text search |
+| `list_domains` | 読めるもの全部：カタログの分野（題名・件数つき）、elements、参考資料、テンプレート / everything readable, with titles and counts |
+| `get_catalog(domain, format?)` | 分野の YAML をそのまま（`yaml`）、または1つの形にそろえた一覧（`items`）/ raw YAML or a flat normalized list |
+| `get_item(id)` | カタログの1件（例 `db.supabase`, `rules.R-004`, `lc.discover.01`）/ one entry by id, normalized + raw |
+| `list_topics(stage?)` | 決めること（tactics）の一覧：段・列・選択肢・おすすめ・先に決めること / decisions with stage, lane, options, ai_pick, depends_on |
+| `get_comparison(topic)` | スタック比較（R-030）：似たサービスと無料枠、1社 vs 組み合わせ、有料に切り替える境目、おすすめと却下理由 / stack comparison |
+| `get_template(name)` | `project.axes.yaml` / `brand-context.md` / `project-map.template.yaml` |
+| `draft_project_map(profile, name?, goal?, decided?)` | 4つの答えから地図を作る。おすすめ・次に決めること・止まっているもの・段ごとの進み具合・YAML を返す。決定はしない / build the project map; never decides on its own |
+| `search(query, limit?)` | カタログ・elements・参考資料・テンプレート・SKILL.md を全文検索 / full-text search |
 | `get_reference(name)` | 参考資料（Markdown）/ a reference doc |
-| `get_skill` | SKILL.md |
-| `stale_items(days)` | 確認日が古い・未確認の項目 / items older than `days`, unchecked or unverified |
+| `get_skill` | SKILL.md（AI が従う手順）/ the procedure |
+| `stale_items(days)` | 確認日が古い・未確認の項目（スタック比較の services も含む）/ items older than `days`, unchecked or unverified |
 | `ui_ux_checklist(phase?)` | はい・いいえで答える UI/UX 確認表（requirements / design / qa）/ yes-no checklist |
-| `propose_learning(text, category)` | 学びを提案箱に追加 / append a proposal to the inbox |
+| `propose_learning(text, category)` | 学びを提案箱に追加（固有名詞・個人名なし）/ append a proposal to the inbox |
+
+テスト / Tests（`npm test`）: `smoke`（全ツール）、`coverage`（カタログの全ファイルが読める・全選択肢の id が引ける・tech の選択に比較がある）、`dryrun`（見本プロジェクトを最初から最後まで通す。`BP_DRYRUN_OUT=path` で記録を書き出す）。
 
 ## 準備 / Setup
 

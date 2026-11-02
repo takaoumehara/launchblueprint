@@ -84,3 +84,5 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`
 - `catalog/schema.md`：全 YAML の書式
 - `templates/project.axes.yaml`, `templates/brand-context.md`
+- `reference/dry-run-sample.md`：見本プロジェクトを MCP だけで構想→終了まで通した記録と穴。`reference/walkthrough-non-engineer.md`：アプリの歩き方
+- MCP（`mcp/`）：`list_topics` → `draft_project_map(profile)` → `get_comparison` / `get_item` → オーナーの OK 後に `draft_project_map(decided)`。使い方は `QUICKSTART.md`

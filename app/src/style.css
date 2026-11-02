@@ -48,7 +48,7 @@ h2{font-size:13px;font-weight:600;margin:0 0 10px}
 .dot.ai{background:var(--fg);border-color:var(--fg)}
 .dot.done{background:var(--acc);border-color:var(--acc)}
 /* map */
-.canvas{position:relative;height:calc(100vh - 48px);min-height:860px;overflow:hidden}
+.canvas{position:relative;height:calc(100vh - 198px);min-height:700px;overflow:hidden}
 .corner{position:absolute;z-index:3}
 .tl{left:28px;top:24px}.tr{right:28px;top:24px;text-align:right}.bl{left:28px;bottom:24px}.br{right:28px;bottom:14px;text-align:right}
 .tr button{background:none;border:0;padding:0;cursor:pointer;color:var(--m1);font:inherit;letter-spacing:inherit;text-transform:inherit}
@@ -147,3 +147,37 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 .cmp-rej li{display:grid;grid-template-columns:200px 1fr;gap:16px;padding:10px 0;border-top:1px solid var(--hair);font-size:12.5px;color:var(--m1)}
 .cmp-rej b{color:var(--fg);font-weight:500}
 @media (max-width:900px){.cmp table,.cmp thead,.cmp tbody,.cmp tr,.cmp td{display:block}.cmp thead{display:none}.cmp td{border:0;padding:2px 0}.cmp tr{border-bottom:1px solid var(--hair);padding:8px 0}.cmp-rej li{grid-template-columns:1fr;gap:2px}}
+
+/* stage rail — 段の帯：細い巨大数字と四角 */
+.stages{position:relative;display:grid;grid-template-columns:repeat(6,1fr);height:150px;border-bottom:1px solid var(--hair);background:var(--bg)}
+.stg{display:grid;grid-template-rows:auto auto 1fr auto auto;gap:2px;align-content:start;text-align:left;background:none;border:0;border-left:1px solid var(--hair);padding:14px 20px 12px;cursor:pointer;color:var(--m1);position:relative}
+.stg:first-child{border-left:0}
+.stg:hover,.stg.on{color:var(--fg)}
+.stg.on{box-shadow:inset 0 -1px 0 var(--acc)}
+.stg .ja{font-size:11.5px;color:var(--m2)}
+.stg .num2{display:flex;align-items:baseline;gap:6px;font-weight:100;font-size:64px;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:var(--m2)}
+.stg .num2 b{font-weight:100}
+.stg.full .num2 b,.stg.on .num2 b{color:var(--acc)}
+.stg .num2 small{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--m3)}
+.stg .what{font-size:11px;color:var(--m3);white-space:nowrap;overflow:hidden;text-overflow:clip}
+.sqs{display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.sq{display:inline-block;width:7px;height:7px;border:1px solid var(--m2);flex:none}
+.sq.ai{background:var(--fg);border-color:var(--fg)}
+.sq.done{background:var(--acc);border-color:var(--acc)}
+.canvas.filtered .node:not(.instage){opacity:.22}
+.canvas.filtered .node.instage .dot{box-shadow:0 0 0 3px var(--acc-soft)}
+/* catalog */
+.cat{border-top:1px solid var(--fg)}
+.crow{display:grid;grid-template-columns:28px 260px 1fr 180px;gap:16px;align-items:start;padding:14px 0;border-bottom:1px solid var(--hair);text-decoration:none}
+.crow:hover b{color:var(--acc)}
+.crow b{font-weight:500;display:block}.crow small{display:block;color:var(--m2);font-size:12px}
+.crow .sqs{padding-top:5px}
+.opt.static{cursor:default}.opt.static:hover .nm2{color:inherit}
+@media (max-width:900px){
+ .stages{grid-template-columns:repeat(3,1fr);height:auto}.stages.desk{display:none}
+ .stg{padding:12px 14px}.stg:nth-child(4){border-left:0}.stg:nth-child(n+4){border-top:1px solid var(--hair)}
+ .stg .num2{font-size:44px}.stg .what{display:none}
+ .crow{grid-template-columns:28px 1fr;gap:4px 12px}.crow .sqs{grid-column:2}.crow .mono{grid-column:2}
+}
+.canvas.tight .node small{display:none}
+.canvas.tight .node:hover small,.canvas.tight .node:focus small{display:block}

@@ -52,9 +52,10 @@
 
 ## Elements 層（2026-10-28 追加、`elements/`）
 - `elements.yaml`：`elements[]`＝id, name, principle, categories（12カテゴリー番号）, tactics_file
-- `tactics.yaml`：`lanes[]`（地図の列 BRAND/UX/UI/TECH/BIZ・LEGAL/RULES）と `tactics[]`＝element, topic, lane, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）
+- `tactics.yaml`：`lanes[]`（地図の列 BRAND/UX/UI/TECH/BIZ・LEGAL/RULES）、`stages[]`（ライフサイクルの段 idea / build / launch / operate / scale / exit＝id, label, ja, what_ja。2026-11-02 追加）と `tactics[]`＝element, topic, **stage**（どの段の決定か。地図の進み具合はこれで数える）, lane, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）。`lane: tech` の choose は必ず `stack_comparisons.yaml` に同じ topic を持つ（MCP の coverage テストで検査）
 - `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by, pick, last_checked。先頭に name, goal, profile。理由のない ai_pick・rejected は書かない
 - `elements.yaml` には name_ja / principle_ja もある。Web アプリは `app/`（`npm run build` で `/data.json` と `/llms.txt` を出す）
 - `glossary.yaml`：`terms[]`＝term, plain, one_line。アプリは専門用語を「plain（term）」に置き換え、説明を横に出す
-- MCP：`get_catalog` は elements/ のファイルも読める。`format: items` で lesson 形式も含めた一覧を返す。`search` は `items` も返す
+- MCP（`mcp/`）：`list_domains`（全ファイルと件数）/ `get_catalog(domain, format)`（elements/ も読める。`items` は lesson・rule・tier・group も1つの形に正規化）/ `get_item(id)`（catalog の id 1件）/ `list_topics(stage?)`（決めること一覧）/ `get_comparison(topic)`（スタック比較）/ `get_template(name)` / `draft_project_map(profile, decided?)`（始める画面の答えから地図を作り、次に決めることと段ごとの進み具合を返す。決定はしない）/ `search` / `stale_items(days)` / `ui_ux_checklist(phase?)` / `propose_learning`。正規化した item の形：id, domain, kind, name, summary, best_for, avoid, why, check, cost, verified, checked, url（＋tactics は stage, lane, options, depends_on）
+- 評価の記録：`reference/dry-run-sample.md`（見本プロジェクトを MCP だけで最初から最後まで通した記録と見つかった穴）、`reference/walkthrough-non-engineer.md`（アプリを使う人向けの手順）
 - `stack_comparisons.yaml`（R-030）：`comparisons[]`＝topic, services[{id, name?, free_tier, paid_entry, url, checked, verified}], combine{single, combined, risks}, switch_points[{when, upgrade_to, why}], recommendation{pick, reason, rejected[{option, why}]}。技術の topic は全部これを持つ（まず payments / database / auth / email / hosting）

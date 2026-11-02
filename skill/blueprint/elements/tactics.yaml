@@ -3,12 +3,14 @@
 # kind：choose（1つ選ぶ）／ checklist（全部確かめる）
 # ai_pick / ai_reason_ja：既定のおすすめ。pick_when は「始める」画面の答えで上書き
 # lane：地図の列（BRAND / UX / UI / TECH / BIZ・LEGAL / RULES）
+# stage：ライフサイクルの段（idea / build / launch / operate / scale / exit）。地図の上の進み具合はこれで数える
 domain: tactics
-updated: '2026-10-28'
+updated: '2026-11-02'
 check_cadence_values: {daily_new_options: 毎日：新しい選択肢が出たかだけ見る（料金・規約は見ない）, deep_when_used: プロジェクトで selected の時だけ、料金・規約を公式で深く確認}
 tactics:
 - element: el.product
   topic: database
+  stage: build
   lane: tech
   label_ja: データの置き場所
   question_ja: ユーザーの情報や投稿をどこに保存する？
@@ -25,6 +27,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: analytics
+  stage: launch
   lane: ux
   label_ja: 使われ方の計測
   question_ja: 何人が来て、どこで止まったかをどう見る？
@@ -37,6 +40,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.experience
   topic: ui_patterns
+  stage: build
   lane: ui
   label_ja: 画面づくりの約束
   question_ja: 迷わない画面にするための確認
@@ -47,6 +51,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.business
   topic: business_setup
+  stage: idea
   lane: biz
   label_ja: 事業の立ち上げ
   question_ja: 住所・ブランド名・決済アカウントの準備
@@ -57,6 +62,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.business
   topic: payments
+  stage: build
   lane: biz
   label_ja: お金の受け取り
   question_ja: お客さんからどう支払ってもらう？
@@ -76,6 +82,7 @@ tactics:
   check_cadence: deep_when_used
 - element: el.marketing
   topic: launch_channels
+  stage: launch
   lane: brand
   label_ja: 発表する場所
   question_ja: 最初のユーザーにどこで知ってもらう？
@@ -88,6 +95,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.brand
   topic: cross_border
+  stage: launch
   lane: biz
   label_ja: 海外向けの準備
   question_ja: 言葉・法律・支払いを国に合わせる確認
@@ -98,6 +106,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: hosting
+  stage: build
   lane: tech
   label_ja: 公開する場所
   question_ja: 作ったものをどこに置いて公開する？
@@ -114,6 +123,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: monitoring
+  stage: operate
   lane: tech
   label_ja: 不具合の見張り
   question_ja: エラーが起きたらどう気づく？
@@ -130,6 +140,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: email
+  stage: build
   lane: ux
   label_ja: お知らせメール
   question_ja: 登録確認やお知らせをどう送る？
@@ -142,6 +153,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: support
+  stage: operate
   lane: ux
   label_ja: 問い合わせ窓口
   question_ja: 困った人がどこに連絡する？
@@ -154,6 +166,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.security
   topic: auth
+  stage: build
   lane: tech
   label_ja: ログイン
   question_ja: ユーザーにどうログインしてもらう？
@@ -170,6 +183,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.security
   topic: protection
+  stage: launch
   lane: tech
   label_ja: 攻撃からの守り
   question_ja: ロボットや不正アクセスをどう防ぐ？
@@ -182,6 +196,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.security
   topic: data_protection
+  stage: operate
   lane: rules
   label_ja: バックアップ
   question_ja: データが消えても戻せる？
@@ -192,6 +207,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.brand
   topic: brand_basics
+  stage: idea
   lane: brand
   label_ja: ブランドの土台
   question_ja: 名前・声・色・伝える順番を決めたか
@@ -202,6 +218,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.marketing
   topic: growth_channels
+  stage: scale
   lane: brand
   label_ja: 続けて増やす方法
   question_ja: 発表のあと、どう人を増やし続ける？
@@ -218,6 +235,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.experience
   topic: app_distribution
+  stage: launch
   lane: ux
   label_ja: 届け方
   question_ja: スマホでどう使ってもらう？
@@ -234,6 +252,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.experience
   topic: ui_copy
+  stage: build
   lane: ui
   label_ja: 画面の言葉
   question_ja: 誰でも分かる言葉になっているか
@@ -244,6 +263,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: frontend
+  stage: build
   lane: tech
   label_ja: 画面の作り方
   question_ja: 画面を何で作る？
@@ -260,6 +280,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: storage
+  stage: build
   lane: tech
   label_ja: 画像・動画の置き場所
   question_ja: 写真や動画をどこに置く？
@@ -272,6 +293,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: search
+  stage: build
   lane: tech
   label_ja: 検索
   question_ja: 中身を探せるようにする？
@@ -284,6 +306,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: realtime
+  stage: build
   lane: tech
   label_ja: すぐに反映
   question_ja: 他の人の変更がすぐ見える必要は？
@@ -300,6 +323,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: ai
+  stage: build
   lane: tech
   label_ja: AIの組み込み
   question_ja: アプリの中でAIを使う？
@@ -316,6 +340,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: ci
+  stage: build
   lane: tech
   label_ja: 自動チェック
   question_ja: 直すたびに自動で確かめる？
@@ -328,6 +353,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.business
   topic: build_vs_buy
+  stage: idea
   lane: tech
   label_ja: 作るか借りるか
   question_ja: 自分で作る？サービスを使う？
@@ -340,6 +366,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.business
   topic: market_entry
+  stage: idea
   lane: biz
   label_ja: どの国から始めるか
   question_ja: 最初にどこで売る？
@@ -359,6 +386,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.business
   topic: exit_dd
+  stage: exit
   lane: biz
   label_ja: 売却・終了の備え
   question_ja: 会社を売る・やめる時に困らないか
@@ -369,6 +397,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.security
   topic: ai_defense
+  stage: launch
   lane: rules
   label_ja: AIを使った攻撃への守り
   question_ja: ロボットや乗っ取りへの基本の守り
@@ -379,6 +408,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: preview_rules
+  stage: build
   lane: rules
   label_ja: 確認用ページの約束
   question_ja: 確認用ページで本番データを壊さないか
@@ -389,6 +419,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.business
   topic: store_rules
+  stage: launch
   lane: rules
   label_ja: アプリストアの決まり
   question_ja: ストアのお金のルールを守れているか
@@ -399,6 +430,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.maintenance
   topic: scale_plan
+  stage: scale
   lane: rules
   label_ja: 増えた時の備え
   question_ja: 利用者が増えても止まらないか
@@ -409,6 +441,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: cms
+  stage: build
   lane: tech
   label_ja: お客さんが更新する仕組み
   question_ja: エンジニアでない人に、文章や写真をどこで直してもらう？
@@ -433,6 +466,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.experience
   topic: editor_ui
+  stage: build
   lane: ui
   label_ja: スマホで編集する画面の部品
   question_ja: スマホで部品を選んで直す画面を何で作る？
@@ -451,6 +485,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.experience
   topic: ui_library
+  stage: build
   lane: ui
   label_ja: 画面の部品集
   question_ja: ボタンや入力欄などの部品を何でそろえる？
@@ -480,6 +515,7 @@ tactics:
   check_cadence: daily_new_options
 - element: el.product
   topic: i18n
+  stage: build
   lane: tech
   label_ja: 多言語化のしくみ
   question_ja: 画面の文言をどうやって言語ごとに出し分ける？
@@ -494,6 +530,78 @@ tactics:
   depends_on: [frontend]
   last_checked: '2026-10-30'
   check_cadence: daily_new_options
+- element: el.product
+  topic: idea_validation
+  stage: idea
+  lane: ux
+  label_ja: 困りごとの確かめ
+  question_ja: 作る前に、本当に困っている人がいると確かめたか
+  kind: checklist
+  options: [lc.discover.01, lc.discover.02, lc.discover.04, lc.strategy.06, lc.strategy.08]
+  depends_on: []
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: rules_ledger
+  stage: idea
+  lane: rules
+  label_ja: 最初に守る約束
+  question_ja: どのプロジェクトでも守る決まりを確認したか
+  kind: checklist
+  options: [rules.R-004, rules.R-012, rules.R-016, rules.R-022, rules.R-030]
+  depends_on: []
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: backend
+  stage: build
+  lane: tech
+  label_ja: 裏側の処理の置き場所
+  question_ja: 画面の裏で動く処理（保存・計算・外部連携）をどこで動かす？
+  kind: choose
+  options: [be.route-handlers, be.cloud-run]
+  ai_pick: be.route-handlers
+  ai_reason_ja: 画面と同じ場所に置けて、追加の契約も公開作業もいらない。長い処理が要る所だけ後で分ける。
+  pick_when:
+  - if: {platform: app}
+    pick: be.cloud-run
+    reason_ja: スマホアプリには画面側のサーバーがないので、独立した置き場所が要る。
+  depends_on: [frontend, hosting]
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: dd_metrics
+  stage: operate
+  lane: biz
+  label_ja: 1日目から残す数字
+  question_ja: あとから作れない数字（人数・お金・継続）を記録しているか
+  kind: checklist
+  options: [dd.users, dd.money, dd.cohort, dd.infra, dd.safety]
+  depends_on: [analytics, monitoring]
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: sunset_plan
+  stage: exit
+  lane: biz
+  label_ja: きれいに終わる・引き渡す
+  question_ja: やめる時・売る時に、利用者とデータを困らせないか
+  kind: checklist
+  options: [dd.sunset, dd.code, dd.infra, dd.metrics, dd.billing_sources]
+  depends_on: [exit_dd, dd_metrics]
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: legal_basics
+  stage: launch
+  lane: rules
+  label_ja: 規約・返金・税の決まり
+  question_ja: 利用規約・プライバシー・返金の決まり・税の扱いを公開前に用意したか
+  kind: checklist
+  options: [lc.legal.30, lc.legal.31, lc.legal.32, lc.legal.33, lc.pricing.35]
+  depends_on: [payments, market_entry]
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
 lanes:
 - {id: brand, label: BRAND, ja: ブランド・発信}
 - {id: ux, label: UX, ja: 体験・届け方}
@@ -501,3 +609,10 @@ lanes:
 - {id: tech, label: TECH, ja: しくみ}
 - {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律}
 - {id: rules, label: RULES, ja: 守ること}
+stages:
+- {id: idea, label: IDEA, ja: 構想, what_ja: 誰の困りごとを、どういう決まりで解くか}
+- {id: build, label: BUILD, ja: 作る, what_ja: しくみと画面を決めて作る}
+- {id: launch, label: LAUNCH, ja: 出す, what_ja: 守りを固めて、人に知らせる}
+- {id: operate, label: OPERATE, ja: 回す, what_ja: 見張る・直す・答える・数字を残す}
+- {id: scale, label: SCALE, ja: 増やす, what_ja: 増えても止まらず、増やし続ける}
+- {id: exit, label: EXIT, ja: 終える, what_ja: 売る・引き渡す・きれいに閉じる}
