@@ -181,3 +181,9 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 }
 .canvas.tight .node small{display:none}
 .canvas.tight .node:hover small,.canvas.tight .node:focus small{display:block}
+/* huge thin numerals (start questions, decide header) */
+.q .qn{font-weight:100;font-size:56px;line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:var(--m3)}
+.q .qn.on{color:var(--acc)}
+.bignum{font-weight:100;font-size:120px;line-height:.85;letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--m3);margin:8px 0 -6px}
+.bignum.done{color:var(--acc)}
+@media (max-width:900px){.q .qn{font-size:40px}.bignum{font-size:80px}}

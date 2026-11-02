@@ -117,15 +117,16 @@ function viewStart() {
     <div class="mono m2">01 — START ・ 始める</div>
     <h1>何を作りますか？</h1>
     <p class="lead">名前と、ひとことで目的を。4つ答えると、決めることが全部ひと目で並び、AIのおすすめが付きます。専門用語はいりません。</p>
-    <div class="q"><div class="k"><div class="mono m3">${n(1)}</div><label class="t" for="nm">名前</label><div class="h">仮でかまいません。</div></div><div><input type="text" id="nm" value="${esc(P.name)}" placeholder="例：週末ダンスのチケット"></div></div>
-    <div class="q"><div class="k"><div class="mono m3">${n(2)}</div><label class="t" for="gl">ひとことで目的</label><div class="h">誰の、どんな困りごとを、どう楽にするか。</div></div><div><input type="text" id="gl" value="${esc(P.goal)}" placeholder="例：主催者が手数料を気にせずチケットを売れるようにする"></div></div>
-    ${Q.map(([k, q, h, opts], i) => `<div class="q"><div class="k"><div class="mono m3">${n(i + 3)}</div><div class="t">${q}</div><div class="h">${h}</div></div>
+    <div class="q"><div class="k"><div class="qn">${n(1)}</div><label class="t" for="nm">名前</label><div class="h">仮でかまいません。</div></div><div><input type="text" id="nm" value="${esc(P.name)}" placeholder="例：週末ダンスのチケット"></div></div>
+    <div class="q"><div class="k"><div class="qn">${n(2)}</div><label class="t" for="gl">ひとことで目的</label><div class="h">誰の、どんな困りごとを、どう楽にするか。</div></div><div><input type="text" id="gl" value="${esc(P.goal)}" placeholder="例：主催者が手数料を気にせずチケットを売れるようにする"></div></div>
+    ${Q.map(([k, q, h, opts], i) => `<div class="q"><div class="k"><div class="qn ${P.profile[k] ? 'on' : ''}">${n(i + 3)}</div><div class="t">${q}</div><div class="h">${h}</div></div>
       <div class="seg" role="group" aria-label="${q}">${opts.map(([v, l, s]) => `<button type="button" data-k="${k}" data-v="${v}" aria-pressed="${P.profile[k] === v}"><span>${l}</span><small>${s}</small><span class="dot"></span></button>`).join('')}</div></div>`).join('')}
     <div class="q"><div class="k"></div><div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><button class="btn" id="go">地図を見る　→</button><span class="mono m3">答えはこのブラウザの中だけに保存</span><button type="button" class="btn line" id="reset">最初からやり直す</button></div></div>
   </section>`;
   app.querySelectorAll('.seg button').forEach(b => b.onclick = () => {
     P.profile[b.dataset.k] = b.dataset.v; save();
     b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    b.closest('.q').querySelector('.qn')?.classList.add('on');
   });
   const sync = () => { P.name = $('#nm').value.trim(); P.goal = $('#gl').value.trim(); save(); };
   $('#nm').oninput = $('#gl').oninput = sync;
@@ -279,7 +280,7 @@ function viewTopic(topic) {
   const stg = STAGES.find(x => x.id === t.stage);
   app.innerHTML = `<section class="page"><div class="mono m2">03 — ${esc(lane.label)} ・ ${esc(e.name_ja)} ・ 段 ${esc(stg?.label || '')} ${esc(stg?.ja || '')}</div>
     <div class="detail"><div>
-      <h1>${esc(t.label_ja)}</h1><p class="lead">${esc(t.question_ja)}</p>
+      <div class="bignum ${s}" aria-hidden="true">${String(LANES.indexOf(lane) + 1).padStart(2, '0')}</div><h1>${esc(t.label_ja)}</h1><p class="lead">${esc(t.question_ja)}</p>
       ${ai ? `<div class="pick"><div class="mono" style="color:var(--acc)">AIのおすすめ${ai.rule ? ' · あなたの答えから' : ''}</div><div class="nm">${esc(itemName(ai.id))}</div><div class="m1">${gloss(ai.reason, used)}</div></div>` : ''}
       <div class="mono m3" style="margin-bottom:8px">${choose ? '選択肢 — 1つ選ぶ' : '確認すること — 全部チェック'}</div>
       <div class="opts" role="${choose ? 'radiogroup' : 'group'}">${opts}</div>
