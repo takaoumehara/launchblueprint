@@ -398,8 +398,76 @@ rules:
     why: "Pseudo-localization exposes hardcoded strings, concatenation and overflow on day one at zero cost."
     check: "Can the app be switched to a pseudo-locale, and has every screen been viewed in it?"
     date: '2026-10-30'
+  - id: component-map-only
+    category: design_system
+    phase: [design, qa]
+    principle: "UI-building agents use only tokens and components listed in the product's component map (reference/component-map-template.md copied into the repo and linked from AGENTS.md)."
+    anti_pattern: "An agent inventing a new hex colour, spacing value or a near-duplicate button instead of using the mapped one."
+    why: "Raw values and duplicate components accumulate and the visuals drift."
+    check: "Does every colour, spacing value and component in this change come from the component map (or is a map update included in the same PR)?"
+    date: '2026-11-02'
+  - id: learn-from-rejection
+    category: design_system
+    phase: [qa]
+    principle: "When PR review requests a UI fix, feed the reason back into the component map or a rule in the same or a follow-up PR."
+    anti_pattern: "Fixing the same review comment by hand PR after PR without changing the map or rules."
+    why: "Fixes that never reach the map or rules get repeated by the next agent."
+    check: "For every review-requested UI fix, was the component map or a rule updated (or a component_map_update learning proposed)?"
+    date: '2026-11-02'
+  - id: capsule-handoff
+    category: design_system
+    phase: [requirements]
+    principle: "Hand a feature to an agent as a one-page capsule: user goal, scope, acceptance criteria, components/tokens from the map, states to verify, relevant checklist items; the agent answers with a draft PR."
+    anti_pattern: "A one-line chat request with no scope, states or acceptance criteria."
+    why: "Without a fixed spec the agent guesses scope and states, and review turns into rework."
+    check: "Does the feature have a capsule with every section filled before the agent starts?"
+    date: '2026-11-02'
+  - id: preview-state-switcher
+    category: design_system
+    phase: [design, qa]
+    principle: "Preview builds have a state switcher panel (device, theme, signed-in/out, role, empty/loading/error states); it is excluded from production builds."
+    anti_pattern: "Reviewing only the happy path on one device, or shipping the debug panel to users."
+    why: "Reviews only see the happy path, so breakage in other states reaches production."
+    check: "Can reviewers switch every listed state in preview, and is the panel absent from the production bundle?"
+    date: '2026-11-02'
+  - id: annotation-to-fix
+    category: design_system
+    phase: [qa]
+    principle: "Pass review annotations to agents as structured items: location (file + component), instruction, and the global direction (see reference/annotation-to-fix-example.md). Optional."
+    anti_pattern: "Screenshots with vague comments like 'make this nicer'."
+    why: "Without a location and direction the agent fixes the wrong place or only one instance."
+    check: "Does each review note sent to an agent name the file, the component and the instruction?"
+    date: '2026-11-02'
+  - id: generative-ui-within-schema
+    category: design_system
+    phase: [design, qa]
+    principle: "In-app AI-generated UI may use only components, tokens and config allowed by a schema derived from the component map, and output is validated before display."
+    anti_pattern: "Letting a model emit free HTML/CSS or arbitrary props shown directly to users."
+    why: "Free generation produces off-design or broken output."
+    check: "Is generated UI validated against a schema of allowed components/tokens, with a safe fallback when validation fails?"
+    date: '2026-11-02'
 phase_gate_checks:
   - id: gate.i18n_keys
     phase: 最初のゲート（01 構想・Intake で「提供言語」を決めた直後／最初の画面を作る前）
     check: "多言語にする可能性が少しでもあるなら、i18n ライブラリを入れ、画面の文言を全部キー経由にし、ハードコード文字列を lint/CI で禁止したか（可能性ゼロなら理由を記録）— はい／いいえ"
     why: "後から英語の直書きを翻訳ファイルへ移すのは、全画面にわたる大きくミスの出やすい作業になるため"
+  - id: gate.component_map
+    phase: デザインのゲート（最初の画面を作る前）
+    check: "コンポーネント対応表をリポジトリに置き、AGENTS.md から参照したか — はい／いいえ"
+    why: "対応表がないと、エージェントが素の値や重複部品を作り、見た目がずれるため"
+  - id: gate.state_switcher_design
+    phase: デザインのゲート
+    check: "プレビュー用の状態切り替えパネル（端末・テーマ・ログイン有無・権限・空/読込/エラー）を用意したか — はい／いいえ"
+    why: "レビューがうまくいく場合しか見ず、それ以外の状態の崩れが本番に出るため"
+  - id: gate.learn_from_rejection
+    phase: レビューのゲート（PR レビューで直しが出たとき）
+    check: "レビューで出た直しを、対応表かルールに戻したか（または component_map_update を propose_learning したか）— はい／いいえ"
+    why: "対応表やルールに戻さない直しは、次のエージェントがまた同じ間違いをするため"
+  - id: gate.state_switcher_review
+    phase: レビューのゲート
+    check: "状態切り替えパネルで全状態を確認したか — はい／いいえ"
+    why: "うまくいく場合だけを見たレビューでは、他の状態の崩れを見逃すため"
+  - id: gate.state_switcher_release
+    phase: リリースのゲート（本番公開前）
+    check: "状態切り替えパネルが本番ビルドに含まれていないことを確認したか — はい／いいえ"
+    why: "デバッグ用の切り替えが本番に出ると、利用者が権限や状態を操作できてしまうため"

@@ -132,8 +132,9 @@ server.tool("ui_ux_checklist", "UI/UX yes/no checklist. Optional phase: requirem
     return json({ phase: phase ?? "all", count: pick.length,
         checklist: pick.map(r => ({ id: r.id, check: r.check, why: r.why })) });
 });
-server.tool("propose_learning", "Propose a new learning. Appends to the inbox only; the master is never edited.", { text: z.string().min(5).max(2000), category: z.string().min(1).max(64) }, async ({ text: t, category }) => {
-    const rec = { ts: new Date().toISOString(), category, text: t, status: "proposed" };
+server.tool("propose_learning", "Propose a new learning. Appends to the inbox only; the master is never edited. kind: rule (default) | component_map_update (a review fix to feed back into the component map).", { text: z.string().min(5).max(2000), category: z.string().min(1).max(64),
+    kind: z.enum(["rule", "component_map_update"]).optional() }, async ({ text: t, category, kind }) => {
+    const rec = { ts: new Date().toISOString(), kind: kind ?? "rule", category, text: t, status: "proposed" };
     fs.mkdirSync(path.dirname(INBOX), { recursive: true });
     fs.appendFileSync(INBOX, JSON.stringify(rec) + "\n");
     return json({ saved: true, inbox: "mcp/inbox/learnings.jsonl", record: rec });

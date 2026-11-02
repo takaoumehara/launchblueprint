@@ -37,7 +37,14 @@ test("all tools respond", async () => {
     assert.ok(JSON.parse(await call("ui_ux_checklist")).count > 0);
     assert.ok(JSON.parse(await call("ui_ux_checklist", { phase: "design" })).count > 0);
     await call("propose_learning", { text: "smoke test learning", category: "test" });
-    assert.equal(fs.readFileSync(inbox, "utf8").trim().split("\n").length, 1);
+    await call("propose_learning", { text: "map: add color.danger token", category: "ui_ux", kind: "component_map_update" });
+    const lines = fs.readFileSync(inbox, "utf8").trim().split("\n").map(l => JSON.parse(l));
+    assert.equal(lines.length, 2);
+    assert.equal(lines[0].kind, "rule"); assert.equal(lines[1].kind, "component_map_update");
+    const badKind = await c.callTool({ name: "propose_learning", arguments: { text: "xxxxx", category: "t", kind: "nope" } });
+    assert.ok(badKind.isError);
+    assert.ok(JSON.parse(await call("search", { query: "component-map-only" })).count > 0);
+    assert.ok(ld.references.includes("component-map-template") && ld.references.includes("capsule-template"));
     const bad = await c.callTool({ name: "get_catalog", arguments: { domain: "../../etc/passwd" } });
     assert.ok(bad.isError);
   } finally { await c.close(); }
