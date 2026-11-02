@@ -7,6 +7,7 @@
 |---|---|
 | `domain` | frontend / backend / database / auth / security / hosting / payments / storage_media / email_notifications / analytics / ai_llm / search / realtime / ci_cd / monitoring |
 | （追加 2026-10-26） | data_protection（2026-10-28、lessons[]） / gtm_channels / support / cross_border / app_distribution / exit_dd / scale_readiness / dd_dashboard / business_setup（2026-10-27、`lessons[]`＝id, jurisdiction, principle, anti_pattern, why, check, see_also, verified）。工程の網羅表は `lifecycle.yaml`（stage, domain, item, status, evidence, proposed_addition, priority） |
+| （追加 2026-11-02） | validation / pricing / legal_terms / backup_dr / cost_control / ops_handoff / exit_tools。どれも `entries[]`（通常の形）＋ `lessons[]`（id, principle, anti_pattern, why, check, see_also, verified）。gtm_channels・monitoring にも entries/lessons を追加。人向けの網羅表は `reference/coverage.md` |
 | `updated` | 最後に直した日 |
 | `stale_after_days` | この日数を過ぎた `source.checked` は「古い」扱い（既定90） |
 
@@ -33,6 +34,13 @@
 - `rules`：効いているルール台帳のID（§10）
 - 理由のない `selected` と `rejected` は書かない
 
+## lifecycle.yaml の段階（2026-11-02 追加、schema `blueprint.lifecycle/v3`）
+- `macro_stages[]`：`{id, name_ja, stages[], known_surprises[], revisit_triggers[]}`。id は idea / launch / operate / scale / exit の 5 つ（この順）。`stages` は下の fine stage の id。
+- `stages[]`：`{id, macro, name_ja, known_surprises[], revisit_triggers[]}`。14 の fine stage（discover … exit）。`items[].stage` はこの id を指す（`12cat` の項目は `category` で段に割り当てる）。
+- `known_surprises`：その段で「計画になかったのに毎回起きること」。1 行ずつ、固有名詞なし。`revisit_triggers`：Blueprint を再実行する合図。**数字で判定できるものだけ**（例：請求が前月の 2 倍、復元テスト 30 日超）。
+- 新しい驚きは `po-input/TEMPLATE-surprise.md` に記録し、`reference/feedback-loop.md` の手順で lessons / lifecycle / tactics に昇格させる。
+- MCP：`lifecycle_stages`（stage で macro か fine を絞る。`include_items: true` で当該段の items も返す）。`get_catalog(lifecycle, format: items)` でも stage 行が `stage`・`known_surprises`・`revisit_triggers` 付きで出る。
+
 ## 鮮度と関連ファイル（2026-10-26 追加）
 - 各ドメイン YAML の `stale_after_days`（90）は**料金の既定値**。フィールド別の期限は `freshness.yaml`。
 - ルール本文は `rules.yaml`（id, type, text, strength, status, review_due）。`project.blueprint.yaml` の `rules: [...]` はこの id を指す。
@@ -52,7 +60,7 @@
 
 ## Elements 層（2026-10-28 追加、`elements/`）
 - `elements.yaml`：`elements[]`＝id, name, principle, categories（12カテゴリー番号）, tactics_file
-- `tactics.yaml`：`lanes[]`（地図の列 BRAND/UX/UI/TECH/BIZ・LEGAL/RULES）と `tactics[]`＝element, topic, lane, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）
+- `tactics.yaml`：`lanes[]`（地図の列 BRAND/UX/UI/TECH/BIZ・LEGAL/RULES）と `tactics[]`＝element, topic, lane, **stage**（2026-11-02 追加：idea / launch / operate / scale / exit。`lifecycle.yaml` の macro_stages の id）, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）。5 段すべてに choose と checklist が 1 つ以上あること（`reference/coverage.md`）
 - `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by, pick, last_checked。先頭に name, goal, profile。理由のない ai_pick・rejected は書かない
 - `elements.yaml` には name_ja / principle_ja もある。Web アプリは `app/`（`npm run build` で `/data.json` と `/llms.txt` を出す）
 - `glossary.yaml`：`terms[]`＝term, plain, one_line。アプリは専門用語を「plain（term）」に置き換え、説明を横に出す

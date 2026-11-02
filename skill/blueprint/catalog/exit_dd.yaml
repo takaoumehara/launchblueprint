@@ -1,33 +1,61 @@
 # Blueprint Catalog — exit_dd（売却・サンセット時の調査準備）
 # 提供：CREATIVITY IS EVERYWHERE, LLC。法務助言ではない。売却前に弁護士確認
+# checklist[]：id, item（原則）, acceptance（AI が確かめる条件）, anti_pattern, why, check（はい／いいえ。2026-11-02 追加）。道具は exit_tools.yaml
 domain: exit_dd
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 180
 checklist:
 - id: dd.ip
   item: コード・デザイン・ブランド・ドメインの権利が会社にある
   acceptance: '全コントリビューター（業務委託・AI含む利用規約）の IP譲渡書が data-room/ip/ にある。ドメイン・ストア・GitHub・Stripe の名義が会社名（個人名0件）'
+  anti_pattern: "個人名義のドメイン・ストア・決済や、業務委託の IP 譲渡なしのまま売却の話を始める"
+  why: "名義変更と譲渡書の回収に数週間かかり、買い手の調査が止まる"
+  check: "コード・ブランド・ドメイン・ストア・決済の名義が全部会社で、全コントリビューターの IP 譲渡書がある？"
 - id: dd.oss
   item: OSSライセンス一覧
   acceptance: 'SBOM（license付き）を生成でき、GPL/AGPL系の混入が0件または説明済み'
+  anti_pattern: "依存のライセンスを見ずに公開し、GPL 系の混入を買い手に指摘される"
+  why: "コピーレフトの混入は自分のコードの公開義務や作り直しにつながる"
+  check: "SBOM を今出せて、GPL/AGPL 系が 0 件または説明済み？"
 - id: dd.contracts
   item: 契約一覧（ベンダー・SaaS・顧客・紹介報酬）
   acceptance: 'contracts.yaml に相手・期間・解約条件・譲渡可否（change of control）が全件ある'
+  anti_pattern: "契約が各人のメールに散り、譲渡可否（change of control）を誰も読んでいない"
+  why: "譲渡できない契約が 1 つあると、売却の形（株式か資産か）が変わる"
+  check: "全契約が 1 つの表にあり、各行に譲渡可否がある？"
 - id: dd.privacy
   item: プライバシー・GDPR/PIPA/CCPA 対応
   acceptance: 'データ所在（リージョン）・処理目的・委託先一覧・削除フローの記録があり、ポリシーの言語が提供国の数と一致'
+  anti_pattern: "ポリシーに書いた委託先・保存先と実際が違う"
+  why: "調査で見つかると、修正と再通知が売却前の必須条件になる"
+  check: "データの所在・目的・委託先・削除フローが記録され、ポリシーと一致している？"
 - id: dd.code
   item: コード健全性
   acceptance: 'CIが緑、テストあり、README/ARCHITECTURE/デプロイ手順あり、秘密情報のコミット0件（secret scan）、依存の既知の重大脆弱性0件'
+  anti_pattern: "CI が赤いまま、秘密情報が履歴に残ったまま引き渡す"
+  why: "買い手は「引き継げるか」を見る。赤い CI と漏れた鍵は値段を直接下げる"
+  check: "CI が緑で、秘密情報のコミットが 0 件、既知の重大脆弱性が 0 件？"
 - id: dd.infra
   item: インフラ構成・費用・バックアップ
   acceptance: '構成図・月額費用・バックアップと復元テストの日付（90日以内）が記録されている'
+  anti_pattern: "月額費用と構成が頭の中だけにある"
+  why: "買い手は維持費と復旧できる証拠で判断する"
+  check: "構成図・月額費用・90 日以内の復元テストの日付がある？"
 - id: dd.metrics
   item: 数字のデータルーム
   acceptance: 'MRR・解約・返金を月次でStripeから再生成できるスクリプト＋DAU/MAU・継続率ダッシュボード。過去12か月分'
+  anti_pattern: "買い手に聞かれてから手作業で数字を集める"
+  why: "過去 12 か月は後から再生成できず、食い違う数字は交渉を止める"
+  check: "MRR・解約・返金を月次でスクリプトから再生成でき、12 か月分ある？"
 - id: dd.billing_sources
   item: 売上の出所の整理
   acceptance: 'Stripe／App Store／Google Play の売上が1つの表で突き合わせ可能'
+  anti_pattern: "Stripe とストアの売上を別々に見せる"
+  why: "合計が合わないと全部の数字が疑われる"
+  check: "Stripe・App Store・Google Play の売上が 1 つの表で突き合わせできる？"
 - id: dd.sunset
   item: 買収後の終了・移行計画
   acceptance: 'ユーザー告知・データエクスポート・削除・リダイレクト・課金停止の手順がある（12-sunset と共通）'
+  anti_pattern: "買収後の終了・移行を買い手任せにする"
+  why: "告知・書き出し・削除・リダイレクトの手順がないと、利用者の信頼と法的義務の両方で問題になる"
+  check: "告知・データ書き出し・削除・リダイレクト・課金停止の手順が書いてある？"

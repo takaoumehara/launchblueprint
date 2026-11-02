@@ -1,7 +1,7 @@
 # Blueprint Catalog — cross_border（海外展開モジュール）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 手数料は 2026-10-26 に公式ページで確認（verified:true）。それ以外は verified:false
 domain: cross_border
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 30   # 料金・規制は30日（freshness.yaml の rules/APIs）
 load: lazy             # 海外展開する案件だけ読む（core には入れない）
 axes:
@@ -11,43 +11,61 @@ axes:
   checks: [翻訳キー管理（next-intl / i18next）, Intl.DateTimeFormat・NumberFormat, DBはUTC保存, 固定幅を使わない（英語は日本語の1.5〜2倍の幅）, ルールファイルに「新機能は EN と JA のキーを同時に更新」]
   acceptance: ハードコード文字列を lint で検出して0件。全キーが en/ja の両方にある（キー差分0）
   ai_risk: 低（AIが得意）。ただし日本語の改行（L19）は目視
+  anti_pattern: "英語の直書きで作り、後から翻訳ファイルへ移す"
+  why: "全画面にわたる作り直しになり、抜けが本番で出る"
+  check: "直書き文字列が lint で 0 件で、全キーが全言語にある？"
 - id: axis.legal
   name: 法規制・データ主権
   category: '07'
   checks: [GDPR（同意バナー・削除要求・EUリージョン）, CCPA/CPRA（オプトアウト導線）, COPPA等の年齢ゲート, 日本：個人情報保護法の外国提供・特商法表記・電気通信事業法の外部送信]
   acceptance: 対象国×項目の表に 該当/対象外/要確認 が空欄なし。AIが書いたポリシーは弁護士またはTermly等で確認済み
   ai_risk: 高（AIが知ったかぶりしやすい）。出典URLと確認日がない記述は不可
+  anti_pattern: "国ごとの要件を AI の記憶で埋める"
+  why: "出典のない記述は間違いやすく、罰金と後からの説明に困る"
+  check: "対象国×項目の表に空欄がなく、各行に出典 URL と確認日がある？"
 - id: axis.payments_tax
   name: 決済・通貨・税
   category: '09'
   checks: [現地の決済手段（Payment Element で自動切替）, 売上税・VAT・日本の消費税（国外事業者）, MoR か自社納税か]
   acceptance: entry_strategy が決定済みで、選んだ側の手数料が出典つき
   ai_risk: 高。手数料と納税義務は毎回公式ページで確認
+  anti_pattern: "税の扱い（自社か MoR か）を決めずに海外に売る"
+  why: "登録義務は国ごとに後から生まれ、さかのぼる"
+  check: "国ごとに税の担当（自社／ツール／MoR）が決まり、手数料に出典がある？"
 - id: axis.culturalization
   name: カルチャライズ・トーン
   category: '02'
   checks: [直訳ではなく再創作（transcreation）, 社会的証明：JP＝導入実績・安心・丁寧、US＝1文の価値・顔・X投稿・速さ, brand.yaml に言語別 voice]
   acceptance: 言語ごとに見出しを別に書き、ネイティブ1人が「直訳っぽくない」と確認した記録
   ai_risk: 中
+  anti_pattern: "見出しをそのまま翻訳する"
+  why: "直訳は信頼されず、社会的証明の出し方も国で違う"
+  check: "言語ごとに見出しを別に書き、ネイティブ 1 人が確認した記録がある？"
 - id: axis.channels
   name: 現地チャネル
   category: '09'
   checks: ['US/グローバル：Product Hunt, Hacker News, Reddit, X（英語）', 'JP：X（日本語）, Zenn/Qiita, note, PR TIMES', 'EU：Product Hunt, LinkedIn, 地域コミュニティ', 'Reddit/X の現地の言い回しをAIで要約し、コピーに戻す']
   acceptance: gtm/channels.yaml の各行に market がある
   ai_risk: 中（規約・自己宣伝ルールは場ごとに確認）
+  anti_pattern: "1 つの国のチャネルで全世界に発表する"
+  why: "場ごとに自己宣伝の規則と言い回しが違う"
+  check: "チャネル表の各行に market があり、場ごとの規則を確認した？"
 - id: axis.latency
   name: インフラ・レイテンシ
   category: '05'
   checks: [エッジ配信（Vercel/Cloudflare）, DBリージョンと読み取りレプリカ（Neon/Supabase/Turso）]
   acceptance: 主要市場からの TTFB が 600ms 未満（実測）
   ai_risk: 低
+  anti_pattern: "DB を 1 地域に置いたまま遠い市場に出す"
+  why: "遠い市場の体感速度が遅く、離脱が増える"
+  check: "主要市場からの TTFB が 600ms 未満と実測した？"
 fees_verified_2026_10_26:
 - {id: pay.stripe.cards, what: 'Stripe 国内カード', fee: '2.9% + 30¢', extra: '国際カード +1%（+30¢の表記あり）、通貨換算は顧客に2%〜表示（Adaptive Pricing）、紛争 $15', url: 'https://stripe.com/pricing', verified: true}
 - {id: tax.stripe.basic, what: 'Stripe Tax Basic（計算と徴収のみ。登録・申告は自分）', fee: '登録済みの地域の取引に 0.5%（Billing/Checkout 等）または 50¢/件（API）', url: 'https://stripe.com/tax/pricing', verified: true}
 - {id: tax.stripe.complete, what: 'Stripe Tax Complete（監視・登録・計算・申告）', fee: '月額・1年契約。最小は 登録2/年・200取引/月・申告4/年。金額はページの取得で読めず要確認', url: 'https://stripe.com/tax/pricing', verified: false}
 - {id: mor.lemonsqueezy, what: 'Lemon Squeezy（MoR）', fee: '5% + 50¢/取引、月額0。米国外の取引や一部の支払い方法で追加手数料あり', url: 'https://www.lemonsqueezy.com/pricing', verified: true}
 - {id: mor.paddle, what: 'Paddle（MoR）', fee: '5% + 50¢/Checkout取引、月額0、追加手数料なしとうたう。$10未満の商品は個別相談', url: 'https://www.paddle.com/pricing', verified: true}
-- {id: mor.stripe.managed, what: 'Stripe Managed Payments（Stripe の MoR サービス）', fee: '料金ページに項目あり、手数料は未取得', url: 'https://stripe.com/pricing', verified: false}
+- {id: mor.stripe.managed, what: 'Stripe Managed Payments（Stripe の MoR サービス）', fee: '決済手数料（国内カード 2.9%+30¢）に加えて 3.5%／件（2026-11-02 料金ページ）', url: 'https://stripe.com/pricing', verified: true}
 entry_strategies:
 - id: es.us_first
   name: USファースト（英語のみで始め、反応があれば日本語化）

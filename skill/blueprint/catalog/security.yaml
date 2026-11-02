@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — security
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: security
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -31,21 +31,20 @@ entries:
   best_for: 登録・問い合わせフォーム
   avoid_when: フォームが1つもない時（守る入口がない）
   pricing_bands:
-    free: 無料（要確認）
-    usd5: 無料（要確認）
-    usd10: 無料（要確認）
-    usd100: 無料（要確認）
-  limits: 要確認
+    free: 無料：確認回数無制限・ウィジェット 20 個・1 つにつき 10 ホスト名・分析 7 日
+    usd5: 同左（Enterprise は要相談）
+    usd10: 同左（Enterprise は要相談）
+    usd100: 同左（Enterprise は要相談）
+  limits: Free：ウィジェット 20 個・ホスト名 10/個
   lock_in: 低
   liability_compliance: Cookie同意の要否を確認
   security: サーバー側でトークン検証
   pairs_well_with:
   - auth.better-auth
   source:
-    url: https://developers.cloudflare.com/turnstile/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://developers.cloudflare.com/turnstile/plans/
+    checked: '2026-11-02'
+    verified: true
 - id: sec.secrets
   name: 秘密情報の置き場（ホストの環境変数／Secret Manager）
   what: 鍵・トークンの保管
@@ -59,12 +58,11 @@ entries:
   limits: —
   lock_in: 低
   liability_compliance: 漏えい時の通知計画（§5.1）
-  security: ローテーション日を L9 に記録
+  security: ローテーション日を L9 に記録。Vercel は Secret 型（保存後は読めない）を使う
   pairs_well_with:
   - host.vercel
   - be.cloud-run
   source:
     url: https://vercel.com/docs/environment-variables
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    checked: '2026-11-02'
+    verified: true

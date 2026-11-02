@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — auth
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: auth
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 auth:
@@ -93,7 +93,7 @@ auth:
       email_password: 'yes'
       magic_link: 'yes'
       phone_sms: Pro 以上、米加 $0.01/通
-      anonymous: 要確認
+      anonymous: 記載なし（公式ドキュメント 2026-11-02）
       passkeys: Pro 以上
       sso_saml: Pro に1接続込み、追加 $75/月
     pricing_bands:
@@ -115,7 +115,7 @@ auth:
       apple: 'yes'
       email_password: 'yes'
       magic_link: yes（Passwordless）
-      phone_sms: yes（要確認：SMS費用）
+      phone_sms: yes（SMS 費用は料金ページに記載なし 2026-11-02）
       anonymous: 'no'
       passkeys: 'yes'
       sso_saml: Free に1接続
@@ -184,7 +184,7 @@ auth:
       email_password: 'yes'
       magic_link: 'yes'
       phone_sms: 'yes'
-      anonymous: 要確認
+      anonymous: 記載なし（公式ドキュメント 2026-11-02）
       passkeys: 'yes'
       sso_saml: yes（B2B）
     pricing_bands:
@@ -207,10 +207,10 @@ auth:
       magic_link: yes（メール送信は別）
       phone_sms: 'no'
       anonymous: 'no'
-      passkeys: 実験的（要確認）
+      passkeys: 実験的（公式に「本番非推奨」。experimental.enableWebAuthn で有効化）
       sso_saml: 'no'
     pricing_bands:
-      free: OSS無料
+      free: OSS無料（ISC）
       usd5: 同左
       usd10: 同左
       usd100: 同左
@@ -218,9 +218,10 @@ auth:
     best_for: Next.js で SNS ログイン中心
     avoid_when: パスワード・二段階認証・管理画面まで要る時
     source:
-      url: https://authjs.dev/
-      checked: null
-      verified: false
+      url: https://authjs.dev/getting-started/authentication/webauthn
+      checked: '2026-11-02'
+      verified: true
+      note: 'ライセンスは ISC。2026-11 時点で Better Auth 傘下と公式ページに記載'
   - id: auth.passkeys
     name: Passkeys（SimpleWebAuthn）
     support:
@@ -234,9 +235,10 @@ auth:
     best_for: 今の認証に生体認証ログインを足す
     avoid_when: 端末をなくした時の復旧手段がない
     source:
-      url: https://simplewebauthn.dev/
-      checked: null
-      verified: false
+      url: https://github.com/MasterKale/SimpleWebAuthn/blob/master/LICENSE.md
+      checked: '2026-11-02'
+      verified: true
+      note: 'MIT'
   - id: auth.magic
     name: Magic（magic.link）
     support:

@@ -63,6 +63,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 
 ### 7. 見直し（いつでも再実行）
 方向・スタック・ホスト・範囲を変えるとき、公開前、各段の引き金に届いたときに再実行。
+0. 今の段（idea / launch / operate / scale / exit）の `known_surprises` を 1 行ずつ「起きていないか」確かめ、`revisit_triggers` に当たるものがあれば先に出す（`catalog/lifecycle.yaml` macro_stages、MCP `lifecycle_stages`）。
 1. 変えるブロックを特定 → `dependencies` を辿り、影響するブロックを全部出す。
 2. リスクの先回り：期限切れの `source.checked`、未決の `open_decisions`、超えそうな無料枠、規約変更を一覧にする。
 3. 影響と新しい推奨を出し、オーナーの OK 後に YAML を更新。
@@ -74,6 +75,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - 固有名詞・個人名・プロジェクト名を外して一般化してある。出典と確認日をつける。
 - 数字は catalog（YAML）へ、手順は SKILL.md へ、説明は reference へ。SKILL.md は150行以内を保つ。
 本体の更新はオーナーの OK 後。
+驚き（計画になかったのに起きたこと）は `po-input/TEMPLATE-surprise.md` の形で 1 件 1 枚に記録し、`reference/feedback-loop.md` の手順で lessons・lifecycle（known_surprises / revisit_triggers）・tactics に戻す。
 
 ## ファイル
 - `reference/12-categories.md`：12カテゴリーの中身、フェーズ別チェック、AI特有の注意、海外展開（6軸・入り方3案）
@@ -81,6 +83,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - `reference/exit-appdist.md`：売却準備とアプリ配信
 - `reference/design-resources.md`：デザインの参考サイト・素材・部品集の使い分け
 - `reference/ui-ux.md`：UI/UX の原則（理由つき）。チェックは `catalog/ui_ux.yaml`
-- `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`
+- `reference/coverage.md`：段階（idea → launch → operate → scale → exit）× 要素 × tactic の網羅表。`reference/feedback-loop.md`：驚きを rule・tactic に戻す手順（記録は `po-input/`）
+- `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`（段階ごとの known_surprises / revisit_triggers）、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`、`validation.yaml`、`pricing.yaml`、`legal_terms.yaml`、`backup_dr.yaml`、`cost_control.yaml`、`ops_handoff.yaml`、`exit_tools.yaml`
 - `catalog/schema.md`：全 YAML の書式
 - `templates/project.axes.yaml`, `templates/brand-context.md`
