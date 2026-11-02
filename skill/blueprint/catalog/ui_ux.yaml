@@ -421,6 +421,7 @@ rules:
     anti_pattern: "count === 1 ? 'item' : 'items' in components."
     why: "Many languages have more than two plural forms (e.g. Russian, Arabic), and code-level branches cannot express them."
     check: "Is every count-dependent string an ICU plural message?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-intl-formatting
     category: i18n
@@ -429,6 +430,7 @@ rules:
     anti_pattern: "Hand-built date strings, fixed '$' symbols, toFixed(2) for money."
     why: "Order, separators, currency position and calendars differ per locale; hand formatting is wrong somewhere."
     check: "Is any date, number or price formatted without Intl or the library formatter?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-no-concatenation
     category: i18n
@@ -437,6 +439,7 @@ rules:
     anti_pattern: "t('hello') + ' ' + name + t('welcome_back')."
     why: "Word order differs by language (Japanese puts the verb last), so fragments cannot be reordered by translators."
     check: "Is any visible sentence assembled from more than one key or string piece?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-text-expansion
     category: i18n
@@ -446,6 +449,7 @@ rules:
     why: "German/French text is often 30%+ longer and short labels can double, which breaks or truncates layouts."
     check: "Does every screen still work with pseudo-localized text that is 40% longer?"
     see_also: "no-ellipsis-truncation"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-cjk-fonts-line-breaking
     category: i18n
@@ -454,6 +458,7 @@ rules:
     anti_pattern: "One Latin web font for all locales and default breaking."
     why: "Missing glyphs fall back inconsistently (Han unification shows wrong regional glyphs) and lines break before punctuation or mid-word."
     check: "Has each CJK locale been checked by eye for font, glyphs and line breaks (lang attribute set)?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-locale-fallback
     category: i18n
@@ -462,6 +467,7 @@ rules:
     anti_pattern: "Showing 'checkout.title' to users when a translation is missing."
     why: "New keys always ship before all translations; without fallback, users see broken text."
     check: "Does a missing translation show the fallback language rather than the key?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-key-naming
     category: i18n
@@ -470,6 +476,7 @@ rules:
     anti_pattern: "Keys equal to the English sentence, or reusing one key for two meanings."
     why: "Text-as-key breaks when copy changes, and shared keys force one translation where languages need two."
     check: "Are keys namespaced by feature, unique in meaning, and described for translators?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-ci-completeness
     category: i18n
@@ -478,6 +485,7 @@ rules:
     anti_pattern: "Finding missing translations from user reports."
     why: "Keys are added daily; only an automatic check keeps locales in sync."
     check: "Does CI fail when a shipped locale is missing a key or has broken ICU syntax?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-pseudo-localization
     category: i18n
@@ -486,6 +494,7 @@ rules:
     anti_pattern: "Waiting for real translations to find hardcoded strings and clipped layouts."
     why: "Pseudo-localization exposes hardcoded strings, concatenation and overflow on day one at zero cost."
     check: "Can the app be switched to a pseudo-locale, and has every screen been viewed in it?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: one-term-per-concept
     category: copy
