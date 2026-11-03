@@ -84,6 +84,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - `reference/design-resources.md`：デザインの参考サイト・素材・部品集の使い分け
 - `reference/ui-ux.md`：UI/UX の原則（原則・避ける形・理由・確認）。チェックと段階ゲートは `catalog/ui_ux.yaml`。専門用語は `elements/glossary.yaml`
 - `reference/coverage.md`：段階（idea → launch → operate → scale → exit）× 要素 × tactic の網羅表。`reference/feedback-loop.md`：驚きを rule・tactic に戻す手順（記録は `po-input/`）
+- `reference/foresight.md`（先読みの手順：決定の先読み・画面操作の下ごしらえ・プレモーテム・「聞かれていないが大事」3 点・クリティカルパスの暦・エージェント環境の一括依頼。罠と手順の id は `catalog/foresight.yaml`）、`reference/planning.md`（計画の手順：地平・制約・前提を最悪から・Now/Next/Later・止める決まりつきマイルストーン・容量計算と次の 10 営業日・決定の議題・シナリオ・やめる線・整合性）
 - `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`（段階ごとの known_surprises / revisit_triggers）、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`、`validation.yaml`、`pricing.yaml`、`legal_terms.yaml`、`backup_dr.yaml`、`cost_control.yaml`、`ops_handoff.yaml`、`exit_tools.yaml`
 - `catalog/schema.md`：全 YAML の書式
 - `templates/project.axes.yaml`, `templates/brand-context.md`
