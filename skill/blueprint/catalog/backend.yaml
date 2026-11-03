@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — backend
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: backend
-updated: '2026-10-26'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -11,11 +11,11 @@ entries:
   best_for: 小〜中規模、1チーム
   avoid_when: ''
   pricing_bands:
-    free: ホストの無料枠内
-    usd5: ホストの無料枠内
+    free: 'ホストの無料枠内。Vercel Hobby $0（個人・非商用のみ）：関数の Active CPU 4 時間/月・メモリ 360 GB時/月・呼び出し 100万回/月'
+    usd5: 'Vercel Hobby は非商用のみ。商用は Pro $20/月（$20 分の利用クレジット込み。超過は Active CPU $0.128/時・メモリ $0.0106/GB時・呼び出し $0.60/100万回）'
     usd10: 同左
-    usd100: 同左
-  limits: 長時間処理に不向き（関数のタイムアウト）
+    usd100: 'Vercel Pro $20/月＋従量（上限は関数ごとに設定）'
+  limits: '長時間処理に不向き（関数の最長時間：Hobby 300 秒、Pro 800 秒・ベータで 1,800 秒。超えると 504）。リクエスト本文は 4.5 MB まで'
   lock_in: 中
   liability_compliance: なし
   security: 入力検証・認可を毎回サーバーで
@@ -23,21 +23,21 @@ entries:
   - fe.nextjs
   - host.vercel
   source:
-    url: https://nextjs.org/docs/app/building-your-application/routing/route-handlers
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://nextjs.org/docs/app/api-reference/file-conventions/route
+    checked: '2026-11-03'
+    verified: true
+    note: 'Route Handlers 自体は無料（Next.js は MIT）。金額は https://vercel.com/pricing、関数の上限は https://vercel.com/docs/functions/limitations で 2026-11-03 確認。旧 URL（/building-your-application/routing/route-handlers）はこのページへ転送'
 - id: be.cloud-run
   name: Google Cloud Run
   what: コンテナをそのまま動かす
   best_for: 長い処理・任意の言語
   avoid_when: ''
   pricing_bands:
-    free: 無料枠あり
-    usd5: 要確認
-    usd10: 要確認
-    usd100: 要確認
-  limits: コールドスタート
+    free: '無料枠（請求アカウント単位・毎月・リクエスト課金の場合）：リクエスト 200万回、メモリ 360,000 GB秒、vCPU 180,000 秒、北米からの送信 1 GB。超えた分は従量課金'
+    usd5: '従量（単価は料金ページが読めず未確認）。請求は 2 方式：リクエスト課金（リクエスト処理中・起動・停止の間だけ課金）／インスタンス課金（インスタンスの稼働中ずっと課金。メモリ 512 MiB 以上が必要）'
+    usd10: 同左
+    usd100: 同左
+  limits: コールドスタート。無料枠は使い切り（翌月に繰り越さない）。超過は自動で課金されるので予算アラートを設定
   lock_in: 低（コンテナは持ち運べる）
   liability_compliance: なし
   security: サービスアカウントを最小権限に
@@ -45,7 +45,7 @@ entries:
   - db.firestore
   - auth.firebase
   source:
-    url: https://cloud.google.com/run/pricing
-    checked: null
-    verified: false
-    note: '未確認：料金ページが自動取得で本文を返さず（2026-11-02 に 3 回試行）。使う前に公式ページで確認'
+    url: https://docs.cloud.google.com/free/docs/free-cloud-features
+    checked: '2026-11-03'
+    verified: true
+    note: '無料枠の数値は Google Cloud 無料枠ページで 2026-11-03 確認。https://cloud.google.com/run/pricing は本文が読めず単価（vCPU秒・GiB秒・100万リクエストあたり）は未確認。課金方式は https://docs.cloud.google.com/run/docs/configuring/billing-settings'

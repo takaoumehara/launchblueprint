@@ -69,12 +69,12 @@ entries:
   name: iOS/Android Capacitor シェル
   best_for: Webコードを再利用しつつネイティブ機能を足す
   avoid_when: ウェブのコードがまだない時（最初から Expo の方が早い）
-  pricing_bands: {free: —, usd5: —, usd10: 'Apple $99/年 ≒ $8.25/月', usd100: —}
+  pricing_bands: {free: —, usd5: —, usd10: 'Apple Developer Program 99 USD/会員年 ≒ $8.25/月（地域により現地通貨で変動。非営利・教育機関・政府は免除申請可）', usd100: —}
   store_billing: 'policy.apple.3_1_1 / 3_1_3b に従う'
-  depends_on: [Apple Developer Program（会社名義はD-U-N-S）, ネイティブ機能で4.2回避]
+  depends_on: [Apple Developer Program（会社名義はD-U-N-S。政府機関を除く）, ネイティブ機能で4.2回避]
   review_risk: 中（4.2・3.1.1）
-  verified: false
-  note: 'Apple Developer Program の年会費は公式ページの自動取得で金額が読めず未確認（2026-11-02）'
+  verified: true
+  source: {url: 'https://developer.apple.com/programs/enroll/', checked: '2026-11-03', verified: true, note: '「99 USD per membership year」を登録ページで確認。compare-memberships ページには金額の記載なし'}
 - id: dist.expo
   name: Expo / React Native 書き直し（EAS Update でOTA）
   best_for: ネイティブ体験が売上を左右し、Webが安定した後

@@ -60,7 +60,7 @@ axes:
   why: "遠い市場の体感速度が遅く、離脱が増える"
   check: "主要市場からの TTFB が 600ms 未満と実測した？"
 fees_verified_2026_10_26:
-- {id: pay.stripe.cards, what: 'Stripe 国内カード', fee: '2.9% + 30¢', extra: '国際カード +1%（+30¢の表記あり）、通貨換算は顧客に2%〜表示（Adaptive Pricing）、紛争 $15', url: 'https://stripe.com/pricing', verified: true}
+- {id: pay.stripe.cards, what: 'Stripe 国内カード', fee: '2.9% + 30¢', extra: '国際カード +1.5%、通貨換算 +1%、紛争 $15（2026-11-03 公式確認）', url: 'https://stripe.com/pricing', checked: '2026-11-03', verified: true}
 - {id: tax.stripe.basic, what: 'Stripe Tax Basic（計算と徴収のみ。登録・申告は自分）', fee: '登録済みの地域の取引に 0.5%（Billing/Checkout 等）または 50¢/件（API）', url: 'https://stripe.com/tax/pricing', verified: true}
 - {id: tax.stripe.complete, what: 'Stripe Tax Complete（監視・登録・計算・申告）', fee: '月額・1年契約。最小は 登録2/年・200取引/月・申告4/年。金額はページの取得で読めず要確認', url: 'https://stripe.com/tax/pricing', verified: false}
 - {id: mor.lemonsqueezy, what: 'Lemon Squeezy（MoR）', fee: '5% + 50¢/取引、月額0。米国外の取引や一部の支払い方法で追加手数料あり', url: 'https://www.lemonsqueezy.com/pricing', verified: true}

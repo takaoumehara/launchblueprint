@@ -1,7 +1,7 @@
 # Blueprint Catalog — legal_terms（規約・プライバシーポリシー・表記の作り方）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。法律助言ではない。公開前に弁護士確認
 domain: legal_terms
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -13,36 +13,37 @@ entries:
   pricing_bands:
     free: Free $0：基本ポリシー1本・バナー表示 1万回/月・Cookie スキャン四半期1回
     usd5: —
-    usd10: Starter $10/サイト/月（年払い。月払い $14）：複数ポリシー・バナー
-    usd100: Pro+ $15/月（年払い。月払い $20）
-  limits: 無料はポリシー1本。バナー表示回数の上限
+    usd10: Starter $10/サイト/月（年払い。月払い $14）：ポリシー 2 本・バナー表示 5 万回/月・スキャン月 1 回
+    usd100: Pro+ $15/月（年払い。月払い $20）：ポリシー・バナー無制限
+  limits: 無料はポリシー1本・1 サイト。バナー表示回数の上限
   lock_in: 低（文書はコピーできる）
   liability_compliance: 生成文書は雛形。事業内容に合わせて確認。弁護士の代わりではない
   security: —
   pairs_well_with: [lt.policy-matches-practice]
   source:
     url: https://termly.io/pricing/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
 - id: lt.iubenda
   name: iubenda
   what: EU 発の規約・ポリシー・同意管理ツール
   best_for: EU の利用者が主で、同意記録まで1つで済ませたい
-  avoid_when: 無料で済ませたい時（無料枠の数値はページに非表示）
+  avoid_when: 月 5,000 PV を超えるサイトを無料で済ませたい時（超えるとバナーがその月は止まる）
   pricing_bands:
-    free: 無料枠あり（内容・上限はページに非表示）
-    usd5: Essentials $5.99/サイト/月（年払い。月払い $6.99）：2.5万 PV/月まで。超過 €0.05/1,000PV
+    free: 無料：5,000 PV/月まで（超過購入不可。超えるとその月はバナー停止）・プライバシー／Cookie ポリシーのみ（規約なし）・第三者サービス 3 件まで（比較表は 4 件表記）・1 言語・iubenda ブランド表示
+    usd5: Essentials $5.99/サイト/月（年払い。月払い $6.99。€4.99／€5.99）：2.5万 PV/月まで。超過 €0.05/1,000PV
     usd10: —
-    usd100: Advanced $24.99/月（年払い。月払い $27.99）／Ultimate $99.99（$119.99）
-  limits: PV で課金が増える
+    usd100: Advanced $24.99/月（年払い。月払い $27.99）：5 万 PV／Ultimate $99.99（$119.99）：15 万 PV
+  limits: PV で課金が増える。料金は VAT 別
   lock_in: 低〜中（同意記録は移しにくい）
   liability_compliance: 雛形。弁護士の代わりではない
   security: —
   pairs_well_with: [lt.consent-before-tracking]
   source:
     url: https://www.iubenda.com/en/pricing
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
+    note: '無料枠の上限は https://www.iubenda.com/en/help/379-free-plan-limitations/（2026-08-25 更新）と https://www.iubenda.com/app/en/pricing_comparison で 2026-11-03 確認。料金ページ本文には無料枠の数値なし'
 - id: lt.getterms
   name: GetTerms
   what: 安い月額か買い切りで規約・ポリシーを作る
@@ -60,7 +61,7 @@ entries:
   pairs_well_with: []
   source:
     url: https://getterms.io/pricing
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
 - id: lt.termageddon
   name: Termageddon
@@ -79,7 +80,7 @@ entries:
   pairs_well_with: []
   source:
     url: https://termageddon.com/pricing/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
 - id: lt.lawyer
   name: 弁護士に依頼（AI の下書き＋レビュー）
@@ -98,9 +99,9 @@ entries:
   pairs_well_with: [dd.contracts, gate.privacy_rep]
   source:
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
-    note: 金額は見積もり次第（estimate）
+    note: 公開料金なし。金額は見積もり次第（estimate）
 lessons:
 - id: lt.policy-matches-practice
   principle: "The privacy policy names the real processors, regions and retention periods, and is updated in the same PR that adds a vendor."

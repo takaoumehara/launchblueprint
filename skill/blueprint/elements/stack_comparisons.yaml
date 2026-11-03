@@ -4,7 +4,7 @@
 #        switch_points（安い有料プランと、払った方が運用が楽になる境目：人数・データ量・運用時間）
 #        recommendation（おすすめ・理由・選ばなかったもの）
 domain: stack_comparisons
-updated: '2026-11-02'
+updated: '2026-11-03'
 comparisons:
 - topic: database
   services:
@@ -12,19 +12,19 @@ comparisons:
     free_tier: 500MB の DB・5GB 転送・1GB ファイル。1週間使わないと一時停止。無料は2プロジェクトまで
     paid_entry: Pro $25/月（8GB・毎日バックアップ7日分・停止なし）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: db.neon
     free_tier: 1プロジェクト 1GB（合計 20GB）・計算 100時間/月・5分で自動停止・転送 5GB
     paid_entry: Launch 使った分だけ（計算 $0.106/時・保存 $0.35/GB月。最低料金なし）
     url: https://neon.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: db.firestore
     free_tier: 1GiB 保存・読み取り 5万回/日・書き込み 2万回/日・削除 2万回/日・転送 10GiB/月
     paid_entry: Blaze（使った分だけ。無料分は差し引き）
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: Supabase 1社でデータ・ログイン・ファイル・すぐ反映がそろう。権限の仕組みが1つで、障害時に見る所も1か所。
@@ -54,25 +54,25 @@ comparisons:
     free_tier: 月 5万人（MAU）まで。メール・SNSログイン・匿名・基本の二段階認証
     paid_entry: Pro $25/月で月 10万人まで（その後 1人 $0.00325）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.clerk
     free_tier: 1アプリ 月 5万人（翌日以降も戻った人だけ数える）。SNS 3種まで。二段階認証・パスキーは無し
     paid_entry: Pro $25/月（年払い $20）。パスキー・二段階認証・ロゴ非表示
     url: https://clerk.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.firebase
     free_tier: 月 5万人（Identity Platform）まで。電話の SMS は1通ごとに課金
     paid_entry: 5万人を超えた分は Google Cloud の料金
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.auth0
     free_tier: 月 2.5万人・SNS ログイン無制限・パスキー・独自ドメイン1つ
     paid_entry: Essentials $35/月〜（500人まで。1,000人で $70、1万人で $700）
     url: https://auth0.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.better-auth
     free_tier: OSS 無料（MIT）。ユーザーは自分の DB に残る
@@ -96,13 +96,13 @@ comparisons:
     free_tier: 1万アクティブ・SSO/SCIM 5接続まで無料。急に高くならない従量
     paid_entry: ブランド変更 $99・SSO追加 $125/接続
     url: https://stytch.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: auth.magic
     free_tier: 月1,000ウォレットまで無料（暗号資産ウォレット向けの料金体系）
     paid_entry: $99/月で2,500人
     url: https://magic.link/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: データの置き場所と同じ会社のログインを使うと、ユーザーIDと権限が自動でつながる。
@@ -144,7 +144,7 @@ comparisons:
     free_tier: 月 3,000通・1日 100通まで・独自ドメイン 3つ
     paid_entry: Pro $20/月で月 5万通（1日の上限なし）
     url: https://resend.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: mail.postmark
     name: Postmark
@@ -187,19 +187,19 @@ comparisons:
     free_tier: Hobby 無料：転送 100GB/月・関数 100万回/月。個人・非商用のみ
     paid_entry: Pro $20/月（1人。転送 1TB 込み・商用可）
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: host.cloudflare-pages
     free_tier: ビルド 月500回・同時1つ・1サイト2万ファイル・確認用ページ無制限。関数は 1日10万回まで
     paid_entry: Workers Paid $5/月〜（月1,000万回込み）
     url: https://www.cloudflare.com/plans/developer-platform/
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: host.firebase-hosting
     free_tier: 保存 10GB・転送 1日 360MB
     paid_entry: Blaze：保存 $0.026/GB・転送 $0.15/GB
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: 画面・関数・確認用ページを1社に置くと、公開作業が1回で、ログも1か所。
@@ -223,10 +223,10 @@ comparisons:
 - topic: payments
   services:
   - id: pay.stripe-checkout
-    free_tier: 月額なし。米国カード 2.9%＋30¢／件・チャージバック $15／件
+    free_tier: 月額なし。米国カード 2.9%＋30¢／件（海外カード +1.5%・通貨換算 +1%）・チャージバック $15／件
     paid_entry: 同じ（手数料だけ）。税の自動計算は別料金
-    url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    url: 'https://stripe.com/pricing'
+    checked: '2026-11-03'
     verified: true
   - id: pay.stripe-connect
     free_tier: Stripe が手数料を売り手から取る方式なら、プラットフォームの追加料金なし
@@ -286,7 +286,7 @@ comparisons:
     free_tier: 無料（オープンソース）。EAS 無料：月 iOS 15回・Android 15回のビルド、更新配信 1,000人まで
     paid_entry: Starter $19/月（ビルド代 $45 分・優先キュー・更新 3,000人）
     url: https://expo.dev/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: ウェブは Next.js 1つで画面もサーバー処理も書く。AI が一番書き慣れている。
@@ -313,13 +313,13 @@ comparisons:
     free_tier: 1GB・転送 5GB・1ファイル 50MB まで
     paid_entry: Pro $25/月（100GB・1ファイル 500GB まで）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: st.vercel-blob
     free_tier: 1GB・読み取り 1万回/月・書き込み 2千回/月・転送 10GB
     paid_entry: Pro：保存 $0.023/GB
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: st.r2
     name: Cloudflare R2
@@ -332,7 +332,7 @@ comparisons:
     free_tier: 動画の取り込み無料・視聴 月10万分無料・毎月 $20 分の利用枠
     paid_entry: 保存 1分 $0.003/月・視聴 10万分を超えたら 1分 $0.001
     url: https://www.mux.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: データの置き場所（Supabase）にファイルも置くと、誰が見られるかの決まりを1つで書ける。
@@ -370,7 +370,7 @@ comparisons:
     free_tier: 検索 月1万回・5万件・おすすめ 5千回
     paid_entry: Grow：1万回を超えたら 1,000回 $0.50・10万件を超えたら 1,000件 $0.40
     url: https://www.algolia.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: データの置き場所の中で検索すると、データを写す仕組みがいらない。
@@ -395,13 +395,13 @@ comparisons:
     free_tier: 同時接続 200・メッセージ 月200万
     paid_entry: Pro $25/月（同時 500・月500万。その後 1,000接続 $10）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: rt.firebase-rtdb
     free_tier: 同時接続 100・保存 1GB・転送 月10GB
     paid_entry: Blaze：保存 $5/GB・転送 $1/GB
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: rt.ably
     name: Ably
@@ -435,7 +435,7 @@ comparisons:
     free_tier: 毎月の無料クレジットあり（使えるモデルは一部・回数制限あり）
     paid_entry: AI 会社の定価そのまま（上乗せなし）。予算の上限を設定できる
     url: https://vercel.com/docs/ai-gateway/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: ai.firebase-ai-logic
     free_tier: Gemini の無料枠に従う
@@ -475,13 +475,13 @@ comparisons:
     free_tier: Hobby に含まれる（変更ごとの確認用ページ・自動公開）
     paid_entry: Pro $20/月に含まれる
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: ci.github-actions
     free_tier: 公開リポジトリは無料。非公開は月 $12 分（Linux で約2,000分）・成果物 500MB
     paid_entry: 超えた分：Linux 1分 $0.006
     url: https://docs.github.com/en/billing/concepts/product-billing/github-actions
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: ci.eas-workflows
     name: Expo EAS Workflows
@@ -512,22 +512,22 @@ comparisons:
 - topic: monitoring
   services:
   - id: mon.sentry
-    free_tier: 1人・エラー 月5万件・トレース・メール通知
-    paid_entry: Team $26/月（人数無制限・外部連携）
-    url: https://sentry.io/pricing/
-    checked: '2026-10-28'
+    free_tier: 1人・エラー 月5,000件・トレース・メール通知
+    paid_entry: Team $29/月（年払い $26、人数無制限・外部連携）
+    url: 'https://sentry.io/pricing/'
+    checked: '2026-11-03'
     verified: true
   - id: mon.crashlytics
     free_tier: 無料（アプリの落ち方の収集）
     paid_entry: —
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: mon.vercel-observability
     free_tier: Hobby に含まれる（関数ログは1時間分）
     paid_entry: Pro で1日分。Observability Plus 30日分（イベント 100万件 $1.20）
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: エラーは Sentry 1つに集めると、画面とサーバーの両方の失敗を1か所で見られる。
@@ -560,7 +560,7 @@ comparisons:
     free_tier: Hobby：自動の DDoS 対策・AI ボット/ボット対策ルール・独自ルール3つ・IP 遮断10件
     paid_entry: Pro：独自ルール40・回数制限 100万回 $0.50〜
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: sec.secrets
     free_tier: ホストの環境変数は無料
@@ -638,19 +638,19 @@ comparisons:
     free_tier: Free：20人・1万件・API 25万回/月・公開データのみ・編集者ロールなし
     paid_entry: Growth $15/人/月
     url: https://www.sanity.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: cms.storyblok
-    free_tier: Starter：1人（+$15で2人まで）・API 10万回/月
+    free_tier: Starter：1人（最大2人、追加席の購入は不可）・API 10万回/月
     paid_entry: Growth $99/月（年払い $90.75）・5人
-    url: https://www.storyblok.com/pricing
-    checked: '2026-10-29'
+    url: 'https://www.storyblok.com/pricing'
+    checked: '2026-11-03'
     verified: true
   - id: cms.tina
     free_tier: Free：2人・100GB
     paid_entry: Team $29/月（年払い $24）・3人
     url: https://tina.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: cms.sheets
     free_tier: Sheets API 無料（読み書き各 300回/分/プロジェクト）／SheetDB Free：月500回
@@ -716,7 +716,7 @@ comparisons:
     free_tier: エディタ本体 MIT・無料
     paid_entry: Start $59/月（年払い $49）：共同編集・履歴・コメント
     url: https://tiptap.dev/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: edit.blocknote
     free_tier: 本体 MPL-2.0・無料（@blocknote/xl-* は GPL-3.0 か商用）
@@ -771,19 +771,19 @@ comparisons:
     free_tier: React FREE（商用可・1人）
     paid_entry: React PRO SOLO $349・Figma PRO SOLO $129（買い切り。似た部品集の再販禁止）
     url: https://www.untitledui.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: ui.magicui
     free_tier: 無料版 MIT
-    paid_entry: Pro $49（買い切り・商用可・再販不可）
-    url: https://pro.magicui.design/
-    checked: '2026-10-29'
+    paid_entry: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
+    url: 'https://pro.magicui.design/'
+    checked: '2026-11-03'
     verified: true
   - id: ui.aceternity
     free_tier: 無料部品あり
     paid_entry: 1年 $169／チーム10人 $1,590
     url: https://ui.aceternity.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: ui.heroui
     free_tier: Apache-2.0・無料
@@ -838,9 +838,9 @@ comparisons:
   - {id: i18n.paraglide, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/@inlang/paraglide-js', checked: '2026-10-30', verified: true}
   - {id: i18n.lint-i18next, name: eslint-plugin-i18next, free_tier: ISC・無料, paid_entry: —, url: 'https://www.npmjs.com/package/eslint-plugin-i18next', checked: '2026-10-30', verified: true}
   - {id: i18n.lint-formatjs, name: eslint-plugin-formatjs, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/eslint-plugin-formatjs', checked: '2026-10-30', verified: true}
-  - {id: i18n.tms-tolgee, name: Tolgee, free_tier: Cloud 無料 3人・30,000語（自前運用も可）, paid_entry: Translate €58/月（年払い・人数無制限）, url: 'https://tolgee.io/pricing', checked: '2026-10-30', verified: true}
-  - {id: i18n.tms-crowdin, name: Crowdin, free_tier: OSS 向け無料（プロジェクト・文字列・人数無制限。申請制）。個人向けの無料枠は不明, paid_entry: 未確認（金額はページがスクリプト描画で読めず。Team は 14 日試用）, url: 'https://crowdin.com/pricing', checked: '2026-11-02', verified: false}
-  - {id: i18n.tms-lokalise, name: Lokalise, free_tier: 無料プランなし（14日試用のみ）, paid_entry: Explorer $149/月（月払い表示）／Growth $379／Advanced $1,049, url: 'https://lokalise.com/pricing', checked: '2026-11-02', verified: true}
+  - {id: i18n.tms-tolgee, name: Tolgee, free_tier: Cloud 無料 3人・30,000語（自前運用も可）, paid_entry: Translate €58/月（年払い・人数無制限）, url: 'https://tolgee.io/pricing', checked: '2026-11-03', verified: true}
+  - {id: i18n.tms-crowdin, name: Crowdin, free_tier: OSS 向け無料（OSI 承認ライセンス・申請制）。個人向けは公式比較ページに Freelancer $0/月 とあるが上限は未確認, paid_entry: '公式比較ページに「$50/月から」・Team $150/月、ヘルプに Team $179/月（月払い）の例。料金ページ本文は金額が読めず未確認 2026-11-03', url: 'https://crowdin.com/pricing', checked: '2026-11-03', verified: false}
+  - {id: i18n.tms-lokalise, name: Lokalise, free_tier: 無料プランなし（14日試用のみ）, paid_entry: Explorer $149/月（月払い表示）／Growth $379／Advanced $1,049, url: 'https://lokalise.com/pricing', checked: '2026-11-03', verified: true}
   combine:
     single: 1つのライブラリ＋その lint だけ。翻訳はリポジトリの JSON を AI と人で直し、CI で抜けを検査。費用ゼロで、AI がファイルを直接直せる。
     combined: ライブラリ＋lint＋翻訳管理（TMS）の無料枠。翻訳者が画面で直し、GitHub 連携で JSON に戻る。
@@ -867,41 +867,41 @@ comparisons:
 - topic: idea_validation
   services:
   - id: val.tally
-    free_tier: フォーム・回答ともに無制限（フェアユース）
-    paid_entry: Pro $24/月
+    free_tier: フォーム・回答ともに無制限（フェアユース。添付 1 件 10 MB まで）
+    paid_entry: Pro $24/月（年払いは 2 か月分割引）
     url: https://tally.so/pricing
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: val.lp-own
-    free_tier: ホストの無料枠内（Hobby は非商用のみ。公開リンクは会社ドメイン）
+    free_tier: ホストの無料枠内（Vercel Hobby $0 は個人・非商用のみ。公開リンクは会社ドメイン）
     paid_entry: Vercel Pro $20/月
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: val.carrd
-    free_tier: 無料（サイト数・要素数に上限。数値は非表示）
-    paid_entry: Pro Lite $9/年（3サイト）／Pro Standard $19/年（フォーム・独自ドメイン）
+    free_tier: 無料：3 サイト・1 サイト 50 要素まで。独自ドメイン・フォーム不可・Carrd 表示あり
+    paid_entry: Pro Lite $9/年（3サイト・独自ドメイン不可）／Pro Standard $19/年（10サイト・フォーム・独自ドメイン）
     url: https://carrd.com/pro
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: val.framer
-    free_tier: Free：転送 1GB・Framer ドメイン・1 言語
+    free_tier: Free $0：転送 1GB・Framer ドメイン・CMS 10 コレクション・1,000 ページ・1 言語
     paid_entry: Basic $10/月（独自ドメイン）
     url: https://www.framer.com/pricing/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: val.typeform
-    free_tier: 回答数に上限（数値はページに非表示）
-    paid_entry: Basic $29/月（年払い $25）
+    free_tier: 回答数に上限（料金ページに数値なし。ヘルプの検索抜粋では 10 件/月、本文は読めず未確認）
+    paid_entry: Basic $39/月（年払い $28/月）：100 回答/月・1 人
     url: https://www.typeform.com/pricing/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: val.google-forms
-    free_tier: 無料
-    paid_entry: —
-    url: https://www.google.com/forms/about/
-    checked: null
-    verified: false
+    free_tier: 個人の Google アカウントで無料（公式ページに金額の明記なし）
+    paid_entry: Google Workspace Business Starter $7/ユーザー/月（年契約）
+    url: https://workspace.google.com/pricing
+    checked: '2026-11-03'
+    verified: true
   combine:
     single: 本番と同じホストに LP と計測を置けば、公開後もそのまま育てられ、訪問→登録率を本番の分析（analytics）で見られる。
     combined: Carrd か Framer の無料 LP に Tally を埋め込むと、コードゼロ・費用ゼロで今日中に出せる。
@@ -911,7 +911,7 @@ comparisons:
     upgrade_to: Carrd Pro Standard $19/年 か Framer Basic $10/月、または自作 LP を本番ホストへ
     why: 無料プランは独自ドメイン不可。会社ドメインでない公開リンクは禁止（R-004）。
   - when: インタビューの予約や分岐つきの質問が要る
-    upgrade_to: Typeform Basic $29/月
+    upgrade_to: Typeform Basic $39/月（年払い $28/月）
     why: 分岐と回答率。少数のインタビュー候補を絞る段階だけ。
   - when: ホストを決めた（hosting が決定）
     upgrade_to: val.lp-own（本番ホストの LP）
@@ -945,10 +945,10 @@ comparisons:
     checked: '2026-10-26'
     verified: true
   - id: pm.usage
-    free_tier: 計測（メーター）を自分で作る。従量請求は決済側の手数料
-    paid_entry: —
-    url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    free_tier: 計測（メーター）を自分で作る。Stripe Billing は Pay as you go 0.7%
+    paid_entry: 月額プラン $620/月〜（1年契約）
+    url: 'https://stripe.com/pricing'
+    checked: '2026-11-03'
     verified: true
   - id: pm.one-time
     free_tier: 決済側の追加料金なし（MoR なら 5%+50¢）
@@ -991,34 +991,34 @@ comparisons:
 - topic: legal_terms
   services:
   - id: lt.termly
-    free_tier: 基本ポリシー 1 本・バナー 1 万回/月
-    paid_entry: Starter $10/サイト/月（年払い。月払い $14）
+    free_tier: 基本ポリシー 1 本・バナー 1 万回/月・スキャン四半期 1 回・1 サイト
+    paid_entry: Starter $10/サイト/月（年払い。月払い $14）：ポリシー 2 本・バナー 5 万回/月
     url: https://termly.io/pricing/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: lt.iubenda
-    free_tier: 無料枠あり（上限はページに非表示）
-    paid_entry: Essentials $5.99/サイト/月（年払い）：2.5万 PV まで
+    free_tier: 無料：5,000 PV/月まで（超えるとその月はバナー停止）・プライバシー／Cookie ポリシーのみ・第三者 3 件・1 言語・ブランド表示
+    paid_entry: Essentials $5.99/サイト/月（年払い。月払い $6.99）：2.5万 PV まで。超過 €0.05/1,000PV
     url: https://www.iubenda.com/en/pricing
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: lt.getterms
     free_tier: 無料版（ブランド表示つき）
-    paid_entry: Starter $5/月（年払い）または買い切り $199
+    paid_entry: Starter $5/月（年払い。月払い $9）または買い切り $199
     url: https://getterms.io/pricing
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: lt.termageddon
-    free_tier: —
-    paid_entry: $12/月 または $119/年
+    free_tier: —（無料プランなし）
+    paid_entry: $12/月 または $119/年（サイトごと）
     url: https://termageddon.com/pricing/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: lt.lawyer
     free_tier: —
-    paid_entry: 見積もり（国・案件で大きく違う）
+    paid_entry: 公開料金なし。見積もり（国・案件で大きく違う）
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
   combine:
     single: 生成ツール 1 つでプライバシー・規約・Cookie バナーをそろえ、法改正の更新を任せる。
@@ -1039,7 +1039,7 @@ comparisons:
     reason: 無料でプライバシーポリシー 1 本と Cookie バナーを今日出せ、必要になったら $10/月 で規約も足せる。実際の構成と一致させる確認（lt.policy-matches-practice）を必ず添える。
     rejected:
     - option: lt.iubenda
-      why: EU 中心・同意記録が要る時の第一候補。無料枠の内容が非表示で、PV 課金が増える。
+      why: EU 中心・同意記録が要る時の第一候補。無料枠は月 5,000 PV・規約なし・1 言語（2026-11-03 確認）で、PV が増えると課金が増える。
     - option: lt.getterms
       why: 買い切り $199 は長く使うなら最安。Cookie 同意の管理はない。
     - option: lt.termageddon
@@ -1052,7 +1052,7 @@ comparisons:
     free_tier: R2 10GB・転送無料（自前の cron）
     paid_entry: 保存 $0.015/GB
     url: https://developers.cloudflare.com/r2/pricing/
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: bk.supabase-builtin
     free_tier: —（Free にバックアップなし）
@@ -1339,7 +1339,7 @@ comparisons:
     free_tier: Hobby：5 万イベント/月（Cookie なし）
     paid_entry: Pro アドオン $10/月（UTM 等）、超過 $3/10 万イベント
     url: https://vercel.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: PostHog 1 つで訪問・ファネル・録画・フラグ・エラーまで見られ、イベント辞書も 1 つで済む。
@@ -1619,10 +1619,10 @@ comparisons:
 
 - topic: backend
   services:
-  - {id: be.route-handlers, free_tier: ホストの無料枠内（関数の実行時間と回数はホスト側の上限。金額未確認）, paid_entry: ホストの有料プランに含まれる（Vercel Pro $20/月 等。本比較では未確認）, url: 'https://nextjs.org/docs/app/building-your-application/routing/route-handlers', checked: '2026-11-02', verified: false}
-  - {id: be.cloud-run, free_tier: 無料枠あり（月あたりの vCPU 秒・リクエスト数の上限は未確認）, paid_entry: 使った分だけ（金額未確認）, url: 'https://cloud.google.com/run/pricing', checked: '2026-11-02', verified: false}
-  - {id: be.supabase-edge, name: Supabase Edge Functions, free_tier: Supabase 無料プランに含まれる（呼び出し回数の上限は未確認）, paid_entry: Pro $25/月に含まれる（上限は未確認）, url: 'https://supabase.com/pricing', checked: '2026-11-02', verified: false}
-  - {id: be.cloudflare-workers, name: Cloudflare Workers, free_tier: 無料枠あり（1日あたりのリクエスト数と CPU 時間の上限は未確認）, paid_entry: Workers Paid $5/月（金額未確認）, url: 'https://workers.cloudflare.com/', checked: '2026-11-02', verified: false}
+  - {id: be.route-handlers, free_tier: 'ホストの無料枠内。Vercel Hobby $0（個人・非商用のみ）：Active CPU 4 時間・メモリ 360 GB時・呼び出し 100万回/月。関数の最長 300 秒', paid_entry: 'Vercel Pro $20/月（$20 分のクレジット込み。超過は Active CPU $0.128/時・呼び出し $0.60/100万回）。最長 800 秒', url: 'https://vercel.com/pricing', checked: '2026-11-03', verified: true}
+  - {id: be.cloud-run, free_tier: '無料枠（請求アカウント単位・月）：リクエスト 200万回・メモリ 360,000 GB秒・vCPU 180,000 秒・北米発送信 1 GB（リクエスト課金の場合）', paid_entry: '使った分だけ（単価は料金ページ本文が読めず未確認 2026-11-03）。リクエスト課金とインスタンス課金の 2 方式', url: 'https://docs.cloud.google.com/free/docs/free-cloud-features', checked: '2026-11-03', verified: true}
+  - {id: be.supabase-edge, name: Supabase Edge Functions, free_tier: 'Supabase Free $0：Edge Functions 呼び出し 50 万回/月。1 週間使わないとプロジェクト停止', paid_entry: 'Pro $25/月〜：200 万回/月込み、超過 $2/100万回', url: 'https://supabase.com/pricing', checked: '2026-11-03', verified: true}
+  - {id: be.cloudflare-workers, name: Cloudflare Workers, free_tier: 'Workers Free：10 万リクエスト/日・1 回あたり CPU 10 ms', paid_entry: 'Workers Paid $5/月〜：1,000 万リクエスト/月・CPU 3,000 万 ms/月込み。超過 $0.30/100万リクエスト・$0.02/100万 CPU ms', url: 'https://developers.cloudflare.com/workers/platform/pricing/', checked: '2026-11-03', verified: true}
   combine:
     single: 画面と同じ場所（Next.js の Route Handlers / Server Actions）に裏側も置く。契約・公開作業・環境変数が1つで、AI も一番書き慣れている。
     combined: 画面はホストに置き、長い処理・定期処理・別言語の処理だけを別の実行環境（コンテナや Workers）に出す。
@@ -1639,7 +1639,7 @@ comparisons:
     why: 同居させる画面側のサーバーがない。
   recommendation:
     pick: be.route-handlers
-    reason: 画面と同じ場所に置けば、作る・直す・公開するが1つで済み、無料枠もホストと共通。長い処理や定期処理が出てきた時だけ、その処理を1つ外に出す。料金と上限は未確認なので、使うと決めた時に公式ページで確かめる。
+    reason: 画面と同じ場所に置けば、作る・直す・公開するが1つで済み、無料枠もホストと共通。長い処理や定期処理が出てきた時だけ、その処理を1つ外に出す。料金と上限は 2026-11-03 に公式ページで確認（Hobby は非商用のみ）。
     rejected:
     - {option: be.cloud-run, why: 自由度は高いが、コンテナの作成・公開作業・監視が別に要る。長い処理やスマホアプリ専用の API の時の候補。}
     - {option: be.supabase-edge, why: データの置き場所が Supabase なら相性がよいが、画面側に Route Handlers があるなら2か所目になる。}

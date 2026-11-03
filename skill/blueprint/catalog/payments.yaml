@@ -1,5 +1,5 @@
 domain: payments
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 entries:
 - id: pay.stripe-checkout
@@ -12,7 +12,7 @@ entries:
     usd5: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
     usd10: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
     usd100: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
-  limits: 国ごとに対応手段が違う。海外カード +1%
+  limits: 国ごとに対応手段が違う。海外カード +1.5%、通貨換算 +1%
   lock_in: 中
   liability_compliance: チャージバックは販売者（自社）。紛争受付 $15
   security: Webhook 署名を検証
@@ -20,7 +20,7 @@ entries:
   - fe.nextjs
   source:
     url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: pay.stripe-connect
   name: Stripe Connect
@@ -58,10 +58,10 @@ entries:
   best_for: 英国・EU のマーケットプレイス／プラットフォーム。出店者の KYC 自動化、分割払い（Split Payments）、手数料の取り方を細かく決めたい、個別担当がほしい場合
   avoid_when: 米国中心の販売、日本向け、公開料金で即日始めたい小規模、Stripe 並みの周辺機能（Billing/Tax/Radar 等）を一式で使いたい場合
   pricing_bands:
-    free: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
-    usd5: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
-    usd10: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
-    usd100: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
+    free: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
+    usd5: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
+    usd10: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
+    usd100: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
   limits: 営業経由の契約（審査あり）。定期課金は日次／月次サイクル。対応国：英国＋EU 各国（公式の一覧は未確認）。米国対応は第三者ページの記載のみで未確認。通貨・入金サイクル・SDK
     言語は未確認
   lock_in: 中〜高：サブアカウント（出店者）と KYC 情報の移行が重い
@@ -69,8 +69,9 @@ entries:
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
   - url: https://www.ryftpay.com/pricing
-    checked: '2026-10-27'
+    checked: '2026-11-03'
     verified: true
+    note: '2026-11-03 再確認：公開料金なし（取扱高に応じた個別提案。サブアカウント費用込みの月額 SaaS 料金は提案時に合意）'
   - url: https://developer.ryftpay.com/documentation/overview/marketplaces
     checked: '2026-10-27'
     verified: true
@@ -229,7 +230,7 @@ entries:
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.paypal.com/us/business/paypal-business-fees
-    checked: '2026-10-27'
+    checked: '2026-11-03'
     verified: true
 - id: pay.venmo
   name: Venmo（Pay with Venmo / ビジネスプロフィール）
@@ -238,7 +239,7 @@ entries:
   avoid_when: 単独の決済基盤にしたい場合・米国外の購入者がいる場合・チケット販売（在庫・QR・払い戻しの仕組みがない）
   recommendation: 単独では使わない。追加の支払い方法として足す
   pricing_bands:
-    free: 'ウェブ（PayPal 経由の Pay with Venmo）3.49%+49¢。アプリ内ビジネスプロフィール 1.9%+10¢（$1超）、Tap to Pay 2.29%+9¢'
+    free: 'ウェブ（PayPal 経由の Pay with Venmo）3.49%+49¢。アプリ内ビジネスプロフィール 1.9%+10¢、Tap to Pay 2.29%+9¢'
     usd5: 同左
     usd10: 同左
     usd100: 同左
@@ -252,7 +253,7 @@ entries:
   source:
     url: https://venmo.com/resources/our-fees
     also: [https://www.paypal.com/us/business/paypal-business-fees, https://venmo.com/business/profiles]
-    checked: '2026-10-27'
+    checked: '2026-11-03'
     verified: true
     note: 'Tap to Pay は料金表 2.29%+9¢、ビジネス紹介ページは 2.9%+9¢ と食い違い。料金表を優先'
 - id: pay.komoju

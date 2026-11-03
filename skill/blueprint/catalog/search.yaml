@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — search
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: search
-updated: '2026-10-26'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -11,7 +11,7 @@ entries:
   best_for: 件数が少ない〜中
   avoid_when: 検索がサービスの主役で、何十万件を一瞬で絞りたい時
   pricing_bands:
-    free: DB 料金内
+    free: DB 料金内（PostgreSQL 本体は PostgreSQL License：用途を問わず無料・商用可）
     usd5: DB 料金内
     usd10: DB 料金内
     usd100: DB 料金内
@@ -24,9 +24,9 @@ entries:
   - db.neon
   source:
     url: https://www.postgresql.org/docs/current/textsearch.html
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    checked: '2026-11-03'
+    verified: true
+    note: '全文検索は PostgreSQL 18 文書 第 12 章。ライセンスは https://www.postgresql.org/about/licence/（BSD/MIT 類似。無料・商用可）で 2026-11-03 確認。pgvector は別途拡張'
 - id: se.algolia
   name: Algolia
   what: ホスト型検索
@@ -45,5 +45,5 @@ entries:
   - fe.nextjs
   source:
     url: https://www.algolia.com/pricing/
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
