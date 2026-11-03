@@ -1,6 +1,6 @@
 # エンジニアでない人のための Blueprint の歩き方
 
-English summary: a step-by-step walkthrough of the web app for someone who does not write code. Four intake answers → a map of 41 decisions in six stages → decide one at a time (accept the AI pick or choose) → export YAML and hand it to an AI agent. The last section lists the friction found while writing this and what was fixed.
+English summary: a step-by-step walkthrough of the web app for someone who does not write code. Four intake answers → a map of 60 decisions in five stages → decide one at a time (accept the AI pick or choose) → export YAML and hand it to an AI agent. The last section lists the friction found while writing this and what was fixed.
 
 提供：CREATIVITY IS EVERYWHERE, LLC。見本は「小さなスタジオの予約アプリ」。実在のプロダクト名・人名は入れません。
 

@@ -6,8 +6,8 @@
 
 ## What you get
 
-- **A map of 41 decisions in six stages** (idea, build, launch, operate, scale, exit) and six lanes (brand, UX, UI, tech, business/legal, rules). Lines on the map are real dependencies only.
-- **A catalog of 34 areas and 407 items**: services, rules and lessons, each with a source and the date it was checked. Unverified numbers are marked `verified: false` instead of guessed.
+- **A map of 60 decisions in five stages** (idea, launch, operate, scale, exit) and six lanes (brand, UX, UI, tech, business/legal, rules). Lines on the map are real dependencies only.
+- **A catalog of 42 areas and 607 items**: services, rules and lessons, each with a source and the date it was checked. Unverified numbers are marked `verified: false` instead of guessed.
 - **A stack comparison for every tech decision** (rule R-030): similar services and free tiers, one vendor vs combining several, when a cheap paid plan is worth it, the pick and the rejected alternatives.
 - **A project map you own.** The app exports YAML in a fixed shape; an agent can draft the same shape with `draft_project_map`. Nothing is marked decided without the owner.
 

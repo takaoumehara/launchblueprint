@@ -9,10 +9,10 @@ Three layers:
 | Layer | File | What it holds |
 |---|---|---|
 | Elements | `skill/blueprint/elements/elements.yaml` | 7 principles that rarely change (experience, product, business, marketing, brand, maintenance, security) |
-| Tactics | `skill/blueprint/elements/tactics.yaml` | 41 decisions. Each has a stage, a lane, options (catalog ids), an AI pick, and `depends_on` |
+| Tactics | `skill/blueprint/elements/tactics.yaml` | 60 decisions. Each has a stage, a lane, Japanese and English labels, options (catalog ids), a rule-based pick, and `depends_on` |
 | Project map | exported by the app or `draft_project_map` | your project: status per decision, pick, reason, rejected options |
 
-Six stages: idea → build → launch → operate → scale → exit. Six lanes: BRAND, UX, UI, TECH, BIZ/LEGAL, RULES.
+Five stages: idea → launch → operate → scale → exit. Six lanes: BRAND, UX, UI, TECH, BIZ/LEGAL, RULES.
 
 ## A. Five minutes as a non-engineer (web app)
 
@@ -23,7 +23,7 @@ cd app && npm ci && npm run dev
 Open the URL Vite prints. Then:
 
 1. **01 始める (Start).** Type a name and a one-line goal. Answer four questions: who it is for, where it runs, how money moves, which country. Press "地図を見る →".
-2. **02 地図 (Map).** The strip at the top shows the six stages with a large number (decided) over a small one (total) and one square per decision. The map below has six lanes of dots. Lines are real dependencies only. "まずここから" (start here) lists the three decisions you can make right now.
+2. **02 地図 (Map).** The strip at the top shows the five stages with a large number (decided) over a small one (total) and one square per decision. The map below has six lanes of dots. Lines are real dependencies only. "まずここから" (start here) lists the three decisions you can make right now.
 3. **03 決める (Decide).** Open a dot. Accept the AI pick ("おすすめで決める") or choose another option and press "選んだものに決める". Checklists need every box ticked. Tech decisions show a stack comparison underneath: similar services and free tiers, one vendor vs combining several, when a paid plan is worth it, the pick and the rejected ones.
 4. Repeat until the stage numbers fill up. Decided dots and their lines turn orange.
 5. **EXPORT YAML** (top right) and give the file to your AI agent. "MARKDOWN" gives a human-readable version.
@@ -68,12 +68,12 @@ Without MCP, an agent can read `app/dist/llms.txt` and `app/dist/data.json` afte
 
 ## C. How to read the map
 
-- **Stage strip (top).** Six stages. Large thin numeral = decided, small = total. Squares: outline = open, white = AI pick waiting ("仮"), orange = decided. Press a stage to light up only its decisions.
+- **Stage strip (top).** Five stages. Large thin numeral = decided, small = total. Squares: outline = open, white = suggestion waiting ("仮"), orange = decided. Press a stage to light up only its decisions.
 - **Dots.** Outline = open, white = AI pick waiting, orange = decided. The small line under a dot shows the current pick.
 - **Lines.** Only `depends_on` from `tactics.yaml`; nothing decorative. A line turns orange when both ends are decided. Press T to show only the decided path.
 - **Lanes.** BRAND, UX, UI, TECH, BIZ/LEGAL, RULES, left to right.
 - **TRACE** (bottom right). Number of decided steps.
-- **04 カタログ (Catalog).** All 34 catalog areas and 407 items, with which decisions use each item.
+- **04 カタログ (Catalog).** All 42 catalog areas and 607 items, with which decisions use each item.
 
 ## D. What is in the catalog
 
