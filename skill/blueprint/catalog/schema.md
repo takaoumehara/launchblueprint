@@ -9,6 +9,7 @@
 | （追加 2026-10-26） | data_protection（2026-10-28、lessons[]） / gtm_channels / support / cross_border / app_distribution / exit_dd / scale_readiness / dd_dashboard / business_setup（2026-10-27、`lessons[]`＝id, jurisdiction, principle, anti_pattern, why, check, see_also, verified）。工程の網羅表は `lifecycle.yaml`（stage, domain, item, status, evidence, proposed_addition, priority） |
 | （追加 2026-11-02） | validation / pricing / legal_terms / backup_dr / cost_control / ops_handoff / exit_tools。どれも `entries[]`（通常の形）＋ `lessons[]`（id, principle, anti_pattern, why, check, see_also, verified）。gtm_channels・monitoring にも entries/lessons を追加。人向けの網羅表は `reference/coverage.md` |
 | （追加 2026-11-03） | foresight（先読み）。entries は無く、`lessons[]`（id `fs.L01`〜、principle, anti_pattern, why, check, trigger＝いつ確かめるか, stage＝idea/launch/operate/scale/exit, see_also, verified, source）＋ `procedures[]`（id `fs.A`〜`fs.F`、name_ja, trigger, stage, also_stages[], what, check, reference＝`reference/foresight.md#proc-x`）＋ `cross_rules[]`（id `fs.X1`〜、lessons と同じ形）。`stale_after_days: 365`（料金を持たない） |
+| （追加 2026-11-03） | client_collaboration（クライアントワーク）。entries は無く、`lessons[]`（id `collab.*`、stage, principle, anti_pattern, why, check, see_also, verified, date）＋ `phase_gate_checks[]`（id `gate.collab_*`、lifecycle, phase, check, why, rules＝まとめる lessons の id）。固有名（会社・店・人・製品）は書かない。人向けは `reference/client-collaboration.md` |
 | `updated` | 最後に直した日 |
 | `stale_after_days` | この日数を過ぎた `source.checked` は「古い」扱い（既定90） |
 
