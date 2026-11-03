@@ -24,9 +24,10 @@ Open the URL Vite prints. Then:
 
 1. **01 始める (Start).** Type a name and a one-line goal. Answer four questions: who it is for, where it runs, how money moves, which country. Press "地図を見る →".
 2. **02 地図 (Map).** The strip at the top shows the five stages with a large number (decided) over a small one (total) and one square per decision. The map below has six lanes of dots. Lines are real dependencies only. "まずここから" (start here) lists the three decisions you can make right now.
-3. **03 決める (Decide).** Open a dot. Accept the AI pick ("おすすめで決める") or choose another option and press "選んだものに決める". Checklists need every box ticked. Tech decisions show a stack comparison underneath: similar services and free tiers, one vendor vs combining several, when a paid plan is worth it, the pick and the rejected ones.
-4. Repeat until the stage numbers fill up. Decided dots and their lines turn orange.
-5. **EXPORT YAML** (top right) and give the file to your AI agent. "MARKDOWN" gives a human-readable version.
+3. **03 決める (Decide).** Open a dot. The suggestion comes from your four answers and the rules in `tactics.yaml` (the screen says so; a real model answers only when the host enables `VITE_BP_AI_PICK` + `BP_AI_PICK` with a server-side key, see `app/.env.example`). Accept it ("おすすめで決める") or choose another option and press "選んだものに決める". Checklists need every box ticked. Tech decisions show a stack comparison underneath: similar services and free tiers, one vendor vs combining several, when a paid plan is worth it, the pick and the rejected ones.
+4. Repeat until the stage numbers fill up. Decided dots and the lines between decided dots turn orange and glow; on a phone the same lines run down the left of the per-stage list.
+5. **JA / EN** (top right) switches every label, question and control to English; option details stay Japanese for now. **LIGHT / DARK** switches the theme.
+6. **EXPORT YAML** (top right) and give the file to your AI agent. "MARKDOWN" gives a human-readable version.
 
 The answers stay in your browser only. A longer, screen-by-screen walkthrough in Japanese is in `skill/blueprint/reference/walkthrough-non-engineer.md`.
 

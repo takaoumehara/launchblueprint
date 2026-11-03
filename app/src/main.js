@@ -21,6 +21,7 @@ const lbl = t => LANG === 'en' && t.label_en ? t.label_en : t.label_ja;
 const qst = t => LANG === 'en' && t.question_en ? t.question_en : t.question_ja;
 const laneName = l => LANG === 'en' ? (l.en || l.label) : l.ja;
 const stageName = s => LANG === 'en' ? s.label[0] + s.label.slice(1).toLowerCase() : s.ja;
+const stageSub = s => LANG === 'en' ? '' : s.ja; // the mono LABEL already reads as English
 const stageWhat = s => LANG === 'en' ? (s.what_en || '') : s.what_ja;
 const elName = e => LANG === 'en' ? (e.name || e.name_ja) : e.name_ja;
 function applyLang() {
@@ -81,7 +82,7 @@ let stageFilter = null;
 // 段の帯：巨大な細い数字（決めた数）と、決めること1件＝四角1つ（未決=枠、仮=白、決定=オレンジ）
 function stageRail(cls = '') {
   return `<section class="stages ${cls}" aria-label="${tr('rail.label')}">${stageProgress().map((p, i) => `<button type="button" class="stg ${stageFilter === p.id ? 'on' : ''} ${p.done === p.total ? 'full' : ''}" data-stage="${p.id}" aria-pressed="${stageFilter === p.id}" title="${esc(stageWhat(p))}">
-    <span class="mono m2">${String(i + 1).padStart(2, '0')} ${esc(p.label)}</span><span class="ja">${esc(stageName(p))}</span>
+    <span class="mono m2">${String(i + 1).padStart(2, '0')} ${esc(p.label)}</span><span class="ja">${esc(stageSub(p))}</span>
     <span class="num2"><b>${String(p.done).padStart(2, '0')}</b><small>/ ${String(p.total).padStart(2, '0')}</small></span>
     <span class="sqs">${p.topics.map(t => `<i class="sq ${status(t)}" title="${esc(lbl(t))}"></i>`).join('')}</span>
     <span class="what">${esc(stageWhat(p))}</span></button>`).join('')}</section>`;
@@ -264,7 +265,7 @@ function viewMap() {
     <h1>${esc(P.name || tr('untitled'))}</h1><p class="lead">${esc(P.goal || tr('map.no.goal'))}</p>
     <div class="quiet" style="position:static;max-width:none;margin-bottom:24px">${quietNext}</div>
     <div class="lwrap"><svg class="glines" aria-hidden="true"></svg>
-    ${byStage.map(({ s, ts }) => `<div class="lsec"><div class="mono"><span class="m3">${String(STAGES.indexOf(s) + 1).padStart(2, '0')}</span> ${esc(s.label)} <span class="m2">· ${esc(stageName(s))}</span></div>
+    ${byStage.map(({ s, ts }) => `<div class="lsec"><div class="mono"><span class="m3">${String(STAGES.indexOf(s) + 1).padStart(2, '0')}</span> ${esc(s.label)}${stageSub(s) ? ` <span class="m2">· ${esc(stageSub(s))}</span>` : ''}</div>
       ${ts.map(t => { const st = status(t); return `<a class="lrow ${st}" href="#/t/${t.topic}" data-topic="${t.topic}"><span class="dot ${st}"></span><span><b>${esc(lbl(t))}</b><small>${esc(LANES[laneIdx(t)].label)} · ${t.depends_on.length ? tr('list.after') + t.depends_on.map(d => lbl(T[d])).join('、') : tr('list.first')}</small></span><span class="mono m2">${STATUS()[st]}</span></a>`; }).join('')}</div>`).join('')}
     </div>
     <div class="quiet" style="position:static;max-width:none;margin-top:24px">${legend}</div>
