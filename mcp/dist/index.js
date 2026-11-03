@@ -78,7 +78,7 @@ function items(d) {
                 const id = kind === "macro_stages" ? `${d}.macro.${it.id}` : it.id ?? `${d}.${it.topic}`;
                 const pb = it.pricing_bands;
                 out.push({ domain: d, kind, id: String(id).includes(".") ? id : `${d}.${id}`,
-                    name: it.name_ja ?? it.label_ja ?? it.name ?? null,
+                    name: it.name_ja ?? it.label_ja ?? it.name ?? null, name_en: it.label_en ?? it.name_en ?? undefined,
                     summary: it.what ?? it.principle_ja ?? it.principle ?? it.question_ja ?? it.item ?? it.rule ?? it.text ?? it.free_tier ?? (Array.isArray(it.must) ? it.must.join("、") : null) ?? (Array.isArray(it.metrics) ? it.metrics.join("、") : null) ?? null,
                     best_for: it.best_for ?? null, avoid: it.avoid_when ?? it.anti_pattern ?? null, why: it.why ?? null,
                     check: it.check ?? it.acceptance ?? null,
@@ -147,7 +147,7 @@ function draftMap(opts) {
     const order = Object.fromEntries((stages ?? []).map((s, i) => [s.id, i]));
     const next = tactics.filter((t) => !isDone(t.topic) && t.depends_on.every((d) => isDone(d)))
         .sort((a, b) => (order[a.stage] ?? 99) - (order[b.stage] ?? 99))
-        .map((t) => ({ topic: t.topic, stage: t.stage, label_ja: t.label_ja, question_ja: t.question_ja, kind: t.kind, ai_pick: aiPick(t, opts.profile)?.id ?? null }));
+        .map((t) => ({ topic: t.topic, stage: t.stage, label_ja: t.label_ja, label_en: t.label_en ?? null, question_ja: t.question_ja, kind: t.kind, ai_pick: aiPick(t, opts.profile)?.id ?? null }));
     const blocked = tactics.filter((t) => !isDone(t.topic) && !t.depends_on.every((d) => isDone(d)))
         .map((t) => ({ topic: t.topic, waiting_for: t.depends_on.filter((d) => !isDone(d)) }));
     const progress = (stages ?? []).map((s) => {
@@ -201,11 +201,11 @@ server.tool("get_template", "Return a template to copy: project.axes.yaml (proje
     return text(fs.readFileSync(p, "utf8"));
 });
 server.tool("get_skill", "Return the Blueprint SKILL.md (the procedure an AI follows: intake questions, research, 12 categories, compare, write the project file, review).", {}, async () => text(fs.readFileSync(path.join(ROOT, "SKILL.md"), "utf8")));
-server.tool("list_topics", "List the decisions (tactics): topic, stage (idea/build/launch/operate/scale/exit), lane, kind (choose one / checklist), options, ai_pick, depends_on, whether a stack comparison exists. Optional stage filter.", { stage: z.enum(LIFECYCLE).optional() }, async ({ stage }) => {
+server.tool("list_topics", "List the decisions (tactics): topic, stage (idea/launch/operate/scale/exit), lane, kind (choose one / checklist), options, ai_pick, depends_on, whether a stack comparison exists. Optional stage filter.", { stage: z.enum(LIFECYCLE).optional() }, async ({ stage }) => {
     const { tactics, stages, lanes } = tacticsDoc();
     const cmp = new Set(comparisons().map(c => c.topic));
     const list = tactics.filter((t) => !stage || t.stage === stage).map((t) => ({
-        topic: t.topic, stage: t.stage, lane: t.lane, element: t.element, label_ja: t.label_ja, question_ja: t.question_ja, kind: t.kind,
+        topic: t.topic, stage: t.stage, lane: t.lane, element: t.element, label_ja: t.label_ja, question_ja: t.question_ja, label_en: t.label_en ?? null, question_en: t.question_en ?? null, kind: t.kind,
         options: t.options, ai_pick: t.ai_pick ?? null, ai_reason_ja: t.ai_reason_ja ?? null, pick_when: t.pick_when ?? [],
         depends_on: t.depends_on, has_comparison: cmp.has(t.topic), last_checked: t.last_checked
     }));
