@@ -445,11 +445,12 @@ comparisons:
     verified: true
   - id: ai.direct
     name: AI 会社に直接つなぐ
-    free_tier: 各 AI 会社の無料枠（会社ごとに違う・要確認）
-    paid_entry: 各社の定価
-    url: https://vercel.com/docs/ai-gateway/pricing
-    checked: null
+    free_tier: 各 AI 会社の無料枠（会社ごとに違う。使う会社の料金ページで確認）
+    paid_entry: 各社の定価（例：Anthropic https://www.anthropic.com/pricing、OpenAI https://openai.com/api/pricing/、Google https://ai.google.dev/gemini-api/docs/pricing）
+    url: https://www.anthropic.com/pricing
+    checked: '2026-11-03'
     verified: false
+    note: 会社ごとに違う一般項目のため金額は書かない（未確認のまま）。URL は代表例
   combine:
     single: 1つの窓口を通すと、AI 会社を後から切り替えても書き直しが少なく、使いすぎの上限も1か所。
     combined: 各社の無料枠を足すために直接つなぐと、無料で試せる量は増える。

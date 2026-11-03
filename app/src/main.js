@@ -180,7 +180,8 @@ function layout(W, H) {
     }
     place();
   }
-  return { pos, lx, y0, step };
+  const maxY = Math.max(...Object.values(pos).map(p => p.y));
+  return { pos, lx, y0, step, maxY };
 }
 function rnd(seed) { let s = 0; for (const c of seed) s = (s * 31 + c.charCodeAt(0)) >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
 // 線は depends_on だけ。決めた同士は太い束（tr）になり、オレンジに光る
@@ -231,8 +232,10 @@ function listStrands(list) {
 function viewMap() {
   const done = D.tactics.filter(t => status(t) === 'done').length;
   const next = nextSteps();
-  const W = Math.max(innerWidth, 1100), H = Math.max(innerHeight - 48 - 150, 760);
-  const { pos, lx, y0, step } = layout(W, H);
+  const W = Math.max(innerWidth, 1100); let H = Math.max(innerHeight - 48 - 150, 760);
+  const { pos, lx, y0, step, maxY } = layout(W, H);
+  const footY = maxY + 44;            // nothing but lines above this; legend, next steps and the trace number sit below
+  H = Math.max(H, footY + 250);
   const nodeSub = t => { const s = status(t); const c = P.choices[t.topic]; const ai = rulePick(t);
     if (s === 'done') return tr('st.done') + (t.kind === 'choose' ? ' · ' + shortName(c.pick) : ' · ' + tr('node.checked'));
     if (s === 'ai') return tr('st.ai') + ' · ' + shortName(ai.id);
@@ -255,8 +258,8 @@ function viewMap() {
     ${LANES.map((l, i) => `<div class="lane" style="left:${lx(i) - 3.5}px;top:${y0 - 72}px"><div class="mono m3">${String(i + 1).padStart(2, '0')}</div><div class="mono">${esc(l.label)}</div><div class="ja">${esc(laneName(l))}</div></div>`).join('')}
     ${D.tactics.map(t => { const s = status(t); const p = pos[t.topic];
       return `<a class="node ${s} ${inStage(t) ? 'instage' : ''}" href="#/t/${t.topic}" data-topic="${t.topic}" style="left:${p.x}px;top:${p.y}px" aria-label="${esc(lbl(t))}：${STATUS_LONG()[s]}"><span class="dot ${s}"></span><span><b>${esc(lbl(t))}</b><small>${esc(nodeSub(t))}</small></span></a>`; }).join('')}
-    <div class="quiet" style="left:28px;bottom:84px">${quietNext}</div>
-    <div class="quiet" style="left:${Math.min(380, W * .3)}px;bottom:84px;max-width:340px">${legend}</div>
+    <div class="quiet" style="left:28px;top:${footY}px;bottom:auto">${quietNext}</div>
+    <div class="quiet" style="left:${Math.min(380, W * .3)}px;top:${footY}px;bottom:auto;max-width:340px">${legend}</div>
     <div class="corner bl mono m2"><div><a href="#/catalog">CATALOG ${Object.keys(CATALOG).length} AREAS</a> · <a href="/data.json">/DATA.JSON</a> · <a href="/llms.txt">/LLMS.TXT</a></div><div class="m3">${tr('map.hint')}${stageFilter ? ' · STAGE ' + stageFilter.toUpperCase() : ''}</div></div>
     <div class="corner br"><div class="mono m2">${tr('map.trace')}</div><div class="num">${String(done).padStart(2, '0')}</div></div>
   </section>
@@ -325,7 +328,7 @@ function viewTopic(topic) {
   let sel = choose ? (c.pick || ai?.id || '') : new Set(c.checked || []);
   const blocked = t.depends_on.filter(d => status(T[d]) !== 'done');
   const later = D.tactics.filter(u => u.depends_on.includes(topic));
-  const verified = it => it?.verified === true || it?.verified === 'True' ? `<span class="tagv ok">${tr('verified')}${it.checked ? ' ' + esc(it.checked) : ''}</span>` : `<span class="tagv">${tr('unverified.long')}</span>`;
+  const verified = it => !it?.priced && !it?.url ? '' : it?.verified === true || it?.verified === 'True' ? `<span class="tagv ok">${tr('verified')}${it.checked ? ' ' + esc(it.checked) : ''}</span>` : `<span class="tagv">${tr('unverified.long')}</span>`;
   const optHtml = id => { const it = D.items[id] || { name: id }; const isAi = ai?.id === id;
     return `<div class="opt" role="${choose ? 'radio' : 'checkbox'}" tabindex="0" data-id="${id}" aria-checked="false">
       <span class="mark ${choose ? 'r' : ''}"></span><div>
@@ -415,7 +418,7 @@ function viewCatalog(domain) {
     <h1>${esc(c.title)}</h1><p class="lead mono m2" style="text-transform:none">${esc(domain)} · ${tr('cat.count', c.ids.length)}${c.updated ? ' · ' + tr('cat.updated') + ' ' + esc(c.updated) : ''} · AI: get_catalog("${esc(domain)}")</p>
     <div class="opts">${c.ids.map(id => { const it = D.items[id]; if (!it) return ''; const ts = usedBy(id);
       return `<div class="opt static"><span class="sq ${ts.length ? 'done' : ''}" style="margin-top:5px"></span><div>
-        <div class="nm2"><span>${esc(it.name)}</span>${it.verified === true || it.verified === 'True' ? `<span class="tagv ok">${tr('verified')}${it.checked ? ' ' + esc(it.checked) : ''}</span>` : `<span class="tagv">${tr('unverified')}</span>`}</div>
+        <div class="nm2"><span>${esc(it.name)}</span>${!it.priced && !it.url ? '' : it.verified === true || it.verified === 'True' ? `<span class="tagv ok">${tr('verified')}${it.checked ? ' ' + esc(it.checked) : ''}</span>` : `<span class="tagv">${tr('unverified')}</span>`}</div>
         <dl>${it.what ? `<dt>${tr('opt.content')}</dt><dd>${gloss(it.what, used)}</dd>` : ''}${it.best_for ? `<dt>${tr('opt.best')}</dt><dd>${gloss(it.best_for, used)}</dd>` : ''}${it.avoid_when ? `<dt>${tr('opt.avoid')}</dt><dd>${gloss(it.avoid_when, used)}</dd>` : ''}
           ${it.why ? `<dt>${tr('opt.why')}</dt><dd>${gloss(it.why, used)}</dd>` : ''}${it.check ? `<dt>${tr('opt.check')}</dt><dd>${gloss(it.check, used)}</dd>` : ''}${it.cost ? `<dt>${tr('opt.cost')}</dt><dd>${gloss(String(it.cost), used)}</dd>` : ''}
           ${it.url ? `<dt>${tr('opt.source')}</dt><dd><a href="${esc(it.url)}" target="_blank" rel="noopener">${tr('official.page')} ↗</a></dd>` : ''}

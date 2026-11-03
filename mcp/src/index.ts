@@ -234,9 +234,17 @@ server.tool("search", "Case-insensitive search across catalog YAML, elements, re
 function walkEntries(node: any, domain: string, out: any[]) {
   if (Array.isArray(node)) { node.forEach(n => walkEntries(n, domain, out)); return; }
   if (node && typeof node === "object") {
-    if (node.source && typeof node.source === "object" && ("checked" in node.source || "verified" in node.source)) {
+    if (node.source && typeof node.source === "object" && !Array.isArray(node.source) && ("checked" in node.source || "verified" in node.source)) {
       out.push({ domain, id: node.id ?? null, name: node.name ?? null, checked: node.source.checked ?? null,
         verified: node.source.verified ?? null, url: node.source.url ?? null });
+    } else if (Array.isArray(node.source) && node.id) {
+      // several sources on one entry (cross_border reps): stale if any of them is
+      const srcs = node.source.filter((s: any) => s && typeof s === "object");
+      if (srcs.length) out.push({ domain, id: node.id, name: node.name ?? null, checked: srcs.map((s: any) => s.checked ?? "").sort()[0] || null,
+        verified: srcs.every((s: any) => s.verified === true), url: srcs[0].url ?? null });
+    } else if (node.id && ("verified" in node) && (node.fee || node.price || node.cost || node.pricing_bands)) {
+      // inline-sourced priced entries (cross_border fee tables) carry url/checked/verified on the entry itself
+      out.push({ domain, id: node.id, name: node.name ?? node.what ?? null, checked: node.checked ?? null, verified: node.verified ?? null, url: node.url ?? null });
     }
     for (const v of Object.values(node)) if (v && typeof v === "object") walkEntries(v, domain, out);
   }

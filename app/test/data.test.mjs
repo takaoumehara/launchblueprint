@@ -42,6 +42,17 @@ test('tech choices have a stack comparison with free tiers, single-vs-combined, 
   }
 });
 
+test('every priced catalog item carries a source: a checked date, and a URL whenever it is marked verified', () => {
+  const priced = Object.values(D.items).filter(it => it.priced);
+  assert.ok(priced.length > 100, 'priced items found');
+  for (const it of priced) {
+    assert.ok(it.checked, `${it.id}: priced but no checked date, so stale_items cannot see it`);
+    if (it.verified === true) assert.ok(it.url, `${it.id}: verified without a source URL`);
+  }
+  // rules and lessons are not vendor facts: no badge, and no "verified" claim
+  for (const it of Object.values(D.items).filter(it => !it.priced && !it.url)) assert.notEqual(it.verified, true, `${it.id}: verified:true on a rule`);
+});
+
 test('glossary terms are unique and every catalog item has an id, name and domain', () => {
   const seen = new Set(); for (const g of D.glossary) { assert.ok(!seen.has(g.term), 'dup ' + g.term); seen.add(g.term); assert.ok(g.plain && g.one_line, g.term); }
   for (const it of Object.values(D.items)) assert.ok(it.id && it.name && it.domain, it.id);

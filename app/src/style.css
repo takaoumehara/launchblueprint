@@ -1,8 +1,8 @@
 @import '@fontsource-variable/inter/index.css';
 @import '@fontsource/geist-mono/400.css';
-:root{--bg:#fff;--fg:#0a0a0a;--m1:rgba(10,10,10,.62);--m2:rgba(10,10,10,.42);--m3:rgba(10,10,10,.24);--hair:rgba(10,10,10,.1);--hair2:rgba(10,10,10,.18);--strand:10,10,10;--acc:#f2541b;--acc-soft:rgba(242,84,27,.08);--on:#fff;
+:root{--bg:#fff;--fg:#0a0a0a;--m1:rgba(10,10,10,.62);--m2:rgba(10,10,10,.42);--m3:rgba(10,10,10,.24);--hair:rgba(10,10,10,.1);--hair2:rgba(10,10,10,.18);--strand:10,10,10;--strand-op:.06;--acc:#f2541b;--acc-soft:rgba(242,84,27,.08);--on:#fff;
 color-scheme:light;--mono:"Geist Mono",ui-monospace,Menlo,monospace;--sans:"Inter Variable","Inter","Hiragino Sans","Noto Sans JP","Noto Sans CJK JP",system-ui,sans-serif}
-[data-theme=dark]{--bg:#070707;--fg:#ededed;--m1:rgba(237,237,237,.64);--m2:rgba(237,237,237,.42);--m3:rgba(237,237,237,.22);--hair:rgba(237,237,237,.09);--hair2:rgba(237,237,237,.17);--strand:237,237,237;--acc:#ff6a2b;--acc-soft:rgba(255,106,43,.1);--on:#070707;color-scheme:dark}
+[data-theme=dark]{--bg:#070707;--fg:#ededed;--m1:rgba(237,237,237,.64);--m2:rgba(237,237,237,.42);--m3:rgba(237,237,237,.22);--hair:rgba(237,237,237,.09);--hair2:rgba(237,237,237,.17);--strand:237,237,237;--strand-op:.11;--acc:#ff6a2b;--acc-soft:rgba(255,106,43,.1);--on:#070707;color-scheme:dark}
 *{box-sizing:border-box;border-radius:0}
 html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit}button,input{font:inherit;color:inherit}
@@ -56,7 +56,7 @@ h2{font-size:13px;font-weight:600;margin:0 0 10px}
 .bl a{text-decoration:none}
 .num{font-weight:100;font-size:168px;line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 #strands{position:absolute;inset:0;width:100%;height:100%}
-#strands path{fill:none;stroke:rgb(var(--strand));stroke-width:.6;stroke-opacity:.11;transition:stroke-opacity .2s}
+#strands path{fill:none;stroke:rgb(var(--strand));stroke-width:.6;stroke-opacity:var(--strand-op);transition:stroke-opacity .2s}
 #strands path.tr{stroke:var(--acc);stroke-opacity:.42;stroke-width:.75;filter:drop-shadow(0 0 2.5px rgba(255,106,43,.55))}
 #strands.focus path{stroke-opacity:.02}
 #strands.focus path.on{stroke-opacity:.5}
@@ -193,7 +193,7 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 /* mobile map: stage sections with a gutter where the dependency lines run (same depends_on as the desktop map) */
 .lwrap{position:relative;padding-left:36px}
 .lwrap svg.glines{position:absolute;left:0;top:0;width:36px;overflow:visible;pointer-events:none}
-.lwrap svg.glines path{fill:none;stroke:rgb(var(--strand));stroke-width:.7;stroke-opacity:.2}
+.lwrap svg.glines path{fill:none;stroke:rgb(var(--strand));stroke-width:.7;stroke-opacity:calc(var(--strand-op) * 1.8)}
 .lwrap svg.glines path.tr{stroke:var(--acc);stroke-opacity:.7;stroke-width:.9;filter:drop-shadow(0 0 2px rgba(255,106,43,.5))}
 .lrow .dot{position:relative;z-index:1;background:var(--bg)}
 .lrow .dot.ai{background:var(--fg)}.lrow .dot.done{background:var(--acc)}

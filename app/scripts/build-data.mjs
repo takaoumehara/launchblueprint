@@ -23,11 +23,19 @@ for (const f of fs.readdirSync(path.join(root, 'catalog')).filter(f => f.endsWit
     const id = it.id.includes('.') ? it.id : `${dom}.${it.id}`;
     catalog[dom].ids.push(id);
     const pb = it.pricing_bands; const cost = pb ? (pb.free || Object.values(pb)[0]) : (it.cost || null);
-    const src = typeof it.source === 'object' && it.source ? it.source : {};
-    items[id] = { id, domain: dom, name: it.name || it.id, what: it.what || it.principle || it.item || it.rule || it.text || (Array.isArray(it.must) ? '必要なこと：' + it.must.join('、') : '') || '',
+    // source may be one object, or a list of them (cross_border reps, pay.ryft): take the one checked earliest so the badge never looks fresher than the facts
+    const src = Array.isArray(it.source) ? ([...it.source].filter(s => s && typeof s === 'object').sort((x, y) => String(x.checked || '').localeCompare(String(y.checked || '')))[0] || {})
+      : typeof it.source === 'object' && it.source ? it.source : {};
+    const priced = !!(pb || it.cost || it.fee || it.price);
+    // rules and lessons have no name: show the id as words ("primary-action-color" → "Primary action color"); the raw id stays in the ID line
+    const readable = s => { const w = s.replace(/^[a-z_]+\./, '').replace(/[-_]+/g, ' '); return w[0].toUpperCase() + w.slice(1); };
+    items[id] = { id, domain: dom, name: it.name || readable(it.id), what: it.what || it.principle || it.item || it.rule || it.text || (Array.isArray(it.must) ? '必要なこと：' + it.must.join('、') : '') || '',
       best_for: it.best_for || (Array.isArray(it.pros) ? it.pros.join('、') : ''), avoid_when: it.avoid_when || it.anti_pattern || (Array.isArray(it.cons) ? it.cons.join('、') : ''), why: it.why || '',
       check: it.check || it.acceptance || it.trigger_next && ('次の段階へ：' + it.trigger_next) || (Array.isArray(it.checks) ? it.checks.join(' / ') : ''), cost,
-      verified: src.verified ?? it.verified ?? false, checked: src.checked || it.date || null, url: src.url || null };
+      // verified only means "read on the official page" for priced entries or entries with a URL; a lesson's own verified flag (field-tested) is not that
+      verified: priced || src.url || it.url ? (src.verified ?? it.verified ?? false) : false, checked: src.checked || it.checked || it.date || null, url: src.url || it.url || null,
+      // priced: a vendor fact that can be verified on an official page. Rules and lessons are not, so the app shows no verified / unverified badge for them.
+      priced };
   }
 }
 const cats = {};
