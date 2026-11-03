@@ -39,11 +39,13 @@ function items(d) {
             return;
         for (const it of node)
             if (it && typeof it === "object" && (it.id || it.topic)) {
-                const id = it.id ?? `${d}.${it.topic}`;
+                // macro stages share ids with two fine stages (operate, exit); keep them distinct as lifecycle.macro.<id>
+                const id = kind === "macro_stages" ? `${d}.macro.${it.id}` : it.id ?? `${d}.${it.topic}`;
                 out.push({ domain: d, kind, id: String(id).includes(".") ? id : `${d}.${id}`, name: it.name_ja ?? it.label_ja ?? it.name ?? null,
                     summary: it.what ?? it.principle_ja ?? it.principle ?? it.question_ja ?? null,
                     avoid: it.avoid_when ?? it.anti_pattern ?? null, why: it.why ?? null, check: it.check ?? null,
                     depends_on: it.depends_on ?? undefined, options: it.options ?? undefined,
+                    stage: it.stage ?? it.macro ?? undefined, known_surprises: it.known_surprises ?? undefined, revisit_triggers: it.revisit_triggers ?? undefined,
                     verified: it.source?.verified ?? it.verified ?? null, checked: it.source?.checked ?? it.last_checked ?? it.date ?? null });
             }
     };
@@ -119,6 +121,31 @@ server.tool("stale_items", "Catalog items whose source.checked is older than `da
         return isNaN(t) || t < cutoff;
     }).map(e => ({ ...e, reason: !e.checked ? "unchecked" : e.verified === false ? "unverified" : "older_than_days" }));
     return json({ days, total_with_source: all.length, stale_count: stale.length, stale });
+});
+// Lifecycle stages: five macro stages (idea → launch → operate → scale → exit) and the fine stages under them,
+// each with known_surprises (what always happens that the plan did not expect) and revisit_triggers (when to re-run Blueprint).
+server.tool("lifecycle_stages", "Lifecycle macro stages (idea/launch/operate/scale/exit) and fine stages with known_surprises and revisit_triggers. Optional stage: a macro or fine stage id. include_items=true adds the coverage items of that stage.", { stage: z.string().optional(), include_items: z.boolean().optional() }, async ({ stage, include_items = false }) => {
+    const lc = loadYaml("lifecycle");
+    const macros = lc?.macro_stages ?? [];
+    const fines = lc?.stages ?? [];
+    const sid = stage ? safe(stage) : null;
+    let m = macros, f = fines;
+    if (sid) {
+        const macro = macros.find(x => x.id === sid);
+        if (macro) {
+            m = [macro];
+            f = fines.filter(x => x.macro === sid);
+        }
+        else {
+            f = fines.filter(x => x.id === sid);
+            if (!f.length)
+                return err(`Unknown stage "${stage}". Macro: ${macros.map(x => x.id).join(", ")}; fine: ${fines.map(x => x.id).join(", ")}`);
+            m = macros.filter(x => x.id === f[0].macro);
+        }
+    }
+    const fineIds = new Set(f.map(x => x.id));
+    const items = include_items ? (lc?.items ?? []).filter((i) => fineIds.has(i.stage)) : undefined;
+    return json({ schema: lc?.schema ?? null, updated: lc?.updated ?? null, macro_stages: m, stages: f, ...(items ? { item_count: items.length, items } : {}) });
 });
 const PHASES = {
     requirements: /copy|announce|hint|onboard|user|flow|feature/i,

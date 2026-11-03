@@ -48,4 +48,4 @@ entries:
     url: https://cloud.google.com/run/pricing
     checked: null
     verified: false
-    note: 未確認：使う前に公式ページで確認
+    note: '未確認：料金ページが自動取得で本文を返さず（2026-11-02 に 3 回試行）。使う前に公式ページで確認'

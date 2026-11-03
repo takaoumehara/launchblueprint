@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — analytics
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: analytics
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -17,7 +17,7 @@ entries:
     usd100: Pro：$3/10万イベント
   limits: —
   lock_in: 中
-  liability_compliance: Cookie同意が不要な設計（要確認）
+  liability_compliance: サードパーティ Cookie を使わず、リクエストのハッシュで識別（公式 2026-11-02）。同意バナーの要否は提供国の法で判断（公式に「不要」の記載はない）
   security: —
   pairs_well_with:
   - host.vercel

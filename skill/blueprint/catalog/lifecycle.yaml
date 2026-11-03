@@ -1,24 +1,150 @@
-schema: blueprint.lifecycle/v2
-updated: '2026-10-26'
+schema: blueprint.lifecycle/v3
+updated: '2026-11-02'
 publisher: CREATIVITY IS EVERYWHERE, LLC
 how_to_read: 'status: covered=合格条件まで書いてある / thin=言及はあるが判断・合格条件・予算帯がない / missing=該当なし。evidence
   はリポジトリ内のファイルと節。priority P1=公開前に必須 / category=12カテゴリー（オーナー案 2026-10-26）。ai_caution=true
   はAIコーディング特有の注意点。acceptance はAIが機械的に確かめられる条件'
+# macro_stages：idea → launch → operate → scale → exit の5段。fine stages（下の stages[]）をまとめる単位。
+# known_surprises：この段で「計画になかったのに毎回起きること」。revisit_triggers：これが起きたら Blueprint を再実行する合図。
+# どちらも一般化した教訓だけ（固有名詞なし）。新しい驚きは po-input/TEMPLATE-surprise.md → reference/feedback-loop.md の手順で足す。
+macro_stages:
+- id: idea
+  name_ja: 構想
+  stages: [discover, strategy, brand, design]
+  known_surprises:
+  - 「競合なし」は代替手段（手作業・何もしない）の見落とし。価格比較の相手は製品ではなく今のやり方
+  - 知り合いの好反応が需要に見えるが、知らない人の登録率は一桁台になる
+  - 仕様は入出力・例外まで書かないと AI は正常系だけ作って「できた」と言う
+  - 提供言語を1つと決めたのに、最初の問い合わせが別の言語で来る（文言の直書きが全画面の作り直しになる）
+  revisit_triggers:
+  - 課題インタビューで「お金を払う」と言った人が 5 人中 2 人未満
+  - 待機リストの訪問→登録率が合格値を下回った、またはそもそも測っていない
+  - 対象の国・言語・課金方式のどれかが変わった（Intake の答えが変わる）
+- id: launch
+  name_ja: 公開
+  stages: [build, legal, pricing, gtm]
+  known_surprises:
+  - 無料プランは「非商用」条件で、初めての売上の日に有料プランへ強制される
+  - ストア審査・決済アカウント審査・DNS 伝播が数日〜数週間ずれて公開日が動く
+  - 価格を決めずに作ると、原価（AI・SMS・転送量）が利用者数に比例することに公開後に気づく
+  - 規約・プライバシー・特商法表記・PR 表記は公開直前に「ない」と分かる
+  - 確認用 URL（*.vercel.app 等）が検索に出る、公開リンクに混ざる
+  - 当日はサポートと監視が手薄で、最初の不具合報告に半日気づかない
+  revisit_triggers:
+  - 初めての有料ユーザー（無料プランの条件・税の登録義務・請求書が一度に現れる）
+  - 対象外だった国から登録が来た
+  - 公開日の 14 日前で、ロールバック条件と担当がまだ 1 行も書かれていない
+- id: operate
+  name_ja: 運営
+  stages: [operate, maintain, finance]
+  known_surprises:
+  - バックアップは「成功」と表示されるのに復元できない。復元を試すまで分からない
+  - 無料枠の上限（関数回数・転送量・メール通数）に月の途中で当たり、黙って止まる
+  - AI 機能の再試行・ボットの連打でトークン費用が一晩で跳ねる
+  - 依存のメジャー更新・ランタイムのサポート終了で、ある日デプロイが拒否される
+  - 外部サービスの規約・価格が変わる（メール通知を読んでいない）
+  - 担当が1人なので休めず、鍵・アカウントの在り処が頭の中にしかない
+  revisit_triggers:
+  - 月の請求が前月の 2 倍、または無料枠の 80% に達した
+  - 復元テストが 30 日以上行われていない
+  - 90 日以内にサポートが切れる依存・ランタイムがある
+  - 運用に関わる人が 2 人目になった（引き継ぎ・権限の整理が要る）
+- id: scale
+  name_ja: 拡大
+  stages: [growth]
+  known_surprises:
+  - 1 つの DB に全部入れた設計が、接続数・容量の上限で先に止まる（CPU より先に）
+  - 従量課金は売上より速く増える部分がある（録画・ログ・転送量）
+  - 人気が出た瞬間に不正（自己紹介・偽アカウント・カードテスト）が来る
+  - 企業顧客が SOC 2・DPA・SSO を求め、営業が止まる
+  revisit_triggers:
+  - scale_readiness の各段の引き金（MAU・DB 容量 50%・429 の件数）に届いた
+  - 企業顧客または投資家から監査・認証の要求が来た
+  - 1 日あたりの費用が売上を超えた日がある
+- id: exit
+  name_ja: 出口
+  stages: [sunset, exit]
+  known_surprises:
+  - コード・ドメイン・ストア・決済の名義に個人名が残っていて、譲渡に数週間かかる
+  - 数字（MRR・解約・継続率）の過去 12 か月が後から再生成できない
+  - 業務委託・AI 利用規約の IP 譲渡が書面になく、買い手の調査で止まる
+  - 終了後も外部 SaaS・API キー・実験用の基盤が課金され続ける
+  - ユーザーのデータ書き出しと削除の手順がなく、告知が遅れる
+  revisit_triggers:
+  - 買い手候補・投資家との最初の会話（データルームの要求が来る前に揃える）
+  - 「続ける／ピボット／撤退」の見直し期日（例：公開から 90 日）
+  - 売上が 3 か月連続で下がった、または主要な依存サービスが終了を発表した
 stages:
-- discover
-- strategy
-- brand
-- design
-- build
-- legal
-- pricing
-- gtm
-- growth
-- operate
-- maintain
-- finance
-- sunset
-- exit
+- id: discover
+  macro: idea
+  name_ja: 課題の発見
+  known_surprises: [「競合なし」は代替手段の見落とし, 知り合いの反応は需要ではない]
+  revisit_triggers: [払うと言った人が 5 人中 2 人未満, 登録率を測っていない]
+- id: strategy
+  macro: idea
+  name_ja: 戦略
+  known_surprises: [北極星指標が売上と結びついていない, 誰が払うかを決めずに作り始める]
+  revisit_triggers: [Intake の答え（国・言語・課金・出口）が変わった]
+- id: brand
+  macro: idea
+  name_ja: ブランド
+  known_surprises: [商標・ドメイン・SNS ハンドルのどれかが取れない, AI 既定の配色・字体が残る]
+  revisit_triggers: [名前を変えた, 2 つ目の国・言語を足した]
+- id: design
+  macro: idea
+  name_ja: 設計
+  known_surprises: [画面×状態の表にない状態（空・エラー・オフライン）が本番で出る, 文言の直書きが翻訳を止める]
+  revisit_triggers: [主要フローが増えた, 提供言語が増えた]
+- id: build
+  macro: launch
+  name_ja: 実装
+  known_surprises: [無料プランの非商用条件, 鍵が Git 履歴・ログに出る, 実在しないパッケージ]
+  revisit_triggers: [スタック・ホストを変える, 初めての有料ユーザー]
+- id: legal
+  macro: launch
+  name_ja: 法務
+  known_surprises: [規約・特商法・PR 表記が公開直前にない, 対象外の国からの登録]
+  revisit_triggers: [新しい国の利用者, 未成年・ユーザー間送金・AI 機能を足した]
+- id: pricing
+  macro: launch
+  name_ja: 価格
+  known_surprises: [原価が利用者数に比例するのに定額で売る, ストア手数料で手取りが変わる, 解約が登録より難しい]
+  revisit_triggers: [10 人目の有料顧客, 価格変更の前, ストア配信を足す時]
+- id: gtm
+  macro: launch
+  name_ja: 打ち上げ
+  known_surprises: [審査・DNS で公開日がずれる, 当日のサポートと監視が手薄, 確認用 URL が検索に出る]
+  revisit_triggers: [公開の 14 日前, チャネルを 3 つ試して 1 つに絞る時]
+- id: growth
+  macro: scale
+  name_ja: 成長
+  known_surprises: [継続率を見ずに獲得だけ増やす, 紹介特典の不正, サンプル不足の A/B 判定]
+  revisit_triggers: [D30 継続率が目標を下回った, scale_readiness の引き金に届いた]
+- id: operate
+  macro: operate
+  name_ja: 運用
+  known_surprises: [無料枠に月の途中で当たり黙って止まる, AI 費用が一晩で跳ねる, 通知先が 1 人]
+  revisit_triggers: [請求が前月の 2 倍, 無料枠の 80%, 初めての障害]
+- id: maintain
+  macro: operate
+  name_ja: 保守
+  known_surprises: [復元できないバックアップ, ランタイムのサポート終了でデプロイ拒否, 規約・価格変更の通知を読んでいない]
+  revisit_triggers: [復元テスト 30 日超, 90 日以内のサポート終了, ベンダーの価格改定]
+- id: finance
+  macro: operate
+  name_ja: お金
+  known_surprises: [海外の売上税の登録義務に気づかない, 月次の数字を記録していない]
+  revisit_triggers: [新しい国での初売上, 月次レビューの期日]
+- id: sunset
+  macro: exit
+  name_ja: 終了
+  known_surprises: [終了後も SaaS・API キーが課金され続ける, データ書き出しと削除の手順がない]
+  revisit_triggers: [続ける／撤退の見直し期日, 主要な依存サービスの終了発表]
+- id: exit
+  macro: exit
+  name_ja: 売却
+  known_surprises: [名義に個人名が残る, 12 か月の数字が再生成できない, IP 譲渡が書面にない]
+  revisit_triggers: [買い手・投資家との最初の会話, 売上 3 か月連続減]
 items:
 - id: lc.discover.01
   stage: discover
@@ -44,8 +170,8 @@ items:
   stage: discover
   domain: validation
   item: 市場規模・競合マップ・代替手段
-  status: thin
-  evidence: v3-draft/blueprint-v3.md §2.1 調査（既存の代替手段）のみ。競合表なし
+  status: covered
+  evidence: catalog/validation.yaml val.alternatives-first／tactics validation_rules
   proposed_addition: gtm-ops §G1 競合・代替手段表
   priority: P2
   category: '01'
@@ -54,8 +180,8 @@ items:
   stage: discover
   domain: validation
   item: 需要の検証（待機リスト／スモークテスト／事前予約）
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/validation.yaml（val.tally・val.lp-own・val.carrd …）val.strangers-not-friends・val.pay-signal／tactics idea_validation／stack_comparisons idea_validation
   proposed_addition: gtm-ops §G2 需要テスト（LP＋待機リスト、合格＝訪問→登録率）
   priority: P1
   category: '01'
@@ -64,8 +190,8 @@ items:
   stage: discover
   domain: validation
   item: PMFの測り方（Sean Ellis 40%テスト等）
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/validation.yaml val.pmf-40／tactics validation_rules
   proposed_addition: gtm-ops §G2 PMF判定
   priority: P2
   category: '01'
@@ -84,8 +210,8 @@ items:
   stage: strategy
   domain: strategy
   item: 北極星指標と成功の定義
-  status: thin
-  evidence: export/blueprint-v2-full.md §2 block1 success metric／block12 イベント3〜5
+  status: covered
+  evidence: catalog/validation.yaml val.north-star-to-money／tactics validation_rules
   proposed_addition: gtm-ops §G8 北極星＋入力指標ツリー
   priority: P1
   category: '01'
@@ -94,8 +220,8 @@ items:
   stage: strategy
   domain: strategy
   item: ビジネスモデル（誰が払うか・単位経済）
-  status: thin
-  evidence: v3-draft/blueprint-v3.md §16 TCO はコスト側のみ
+  status: covered
+  evidence: catalog/pricing.yaml pr.unit-cost-before-price／tactics pricing_model・pricing_rules
   proposed_addition: gtm-ops §G6 単位経済（CAC/LTV/粗利）
   priority: P1
   category: '01'
@@ -116,8 +242,8 @@ items:
   stage: 12cat
   domain: ai_caution
   item: 仕様を入出力・前提条件のレベルまで具体化（AIは隙間を推測で埋める）
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/validation.yaml val.spec-edge-cases／tactics validation_rules
   proposed_addition: 12cat §01
   priority: P1
   category: '01'
@@ -134,6 +260,9 @@ items:
   priority: P3
   category: '02'
   source: blueprint-v2/v3（既存）
+  anti_pattern: "名前を決めてから商標・ドメイン・SNS ハンドルを調べる"
+  why: "どれか 1 つ取れないと名前からやり直しになる"
+  check: "商標検索・ドメイン・主要 SNS ハンドルの 3 つを押さえてから名前を確定した？"
 - id: lc.brand.12
   stage: brand
   domain: brand
@@ -144,6 +273,9 @@ items:
   priority: P3
   category: '02'
   source: blueprint-v2/v3（既存）
+  anti_pattern: "声とトーンが人によって違う文面で出る"
+  why: "AI の指示ファイルにまで同じ声を通さないと、画面・メール・投稿がばらばらになる"
+  check: "声・トーン・言語別ルールが 1 枚にあり、AI ルールファイルにも同じものが入っている？"
 - id: lc.brand.13
   stage: brand
   domain: brand
@@ -154,6 +286,9 @@ items:
   priority: P3
   category: '02'
   source: blueprint-v2/v3（既存）
+  anti_pattern: "ライブラリ既定の配色・字体のまま公開する"
+  why: "AI 既定の見た目は「どこかで見た」印象になり、ブランドとして覚えられない"
+  check: "色・ロゴ・字体がトークンとして数値で決まり、既定値が残っていない？"
 - id: lc.brand.14
   stage: brand
   domain: brand
@@ -164,6 +299,9 @@ items:
   priority: P1
   category: '02'
   source: blueprint-v2/v3（既存）
+  anti_pattern: "見出しに、まだ無い機能や証拠のない主張を書く"
+  why: "証拠のない主張は信頼を落とし、L27 にも反する"
+  check: "見出し 7 語以内・3 本柱それぞれに証拠・反論 3 つと答えがある？"
 - id: lc.design.19
   stage: design
   domain: ui
@@ -248,8 +386,8 @@ items:
   stage: 12cat
   domain: cross_border
   item: カルチャライズ（翻訳ではなく再創作・社会的証明の出し方）
-  status: missing
-  evidence: 該当なし
+  status: thin
+  evidence: catalog/cross_border.yaml axis.culturalization（表のみ。合格条件なし）
   proposed_addition: cross_border.yaml axis.culturalization
   priority: P2
   category: '02'
@@ -336,8 +474,8 @@ items:
   stage: strategy
   domain: team
   item: 人とAIエージェントの役割分担（RACI）
-  status: thin
-  evidence: v3-draft/blueprint-v3.md L17/L30 AIクレジット・実行場所
+  status: covered
+  evidence: catalog/ops_handoff.yaml ho.hire-trigger-written・ho.bus-factor-two／tactics handoff_rules（人／AI の承認者は gtm-ops §O10）
   proposed_addition: gtm-ops §O10 役割表（人／AI／承認）
   priority: P2
   category: '04'
@@ -425,7 +563,7 @@ items:
   domain: data
   item: データ・保持・バックアップ・復元
   status: covered
-  evidence: v3-draft/blueprint-v3.md L5／export/blueprint-v2-full.md block5
+  evidence: catalog/backup_dr.yaml＋data_protection.yaml／tactics backup_dr・backup_rules／stack_comparisons backup_dr
   proposed_addition: —
   priority: P3
   category: '05'
@@ -593,7 +731,7 @@ items:
   domain: legal
   item: 規約・プライバシー・国別規制
   status: covered
-  evidence: v3-draft/blueprint-v3.md §5.2
+  evidence: catalog/legal_terms.yaml（lt.termly・lt.iubenda・lt.getterms・lt.termageddon・lt.lawyer）＋ lessons／tactics legal_terms・legal_rules／stack_comparisons legal_terms
   proposed_addition: —
   priority: P3
   category: '07'
@@ -602,8 +740,8 @@ items:
   stage: legal
   domain: legal
   item: 広告・マーケの法規（景表法・ステマ規制・FTC 推奨表示・CAN-SPAM）
-  status: thin
-  evidence: v3-draft/blueprint-v3.md §5.2 景品表示法・CAN-SPAM の1語のみ
+  status: covered
+  evidence: catalog/gtm_channels.yaml la.pr-disclosure／tactics launch_rules
   proposed_addition: gtm-ops §G5 広告とインフルエンサーの表示ルール
   priority: P1
   category: '07'
@@ -656,8 +794,8 @@ items:
   stage: 12cat
   domain: security
   item: 秘密情報がGit履歴・プロンプト・外部ログに出ていない
-  status: thin
-  evidence: v3 L10（ルールのみ、検査なし）
+  status: covered
+  evidence: catalog/ops_handoff.yaml（ho.host-env-vars）・backup_dr.yaml bk.no-live-secrets-in-backups・security.yaml sec.secrets／tactics secrets_sharing
   proposed_addition: 12cat §07
   priority: P1
   category: '07'
@@ -668,8 +806,8 @@ items:
   stage: 12cat
   domain: legal
   item: OSSライセンス（GPL 混入）確認
-  status: thin
-  evidence: v3 L26
+  status: covered
+  evidence: catalog/exit_tools.yaml xt.syft・xt.fossa／tactics sbom_tool
   proposed_addition: 12cat §07
   priority: P2
   category: '07'
@@ -762,8 +900,8 @@ items:
   stage: pricing
   domain: pricing
   item: 価格とパッケージ（無料枠・プラン・試用）
-  status: thin
-  evidence: v3-draft/blueprint-v3.md L13（JTBDからオファー）
+  status: covered
+  evidence: catalog/pricing.yaml（pm.free-trial・pm.freemium・pm.usage・pm.one-time・pm.seats）／tactics pricing_model／stack_comparisons pricing_model
   proposed_addition: gtm-ops §G6 価格設計
   priority: P1
   category: 09
@@ -772,8 +910,8 @@ items:
   stage: pricing
   domain: pricing
   item: 課金運用（請求・返金・チャージバック・解約）
-  status: thin
-  evidence: v3-draft/blueprint-v3.md §5.2 解約・撤回／§7 責任の所在
+  status: covered
+  evidence: catalog/pricing.yaml pr.cancel-as-easy-as-signup・pr.refund-policy-written・pr.price-change-notice／tactics pricing_rules
   proposed_addition: gtm-ops §G6/§O3
   priority: P2
   category: 09
@@ -782,8 +920,8 @@ items:
   stage: pricing
   domain: pricing
   item: アプリ内課金とストア手数料
-  status: thin
-  evidence: v3-draft/blueprint-v3.md §5.2 アプリストア
+  status: covered
+  evidence: catalog/pricing.yaml pr.store-fee-in-price／catalog/app_distribution.yaml policy_checks／tactics store_rules
   proposed_addition: gtm-ops §G6
   priority: P3
   category: 09
@@ -822,8 +960,8 @@ items:
   stage: gtm
   domain: launch
   item: ローンチ計画（T-14〜T+30・ロールバック）
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/gtm_channels.yaml la.launch-plan-t14・la.rollback-owner・la.support-on-launch-day／tactics launch_rules
   proposed_addition: gtm-ops §G5 ローンチ計画
   priority: P1
   category: 09
@@ -932,8 +1070,8 @@ items:
   stage: operate
   domain: support
   item: サポート窓口・応答目標・FAQ/ヘルプ
-  status: thin
-  evidence: export/blueprint-v2-full.md block11／gaps『運用』一部
+  status: covered
+  evidence: catalog/support.yaml（2026-11-02 価格確認）／tactics support
   proposed_addition: gtm-ops §O3／catalog/support.yaml
   priority: P1
   category: '10'
@@ -952,8 +1090,8 @@ items:
   stage: operate
   domain: ops
   item: ランブック・障害対応・ステータスページ
-  status: thin
-  evidence: export/blueprint-v2-full.md block11 incident runbook／catalog/monitoring.yaml
+  status: covered
+  evidence: catalog/ops_handoff.yaml ho.runbook-top5／catalog/monitoring.yaml mon.uptimerobot・mon.betterstack／support.yaml sup.status／tactics uptime・handoff_rules
   proposed_addition: gtm-ops §O1 障害対応
   priority: P1
   category: '10'
@@ -962,8 +1100,8 @@ items:
   stage: operate
   domain: ops
   item: オンコール（誰が何時に起きるか）・SLO
-  status: missing
-  evidence: 該当なし
+  status: thin
+  evidence: catalog/monitoring.yaml mon.betterstack（オンコール）／ops_handoff.yaml ho.bus-factor-two。SLO の数値例は gtm-ops §O1 のみ
   proposed_addition: gtm-ops §O1 SLO
   priority: P2
   category: '10'
@@ -973,7 +1111,7 @@ items:
   domain: ops
   item: コスト監視・上限・キルスイッチ
   status: covered
-  evidence: export/blueprint-v2-full.md block4 spend caps／v3-draft/blueprint-v3.md
+  evidence: catalog/cost_control.yaml（cc.vercel-spend・cc.supabase-spend-cap・cc.ai-gateway-budget・cc.gcp-budget）＋ lessons／tactics cost_control・cost_rules／stack_comparisons cost_control
     L2/L16/L17
   proposed_addition: —
   priority: P3
@@ -993,8 +1131,8 @@ items:
   stage: maintain
   domain: maintenance
   item: 依存更新・メジャーアップグレード・非推奨API
-  status: missing
-  evidence: v3-draft/blueprint-v3.md §5.1 に『依存関係の更新』1語
+  status: thin
+  evidence: catalog/lifecycle.yaml maintain.known_surprises・revisit_triggers（90 日以内のサポート終了）。保守カレンダーの書式は gtm-ops §O7 のみ
   proposed_addition: gtm-ops §O7 保守カレンダー
   priority: P1
   category: '10'
@@ -1023,8 +1161,8 @@ items:
   stage: finance
   domain: finance
   item: 予算・ランウェイ・月次レビュー
-  status: thin
-  evidence: v3-draft/blueprint-v3.md §9 予算帯／export/blueprint-v2-full.md block8
+  status: covered
+  evidence: catalog/cost_control.yaml cc.monthly-cost-sheet・cc.alert-50-80／tactics cost_rules
   proposed_addition: gtm-ops §O9 月次の数字
   priority: P2
   category: '10'
@@ -1046,7 +1184,7 @@ items:
   domain: ops
   item: バックアップの定期スナップショットと復元テスト
   status: covered
-  evidence: v3 L5
+  evidence: catalog/backup_dr.yaml（bk.dump-to-r2 …）bk.restore-drill-timed／data_protection.yaml dp.restore-test-monthly／tactics backup_dr・backup_rules
   proposed_addition: —
   priority: P2
   category: '10'
@@ -1057,8 +1195,8 @@ items:
   stage: 12cat
   domain: ai_caution
   item: LLM API の無限再試行・トークン浪費（サーキットブレーカー＋上限額）
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/cost_control.yaml cc.retry-with-breaker・cc.ai-gateway-budget／tactics cost_rules
   proposed_addition: 12cat §10
   priority: P1
   category: '10'
@@ -1069,8 +1207,8 @@ items:
   stage: gtm
   domain: seo
   item: SEO・技術SEO・構造化データ・llms.txt
-  status: missing
-  evidence: 該当なし（llms.txt は Blueprint 自身の画面のみ）
+  status: covered
+  evidence: catalog/gtm_channels.yaml la.seo-basics・la.preview-noindex・gtm.seo／tactics launch_rules
   proposed_addition: gtm-ops §G7 SEO
   priority: P1
   category: '11'
@@ -1215,8 +1353,8 @@ items:
   stage: sunset
   domain: exit
   item: 撤退・移行・ピボット判断
-  status: thin
-  evidence: export/blueprint-v2-full.md block13 Exit and migration
+  status: covered
+  evidence: catalog/lifecycle.yaml exit.revisit_triggers（見直し期日・3 か月連続減）／exit_tools.yaml lessons／tactics sunset_rules
   proposed_addition: gtm-ops §O11 継続/ピボット/撤退の判定基準
   priority: P2
   category: '12'
@@ -1225,8 +1363,8 @@ items:
   stage: 12cat
   domain: sunset
   item: 終了告知（1〜3か月前）・新規課金停止・返金方針
-  status: thin
-  evidence: v2 block13
+  status: covered
+  evidence: catalog/exit_tools.yaml xs.notice-before-shutdown／tactics sunset_rules
   proposed_addition: gtm-ops §O11
   priority: P2
   category: '12'
@@ -1237,8 +1375,8 @@ items:
   stage: 12cat
   domain: sunset
   item: データのエクスポートと確実な削除
-  status: thin
-  evidence: v3 §5.1 削除／v2 block5
+  status: covered
+  evidence: catalog/exit_tools.yaml xs.export-then-delete／tactics sunset_rules
   proposed_addition: 12cat §12
   priority: P2
   category: '12'
@@ -1249,8 +1387,8 @@ items:
   stage: 12cat
   domain: sunset
   item: 外部SaaS・APIキー・DNS の完全解約
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/exit_tools.yaml xs.cancel-every-subscription／tactics sunset_rules
   proposed_addition: 12cat §12
   priority: P2
   category: '12'
@@ -1261,8 +1399,8 @@ items:
   stage: 12cat
   domain: ai_caution
   item: シャドーコスト（実験用ベクトルDB・ストレージ・微調整モデル）の残存
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/exit_tools.yaml xs.cancel-every-subscription・cost_control.yaml cc.monthly-cost-sheet／tactics sunset_rules
   proposed_addition: 12cat §12
   priority: P2
   category: '12'
@@ -1273,8 +1411,8 @@ items:
   stage: 12cat
   domain: archive
   item: リポジトリのアーカイブとプロンプト・パターンの資産化
-  status: missing
-  evidence: 該当なし
+  status: covered
+  evidence: catalog/exit_tools.yaml xs.redirect-and-archive／reference/feedback-loop.md／po-input/TEMPLATE-surprise.md
   proposed_addition: §15.2 学びの戻し
   priority: P3
   category: '12'
@@ -1285,8 +1423,8 @@ items:
   stage: exit
   domain: exit
   item: IP・名義の会社集約（コード・ブランド・ドメイン・ストア・決済）
-  status: thin
-  evidence: catalog/exit_dd.yaml
+  status: covered
+  evidence: catalog/exit_dd.yaml dd.ip／ops_handoff.yaml ho.company-owned-accounts・ho.contractor-ip-assignment／tactics exit_dd・handoff_rules
   proposed_addition: blueprint-v3-exit-appdist.md
   priority: P1
   category: '12'
@@ -1298,8 +1436,8 @@ items:
   stage: exit
   domain: exit
   item: 契約一覧と譲渡可否
-  status: thin
-  evidence: catalog/exit_dd.yaml
+  status: covered
+  evidence: catalog/exit_dd.yaml dd.contracts／ops_handoff.yaml ho.contractor-ip-assignment／tactics exit_dd
   proposed_addition: blueprint-v3-exit-appdist.md
   priority: P2
   category: '12'
@@ -1310,8 +1448,8 @@ items:
   stage: exit
   domain: exit
   item: プライバシー・データ所在記録（国別）
-  status: thin
-  evidence: catalog/exit_dd.yaml
+  status: covered
+  evidence: catalog/exit_dd.yaml dd.privacy／legal_terms.yaml lt.policy-matches-practice／tactics exit_dd・legal_rules
   proposed_addition: blueprint-v3-exit-appdist.md
   priority: P1
   category: '12'
@@ -1322,8 +1460,8 @@ items:
   stage: exit
   domain: exit
   item: コード健全性（CI・テスト・秘密0件・SBOM）
-  status: thin
-  evidence: catalog/exit_dd.yaml
+  status: covered
+  evidence: catalog/exit_dd.yaml dd.code／exit_tools.yaml xt.syft／tactics exit_dd・sbom_tool
   proposed_addition: blueprint-v3-exit-appdist.md
   priority: P2
   category: '12'
@@ -1334,8 +1472,8 @@ items:
   stage: exit
   domain: exit
   item: 数字のデータルーム（MRR・解約・継続率12か月）
-  status: thin
-  evidence: catalog/exit_dd.yaml
+  status: covered
+  evidence: catalog/exit_dd.yaml dd.metrics／exit_tools.yaml xs.numbers-regenerable／dd_dashboard.yaml／tactics exit_dd・sunset_rules
   proposed_addition: blueprint-v3-exit-appdist.md
   priority: P2
   category: '12'
@@ -1346,8 +1484,8 @@ items:
   stage: exit
   domain: exit
   item: 買い手候補と打診の道筋・KPIの目安
-  status: thin
-  evidence: catalog/exit_dd.yaml
+  status: covered
+  evidence: catalog/exit_tools.yaml（xt.direct-outreach・xt.acquire・xt.flippa）／tactics exit_route／stack_comparisons exit_route
   proposed_addition: blueprint-v3-exit-appdist.md
   priority: P3
   category: '12'

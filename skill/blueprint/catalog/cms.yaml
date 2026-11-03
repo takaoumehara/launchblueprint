@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — cms
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: cms
-updated: '2026-10-29'
+updated: '2026-11-02'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -12,14 +12,15 @@ entries:
   avoid_when: 見たまま編集したい時
   pricing_bands:
     free: Hobby 0円：API 5個・3人・転送 20GB/月（超えると翌月までAPI停止）・1万件
-    usd5: Team（有料。料金ページで金額要確認）：転送 200GB・ファイル添付・CSV 書き出し。Business は権限・復元つき
-    usd10: Team（有料。料金ページで金額要確認）：転送 200GB・ファイル添付・CSV 書き出し。Business は権限・復元つき
-    usd100: Team（有料。料金ページで金額要確認）：転送 200GB・ファイル添付・CSV 書き出し。Business は権限・復元つき
+    usd5: 'Team 4,900円〜/月（税抜）：3人（+1,200円/人）・API 10個・転送 200GB/月（+20円/GB）・ファイル添付・CSV 書き出し'
+    usd10: 'Team 4,900円〜/月（税抜）：同上'
+    usd100: 'Business 75,000円〜/月（税抜）：20人・API 30個・転送 1TB/月・権限・復元'
   lock_in: 中
   source:
     url: https://microcms.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-02'
     verified: true
+  limits: 'Hobby：API 5個・3人・1万件・転送 20GB/月（超えると翌月まで API 停止）。API 回数と画像保存は無制限、1ファイル 40MB'
 - id: cms.sanity
   name: Sanity
   what: 管理画面を自由に作れる開発者向けCMS
@@ -71,28 +72,28 @@ entries:
   best_for: 少量・表の形の情報
   avoid_when: 画像が多い、権限や下書きが要る
   pricing_bands:
-    free: Sheets API は無料（回数制限あり・要確認）／SheetDB Free：2シート・月500回
+    free: 'Sheets API は無料（読み書き各 300回/分/プロジェクト・60回/分/ユーザー。超過分の課金を 2026 年中に始めると公式に記載）／SheetDB Free：2シート・月500回'
     usd5: SheetDB $29.99/月（年払い $25.49）：月1万回
     usd10: SheetDB $29.99/月（年払い $25.49）：月1万回
     usd100: SheetDB $29.99/月（年払い $25.49）：月1万回
   lock_in: 低
   source:
     url: https://sheetdb.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-02'
     verified: true
+    note: 'Sheets API の上限は https://developers.google.com/workspace/sheets/api/limits（2026-11-02）'
 - id: cms.notion
   name: Notion API
   what: Notion のデータベースを記事の元データにする
   best_for: 社内がすでに Notion を使っている
   avoid_when: 表示を速くしたい（画像URLが期限切れになる・回数制限あり）
   pricing_bands:
-    free: API 無料（Notion の各プラン内）
+    free: 'API 無料（Notion の各プラン内）。180回/分（Business・Enterprise は 600回/分）'
     usd5: Notion のプランに準ずる
     usd10: Notion のプランに準ずる
     usd100: Notion のプランに準ずる
   lock_in: 中
   source:
-    url: https://developers.notion.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://developers.notion.com/reference/request-limits
+    checked: '2026-11-02'
+    verified: true

@@ -60,7 +60,7 @@ entries:
     usd100: 大規模でも転送料なし（例：1億リクエストで約$45）
   limits: Free は CPU 10ms/回
   lock_in: 中
-  liability_compliance: 要確認
+  liability_compliance: 認証（SOC 2 等）の一覧は Cloudflare ダッシュボード内の Trust Hub で提供。公開ページに個別名の記載なし（2026-11-02）
   security: —
   pairs_well_with:
   - fe.astro
