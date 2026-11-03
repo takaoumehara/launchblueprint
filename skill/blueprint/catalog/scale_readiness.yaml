@@ -1,7 +1,7 @@
 # Blueprint Catalog — scale_readiness（ユーザー数ごとに、今の仕組みがどこまで持つか）
 # 提供：CREATIVITY IS EVERYWHERE, LLC。金額・工数は目安（estimate）。採用前に公式料金で確認
 domain: scale_readiness
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 180
 principle:
 - 先に大きな基盤を作らない。各段の「引き金（trigger）」に届いてから次の段へ進む
@@ -41,6 +41,7 @@ tiers:
   users: 'enterprise 顧客 / 売却交渉'
   add: [SOC 2（Type I→II）]
   cost: '初年度 $20-80k（estimate）'
+  source: {url: null, checked: '2026-11-03', verified: false, note: '金額は見積り（estimate）。公式の価格ではない'}
   note: 売却だけが目的なら、買い手側の体制に乗るため必須ではないことが多い。交渉相手に確認
   anti_pattern: "売却だけが目的なのに SOC 2 を先に買う"
   why: "買い手が自分の体制に乗せることが多く、初年度 $20-80k は回収できないことがある"

@@ -1,7 +1,7 @@
 # Blueprint Catalog — gtm_channels
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点（2026-11-02 に一部を公式ページで確認）。verified:false は使う前に要確認
 domain: gtm_channels
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml
 entries:
@@ -44,8 +44,9 @@ entries:
   - gtm.producthunt
   source:
     url: https://news.ycombinator.com/showhn.html
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '公式ページに料金の記載なし（投稿のルールのみ）2026-11-03'
 - id: gtm.x
   name: X（旧Twitter）
   what: 短文SNS・作りながら発信（build in public）
@@ -65,9 +66,9 @@ entries:
   - gtm.content
   source:
     url: https://business.x.com/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: false
-    note: '広告の料金ページは自動取得を拒否（403）。最低額は未確認'
+    note: '広告の料金ページは自動取得を拒否（403）。最低額は未確認。2026-11-03 も同様で公式ページで金額が読めず未確認'
 - id: gtm.seo
   name: SEO（検索流入）
   what: 検索結果からの自然流入
@@ -129,8 +130,9 @@ entries:
   - gtm.x
   source:
     url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '公式の作り方ガイド。料金の記載なし 2026-11-03'
 - id: gtm.ads.meta
   name: Meta 広告
   what: Instagram/Facebook 広告
@@ -149,8 +151,9 @@ entries:
   - gtm.ads.google
   source:
     url: https://www.facebook.com/business/ads
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '公式ページで金額が読めず未確認 2026-11-03（最低予算の記載を取得できず）'
 - id: gtm.ads.google
   name: Google 広告
   what: 検索連動・P-MAX
@@ -168,9 +171,10 @@ entries:
   pairs_well_with:
   - gtm.seo
   source:
-    url: https://ads.google.com/
-    checked: '2026-10-26'
+    url: https://business.google.com/us/google-ads/
+    checked: '2026-11-03'
     verified: false
+    note: '公式ページで金額が読めず未確認 2026-11-03（ads.google.com は business.google.com へ転送。最低支出額は未表示）'
 - id: gtm.referral
   name: 紹介プログラム
   what: 既存ユーザーが招待すると双方に特典
@@ -209,9 +213,9 @@ entries:
   - gtm.x
   source:
     url: https://discord.com/
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: false
-    note: 'Circle は公式で 2026-11-02 確認。Discord の無料枠はページ未取得'
+    note: 'Circle は公式で 2026-11-02 確認。Discord の無料枠は公式ページに明記なし（Nitro $9.99/月・Nitro Basic $2.99/月のみ確認 2026-11-03）'
 - id: gtm.pr
   name: PR・プレスキット
   what: メディアへの情報提供
@@ -249,9 +253,10 @@ entries:
   pairs_well_with:
   - gtm.content
   source:
-    url: https://www.shopify.com/partners
-    checked: '2026-10-26'
-    verified: false
+    url: https://help.shopify.com/en/partners/about
+    checked: '2026-11-03'
+    verified: true
+    note: 'Shopify Partner は公式ヘルプに「free to join」と明記 2026-11-03。他の掲載先は個別に確認'
 - id: gtm.outbound
   name: アウトバウンド営業（B2B）
   what: メール・DM で直接接触
@@ -270,8 +275,9 @@ entries:
   - em.resend
   source:
     url: https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '価格は見積り（estimate）。公式の価格ではない。URL は CAN-SPAM の公式ガイド'
 lessons:
 - id: la.launch-plan-t14
   principle: "Write the launch plan as dated rows from T-14 to T+30, each with an owner, before announcing a date."

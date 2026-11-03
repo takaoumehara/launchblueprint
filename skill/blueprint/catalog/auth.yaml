@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — auth
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: auth
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 auth:
@@ -52,7 +52,7 @@ auth:
     avoid_when: データの置き場所が Supabase の時（2か所に分かれる）
     source:
       url: https://firebase.google.com/pricing
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
     passkey_source:
       url: https://firebase.uservoice.com/forums/948424-general/suggestions/46647016-support-authentication-with-passkeys
@@ -79,7 +79,7 @@ auth:
     avoid_when: データの置き場所が Firebase の時（2か所に分かれる）
     source:
       url: https://supabase.com/pricing
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
     passkey_source:
       url: https://supabase.com/docs/guides/auth/passkeys
@@ -106,7 +106,7 @@ auth:
     avoid_when: 無料・低単価で大量ユーザーの B2C（公式FAQも Supabase/Firebase を勧める）
     source:
       url: https://clerk.com/pricing
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
   - id: auth.auth0
     name: Auth0
@@ -129,7 +129,7 @@ auth:
     avoid_when: 無料枠を超えて伸びる B2C（MAU 段階で急に高くなる）
     source:
       url: https://auth0.com/pricing
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
   - id: auth.better-auth
     name: Better Auth
@@ -152,8 +152,9 @@ auth:
     avoid_when: セキュリティ運用を自分で持てない時
     source:
       url: https://www.better-auth.com/docs/plugins/passkey
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
+      note: 'ライセンスは MIT（github.com/better-auth/better-auth の LICENSE.md、2026-11-03 確認）'
   - id: auth.cognito
     name: AWS Cognito
     support:
@@ -174,7 +175,7 @@ auth:
     best_for: AWS に寄せている
     source:
       url: https://aws.amazon.com/cognito/pricing/
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
   - id: auth.stytch
     name: Stytch
@@ -196,7 +197,7 @@ auth:
     best_for: パスワードレス中心、不正対策
     source:
       url: https://stytch.com/pricing
-      checked: '2026-10-26'
+      checked: '2026-11-03'
       verified: true
   - id: auth.authjs
     name: Auth.js（旧 NextAuth.js）
@@ -256,5 +257,5 @@ auth:
     avoid_when: 普通のウェブのログイン（今は財布向けの料金体系）
     source:
       url: https://magic.link/pricing
-      checked: '2026-10-29'
+      checked: '2026-11-03'
       verified: true

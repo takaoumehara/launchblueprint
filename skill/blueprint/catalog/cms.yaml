@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — cms
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: cms
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -34,7 +34,7 @@ entries:
   lock_in: 中
   source:
     url: https://www.sanity.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: cms.storyblok
   name: Storyblok
@@ -42,14 +42,14 @@ entries:
   best_for: パソコンで見たまま編集したい会社サイト
   avoid_when: スマホでの編集、無料で2人超
   pricing_bands:
-    free: Starter 無料：1人（最大2人、+$15/人）・API 10万回/月・100GB
+    free: Starter 無料：1人（最大2人。追加席の購入は不可）・API 10万回/月・転送 100GB
     usd5: Growth $99/月（年払い $90.75）：5人・100万回
     usd10: Growth $99/月（年払い $90.75）：5人・100万回
     usd100: Growth $99/月（年払い $90.75）：5人・100万回
   lock_in: 中
   source:
     url: https://www.storyblok.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: cms.tina
   name: TinaCMS
@@ -64,7 +64,7 @@ entries:
   lock_in: 低
   source:
     url: https://tina.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: cms.sheets
   name: Google スプレッドシート（Sheets API / SheetDB）

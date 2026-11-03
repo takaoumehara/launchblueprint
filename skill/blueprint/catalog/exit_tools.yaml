@@ -1,7 +1,7 @@
 # Blueprint Catalog — exit_tools（売却・終了の道具：データルーム・SBOM・売却先）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。法律助言ではない。売却前に弁護士確認
 domain: exit_tools
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -22,9 +22,9 @@ entries:
   pairs_well_with: [dd.contracts, dd.metrics]
   source:
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
-    note: 一般的な手順。無料枠はドライブの提供元で確認
+    note: 価格は見積り（estimate）。公式の価格ではない。無料枠はドライブの提供元で確認
 - id: xt.acquire
   name: Acquire.com
   what: スタートアップ・SaaS の売買マーケットプレイス
@@ -81,9 +81,9 @@ entries:
   pairs_well_with: [lc.exit.buyers, lt.lawyer]
   source:
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
-    note: 手順の一般論（estimate）
+    note: 価格は見積り（estimate）。公式の価格ではない。手順の一般論
 - id: xt.syft
   name: Syft（SBOM 生成）
   what: 依存とライセンスの一覧（SBOM）をコマンド 1 つで出す。Apache-2.0

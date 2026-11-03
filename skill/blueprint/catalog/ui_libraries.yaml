@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — ui_libraries
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: ui_libraries
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -83,7 +83,7 @@ entries:
   license: 独自ライセンス
   source:
     url: https://www.untitledui.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: ui.coss
   name: coss ui（旧 Origin UI）
@@ -140,15 +140,16 @@ entries:
   avoid_when: アプリの作業画面で多用
   pricing_bands:
     free: 無料版 MIT
-    usd5: Pro $49（買い切り・商用可・再販不可）
-    usd10: Pro $49（買い切り・商用可・再販不可）
-    usd100: Pro $49（買い切り・商用可・再販不可）
+    usd5: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
+    usd10: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
+    usd100: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
   lock_in: 低
   license: MIT／Pro は独自
   source:
     url: https://pro.magicui.design/
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
+    note: '無料版は MIT（github.com/magicuidesign/magicui の LICENSE.md、2026-11-03 確認）'
 - id: ui.aceternity
   name: Aceternity UI
   what: 大きな演出（背景・スクロール効果）
@@ -163,7 +164,7 @@ entries:
   license: 独自
   source:
     url: https://ui.aceternity.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: ui.smoothui
   name: SmoothUI

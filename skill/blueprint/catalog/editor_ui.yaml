@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — editor_ui
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: editor_ui
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -68,7 +68,7 @@ entries:
   license: MIT
   source:
     url: https://tiptap.dev/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: edit.blocknote
   name: BlockNote

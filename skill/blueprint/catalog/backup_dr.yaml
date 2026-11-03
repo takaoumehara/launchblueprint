@@ -1,7 +1,7 @@
 # Blueprint Catalog — backup_dr（バックアップと復旧の置き方）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。教訓（原則）は data_protection.yaml と対で使う
 domain: backup_dr
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -80,7 +80,7 @@ entries:
   pairs_well_with: [dp.backup-worker-isolated, dp.ai-keys-no-backup-delete, bk.backblaze-b2]
   source:
     url: https://developers.cloudflare.com/r2/pricing/
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
 - id: bk.backblaze-b2
   name: Backblaze B2（別事業者のコピー）

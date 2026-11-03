@@ -1,7 +1,7 @@
 # Blueprint Catalog — pricing（価格・パッケージ・単位経済）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格の型（entries）と教訓（lessons）。法律・税の助言ではない
 domain: pricing
-updated: '2026-11-02'
+updated: '2026-11-03'
 stale_after_days: 180
 freshness: freshness.yaml
 entries:
@@ -22,7 +22,7 @@ entries:
   pairs_well_with: [pay.stripe-checkout, pr.cancel-as-easy-as-signup]
   source:
     url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: pm.freemium
   name: 無料枠＋有料プラン
@@ -41,7 +41,7 @@ entries:
   pairs_well_with: [pr.free-tier-cap, dp.ai-usage-caps]
   source:
     url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: pm.usage
   name: 使った分だけ（従量）
@@ -49,7 +49,7 @@ entries:
   best_for: AI・API・動画など原価が使用量に比例するもの。会社向け
   avoid_when: 請求額が読めないと嫌がる個人向け（上限や定額の組み合わせが要る）
   pricing_bands:
-    free: Stripe の従量請求は Billing の手数料（公式ページで確認）
+    free: Stripe Billing（従量・サブスク）は Pay as you go で請求額の 0.7%（月額なし。月額プランは $620/月〜・1年契約）
     usd5: —
     usd10: —
     usd100: —
@@ -60,7 +60,7 @@ entries:
   pairs_well_with: [pay.stripe-checkout, cc.ai-gateway-budget]
   source:
     url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: pm.one-time
   name: 買い切り（ライフタイム）
@@ -98,7 +98,7 @@ entries:
   pairs_well_with: [pay.stripe-checkout, auth.clerk]
   source:
     url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 lessons:
 - id: pr.unit-cost-before-price
