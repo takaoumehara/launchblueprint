@@ -304,7 +304,7 @@ rules:
     anti_pattern: "Selected chips, focus rings and the primary button sharing one solid fill, or rings left in an old accent."
     why: "Selected options were mistaken for buttons, and old-accent rings looked like a different product."
     check: "Are selected states a tint, the primary action a fill, and focus rings brand-coloured at 3:1 or more?"
-    source: 'product iteration 2026-10'
+    source: 'product iteration 2026-10; focus-ring 3:1 per WCAG 2.2 (1.4.11 AA) https://www.w3.org/TR/WCAG22/#non-text-contrast checked 2026-11-03'
     date: '2026-10-27'
   - id: clean-build-before-deploy
     category: engineering
@@ -514,7 +514,7 @@ rules:
     why: "Low contrast is the most common accessibility failure and hurts everyone outdoors or on a dim screen, not only people with low vision."
     check: "Does every text and meaningful graphic colour pair measure 4.5:1 (text) or 3:1 (large text, icons, borders) in both light and dark themes?"
     see_also: "selected-vs-primary-color, dark-mode-checked-every-screen"
-    source: 'WCAG 2.2 AA (1.4.3, 1.4.11) 2026-11'
+    source: 'WCAG 2.2 (1.4.3 AA, 1.4.11 AA) https://www.w3.org/TR/WCAG22/#contrast-minimum checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-keyboard-reachable
     category: accessibility
@@ -524,7 +524,7 @@ rules:
     why: "Keyboard access is what screen readers, switch devices and power users all rely on, and it is cheap only when built in from the start."
     check: "Can you complete every flow with Tab, Shift+Tab, Enter, Space, arrows and Esc alone, with a visible focus ring at each stop and no keyboard trap?"
     see_also: "a11y-focus-in-dialogs, selected-vs-primary-color"
-    source: 'WCAG 2.2 AA (2.1.1, 2.4.3, 2.4.7, 2.4.11) 2026-11'
+    source: 'WCAG 2.2 (2.1.1 A, 2.4.3 A, 2.4.7 AA, 2.4.11 AA) https://www.w3.org/TR/WCAG22/#keyboard checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-accessible-names
     category: accessibility
@@ -534,7 +534,7 @@ rules:
     why: "Without a name a screen reader says 'button', so the user cannot tell Delete from Save."
     check: "Does every control and meaningful image expose a name that says what it does, and are all decorative images hidden?"
     see_also: "icon-only-secondary-on-narrow"
-    source: 'WCAG 2.2 AA (1.1.1, 2.4.4, 4.1.2) 2026-11'
+    source: 'WCAG 2.2 (1.1.1 A, 2.4.4 A, 4.1.2 A) https://www.w3.org/TR/WCAG22/#non-text-content checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-focus-in-dialogs
     category: accessibility
@@ -544,7 +544,7 @@ rules:
     why: "Keyboard and screen-reader users otherwise lose their place or interact with a page they cannot see."
     check: "On open, is focus inside the dialog; does Esc close it; on close, does focus return to the opener; is the background inert while it is open?"
     see_also: "a11y-keyboard-reachable"
-    source: 'WAI-ARIA Authoring Practices (dialog) 2026-11'
+    source: 'WAI-ARIA APG (Modal Dialog pattern) https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/ checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-semantic-structure
     category: accessibility
@@ -554,7 +554,7 @@ rules:
     why: "Native elements give keyboard behaviour, names and roles for free; a correct outline lets screen-reader users jump to what they want."
     check: "With CSS turned off, does the page still read as a sensible outline, and is every interactive element a native control or has an explicit role and keyboard handler?"
     see_also: "a11y-keyboard-reachable"
-    source: 'WCAG 2.2 AA (1.3.1, 4.1.2) 2026-11'
+    source: 'WCAG 2.2 (1.3.1 A, 4.1.2 A) https://www.w3.org/TR/WCAG22/#info-and-relationships checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-not-colour-alone
     category: accessibility
@@ -564,7 +564,7 @@ rules:
     why: "About 1 in 12 men cannot tell red from green, and colour alone is also lost in greyscale screenshots and printouts."
     check: "In a greyscale screenshot, is every status, selection and error still distinguishable?"
     see_also: "never-red-for-success, selected-state-tint"
-    source: 'WCAG 2.2 AA (1.4.1) 2026-11'
+    source: 'WCAG 2.2 (1.4.1 A) https://www.w3.org/TR/WCAG22/#use-of-color checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-zoom-and-text-size
     category: accessibility
@@ -574,7 +574,7 @@ rules:
     why: "Many people enlarge text; a layout that only works at one size shuts them out."
     check: "At 200% zoom and with the largest system text size, is every control reachable and no text clipped or overlapping?"
     see_also: "no-ellipsis-truncation, i18n-text-expansion"
-    source: 'WCAG 2.2 AA (1.4.4, 1.4.10) 2026-11'
+    source: 'WCAG 2.2 (1.4.4 AA 200 %, 1.4.10 AA 320 CSS px) https://www.w3.org/TR/WCAG22/#resize-text checked 2026-11-03'
     date: '2026-11-02'
   - id: a11y-announce-changes
     category: accessibility
@@ -584,7 +584,7 @@ rules:
     why: "A screen-reader user cannot see a message appear elsewhere on the screen, so they do not know the action happened."
     check: "With a screen reader on, is every toast, save state and error announced once, politely, without stealing focus?"
     see_also: "single-status-location, form-validation-timing"
-    source: 'WCAG 2.2 AA (4.1.3) 2026-11'
+    source: 'WCAG 2.2 (4.1.3 AA) https://www.w3.org/TR/WCAG22/#status-messages checked 2026-11-03'
     date: '2026-11-02'
   - id: define-every-screen-state
     category: states
@@ -614,7 +614,7 @@ rules:
     why: "Shifting content makes people tap the wrong thing, and flashing spinners make a fast app feel slow."
     check: "Does content appear without moving anything already on screen, and is no loading indicator shown for waits shorter than a few hundred milliseconds?"
     see_also: "perf-images-and-media, perf-core-web-vitals-budget"
-    source: 'standard practice (skeleton screens, CLS) 2026-11'
+    source: 'standard practice (skeleton screens); Core Web Vitals (CLS ≤0.1 at p75) https://web.dev/articles/cls checked 2026-11-03'
     date: '2026-11-02'
   - id: error-state-recoverable
     category: states
@@ -654,7 +654,7 @@ rules:
     why: "Once a placeholder disappears people forget what the field was for, and inconsistent markers make users re-read every form."
     check: "Does every input have a visible, linked label that remains while typing, and are required or optional markers identical across screens?"
     see_also: "time-inputs-for-novices, a11y-accessible-names"
-    source: 'standard practice (WCAG 2.2 3.3.2) 2026-11'
+    source: 'standard practice; WCAG 2.2 (3.3.2 A) https://www.w3.org/TR/WCAG22/#labels-or-instructions checked 2026-11-03'
     date: '2026-11-02'
   - id: form-validation-timing
     category: forms
@@ -664,7 +664,7 @@ rules:
     why: "Premature errors feel like being scolded mid-sentence, and errors far from the field are missed."
     check: "Does an error appear only after the user leaves the field or submits, next to the field, in fix-it language, and does focus move to the first error?"
     see_also: "prevent-invalid-input, error-state-recoverable, a11y-announce-changes"
-    source: 'standard practice (WCAG 2.2 3.3.1, 3.3.3) 2026-11'
+    source: 'standard practice; WCAG 2.2 (3.3.1 A, 3.3.3 AA) https://www.w3.org/TR/WCAG22/#error-identification checked 2026-11-03'
     date: '2026-11-02'
   - id: form-input-types-and-autofill
     category: forms
@@ -674,7 +674,7 @@ rules:
     why: "Typing on a phone is the slowest part of any form; autofill and the right keyboard cut it in half."
     check: "Does the right keyboard appear on a phone for each field, does browser autofill fill the form, and does pasting a formatted value succeed?"
     see_also: "form-labels-always-visible, touch-targets-and-spacing"
-    source: 'standard practice (HTML autocomplete, WCAG 2.2 1.3.5) 2026-11'
+    source: 'standard practice (HTML autocomplete); WCAG 2.2 (1.3.5 AA) https://www.w3.org/TR/WCAG22/#identify-input-purpose checked 2026-11-03'
     date: '2026-11-02'
   - id: form-submit-once-with-feedback
     category: forms
@@ -734,7 +734,7 @@ rules:
     why: "Missed taps are the most common mobile complaint, and they are invisible in desktop testing."
     check: "Is every tappable control at least 44 × 44 with spacing from its neighbours, including icon buttons, list-row actions and dismiss controls?"
     see_also: "icon-only-secondary-on-narrow, no-overlapping-inserters"
-    source: 'Apple HIG / Material (44 pt / 48 dp); WCAG 2.2 AA minimum 24 × 24 CSS px (2.5.8) 2026-11'
+    source: 'Apple HIG / Material (44 pt / 48 dp); WCAG 2.2 (2.5.8 AA: minimum 24 × 24 CSS px, spacing exception) https://www.w3.org/TR/WCAG22/#target-size-minimum checked 2026-11-03'
     date: '2026-11-02'
   - id: thumb-zone-primary-actions
     category: mobile
@@ -774,7 +774,7 @@ rules:
     why: "Gestures are invisible; without a visible alternative they are undiscoverable for many and impossible for some."
     check: "Can every gesture-triggered action also be done through a visible control, and is the gesture taught once?"
     see_also: "announce-new-features-once, handle-only-reorder, a11y-keyboard-reachable"
-    source: 'WCAG 2.2 AA (2.5.1, 2.5.7) 2026-11'
+    source: 'WCAG 2.2 (2.5.1 A, 2.5.7 AA) https://www.w3.org/TR/WCAG22/#pointer-gestures checked 2026-11-03'
     date: '2026-11-02'
   - id: motion-explains-change
     category: motion
@@ -794,7 +794,7 @@ rules:
     why: "Motion can cause nausea and distraction; a setting that only some components honour is worse than none, because people stop trusting it."
     check: "With the system reduce-motion setting on, does anything on any screen still move or auto-play?"
     see_also: "motion-accessibility, decorative-motion-once"
-    source: 'WCAG 2.2 (2.3.3), prefers-reduced-motion 2026-11'
+    source: 'WCAG 2.2 (2.3.3 AAA) https://www.w3.org/TR/WCAG22/#animation-from-interactions checked 2026-11-03; prefers-reduced-motion'
     date: '2026-11-02'
   - id: autoplay-is-muted-and-stoppable
     category: motion
@@ -804,7 +804,7 @@ rules:
     why: "Moving content competes with reading, triggers vestibular symptoms for some people, and burns mobile data."
     check: "Does every auto-playing or moving element longer than five seconds have a visible pause, start muted, and stay still under reduced motion?"
     see_also: "reduced-motion-is-global, real-media-thumbnails, perf-images-and-media"
-    source: 'WCAG 2.2 AA (2.2.2, 1.4.2) 2026-11'
+    source: 'WCAG 2.2 (2.2.2 A, 1.4.2 A) https://www.w3.org/TR/WCAG22/#pause-stop-hide checked 2026-11-03'
     date: '2026-11-02'
   - id: perf-core-web-vitals-budget
     category: performance
@@ -814,7 +814,7 @@ rules:
     why: "Speed is a feature users notice first; without a budget every change is a little slower than the last."
     check: "Does the preview report LCP, INP and CLS for every key page on a throttled mid-range phone, and does CI fail when the budget is exceeded?"
     see_also: "loading-without-layout-shift, perf-images-and-media, perf-ship-less-javascript"
-    source: 'Core Web Vitals thresholds (web.dev) 2026-11'
+    source: 'Core Web Vitals (LCP ≤2.5 s, INP ≤200 ms, CLS ≤0.1 at p75) https://web.dev/articles/vitals checked 2026-11-03'
     date: '2026-11-02'
   - id: perf-images-and-media
     category: performance
