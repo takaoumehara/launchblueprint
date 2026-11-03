@@ -134,13 +134,17 @@ const PHASES: Record<string, RegExp> = {
   design: /colou?r|border|tint|type|layout|spacing|icon|visual|selected|primary/i,
   qa: /.*/,
 };
-server.tool("ui_ux_checklist", "UI/UX yes/no checklist. Optional phase: requirements | design | qa (qa = all).",
-  { phase: z.enum(["requirements", "design", "qa"]).optional() }, async ({ phase }) => {
-    const rules: any[] = loadYaml("ui_ux")?.rules ?? [];
+const LIFECYCLE = ["idea", "launch", "operate", "scale", "exit"] as const;
+server.tool("ui_ux_checklist", "UI/UX yes/no checklist. Optional phase: requirements | design | qa (qa = all). Optional lifecycle: idea | launch | operate | scale | exit filters the phase gates; gates are always returned.",
+  { phase: z.enum(["requirements", "design", "qa"]).optional(), lifecycle: z.enum(LIFECYCLE).optional() }, async ({ phase, lifecycle }) => {
+    const doc = loadYaml("ui_ux");
+    const rules: any[] = doc?.rules ?? [];
     const pick = rules.filter(r => !phase || (r.phase ? [].concat(r.phase).includes(phase as never)
       : PHASES[phase].test(`${r.id} ${r.principle}`)));
+    const gates: any[] = (doc?.phase_gate_checks ?? []).filter((g: any) => !lifecycle || g.lifecycle === lifecycle);
     return json({ phase: phase ?? "all", count: pick.length,
-      checklist: pick.map(r => ({ id: r.id, check: r.check, why: r.why })) });
+      checklist: pick.map(r => ({ id: r.id, category: r.category ?? null, check: r.check, why: r.why })),
+      lifecycle: lifecycle ?? "all", gates: gates.map(g => ({ id: g.id, lifecycle: g.lifecycle ?? null, phase: g.phase, check: g.check, why: g.why, rules: g.rules ?? [] })) });
   });
 
 server.tool("propose_learning", "Propose a new learning. Appends to the inbox only; the master is never edited.",

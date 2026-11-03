@@ -1,6 +1,8 @@
 # UI/UX learnings v1 — generic rules from product iteration
 rules:
   - id: primary-action-color
+    category: emphasis
+    phase: [design, qa]
     principle: "Reserve the strongest colour (solid black or brand fill) for the single primary action on a screen."
     anti_pattern: "Several solid dark boxes and selected states all competing with the primary button."
     why: "Users' eyes were pulled between the main action and selected options, so the main action stopped standing out."
@@ -8,6 +10,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: selected-state-tint
+    category: emphasis
+    phase: [design, qa]
     principle: "Show selected states with a light accent tint plus a thin ring, not a solid fill."
     anti_pattern: "Selected chips filled solid in the same weight as the primary button."
     why: "A solid selected option looked like a second primary action."
@@ -15,6 +19,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: borders-only-on-pressables
+    category: emphasis
+    phase: [design, qa]
     principle: "Use boxes and borders only for pressable buttons; use plain text links elsewhere."
     anti_pattern: "Bordered boxes around labels, lists and secondary links."
     why: "Too many framed boxes made the header feel busy and hid what was actually tappable."
@@ -22,6 +28,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: hints-on-demand
+    category: guidance
+    phase: [requirements, design]
     principle: "Keep hints off the main surface; put them behind an (i) or a one-time dismissible tip."
     anti_pattern: "Always-on helper lines and tour buttons in section headers."
     why: "Permanent helper text cluttered the header and was ignored after the first visit."
@@ -29,6 +37,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: announce-new-features-once
+    category: guidance
+    phase: [requirements, qa]
     principle: "Announce a new feature to all users, existing ones included, once, then never again."
     anti_pattern: "Shipping an interaction change silently, or showing the tip on every visit."
     why: "Existing users never discovered a new gesture because only new sign-ups saw guidance."
@@ -36,6 +46,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: short-scannable-copy
+    category: copy
+    phase: [requirements, design, qa]
     principle: "Keep UI copy extremely short and scannable."
     anti_pattern: "Sentences in buttons, labels and toasts."
     why: "Long labels were truncated or skipped, and users missed the point."
@@ -43,6 +55,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: plain-localized-terms
+    category: copy
+    phase: [requirements, design, qa]
     principle: "Use plain, recognizable terms, localized to each locale's natural word."
     anti_pattern: "Invented feature names or literal translations (e.g. 'Contents at the top')."
     why: "An invented label was not recognized; the standard term ('Table of contents') was."
@@ -50,6 +64,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: undoable-delete
+    category: lists
+    phase: [requirements, design]
     principle: "Delete immediately with an Undo toast, and offer Hide as a non-destructive alternative."
     anti_pattern: "Blocking confirm sheet saying 'This can't be undone'."
     why: "Users feared deleting and asked why it could not be undone and whether they could just hide it."
@@ -57,6 +73,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: handle-only-reorder
+    category: lists
+    phase: [design]
     principle: "Use a drag handle alone for reorder; put Move up/down in the overflow menu."
     anti_pattern: "Drag handle plus up/down arrows plus overflow on every row."
     why: "Rows with three reorder affordances looked cluttered and redundant."
@@ -64,6 +82,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: no-overlapping-inserters
+    category: lists
+    phase: [design, qa]
     principle: "Do not put between-item inserter buttons where they overlap content; use one Add button and 'Add below' in the overflow."
     anti_pattern: "Floating '+' between list items."
     why: "The between-item '+' overlapped neighbouring items and kept drawing complaints."
@@ -71,6 +91,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: distinct-coachmarks
+    category: guidance
+    phase: [design, qa]
     principle: "Make tour coachmarks visually distinct from the highlighted UI (dark bubble plus accent outline) with Back, swipe and progress dots."
     anti_pattern: "A coachmark styled like the UI it points to, forward-only."
     why: "Users confused the tour bubble with the real control and could not go back."
@@ -78,6 +100,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: celebrate-publish
+    category: saving
+    phase: [design, qa]
     principle: "Show publish success in clear green with a live message, Copy/Share actions and a small first-time celebration."
     anti_pattern: "Neutral or ambiguous publish feedback."
     why: "Users were unsure whether their page had gone live."
@@ -85,6 +109,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: never-red-for-success
+    category: emphasis
+    phase: [design, qa]
     principle: "Never use red for a success state."
     anti_pattern: "Red or warning colours on a successful state."
     why: "A success state in red read as an error."
@@ -92,6 +118,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: preserve-scroll-highlight
+    category: lists
+    phase: [design, qa]
     principle: "After closing an editor, return to the same scroll position and briefly highlight the edited item."
     anti_pattern: "Jumping back to the top of the list."
     why: "Users lost their place after every edit."
@@ -99,6 +127,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: no-ellipsis-truncation
+    category: copy
+    phase: [design, qa]
     principle: "Never truncate text with an ellipsis; wrap, shorten copy or resize."
     anti_pattern: "Labels cut off with '…'."
     why: "Cut-off labels hid meaning and looked broken."
@@ -106,6 +136,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: plain-screen-labels
+    category: emphasis
+    phase: [design, qa]
     principle: "Screen-name labels are plain text, and mode toggles state what they switch between."
     anti_pattern: "Heavy black banner for a mode label; ambiguous toggles like 'Test links'."
     why: "A heavy preview banner looked ugly and an unclear toggle confused users."
@@ -113,6 +145,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: separate-preview-from-edit
+    category: lists
+    phase: [design, qa]
     principle: "Separate an inline preview clearly from the edit list (Edit/Preview switch, framed and labelled preview)."
     anti_pattern: "Preview rendered inline with the same images as the list, with no boundary."
     why: "Users saw the same images twice and could not tell preview from editor."
@@ -120,6 +154,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: full-focus-edit-mode
+    category: lists
+    phase: [requirements, design]
     principle: "Item edit mode is full focus; define a show/hide matrix of controls per mode."
     anti_pattern: "Global actions, Publish and add bars still visible while editing one item."
     why: "Mixed global and local controls made editing mode feel unclear."
@@ -127,6 +163,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: sticky-save-bar-when-dirty
+    category: saving
+    phase: [design, qa]
     principle: "Manual-save screens use a sticky bottom Cancel/Save bar that appears only when there are changes, the same on every manual-save screen."
     anti_pattern: "Save and cancel as heavy boxes in the header, always visible."
     why: "An always-on header Save made three heavy boxes and gave no sense of unsaved changes."
@@ -134,6 +172,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: prevent-invalid-input
+    category: saving
+    phase: [design, qa]
     principle: "Prevent invalid input by auto-adjusting (e.g. accent contrast) with Undo instead of showing an error."
     anti_pattern: "Error message after the user picks an unreadable colour."
     why: "Users hit a contrast error with no idea how to fix it."
@@ -141,6 +181,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: separate-concepts
+    category: saving
+    phase: [requirements, design]
     principle: "Keep separate concepts in separate controls (publish status vs audience/visibility)."
     anti_pattern: "A 'Private' visibility option that overlaps with draft/unpublished state."
     why: "Users could not tell 'private' from 'not published'."
@@ -148,6 +190,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: real-media-thumbnails
+    category: visual
+    phase: [design, qa]
     principle: "Media embeds show the real thumbnail with a play overlay."
     anti_pattern: "Generic placeholder for embedded video."
     why: "Placeholder embeds made pages look broken and unfamiliar."
@@ -155,6 +199,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: design-system-fonts-everywhere
+    category: visual
+    phase: [design, qa]
     principle: "Every dialog, sheet and toast uses design-system fonts."
     anti_pattern: "Sheets falling back to a different (e.g. serif) font."
     why: "A confirm sheet showed an unfamiliar font and users doubted the design system."
@@ -162,6 +208,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: distinct-motion-styles
+    category: motion
+    phase: [design, qa]
     principle: "Offer motion styles only if each is visibly distinct, with a live mini preview per style."
     anti_pattern: "Presets or on/off switches that look nearly identical."
     why: "Near-identical presets were rejected; users wanted clearly different reveal styles."
@@ -169,6 +217,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: motion-accessibility
+    category: motion
+    phase: [design, qa]
     principle: "Reduced-motion users get no motion; long body text uses only a soft fade; any input finishes the reveal; animate only transform, opacity, clip-path and filter."
     anti_pattern: "Decode or typewriter effects on paragraphs, ignoring reduced-motion."
     why: "Effects on long text hurt readability and performance."
@@ -176,6 +226,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: consistent-save-model
+    category: saving
+    phase: [requirements, design, qa]
     principle: "Make the save model explicit per surface (auto-saved to draft vs live at once vs manual) and show a consistent indicator."
     anti_pattern: "Some settings live instantly, others draft, others manual, all looking the same."
     why: "An audit found mixed save behaviours that users could not predict."
@@ -183,6 +235,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: tap-row-to-open
+    category: lists
+    phase: [design]
     principle: "Tapping a list row opens it; the row shows only its name and an overflow menu."
     anti_pattern: "An extra Edit button on every row."
     why: "Per-row Edit buttons added noise without adding capability."
@@ -190,6 +244,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: scoped-help-assistant
+    category: guidance
+    phase: [requirements, qa]
     principle: "An in-product help assistant answers only from the help content, cites the source page, links to screens instead of acting, and politely declines off-topic questions."
     anti_pattern: "A general chatbot that answers anything or takes account actions."
     why: "Off-topic answers and unsourced replies erode trust."
@@ -197,6 +253,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: collapse-long-nav
+    category: lists
+    phase: [design, qa]
     principle: "Long in-page navigation collapses ('Contents ▾', '+N more') instead of growing without limit."
     anti_pattern: "An ever-growing list of links at the top of long pages."
     why: "Long tables of contents pushed content below the fold."
@@ -204,6 +262,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: toast-never-covers-controls
+    category: saving
+    phase: [design, qa]
     principle: "Show transient messages in their own reserved space (above a bottom bar, clear of the safe area), never on top of tappable controls."
     anti_pattern: "A floating toast laid over list items and buttons near the bottom of the screen."
     why: "A toast covered a button users were about to tap, so taps were missed or hit the toast."
@@ -211,6 +271,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: header-title-wraps-to-own-row
+    category: copy
+    phase: [design, qa]
     principle: "Let a header title wrap (a few lines at most) or move to its own full-width row; never cut it off."
     anti_pattern: "A page title truncated with an ellipsis or squeezed to one word per line beside header buttons."
     why: "People could not tell which page they were editing, and truncated titles looked broken."
@@ -218,6 +280,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: icon-only-secondary-on-narrow
+    category: emphasis
+    phase: [design, qa]
     principle: "On narrow screens, collapse secondary header actions to labelled icons (accessible name, 44px target) before squeezing the title."
     anti_pattern: "Text labels on every header button so a short title wraps into two cramped lines."
     why: "Short titles wrapped needlessly because secondary buttons took the space."
@@ -225,6 +289,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: decorative-motion-once
+    category: motion
+    phase: [design, qa]
     principle: "Play decorative motion (a sheen, a shimmer) once on load and once per press, never on a loop, and not at all under reduced motion."
     anti_pattern: "A shine that repeats forever on the primary button."
     why: "Looping decoration distracted from content and ignored people who asked for less motion."
@@ -232,6 +298,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: selected-vs-primary-color
+    category: emphasis
+    phase: [design, qa]
     principle: "Keep selected states visibly lighter than the primary action, and draw focus rings in the brand colour at 3:1 or more."
     anti_pattern: "Selected chips, focus rings and the primary button sharing one solid fill, or rings left in an old accent."
     why: "Selected options were mistaken for buttons, and old-accent rings looked like a different product."
@@ -239,6 +307,8 @@ rules:
     source: 'product iteration 2026-10'
     date: '2026-10-27'
   - id: clean-build-before-deploy
+    category: engineering
+    phase: [qa]
     principle: "Clear the build cache before a production build when design tokens or global CSS changed, then verify the deployed CSS."
     anti_pattern: "Deploying from an incremental build whose cached CSS still held the old tokens."
     why: "A stale cache shipped old colours even though the source had changed."
@@ -247,6 +317,7 @@ rules:
     date: '2026-10-27'
   - id: external-setup-roundtrip
     category: flows
+    phase: [requirements, design, qa]
     principle: "Before sending users to an external setup step mid-flow (e.g. payment onboarding), auto-save, deep-link straight to the setup screen, and return them to the exact item they left."
     anti_pattern: "Leaving through a generic settings/profile page and showing 'Leave without saving?' after the work was already saved."
     why: "A saved draft plus a detour and a false unsaved-changes warning made the flow feel broken."
@@ -256,6 +327,7 @@ rules:
     date: '2026-10-27'
   - id: single-status-location
     category: feedback
+    phase: [design, qa]
     principle: "Show each status (progress, sync, error) in exactly one place on a screen."
     anti_pattern: "The same upload progress rendered in a row and again in a banner or toast."
     why: "Duplicate progress indicators confused users about whether two uploads were running."
@@ -264,6 +336,7 @@ rules:
     date: '2026-10-27'
   - id: migration-numbers-by-merge-order
     category: engineering
+    phase: [qa]
     principle: "When several branches add database migrations in parallel, assign migration numbers by planned merge order before review ends, and ship each migration to every environment's database."
     anti_pattern: "Each branch picking the next free number on its own and assuming production migrates itself."
     why: "Three changes claimed the same migration number, and one never got its production migration."
@@ -273,6 +346,7 @@ rules:
     date: '2026-10-27'
   - id: offline-payment-holds-expire
     category: payments
+    phase: [requirements, qa]
     principle: "Seats or stock held for manual/offline payment need an expiry, an organizer cancel action, and a per-buyer cap."
     anti_pattern: "Unpaid holds that count against capacity indefinitely."
     why: "Unpaid holds blocked capacity forever and real buyers were turned away."
@@ -282,6 +356,7 @@ rules:
     date: '2026-10-27'
   - id: money-summary-integrity
     category: payments
+    phase: [requirements, qa]
     principle: "Money summaries subtract refunds once, exclude cancelled/expired orders from gross, store the processor's real fees, and label anything estimated."
     anti_pattern: "Subtracting a refund from gross and again from net, or computing fees from a formula and showing them as fact."
     why: "A fully refunded order showed a negative net amount."
@@ -291,6 +366,7 @@ rules:
     date: '2026-10-27'
   - id: public-support-address-not-home
     category: onboarding
+    phase: [requirements, qa]
     principle: "A public-facing support/business address must never default to the user's home address; warn that it is public and suggest a virtual or business address."
     anti_pattern: "Prefilling the account's personal address into a field buyers can see."
     why: "Onboarding exposed a home address to buyers without the user realising."
@@ -300,6 +376,7 @@ rules:
     date: '2026-10-27'
   - id: agreement-snapshot-and-retention
     category: privacy
+    phase: [requirements, qa]
     principle: "For agreements accepted at checkout, snapshot the exact text plus a hash per order, collect the minimum personal data (no IP unless required), scrub personal data when the stated retention ends, and update the privacy policy in the same change."
     anti_pattern: "Linking to a live, editable agreement, logging IPs by default, and keeping data past the stated retention."
     why: "Personal data was kept beyond the retention period the policy promised."
@@ -309,6 +386,7 @@ rules:
     date: '2026-10-27'
   - id: time-inputs-for-novices
     category: forms
+    phase: [design, qa]
     principle: "Date/time inputs offer a 12h/24h toggle, prefill End from Start, label optional fields consistently, and explain inline when blank means unlimited."
     anti_pattern: "Bare time fields where End starts empty, optional markers vary, and blank's meaning is undocumented."
     why: "First-time users had to guess formats and what an empty field meant."
@@ -318,6 +396,7 @@ rules:
     date: '2026-10-27'
   - id: statement-descriptor-preflight
     category: payments
+    phase: [requirements, design]
     principle: "Ask for the trading (DBA) name first and explain that the card statement descriptor must match the legal name or website before the processor validates it."
     anti_pattern: "Letting users type any descriptor and surfacing the processor's rejection mid-setup."
     why: "Setup failed with an unexplained processor rejection error."
@@ -327,6 +406,7 @@ rules:
     date: '2026-10-27'
   - id: i18n-message-keys-day-one
     category: i18n
+    phase: [requirements, qa]
     principle: "Products that may go multilingual must put all UI text behind message keys from day one and ban hardcoded strings via lint/CI."
     anti_pattern: "Writing English UI strings directly in components and planning to 'translate later'."
     why: "Retrofitting hardcoded strings into translation files later is a large, error-prone sweep across every screen."
@@ -336,70 +416,519 @@ rules:
     date: '2026-10-30'
   - id: i18n-icu-plurals
     category: i18n
+    phase: [qa]
     principle: "Write plurals, gender and selects as ICU MessageFormat inside the message, not as if/else in code."
     anti_pattern: "count === 1 ? 'item' : 'items' in components."
     why: "Many languages have more than two plural forms (e.g. Russian, Arabic), and code-level branches cannot express them."
     check: "Is every count-dependent string an ICU plural message?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-intl-formatting
     category: i18n
+    phase: [qa]
     principle: "Format dates, times, numbers, currency and relative times with Intl APIs (or the i18n library's wrappers) using the active locale."
     anti_pattern: "Hand-built date strings, fixed '$' symbols, toFixed(2) for money."
     why: "Order, separators, currency position and calendars differ per locale; hand formatting is wrong somewhere."
     check: "Is any date, number or price formatted without Intl or the library formatter?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-no-concatenation
     category: i18n
+    phase: [qa]
     principle: "Never build sentences by concatenating translated fragments; use one message with named placeholders."
     anti_pattern: "t('hello') + ' ' + name + t('welcome_back')."
     why: "Word order differs by language (Japanese puts the verb last), so fragments cannot be reordered by translators."
     check: "Is any visible sentence assembled from more than one key or string piece?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-text-expansion
     category: i18n
+    phase: [design, qa]
     principle: "Design layouts to tolerate ~30-40% longer text (more for short labels) and wrapping; no fixed-width buttons or labels."
     anti_pattern: "Pixel-fitted buttons and tabs sized to the English word."
     why: "German/French text is often 30%+ longer and short labels can double, which breaks or truncates layouts."
     check: "Does every screen still work with pseudo-localized text that is 40% longer?"
     see_also: "no-ellipsis-truncation"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-cjk-fonts-line-breaking
     category: i18n
+    phase: [design, qa]
     principle: "For CJK locales, set a per-locale font stack (subset or system fonts) and line-breaking rules (word-break / line-break: strict, or keep-all for Korean); check by eye."
     anti_pattern: "One Latin web font for all locales and default breaking."
     why: "Missing glyphs fall back inconsistently (Han unification shows wrong regional glyphs) and lines break before punctuation or mid-word."
     check: "Has each CJK locale been checked by eye for font, glyphs and line breaks (lang attribute set)?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-locale-fallback
     category: i18n
+    phase: [qa]
     principle: "Define a locale fallback chain (e.g. zh-Hant-TW → zh-Hant → default) and a default locale; missing keys fall back, never show raw keys."
     anti_pattern: "Showing 'checkout.title' to users when a translation is missing."
     why: "New keys always ship before all translations; without fallback, users see broken text."
     check: "Does a missing translation show the fallback language rather than the key?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-key-naming
     category: i18n
+    phase: [qa]
     principle: "Name keys by screen/feature and meaning (checkout.payButton), not by the English text; give translators context/descriptions."
     anti_pattern: "Keys equal to the English sentence, or reusing one key for two meanings."
     why: "Text-as-key breaks when copy changes, and shared keys force one translation where languages need two."
     check: "Are keys namespaced by feature, unique in meaning, and described for translators?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-ci-completeness
     category: i18n
+    phase: [qa]
     principle: "CI checks every locale file has every key, no unused keys, and valid ICU syntax; release-blocking for shipped locales."
     anti_pattern: "Finding missing translations from user reports."
     why: "Keys are added daily; only an automatic check keeps locales in sync."
     check: "Does CI fail when a shipped locale is missing a key or has broken ICU syntax?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
   - id: i18n-pseudo-localization
     category: i18n
+    phase: [qa]
     principle: "Run a pseudo-locale (accented, ~40% longer, bracketed text) in dev/QA before real translations exist."
     anti_pattern: "Waiting for real translations to find hardcoded strings and clipped layouts."
     why: "Pseudo-localization exposes hardcoded strings, concatenation and overflow on day one at zero cost."
     check: "Can the app be switched to a pseudo-locale, and has every screen been viewed in it?"
+    source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
+  - id: one-term-per-concept
+    category: copy
+    phase: [requirements, design, qa]
+    principle: "Keep a product glossary and use exactly one term per concept across UI, help, emails and code (e.g. always 'page', never also 'site' or 'board' for the same thing)."
+    anti_pattern: "The same object called 'page' in the editor, 'site' in settings and 'board' in the help centre."
+    why: "Every extra name for one thing is a new concept users must learn, and support has to translate between them."
+    check: "Does every screen, email and help page use the glossary term for each concept, with no second name in use?"
+    see_also: "plain-localized-terms, elements/glossary.yaml"
+    source: 'standard practice (UX writing) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-text-contrast
+    category: accessibility
+    phase: [design, qa]
+    principle: "Text has at least 4.5:1 contrast against its background (3:1 for large text), and icons, borders and focus rings that carry meaning have at least 3:1, in every theme."
+    anti_pattern: "Light grey helper text, brand colour on a brand tint, or placeholder-grey body text that passes in light mode and fails in dark mode."
+    why: "Low contrast is the most common accessibility failure and hurts everyone outdoors or on a dim screen, not only people with low vision."
+    check: "Does every text and meaningful graphic colour pair measure 4.5:1 (text) or 3:1 (large text, icons, borders) in both light and dark themes?"
+    see_also: "selected-vs-primary-color, dark-mode-checked-every-screen"
+    source: 'WCAG 2.2 AA (1.4.3, 1.4.11) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-keyboard-reachable
+    category: accessibility
+    phase: [design, qa]
+    principle: "Everything that can be tapped can also be reached and operated with the keyboard in a sensible order, with a visible focus ring at every stop; never remove focus outlines without replacing them."
+    anti_pattern: "outline: none, clickable divs with no key handler, custom dropdowns that Tab skips, and focus jumping to the top after an action."
+    why: "Keyboard access is what screen readers, switch devices and power users all rely on, and it is cheap only when built in from the start."
+    check: "Can you complete every flow with Tab, Shift+Tab, Enter, Space, arrows and Esc alone, with a visible focus ring at each stop and no keyboard trap?"
+    see_also: "a11y-focus-in-dialogs, selected-vs-primary-color"
+    source: 'WCAG 2.2 AA (2.1.1, 2.4.3, 2.4.7, 2.4.11) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-accessible-names
+    category: accessibility
+    phase: [design, qa]
+    principle: "Every control, link, form field and meaningful image has a text name a screen reader can say, describing what it does, not what it looks like; purely decorative images are hidden from assistive tech."
+    anti_pattern: "Icon-only buttons with no label, alt text of 'image.png', links that read 'click here', and the same label on buttons that do different things."
+    why: "Without a name a screen reader says 'button', so the user cannot tell Delete from Save."
+    check: "Does every control and meaningful image expose a name that says what it does, and are all decorative images hidden?"
+    see_also: "icon-only-secondary-on-narrow"
+    source: 'WCAG 2.2 AA (1.1.1, 2.4.4, 4.1.2) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-focus-in-dialogs
+    category: accessibility
+    phase: [design, qa]
+    principle: "Dialogs and sheets move focus inside on open, keep it there while open, close on Esc, and return focus to the element that opened them; the page behind is inert."
+    anti_pattern: "A modal that opens while focus stays on the page behind, cannot be closed with Esc, and drops focus at the top of the page when it closes."
+    why: "Keyboard and screen-reader users otherwise lose their place or interact with a page they cannot see."
+    check: "On open, is focus inside the dialog; does Esc close it; on close, does focus return to the opener; is the background inert while it is open?"
+    see_also: "a11y-keyboard-reachable"
+    source: 'WAI-ARIA Authoring Practices (dialog) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-semantic-structure
+    category: accessibility
+    phase: [design, qa]
+    principle: "Use native elements for their purpose (button, a, input, select, table, list), headings in order with one h1 per screen, and landmarks (header, nav, main, footer)."
+    anti_pattern: "div with onClick for buttons, headings chosen for their font size, and tables built from floated divs."
+    why: "Native elements give keyboard behaviour, names and roles for free; a correct outline lets screen-reader users jump to what they want."
+    check: "With CSS turned off, does the page still read as a sensible outline, and is every interactive element a native control or has an explicit role and keyboard handler?"
+    see_also: "a11y-keyboard-reachable"
+    source: 'WCAG 2.2 AA (1.3.1, 4.1.2) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-not-colour-alone
+    category: accessibility
+    phase: [design, qa]
+    principle: "Never convey status, selection or validity by colour alone; add an icon, text or pattern."
+    anti_pattern: "Red and green dots as the only difference between failed and passed, or a selected tab shown only by a colour change."
+    why: "About 1 in 12 men cannot tell red from green, and colour alone is also lost in greyscale screenshots and printouts."
+    check: "In a greyscale screenshot, is every status, selection and error still distinguishable?"
+    see_also: "never-red-for-success, selected-state-tint"
+    source: 'WCAG 2.2 AA (1.4.1) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-zoom-and-text-size
+    category: accessibility
+    phase: [design, qa]
+    principle: "Layouts survive 200% browser zoom and the largest system text size without loss of content or function; pinch zoom is never disabled."
+    anti_pattern: "user-scalable=no in the viewport tag, fixed-height containers that clip enlarged text, and px font sizes that ignore the system setting."
+    why: "Many people enlarge text; a layout that only works at one size shuts them out."
+    check: "At 200% zoom and with the largest system text size, is every control reachable and no text clipped or overlapping?"
+    see_also: "no-ellipsis-truncation, i18n-text-expansion"
+    source: 'WCAG 2.2 AA (1.4.4, 1.4.10) 2026-11'
+    date: '2026-11-02'
+  - id: a11y-announce-changes
+    category: accessibility
+    phase: [design, qa]
+    principle: "Status changes that happen away from focus (toast, saving, async results, item counts) are announced through a live region, and form errors are linked to their fields."
+    anti_pattern: "A silent toast, a 'Saved' label that only changes colour, and an error summary that a screen reader never hears."
+    why: "A screen-reader user cannot see a message appear elsewhere on the screen, so they do not know the action happened."
+    check: "With a screen reader on, is every toast, save state and error announced once, politely, without stealing focus?"
+    see_also: "single-status-location, form-validation-timing"
+    source: 'WCAG 2.2 AA (4.1.3) 2026-11'
+    date: '2026-11-02'
+  - id: define-every-screen-state
+    category: states
+    phase: [requirements, design, qa]
+    principle: "Design every screen and reusable component in all of its states before building: loading, empty (first use), empty (no results for a filter), error, offline or stale, partial, and populated with both 1 item and very many; record them in a screen × state matrix."
+    anti_pattern: "Designing and reviewing only the populated happy path, then letting the first user meet a blank or broken screen."
+    why: "Most users meet the empty and error states first, and those are the states nobody designed."
+    check: "Does the screen × state matrix list every state for this screen with a design each, and has each been seen in the running product?"
+    see_also: "empty-state-teaches-next-step, error-state-recoverable, loading-without-layout-shift"
+    source: 'standard practice (screen × state matrix) 2026-11'
+    date: '2026-11-02'
+  - id: empty-state-teaches-next-step
+    category: states
+    phase: [design, qa]
+    principle: "An empty state says what will appear here, why it is empty, and offers the one action that fills it; a no-results state offers to clear the filter or search."
+    anti_pattern: "A blank area, or 'No data' with nothing to do next."
+    why: "First-use empty states are the onboarding most people actually see; a blank screen reads as broken."
+    check: "Does every empty state have a one-line explanation and a primary next action, and does every no-results state offer to clear the filter?"
+    see_also: "define-every-screen-state, short-scannable-copy"
+    source: 'standard practice 2026-11'
+    date: '2026-11-02'
+  - id: loading-without-layout-shift
+    category: states
+    phase: [design, qa]
+    principle: "Loading states reserve the final layout (skeletons or fixed sizes) so nothing already on screen moves when content arrives; show a spinner only for waits longer than a few hundred milliseconds and only in the area that is loading."
+    anti_pattern: "A full-page spinner for a partial reload, content that jumps down when an image or banner arrives, and a spinner that flashes for 50 ms."
+    why: "Shifting content makes people tap the wrong thing, and flashing spinners make a fast app feel slow."
+    check: "Does content appear without moving anything already on screen, and is no loading indicator shown for waits shorter than a few hundred milliseconds?"
+    see_also: "perf-images-and-media, perf-core-web-vitals-budget"
+    source: 'standard practice (skeleton screens, CLS) 2026-11'
+    date: '2026-11-02'
+  - id: error-state-recoverable
+    category: states
+    phase: [design, qa]
+    principle: "Every error says what happened in plain words, what the user can do, and offers Retry or a way out; it keeps the user's input, and never shows raw codes or stack traces (log those with a reference id instead)."
+    anti_pattern: "'Something went wrong' with no action, a raw 'TypeError: undefined', or a form that empties itself after a failed submit."
+    why: "Users judge a product by how it fails; an unrecoverable error loses both the work and the trust."
+    check: "Can a user recover from every error without reloading or losing input, and does no screen ever show a raw error message or code?"
+    see_also: "define-every-screen-state, form-validation-timing, single-status-location"
+    source: 'standard practice 2026-11'
+    date: '2026-11-02'
+  - id: offline-and-stale-shown-once
+    category: states
+    phase: [requirements, design, qa]
+    principle: "Detect offline and failed sync, show it in one place, label stale data instead of hiding it, and either queue writes with a visible pending state or disable them with a reason; never lose a write silently."
+    anti_pattern: "A blank screen with no network, a Save that spins forever, or edits that vanish when the connection returns."
+    why: "Phones lose connection constantly; silent loss of work is the failure users forgive least."
+    check: "With the network turned off, does every screen say so in one place, keep showing last data labelled as stale, and is no write silently lost?"
+    see_also: "single-status-location, consistent-save-model"
+    source: 'standard practice (offline-first) 2026-11'
+    date: '2026-11-02'
+  - id: irreversible-actions-name-consequence
+    category: forms
+    phase: [requirements, design, qa]
+    principle: "When an action truly cannot be undone (delete account, send money, publish to an audience), the confirmation names the object and the consequence; type-to-confirm is reserved for the most destructive actions; everything else is undoable instead of confirmed."
+    anti_pattern: "A generic 'Are you sure?' on every action, or a one-tap permanent account deletion."
+    why: "Generic confirmations get clicked through by reflex, and then the one that mattered is gone."
+    check: "Does every irreversible action name what will be lost, and does every reversible action skip the confirmation in favour of Undo?"
+    see_also: "undoable-delete"
+    source: 'standard practice 2026-11'
+    date: '2026-11-02'
+  - id: form-labels-always-visible
+    category: forms
+    phase: [design, qa]
+    principle: "Every field has a visible label that stays while typing and is linked to the input; placeholders show an example, not the label; mark only the minority of fields (optional or required) and do it the same way everywhere; help text sits under the field."
+    anti_pattern: "Placeholder-only labels that disappear on focus, asterisks on some screens and '(optional)' on others."
+    why: "Once a placeholder disappears people forget what the field was for, and inconsistent markers make users re-read every form."
+    check: "Does every input have a visible, linked label that remains while typing, and are required or optional markers identical across screens?"
+    see_also: "time-inputs-for-novices, a11y-accessible-names"
+    source: 'standard practice (WCAG 2.2 3.3.2) 2026-11'
+    date: '2026-11-02'
+  - id: form-validation-timing
+    category: forms
+    phase: [design, qa]
+    principle: "Validate a field when the user leaves it or submits, not on every keystroke before they finish; show the error next to the field in words that say how to fix it; keep the input; on submit, move focus to the first error and summarise when there are several."
+    anti_pattern: "'Invalid email' shown after the first letter, errors only at the top of the page, and a submit that clears the form."
+    why: "Premature errors feel like being scolded mid-sentence, and errors far from the field are missed."
+    check: "Does an error appear only after the user leaves the field or submits, next to the field, in fix-it language, and does focus move to the first error?"
+    see_also: "prevent-invalid-input, error-state-recoverable, a11y-announce-changes"
+    source: 'standard practice (WCAG 2.2 3.3.1, 3.3.3) 2026-11'
+    date: '2026-11-02'
+  - id: form-input-types-and-autofill
+    category: forms
+    phase: [design, qa]
+    principle: "Use the right input type, inputmode and autocomplete for every field (email, tel, one-time code, postal code, name, card) so the right keyboard and browser autofill appear; accept pasted and formatted input (spaces in card numbers, dashes in phone numbers); never block paste."
+    anti_pattern: "type=text for everything, onPaste preventDefault on the password field, and a card field that rejects spaces."
+    why: "Typing on a phone is the slowest part of any form; autofill and the right keyboard cut it in half."
+    check: "Does the right keyboard appear on a phone for each field, does browser autofill fill the form, and does pasting a formatted value succeed?"
+    see_also: "form-labels-always-visible, touch-targets-and-spacing"
+    source: 'standard practice (HTML autocomplete, WCAG 2.2 1.3.5) 2026-11'
+    date: '2026-11-02'
+  - id: form-submit-once-with-feedback
+    category: forms
+    phase: [design, qa]
+    principle: "A submit button shows a busy state and ignores repeated taps while the request is in flight; it is disabled only during the request, not until the form is 'valid'; Enter submits a single-field form; the result (success or failure) is shown where the user is looking."
+    anti_pattern: "A button greyed out with no explanation until every field is right, or a double tap that creates two orders."
+    why: "A disabled button gives no clue what is wrong, and double submissions create duplicate records and charges."
+    check: "Can a double tap create two records, does the button show it is working, and can the user press Submit at any time to see what is missing?"
+    see_also: "error-state-recoverable, perf-respond-within-100ms"
+    source: 'standard practice 2026-11'
+    date: '2026-11-02'
+  - id: long-forms-keep-progress
+    category: forms
+    phase: [requirements, design, qa]
+    principle: "Forms longer than one screen show the steps, let the user go back without losing anything, and keep a draft across reload and navigation; only ask what is needed now and mark where the rest will be asked later."
+    anti_pattern: "A ten-field sign-up on one page, or a wizard where Back empties the previous step."
+    why: "Every lost answer is a reason to abandon, and sign-up is where most users are lost."
+    check: "After going back a step, reloading or leaving and returning, is every entered value still there, and can the user see how many steps remain?"
+    see_also: "consistent-save-model, external-setup-roundtrip"
+    source: 'standard practice 2026-11'
+    date: '2026-11-02'
+  - id: theme-tokens-not-hardcoded
+    category: theming
+    phase: [design, qa]
+    principle: "Colours, shadows and elevation come only from semantic design tokens (background, surface, text, border, accent, success, warning, danger) that each have a light and a dark value; components never contain raw colour values; illustrations and shadows get dark variants."
+    anti_pattern: "#fff and #111 typed into components, a dark theme made with an invert filter, and drop shadows that vanish on a dark surface."
+    why: "A hardcoded colour is a bug that appears only in the other theme, and there is no way to find them all except by grep."
+    check: "Does a search of the components for raw colour values return zero results, and does every token have both a light and a dark value?"
+    see_also: "design-system-fonts-everywhere, dark-mode-checked-every-screen"
+    source: 'standard practice (design tokens) 2026-11'
+    date: '2026-11-02'
+  - id: dark-mode-checked-every-screen
+    category: theming
+    phase: [design, qa]
+    principle: "Dark mode follows the system setting by default, can be overridden and is remembered; higher surfaces are lighter, not shadowed; status colours are desaturated; every screen, dialog, toast, chart and embedded third-party widget is checked in dark mode with contrast re-measured."
+    anti_pattern: "Shipping a dark theme that was only seen on the home screen, pure white text on pure black, neon status colours, and a white third-party widget in the middle of a dark page."
+    why: "Dark mode doubles the surface area to test, and the breakage hides in the screens nobody opened."
+    check: "Has every screen (including dialogs, toasts, charts and third-party embeds) been viewed in dark mode, with text contrast re-measured and the choice remembered across visits?"
+    see_also: "a11y-text-contrast, theme-tokens-not-hardcoded, theme-applied-before-first-paint"
+    source: 'standard practice (platform dark mode guidelines) 2026-11'
+    date: '2026-11-02'
+  - id: theme-applied-before-first-paint
+    category: theming
+    phase: [design, qa]
+    principle: "Apply the chosen theme before the first paint (server hint or inline script), declare color-scheme so native controls, scrollbars and form fields match, and set theme-color per theme so the browser chrome matches too."
+    anti_pattern: "A white flash on every reload in dark mode, a bright white scrollbar and date picker inside a dark page."
+    why: "A flash on every load makes a polished product feel cheap, and mismatched native controls look broken."
+    check: "On refresh in dark mode is there no flash of the light theme, and do scrollbars, native pickers and the browser bar match the theme?"
+    see_also: "dark-mode-checked-every-screen, perf-fonts-no-reflow"
+    source: 'standard practice (color-scheme, theme-color) 2026-11'
+    date: '2026-11-02'
+  - id: touch-targets-and-spacing
+    category: mobile
+    phase: [design, qa]
+    principle: "Every tappable control is at least 44 × 44 points (48 dp on Android) with enough space from its neighbours that a thumb cannot hit the wrong one; small visuals get a larger invisible hit area."
+    anti_pattern: "A 24-px icon with a 24-px hit area, adjacent icons with no gap, and tiny close buttons in the corner of a card."
+    why: "Missed taps are the most common mobile complaint, and they are invisible in desktop testing."
+    check: "Is every tappable control at least 44 × 44 with spacing from its neighbours, including icon buttons, list-row actions and dismiss controls?"
+    see_also: "icon-only-secondary-on-narrow, no-overlapping-inserters"
+    source: 'Apple HIG / Material (44 pt / 48 dp); WCAG 2.2 AA minimum 24 × 24 CSS px (2.5.8) 2026-11'
+    date: '2026-11-02'
+  - id: thumb-zone-primary-actions
+    category: mobile
+    phase: [design]
+    principle: "On phones, the primary action and the most frequent controls sit in the lower part of the screen where a thumb reaches; destructive actions sit away from them; nothing important hides behind the keyboard."
+    anti_pattern: "A primary button in the top-right corner, Delete next to Save, and a submit button covered by the keyboard."
+    why: "Most people hold a phone in one hand; what the thumb cannot reach gets used less and mis-tapped more."
+    check: "With one hand on the smallest supported phone, can the primary action be reached without shifting grip, and is no destructive control adjacent to it?"
+    see_also: "sticky-save-bar-when-dirty, safe-areas-and-viewport"
+    source: 'standard practice (thumb zone research) 2026-11'
+    date: '2026-11-02'
+  - id: no-hover-only-interactions
+    category: mobile
+    phase: [design, qa]
+    principle: "Nothing depends on hover: every hover-revealed control, tooltip or menu has a tap equivalent, and hover styles apply only where hover exists so a tapped button does not stay highlighted."
+    anti_pattern: "Row actions that appear on hover only, a tooltip as the only explanation of an icon, and buttons stuck in their hover colour after a tap on a phone."
+    why: "Touch has no hover; what only hover reveals does not exist on a phone."
+    check: "On a phone, is every hover-revealed control reachable by tap, and does no element stay in its hover state after being tapped?"
+    see_also: "hints-on-demand, a11y-accessible-names"
+    source: 'standard practice (hover media query) 2026-11'
+    date: '2026-11-02'
+  - id: safe-areas-and-viewport
+    category: mobile
+    phase: [design, qa]
+    principle: "Respect the safe-area insets (notch, home indicator), size full-height layouts with the dynamic viewport rather than 100vh, keep input text at 16 px or more so the browser does not zoom on focus, and make sure the keyboard never covers the focused field or the submit button."
+    anti_pattern: "A bottom bar under the home indicator, a layout that jumps when the browser bar hides, a page that zooms in when a field is tapped, and a Save button hidden behind the keyboard."
+    why: "These four problems are what makes a web app feel like 'a website in a browser' instead of a product."
+    check: "On a notched phone with the keyboard open, is every control visible and tappable, with no content under the notch or home bar and no zoom on focus?"
+    see_also: "toast-never-covers-controls, thumb-zone-primary-actions"
+    source: 'standard practice (safe-area-inset, dvh, iOS Safari behaviour) 2026-11'
+    date: '2026-11-02'
+  - id: gestures-have-visible-alternative
+    category: mobile
+    phase: [design, qa]
+    principle: "Every swipe, long-press or pinch action also has a visible control that does the same thing, and the gesture is hinted the first time."
+    anti_pattern: "Swipe-to-delete as the only way to delete, or a long-press menu nobody discovers."
+    why: "Gestures are invisible; without a visible alternative they are undiscoverable for many and impossible for some."
+    check: "Can every gesture-triggered action also be done through a visible control, and is the gesture taught once?"
+    see_also: "announce-new-features-once, handle-only-reorder, a11y-keyboard-reachable"
+    source: 'WCAG 2.2 AA (2.5.1, 2.5.7) 2026-11'
+    date: '2026-11-02'
+  - id: motion-explains-change
+    category: motion
+    phase: [design, qa]
+    principle: "Animate only to explain a change (where something came from or went, what is connected); keep UI transitions short (roughly 150 to 300 ms, exits faster than entrances, ease-out on entry); never block input while animating."
+    anti_pattern: "A 600 ms bounce on every panel, pages that cannot be tapped until the transition finishes, and animation added because it 'looks nice'."
+    why: "Slow or decorative motion makes a product feel sluggish, and motion with no meaning is noise."
+    check: "Does each animation explain a state change, finish within about 300 ms, and never delay the next tap?"
+    see_also: "motion-accessibility, decorative-motion-once, distinct-motion-styles"
+    source: 'standard practice (platform motion guidelines) 2026-11'
+    date: '2026-11-02'
+  - id: reduced-motion-is-global
+    category: motion
+    phase: [design, qa]
+    principle: "One global reduced-motion rule replaces movement (slide, scale, parallax, auto-playing video, looping decoration) with an instant or opacity-only change across the whole product; components do not opt in one by one; if motion is a product feature, add an in-app switch too."
+    anti_pattern: "Reduced motion handled in three components and forgotten in the other thirty, or a parallax hero that still scrolls under reduced motion."
+    why: "Motion can cause nausea and distraction; a setting that only some components honour is worse than none, because people stop trusting it."
+    check: "With the system reduce-motion setting on, does anything on any screen still move or auto-play?"
+    see_also: "motion-accessibility, decorative-motion-once"
+    source: 'WCAG 2.2 (2.3.3), prefers-reduced-motion 2026-11'
+    date: '2026-11-02'
+  - id: autoplay-is-muted-and-stoppable
+    category: motion
+    phase: [design, qa]
+    principle: "Anything that moves, blinks or plays by itself for more than five seconds can be paused or stopped by a visible control; auto-playing video is muted, shows a poster first, and does not start on a cellular connection without the user's choice."
+    anti_pattern: "An auto-playing hero video with sound, an infinite carousel with no pause, and a blinking badge."
+    why: "Moving content competes with reading, triggers vestibular symptoms for some people, and burns mobile data."
+    check: "Does every auto-playing or moving element longer than five seconds have a visible pause, start muted, and stay still under reduced motion?"
+    see_also: "reduced-motion-is-global, real-media-thumbnails, perf-images-and-media"
+    source: 'WCAG 2.2 AA (2.2.2, 1.4.2) 2026-11'
+    date: '2026-11-02'
+  - id: perf-core-web-vitals-budget
+    category: performance
+    phase: [requirements, qa]
+    principle: "Set a performance budget per page and check it on every preview: Largest Contentful Paint under 2.5 s, Interaction to Next Paint under 200 ms, Cumulative Layout Shift under 0.1, measured on a mid-range phone over a slow connection; a change that breaks the budget does not merge."
+    anti_pattern: "Measuring only on a developer laptop over office Wi-Fi, or discovering slowness from user complaints."
+    why: "Speed is a feature users notice first; without a budget every change is a little slower than the last."
+    check: "Does the preview report LCP, INP and CLS for every key page on a throttled mid-range phone, and does CI fail when the budget is exceeded?"
+    see_also: "loading-without-layout-shift, perf-images-and-media, perf-ship-less-javascript"
+    source: 'Core Web Vitals thresholds (web.dev) 2026-11'
+    date: '2026-11-02'
+  - id: perf-images-and-media
+    category: performance
+    phase: [design, qa]
+    principle: "Images are sized to their slot, served in a modern format (AVIF or WebP) with responsive sizes, carry explicit width and height so space is reserved, and load lazily below the fold; video uses a poster and does not auto-download on cellular."
+    anti_pattern: "A 4 MB PNG scaled down with CSS, images without dimensions that push content around, and a 30 MB background video on mobile."
+    why: "Images are the heaviest thing on most pages and the largest cause of both slow loads and layout shift."
+    check: "Does every image have width and height, a modern format with responsive sizes, lazy loading below the fold, and is no image delivered at more than about twice its display size?"
+    see_also: "loading-without-layout-shift, real-media-thumbnails, autoplay-is-muted-and-stoppable"
+    source: 'standard practice (web.dev image guidance) 2026-11'
+    date: '2026-11-02'
+  - id: perf-fonts-no-reflow
+    category: performance
+    phase: [design, qa]
+    principle: "Self-host at most two type families, preload only the one or two files needed for the first screen, subset to the languages served, and use a fallback font tuned with size-adjust so text neither disappears nor jumps when the web font arrives."
+    anti_pattern: "Five weights from a third-party CDN, invisible text for two seconds, and a paragraph that reflows when the font loads."
+    why: "Fonts block the first readable paint and are the second most common cause of layout shift."
+    check: "Does text render immediately in a fallback and stay in place when the web font arrives, with only the first-screen font files preloaded?"
+    see_also: "design-system-fonts-everywhere, i18n-cjk-fonts-line-breaking, loading-without-layout-shift"
+    source: 'standard practice (font-display, size-adjust) 2026-11'
+    date: '2026-11-02'
+  - id: perf-ship-less-javascript
+    category: performance
+    phase: [design, qa]
+    principle: "Split code by route, load third-party scripts only after the page is interactive and only where used, prefer platform features (native controls, CSS) over libraries, and give every third-party script an owner and a reason."
+    anti_pattern: "One bundle for the whole app, an analytics tag and a chat widget loading before the content, and a date library for one formatted date."
+    why: "JavaScript is the most expensive byte: it must be downloaded, parsed and run, and it blocks taps while it runs."
+    check: "Is the JavaScript loaded on the landing route within the budget, and does every third-party script have a named owner, a reason, and a deferred load?"
+    see_also: "perf-core-web-vitals-budget, loading-without-layout-shift"
+    source: 'standard practice (code splitting, third-party scripts) 2026-11'
+    date: '2026-11-02'
+  - id: perf-respond-within-100ms
+    category: performance
+    phase: [design, qa]
+    principle: "Every tap gets visible feedback within 100 ms (pressed state, optimistic update, or a local change) even if the server takes longer; low-risk actions update optimistically and roll back with a message on failure; anything over about a second shows progress."
+    anti_pattern: "A like button that waits for the server before changing, a list that only re-renders when the response arrives, and a two-second wait with no indicator."
+    why: "A product feels fast or slow based on the time to first feedback, not the time to completion."
+    check: "Does every tap visibly respond within 100 ms, do low-risk actions update before the server replies, and does anything longer than a second show progress?"
+    see_also: "form-submit-once-with-feedback, loading-without-layout-shift, single-status-location"
+    source: 'standard practice (response-time thresholds) 2026-11'
+    date: '2026-11-02'
+  - id: i18n-locale-switcher-and-detection
+    category: i18n
+    phase: [requirements, design, qa]
+    principle: "Pick the first locale from the user's account setting, then the URL, then the browser language; show a visible switcher that lists languages in their own names (日本語, not Japanese); remember the choice; put the locale in the URL of public pages so each language can be indexed."
+    anti_pattern: "Locale guessed from IP address, a switcher hidden in account settings listing 'Japanese' in English, and one URL for every language."
+    why: "People travel and share devices; a wrong locale they cannot find how to change is a lost user, and un-indexed translations bring no traffic."
+    check: "Can a user find and change the language from any screen in one step, is the choice remembered, and does each public page have a per-locale URL?"
+    see_also: "i18n-locale-fallback, plain-localized-terms"
+    source: 'standard practice (locale negotiation, hreflang) 2026-11'
+    date: '2026-11-02'
+  - id: i18n-rtl-and-logical-properties
+    category: i18n
+    phase: [design, qa]
+    principle: "If a right-to-left language may ever be served, use CSS logical properties (inline-start and inline-end instead of left and right), set dir on the document, mirror directional icons (back, next, progress) and keep numbers, phone numbers and code left-to-right."
+    anti_pattern: "margin-left everywhere, a back arrow that points the wrong way in Arabic, and a progress bar that fills from the wrong side."
+    why: "Retrofitting direction into hundreds of left and right declarations is as painful as retrofitting message keys."
+    check: "Does switching to a right-to-left locale mirror the layout and directional icons with no overlapping text, while numbers stay left-to-right?"
+    see_also: "i18n-message-keys-day-one, i18n-text-expansion"
+    source: 'standard practice (CSS logical properties) 2026-11'
+    date: '2026-11-02'
+# phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階（idea → launch → operate → scale → exit）、phase はその中のどの場面か。
+# MCP の ui_ux_checklist（lifecycle 引数）と reference/ui-ux.md の "Phase gates" に出る。全段階に少なくとも1つ置く。
 phase_gate_checks:
   - id: gate.i18n_keys
+    lifecycle: idea
     phase: 最初のゲート（01 構想・Intake で「提供言語」を決めた直後／最初の画面を作る前）
     check: "多言語にする可能性が少しでもあるなら、i18n ライブラリを入れ、画面の文言を全部キー経由にし、ハードコード文字列を lint/CI で禁止したか（可能性ゼロなら理由を記録）— はい／いいえ"
     why: "後から英語の直書きを翻訳ファイルへ移すのは、全画面にわたる大きくミスの出やすい作業になるため"
+  - id: gate.ux_targets_idea
+    lifecycle: idea
+    phase: 要件のゲート（03 要件・仕様。最初の画面を作る前）
+    check: "アクセシビリティの目標（WCAG 2.2 AA）、対応端末と最小画面幅、ダークモードの有無、動きを減らす設定への対応、性能予算（LCP 2.5秒・INP 200ms・CLS 0.1）を要件に書いたか — はい／いいえ"
+    why: "目標を書かずに作ると、後から足す費用が最初から守る費用の何倍にもなるため"
+    rules: [a11y-text-contrast, a11y-keyboard-reachable, touch-targets-and-spacing, dark-mode-checked-every-screen, reduced-motion-is-global, perf-core-web-vitals-budget]
+  - id: gate.screen_state_matrix
+    lifecycle: idea
+    phase: 要件のゲート（03 要件・仕様 §13 画面×状態マトリクス。設計に入る前）
+    check: "全画面について 読込・空（初回）・空（絞り込み結果なし）・エラー・オフライン・1件・大量 の各状態と、誰に見えるかを表にしたか — はい／いいえ"
+    why: "AI も人も正常系だけを作りがちで、利用者が最初に出会うのは空とエラーの画面だから"
+    rules: [define-every-screen-state, empty-state-teaches-next-step, error-state-recoverable, offline-and-stale-shown-once]
+  - id: gate.a11y_launch
+    lifecycle: launch
+    phase: 公開前のゲート（07 品質・セキュリティ・法務）
+    check: "主要な流れをキーボードだけで通し、1つの流れをスクリーンリーダーで通し、全画面のコントラストを測り、見つかった問題を直したか — はい／いいえ"
+    why: "公開後に見つかるアクセシビリティの問題は、苦情・返金・法的な指摘として戻ってくるため"
+    rules: [a11y-keyboard-reachable, a11y-accessible-names, a11y-focus-in-dialogs, a11y-text-contrast, a11y-not-colour-alone, a11y-zoom-and-text-size, a11y-announce-changes]
+  - id: gate.states_devices_launch
+    lifecycle: launch
+    phase: 公開前のゲート（07 品質・セキュリティ・法務）
+    check: "実機（iOS と Android、最小対応幅）で、空・読込・エラー・オフラインの各状態、ダークモード、動きを減らす設定、擬似ロケールの4つを全画面で見たか — はい／いいえ"
+    why: "エミュレータと正常系だけの確認では、通知領域・キーボード・遅い回線・他の状態の崩れを見逃すため"
+    rules: [define-every-screen-state, dark-mode-checked-every-screen, reduced-motion-is-global, safe-areas-and-viewport, touch-targets-and-spacing, i18n-pseudo-localization]
+  - id: gate.perf_launch
+    lifecycle: launch
+    phase: 公開前のゲート（08 インフラ・CI/CD）
+    check: "主要ページの LCP・INP・CLS を中位スマホ・遅い回線で測って予算内に収め、CI が予算超えで落ちるようにしたか — はい／いいえ"
+    why: "公開直後は一番人が来る時で、遅さは最初の印象を決めてしまうため"
+    rules: [perf-core-web-vitals-budget, perf-images-and-media, perf-fonts-no-reflow, perf-ship-less-javascript, theme-applied-before-first-paint]
+  - id: gate.ux_signals_operate
+    lifecycle: operate
+    phase: 運用のゲート（10 運用・保守。月1回）
+    check: "画面ごとのエラー率・離脱・問い合わせ、実利用者の Core Web Vitals、アクセシビリティの自動検査を毎月見て、直したことをルールか部品の表に戻したか — はい／いいえ"
+    why: "数字を見ない運用は劣化に気づけず、ルールに戻さない修正は次の変更でまた壊れるため"
+    rules: [perf-core-web-vitals-budget, error-state-recoverable, single-status-location, announce-new-features-once]
+  - id: gate.ux_scale
+    lifecycle: scale
+    phase: 拡大のゲート（11 グロース。言語・端末・利用者層・データ量を増やす前）
+    check: "大量データ（1万件）での一覧・検索・読込、新しい言語の擬似ロケールと RTL、新しい端末幅、トークンと部品の一元管理が保てていることを確かめたか — はい／いいえ"
+    why: "規模が増えると、1件で動いた画面が1万件で止まり、1言語で済んだ余白が別言語で崩れるため"
+    rules: [define-every-screen-state, perf-ship-less-javascript, perf-respond-within-100ms, i18n-text-expansion, i18n-rtl-and-logical-properties, i18n-locale-switcher-and-detection, theme-tokens-not-hardcoded]
+  - id: gate.ux_handover_exit
+    lifecycle: exit
+    phase: 出口のゲート（12 サンセット／売却準備。引き継ぐ前）
+    check: "デザイントークン・部品の一覧・画面×状態マトリクス・用語集・アクセシビリティ適合の記録・UX 指標の推移・既知の問題一覧をリポジトリに入れ、買い手や後任が外部ツールなしで画面を作り直せるか — はい／いいえ"
+    why: "デザインが個人のツールや頭の中にしかないと、売却時の価値が下がり、引き継ぎ後に見た目が崩れるため"
+    rules: [theme-tokens-not-hardcoded, one-term-per-concept, define-every-screen-state, design-system-fonts-everywhere]

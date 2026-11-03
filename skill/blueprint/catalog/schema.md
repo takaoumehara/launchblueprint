@@ -56,13 +56,13 @@
 - `exit_dd.yaml`：売却準備の `checklist[]`（id, item, acceptance）。
 - `scale_readiness.yaml`：`tiers[]`（id, users, add/must, trigger_next, effort, cost, acceptance）。金額・工数は estimate。
 - `dd_dashboard.yaml`：`groups[]`（id, metrics, source_of_truth）。1日目から記録。
-- `ui_ux.yaml`：UI/UX の原則。`rules[]`（id, principle, anti_pattern, why, check, source, date）。`check` は はい／いいえ で判定でき、要件・設計・品質の確認で使う。固有名詞・プロダクト名は入れない。
+- `ui_ux.yaml`：UI/UX の原則。`rules[]`（id, category, phase[], principle, anti_pattern, why, check, see_also?, source?, date）。4つ（原則・避ける形・理由・確認）は必須。`check` は はい／いいえ で判定でき、要件・設計・品質の確認で使う。`category` は emphasis / copy / guidance / lists / saving / forms / states / accessibility / mobile / theming / motion / visual / performance / flows / feedback / payments / onboarding / privacy / engineering / i18n、`phase` は requirements / design / qa（MCP `ui_ux_checklist` の絞り込み）。固有名詞・プロダクト名は入れない。（2026-11-02 追加）`phase_gate_checks[]`＝id, lifecycle（idea / launch / operate / scale / exit。5段階すべてに1つ以上）, phase（場面の説明）, check（はい／いいえ）, why, rules[]（束ねる rule の id）。`reference/ui-ux.md` は rules と同じ id で全件を載せる（`mcp/test/ui_ux.test.mjs` が照合）。
 
 ## Elements 層（2026-10-28 追加、`elements/`）
 - `elements.yaml`：`elements[]`＝id, name, principle, categories（12カテゴリー番号）, tactics_file
 - `tactics.yaml`：`lanes[]`（地図の列 BRAND/UX/UI/TECH/BIZ・LEGAL/RULES）と `tactics[]`＝element, topic, lane, **stage**（2026-11-02 追加：idea / launch / operate / scale / exit。`lifecycle.yaml` の macro_stages の id）, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）。5 段すべてに choose と checklist が 1 つ以上あること（`reference/coverage.md`）
 - `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by, pick, last_checked。先頭に name, goal, profile。理由のない ai_pick・rejected は書かない
 - `elements.yaml` には name_ja / principle_ja もある。Web アプリは `app/`（`npm run build` で `/data.json` と `/llms.txt` を出す）
-- `glossary.yaml`：`terms[]`＝term, plain, one_line。アプリは専門用語を「plain（term）」に置き換え、説明を横に出す
+- `glossary.yaml`：`terms[]`＝term, plain, one_line。アプリは専門用語を「plain（term）」に置き換え、説明を横に出す。カタログ・参照・アプリに出る専門用語は全部ここで定義する（英語表記とカタカナ表記は別行）。他の語の一部になる短いカタカナ（ログ・シート・フォーム）は入れない
 - MCP：`get_catalog` は elements/ のファイルも読める。`format: items` で lesson 形式も含めた一覧を返す。`search` は `items` も返す
 - `stack_comparisons.yaml`（R-030）：`comparisons[]`＝topic, services[{id, name?, free_tier, paid_entry, url, checked, verified}], combine{single, combined, risks}, switch_points[{when, upgrade_to, why}], recommendation{pick, reason, rejected[{option, why}]}。技術の topic は全部これを持つ（まず payments / database / auth / email / hosting）

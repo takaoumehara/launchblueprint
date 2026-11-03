@@ -17,7 +17,7 @@ A small MCP server that lets any AI session read Blueprint's catalog and referen
 | `get_reference(name)` | 参考資料（Markdown）/ a reference doc |
 | `get_skill` | SKILL.md |
 | `stale_items(days)` | 確認日が古い・未確認の項目 / items older than `days`, unchecked or unverified |
-| `ui_ux_checklist(phase?)` | はい・いいえで答える UI/UX 確認表（requirements / design / qa）/ yes-no checklist |
+| `ui_ux_checklist(phase?, lifecycle?)` | はい・いいえで答える UI/UX 確認表（phase: requirements / design / qa）。段階ゲート `gates` も返し、lifecycle（idea / launch / operate / scale / exit）で絞れる / yes-no checklist plus phase gates per lifecycle stage |
 | `propose_learning(text, category)` | 学びを提案箱に追加 / append a proposal to the inbox |
 
 ## 準備 / Setup
