@@ -61,11 +61,11 @@ axes:
   check: "主要市場からの TTFB が 600ms 未満と実測した？"
 fees_verified_2026_10_26:
 - {id: pay.stripe.cards, what: 'Stripe 国内カード', fee: '2.9% + 30¢', extra: '国際カード +1.5%、通貨換算 +1%、紛争 $15（2026-11-03 公式確認）', url: 'https://stripe.com/pricing', checked: '2026-11-03', verified: true}
-- {id: tax.stripe.basic, what: 'Stripe Tax Basic（計算と徴収のみ。登録・申告は自分）', fee: '登録済みの地域の取引に 0.5%（Billing/Checkout 等）または 50¢/件（API）', url: 'https://stripe.com/tax/pricing', verified: true}
-- {id: tax.stripe.complete, what: 'Stripe Tax Complete（監視・登録・計算・申告）', fee: '月額・1年契約。最小は 登録2/年・200取引/月・申告4/年。金額はページの取得で読めず要確認', url: 'https://stripe.com/tax/pricing', verified: false}
-- {id: mor.lemonsqueezy, what: 'Lemon Squeezy（MoR）', fee: '5% + 50¢/取引、月額0。米国外の取引や一部の支払い方法で追加手数料あり', url: 'https://www.lemonsqueezy.com/pricing', verified: true}
-- {id: mor.paddle, what: 'Paddle（MoR）', fee: '5% + 50¢/Checkout取引、月額0、追加手数料なしとうたう。$10未満の商品は個別相談', url: 'https://www.paddle.com/pricing', verified: true}
-- {id: mor.stripe.managed, what: 'Stripe Managed Payments（Stripe の MoR サービス）', fee: '決済手数料（国内カード 2.9%+30¢）に加えて 3.5%／件（2026-11-02 料金ページ）', url: 'https://stripe.com/pricing', verified: true}
+- {id: tax.stripe.basic, what: 'Stripe Tax Basic（計算と徴収のみ。登録・申告は自分）', fee: '登録済みの地域の取引に 0.5%（Billing/Checkout 等）または 50¢/件（API）', url: 'https://stripe.com/tax/pricing', checked: '2026-10-26', verified: true}
+- {id: tax.stripe.complete, what: 'Stripe Tax Complete（監視・登録・計算・申告）', fee: '月額・1年契約。最小は 登録2/年・200取引/月・申告4/年。金額はページの取得で読めず要確認', url: 'https://stripe.com/tax/pricing', checked: '2026-10-26', verified: false}
+- {id: mor.lemonsqueezy, what: 'Lemon Squeezy（MoR）', fee: '5% + 50¢/取引、月額0。米国外の取引や一部の支払い方法で追加手数料あり', url: 'https://www.lemonsqueezy.com/pricing', checked: '2026-11-03', verified: true}
+- {id: mor.paddle, what: 'Paddle（MoR）', fee: '5% + 50¢/Checkout取引、月額0、追加手数料なしとうたう。$10未満の商品は個別相談', url: 'https://www.paddle.com/pricing', checked: '2026-10-26', verified: true}
+- {id: mor.stripe.managed, what: 'Stripe Managed Payments（Stripe の MoR サービス）', fee: '決済手数料（国内カード 2.9%+30¢）に加えて 3.5%／件（税・不正対策・紛争対応・Link 経由のサポート込み）', url: 'https://stripe.com/pricing', checked: '2026-11-03', verified: true}
 entry_strategies:
 - id: es.us_first
   name: USファースト（英語のみで始め、反応があれば日本語化）
@@ -128,8 +128,8 @@ privacy_representatives:
     name: ICO データ保護料（UK）
     what: 'UK で個人データを使う組織が ICO に払う年会費（Data Protection (Charges and Information) Regulations 2018）'
     applies_to_non_uk: 'UK に拠点のない事業者は原則対象外とされる（ICO の自己診断で確認）。UK 法人・UK 拠点を作ったら対象'
-    fee: '段階制：Tier1 小（売上£632万以下 または 従業員10人以下）／Tier2 中／Tier3 大。金額はおよそ £52／£78／£3,000（2025年改定、要確認）。口座振替で £5 割引'
-    source: {url: 'https://ico.org.uk/for-organisations/data-protection-fee/', checked: '2026-10-27', verified: false}
+    fee: '段階制：Tier1 小（売上 £632,000 以下 または 従業員10人以下）£52／Tier2 中（売上 £3,600万以下 または 従業員250人以下）£78／Tier3 大 £3,763（2025年2月改定）。口座振替で £5 割引'
+    source: {url: 'https://www.gov.uk/government/consultations/data-protection-fee-regime-proposed-changes/outcome/data-protection-fee-regime-government-response', checked: '2026-11-03', verified: true, note: 'ICO のページは自動取得を拒否（403）。金額と区分は gov.uk の政府回答で確認。最新の実額は ICO の自己診断で再確認'}
   - id: rep.ch_revfadp
     name: スイス代理人（新データ保護法 revFADP 14条）
     who_must: 'スイスに拠点のない管理者で、スイスの人に商品・サービスを提供するか行動を監視し、かつ処理が「大規模・定期的・高リスク」のすべてに当たる場合'

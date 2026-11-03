@@ -605,7 +605,7 @@ comparisons:
     free_tier: サービス代はゼロ。代わりに作る時間・直す時間・夜中の障害対応
     paid_entry: 自分の時間（例：月10時間の保守 × 時給）
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
   combine:
     single: 全部入りサービス1つなら、作る量も保守も最小。
@@ -786,10 +786,10 @@ comparisons:
     checked: '2026-11-03'
     verified: true
   - id: ui.heroui
-    free_tier: Apache-2.0・無料
-    paid_entry: —
+    free_tier: Apache-2.0・無料（v3 系）
+    paid_entry: HeroUI Pro（買い切り。先行販売中で金額は未掲載）
     url: https://github.com/heroui-inc/heroui
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
   - id: ui.daisyui
     free_tier: MIT・無料
@@ -1260,7 +1260,7 @@ comparisons:
     free_tier: 手数料ゼロ（弁護士費用のみ）
     paid_entry: 弁護士・会計士（見積もり）
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
   - id: xt.acquire
     free_tier: —
@@ -1426,8 +1426,8 @@ comparisons:
     free_tier: 無料（Show HN）
     paid_entry: —
     url: https://news.ycombinator.com/showhn.html
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-03'
+    verified: true
   - id: gtm.seo
     free_tier: Search Console 無料
     paid_entry: Ahrefs Starter $29/月
@@ -1461,8 +1461,8 @@ comparisons:
 - topic: growth_channels
   services:
   - id: gtm.community
-    free_tier: Discord 無料（ページ未取得）
-    paid_entry: Circle Professional $89/月（年払い）
+    free_tier: Discord 無料（公式ページに明記なし・未確認）
+    paid_entry: Circle Professional $89/月（年払い）＋取引手数料 2%（公式で確認）
     url: https://circle.so/pricing
     checked: '2026-11-02'
     verified: false
@@ -1519,11 +1519,11 @@ comparisons:
 - topic: app_distribution
   services:
   - id: dist.pwa
-    free_tier: 無料（審査なし）
+    free_tier: 無料（ストア外なので審査も手数料もなし）
     paid_entry: —
     url: https://developer.apple.com/app-store/review/guidelines/
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-03'
+    verified: true
   - id: dist.twa
     free_tier: —
     paid_entry: Play Console 初回 US$25（一回限り）
@@ -1532,10 +1532,10 @@ comparisons:
     verified: true
   - id: dist.capacitor
     free_tier: —
-    paid_entry: Apple Developer Program 年会費（金額は公式ページの自動取得で読めず未確認）＋ Play $25
-    url: https://developer.apple.com/programs/
-    checked: '2026-11-02'
-    verified: false
+    paid_entry: Apple Developer Program US$99/年 ＋ Play US$25（一回限り）
+    url: https://developer.apple.com/programs/enroll/
+    checked: '2026-11-03'
+    verified: true
   - id: dist.expo
     free_tier: EAS 無料：Android 15・iOS 15 ビルド/月
     paid_entry: EAS Starter $19/月（$45 分のビルドクレジット）
@@ -1544,9 +1544,9 @@ comparisons:
     verified: true
   - id: dist.native
     free_tier: —
-    paid_entry: 開発費が主（iPhone 用と Android 用を 2 回作る。見積もり）
+    paid_entry: 開発費が主（iPhone 用と Android 用を 2 回作る。見積もり）＋ストア費用は上と同じ
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
   combine:
     single: ウェブ（PWA）だけなら審査なし・即日・課金はウェブのまま。

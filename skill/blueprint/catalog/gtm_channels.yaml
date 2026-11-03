@@ -36,17 +36,17 @@ entries:
     usd5: —
     usd10: —
     usd100: —
-  limits: 宣伝文は嫌われる。作り手本人が答える
+  limits: 試せるものだけ（LP・登録ページ・資金集め・ブログ記事は不可）。題名は「Show HN:」で始め、作り手本人が答える。宣伝文は嫌われる
   lock_in: 低
-  liability_compliance: 投票操作は禁止
+  liability_compliance: 友人への投票・コメント依頼は禁止
   security: —
   pairs_well_with:
   - gtm.producthunt
   source:
     url: https://news.ycombinator.com/showhn.html
     checked: '2026-11-03'
-    verified: false
-    note: '公式ページに料金の記載なし（投稿のルールのみ）2026-11-03'
+    verified: true
+    note: '公式ルールページで確認（2026-11-03）：料金の記載はなく、投稿の条件と投票依頼の禁止のみ'
 - id: gtm.x
   name: X（旧Twitter）
   what: 短文SNS・作りながら発信（build in public）
@@ -56,7 +56,7 @@ entries:
     free: 無料
     usd5: —
     usd10: —
-    usd100: 広告は入札制（最低額は要確認）
+    usd100: 広告は入札制（公式ヘルプでは最低出稿額なし・日額上限を自分で設定。料金ページは自動取得で読めず未確認）
   limits: アルゴリズム変動が大きい
   lock_in: 中（フォロワーは移せない）
   liability_compliance: ステマ規制：PR表記必須
@@ -204,7 +204,7 @@ entries:
     free: Discord 無料
     usd5: —
     usd10: —
-    usd100: Circle Professional $89/月（年払い）／Business $199
+    usd100: Circle Professional $89/月（年払い）／Business $199／Scale $419。加えて取引手数料 2%／1%／1%
   limits: 放置すると逆効果
   lock_in: 中
   liability_compliance: モデレーション責任

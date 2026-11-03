@@ -233,4 +233,4 @@
 - **operate**：依存更新・ランタイムのサポート終了（`lc.maintain.62`）とベンダーの規約・価格変更の監視（`lc.maintain.63`）は lifecycle の known_surprises にあるだけで、tactic（Dependabot/Renovate 等の比較）がない。
 - **launch**：脆弱性診断・SAST（`lc.n23`・`lc.build.26`）、実在しないパッケージ（`lc.n26`）、IaC の版の照合（`lc.n30`）は lesson も tactic もない。
 - **idea**：ブランドのメッセージ階層（`lc.brand.14`）、AI ルールファイルの配備（`lc.n12`・`lc.n14`）は reference の記述のみ。
-- **価格が未確認のまま**：Crowdin の個人向けプラン、Cloud Run の無料枠（公式ページが自動取得で本文を返さない）、Apple Developer Program の年会費（同）、X 広告の最低額（403）、Discord の無料枠、Google フォーム、Upwork の手数料（403）、DocSend（403）。使う前に公式ページで確認（`stale_items` で一覧できる）。
+- **価格が未確認のまま**（2026-11-03 再確認後）：Crowdin のプラン別の語数上限と課金周期（料金表がスクリプト描画）、Cloud Run の単価（無料枠は確認済み）、Typeform 無料枠の回答数、X 広告の最低額（403）、Discord の無料枠（公式に明記なし）、PostHog（料金ページが読めず）、Upwork の手数料（403）、DocSend（403）、弁護士費用や売却の手順など公式価格がないもの。使う前に公式ページで確認（`stale_items` で一覧できる）。

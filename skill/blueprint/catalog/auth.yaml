@@ -217,7 +217,7 @@ auth:
       usd100: 同左
     lock_in: 最低
     best_for: Next.js で SNS ログイン中心
-    avoid_when: パスワード・二段階認証・管理画面まで要る時
+    avoid_when: パスワード・二段階認証・管理画面まで要る時。公式が「Better Auth の一部になった」と案内しているため、新規なら Better Auth も並べて比べる
     source:
       url: https://authjs.dev/getting-started/authentication/webauthn
       checked: '2026-11-02'

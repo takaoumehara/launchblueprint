@@ -151,7 +151,7 @@ entries:
     usd5: 同左
     usd10: 同左
     usd100: 同左
-  limits: 2026-01 に Stripe Managed Payments（Stripe の MoR）への移行を公式に発表。新規はそちらを前提に比較する
+  limits: 2026-01-28 の公式ブログで、今後の重点を Stripe Managed Payments（Stripe の MoR）に移すと発表。新規登録は引き続き可能で、強制移行の期日は出ていない（更新とサポートは遅くなる見込み）。新規は Stripe Managed Payments も並べて比較する
   lock_in: 中
   liability_compliance: 税と紛争の主体は Lemon Squeezy（MoR）
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
@@ -159,7 +159,7 @@ entries:
     url: https://www.lemonsqueezy.com/pricing
     checked: '2026-11-02'
     verified: true
-    note: '2026-01-28 公式ブログ：Stripe Managed Payments（3.5%＋決済手数料）への移行を発表'
+    note: '5%+50¢ は料金ページで確認（2026-11-03）。2026-01-28 公式ブログ：重点を Stripe Managed Payments に移す。移行期日なし・新規登録は継続'
 - id: pay.polar
   name: Polar
   what: 開発者向け MoR（SaaS・デジタル商品）

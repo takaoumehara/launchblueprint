@@ -75,7 +75,7 @@ Profile rules fired as expected: `country: jp` → market entry `es.jp_en` (Japa
 
 ## Unverified items met on the way
 
-`stale_items(90)` reported 74 of 190 sourced entries as unverified or unchecked. The ones this sample actually touched:
+`stale_items(90)` reported 74 of 190 sourced entries as unverified or unchecked when this sample was first run (2026-11-02). After the 2026-11-03 re-check the count is far lower; re-run `stale_items(90)` for the current number rather than quoting this one. The ones this sample actually touched:
 
 - `gtm_channels` (all), `support` (all), `app_distribution` entries (policies are verified, costs are not): memory-based drafts, marked `verified: false` in the files.
 - `backend` comparison (new): all four services unverified.

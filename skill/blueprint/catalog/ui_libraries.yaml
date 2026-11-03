@@ -59,16 +59,17 @@ entries:
   best_for: 早く整った画面
   avoid_when: 独自ブランドを強く出したい
   pricing_bands:
-    free: Apache-2.0・無料
+    free: Apache-2.0・無料（v3 系）
     usd5: —
     usd10: —
-    usd100: —
+    usd100: HeroUI Pro（買い切りライセンス。先行販売中で公式ページに金額の掲載なし・未確認）
   lock_in: 中
   license: Apache-2.0
   source:
     url: https://github.com/heroui-inc/heroui
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
+    note: 'ライセンスは Apache-2.0（LICENSE で確認）。有料の HeroUI Pro は https://heroui.pro/pricing に金額なし（2026-11-03）'
 - id: ui.untitled
   name: Untitled UI
   what: Figma とコードがそろう大きな部品集（React Aria ベース）
@@ -207,12 +208,13 @@ entries:
     free: MIT + Commons Clause・無料（アプリに組み込むのは可。部品そのものの販売・再配布は不可）
     usd5: —
     usd10: —
-    usd100: Pro（買い切り。金額はページに無し）
+    usd100: Pro 買い切り $129／$249／$349（Starter／Pro／Ultimate。開発者1人あたり、プロジェクト数無制限）
   lock_in: 低
   source:
     url: https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md
-    checked: '2026-11-02'
+    checked: '2026-11-03'
     verified: true
+    note: 'Pro の金額は https://pro.reactbits.dev/ で 2026-11-03 確認'
   license: MIT + Commons Clause
 - id: ui.21st
   name: 21st.dev

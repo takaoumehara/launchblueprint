@@ -509,7 +509,7 @@ rules:
   - id: a11y-text-contrast
     category: accessibility
     phase: [design, qa]
-    principle: "Text has at least 4.5:1 contrast against its background (3:1 for large text), and icons, borders and focus rings that carry meaning have at least 3:1, in every theme."
+    principle: "Text has at least 4.5:1 contrast against its background (3:1 for large text, meaning at least 24 px, or 18.5 px bold), and icons, borders and focus rings that carry meaning have at least 3:1, in every theme."
     anti_pattern: "Light grey helper text, brand colour on a brand tint, or placeholder-grey body text that passes in light mode and fails in dark mode."
     why: "Low contrast is the most common accessibility failure and hurts everyone outdoors or on a dim screen, not only people with low vision."
     check: "Does every text and meaningful graphic colour pair measure 4.5:1 (text) or 3:1 (large text, icons, borders) in both light and dark themes?"
@@ -572,7 +572,7 @@ rules:
     principle: "Layouts survive 200% browser zoom and the largest system text size without loss of content or function; pinch zoom is never disabled."
     anti_pattern: "user-scalable=no in the viewport tag, fixed-height containers that clip enlarged text, and px font sizes that ignore the system setting."
     why: "Many people enlarge text; a layout that only works at one size shuts them out."
-    check: "At 200% zoom and with the largest system text size, is every control reachable and no text clipped or overlapping?"
+    check: "At 200% zoom, at 320 CSS px width (400% zoom) with no horizontal scrolling, and with the largest system text size, is every control reachable and no text clipped or overlapping?"
     see_also: "no-ellipsis-truncation, i18n-text-expansion"
     source: 'WCAG 2.2 (1.4.4 AA 200 %, 1.4.10 AA 320 CSS px) https://www.w3.org/TR/WCAG22/#resize-text checked 2026-11-03'
     date: '2026-11-02'
@@ -809,7 +809,7 @@ rules:
   - id: perf-core-web-vitals-budget
     category: performance
     phase: [requirements, qa]
-    principle: "Set a performance budget per page and check it on every preview: Largest Contentful Paint under 2.5 s, Interaction to Next Paint under 200 ms, Cumulative Layout Shift under 0.1, measured on a mid-range phone over a slow connection; a change that breaks the budget does not merge."
+    principle: "Set a performance budget per page and check it on every preview: Largest Contentful Paint at or under 2.5 s, Interaction to Next Paint at or under 200 ms, Cumulative Layout Shift at or under 0.1, each at the 75th percentile of page loads, measured on a mid-range phone over a slow connection; a change that breaks the budget does not merge."
     anti_pattern: "Measuring only on a developer laptop over office Wi-Fi, or discovering slowness from user complaints."
     why: "Speed is a feature users notice first; without a budget every change is a little slower than the last."
     check: "Does the preview report LCP, INP and CLS for every key page on a throttled mid-range phone, and does CI fail when the budget is exceeded?"
