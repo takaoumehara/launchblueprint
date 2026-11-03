@@ -1,7 +1,7 @@
 @import '@fontsource-variable/inter/index.css';
 @import '@fontsource/geist-mono/400.css';
 :root{--bg:#fff;--fg:#0a0a0a;--m1:rgba(10,10,10,.62);--m2:rgba(10,10,10,.42);--m3:rgba(10,10,10,.24);--hair:rgba(10,10,10,.1);--hair2:rgba(10,10,10,.18);--strand:10,10,10;--acc:#f2541b;--acc-soft:rgba(242,84,27,.08);--on:#fff;
---mono:"Geist Mono",ui-monospace,Menlo,monospace;--sans:"Inter Variable","Inter","Hiragino Sans","Noto Sans JP","Noto Sans CJK JP",system-ui,sans-serif}
+color-scheme:light;--mono:"Geist Mono",ui-monospace,Menlo,monospace;--sans:"Inter Variable","Inter","Hiragino Sans","Noto Sans JP","Noto Sans CJK JP",system-ui,sans-serif}
 [data-theme=dark]{--bg:#070707;--fg:#ededed;--m1:rgba(237,237,237,.64);--m2:rgba(237,237,237,.42);--m3:rgba(237,237,237,.22);--hair:rgba(237,237,237,.09);--hair2:rgba(237,237,237,.17);--strand:237,237,237;--acc:#ff6a2b;--acc-soft:rgba(255,106,43,.1);--on:#070707;color-scheme:dark}
 *{box-sizing:border-box;border-radius:0}
 html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -57,7 +57,7 @@ h2{font-size:13px;font-weight:600;margin:0 0 10px}
 .num{font-weight:100;font-size:168px;line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 #strands{position:absolute;inset:0;width:100%;height:100%}
 #strands path{fill:none;stroke:rgb(var(--strand));stroke-width:.6;stroke-opacity:.11;transition:stroke-opacity .2s}
-#strands path.tr{stroke:var(--acc);stroke-opacity:.34;stroke-width:.7}
+#strands path.tr{stroke:var(--acc);stroke-opacity:.42;stroke-width:.75;filter:drop-shadow(0 0 2.5px rgba(255,106,43,.55))}
 #strands.focus path{stroke-opacity:.02}
 #strands.focus path.on{stroke-opacity:.5}
 #strands.focus path.tr.on{stroke-opacity:.8}
@@ -128,7 +128,7 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 .lrow b{font-weight:500}.lrow.done b{color:var(--acc)}
 .lrow small{display:block;color:var(--m2);font-size:12px}
 .steps a,.steps span{white-space:nowrap}
-@media (max-width:900px){.top .brand{font-size:0;gap:0}.top .brand i{width:9px;height:9px}.steps{gap:12px}.tbtn{font-size:0;width:26px;padding:0;position:relative}.tbtn:after{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid var(--fg);background:linear-gradient(90deg,var(--fg) 50%,transparent 50%)}}
+@media (max-width:900px){.top .brand{font-size:0;gap:0}.top{gap:10px}.tbtn#lang{padding:0 6px;font-size:9px;letter-spacing:.02em;white-space:nowrap}.top{padding:0 14px}.top .brand i{width:9px;height:9px}.steps{gap:12px}.tbtn#theme{font-size:0;width:26px;padding:0;position:relative}.tbtn#theme:after{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid var(--fg);background:linear-gradient(90deg,var(--fg) 50%,transparent 50%)}}
 
 .cmp{margin-top:56px;border-top:1px solid var(--fg);padding-top:14px}
 .cmp-h{font-weight:600;font-size:13px;margin:28px 0 10px}
@@ -149,7 +149,7 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 @media (max-width:900px){.cmp table,.cmp thead,.cmp tbody,.cmp tr,.cmp td{display:block}.cmp thead{display:none}.cmp td{border:0;padding:2px 0}.cmp tr{border-bottom:1px solid var(--hair);padding:8px 0}.cmp-rej li{grid-template-columns:1fr;gap:2px}}
 
 /* stage rail — 段の帯：細い巨大数字と四角 */
-.stages{position:relative;display:grid;grid-template-columns:repeat(6,1fr);height:150px;border-bottom:1px solid var(--hair);background:var(--bg)}
+.stages{position:relative;display:grid;grid-template-columns:repeat(5,1fr);height:150px;border-bottom:1px solid var(--hair);background:var(--bg)}
 .stg{display:grid;grid-template-rows:auto auto 1fr auto auto;gap:2px;align-content:start;text-align:left;background:none;border:0;border-left:1px solid var(--hair);padding:14px 20px 12px;cursor:pointer;color:var(--m1);position:relative}
 .stg:first-child{border-left:0}
 .stg:hover,.stg.on{color:var(--fg)}
@@ -174,9 +174,9 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 .crow .sqs{padding-top:5px}
 .opt.static{cursor:default}.opt.static:hover .nm2{color:inherit}
 @media (max-width:900px){
- .stages{grid-template-columns:repeat(3,1fr);height:auto}.stages.desk{display:none}
- .stg{padding:12px 14px}.stg:nth-child(4){border-left:0}.stg:nth-child(n+4){border-top:1px solid var(--hair)}
- .stg .num2{font-size:44px}.stg .what{display:none}
+ .stages{grid-template-columns:repeat(5,1fr);height:auto}.stages.desk{display:none}
+ .stg{padding:10px 8px 8px}.stg .ja{font-size:10.5px}
+ .stg .num2{font-size:34px;gap:3px}.stg .num2 small{font-size:9px}.stg .what{display:none}.stg .mono{font-size:9px;letter-spacing:.04em}
  .crow{grid-template-columns:28px 1fr;gap:4px 12px}.crow .sqs{grid-column:2}.crow .mono{grid-column:2}
 }
 .canvas.tight .node small{display:none}
@@ -187,3 +187,15 @@ abbr{text-decoration:none;border-bottom:1px dotted var(--m2);cursor:help}
 .bignum{font-weight:100;font-size:120px;line-height:.85;letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--m3);margin:8px 0 -6px}
 .bignum.done{color:var(--acc)}
 @media (max-width:900px){.q .qn{font-size:40px}.bignum{font-size:80px}}
+
+/* start: action row */
+.acts-row{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+/* mobile map: stage sections with a gutter where the dependency lines run (same depends_on as the desktop map) */
+.lwrap{position:relative;padding-left:36px}
+.lwrap svg.glines{position:absolute;left:0;top:0;width:36px;overflow:visible;pointer-events:none}
+.lwrap svg.glines path{fill:none;stroke:rgb(var(--strand));stroke-width:.7;stroke-opacity:.2}
+.lwrap svg.glines path.tr{stroke:var(--acc);stroke-opacity:.7;stroke-width:.9;filter:drop-shadow(0 0 2px rgba(255,106,43,.5))}
+.lrow .dot{position:relative;z-index:1;background:var(--bg)}
+.lrow .dot.ai{background:var(--fg)}.lrow .dot.done{background:var(--acc)}
+.note-en{text-transform:none;letter-spacing:.02em;margin:-28px 0 28px}
+.nocmp{font-size:12.5px;margin-top:40px;border-top:1px solid var(--hair);padding-top:14px}

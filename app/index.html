@@ -8,12 +8,13 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23f2541b'/%3E%3C/svg%3E">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
 <link rel="alternate" type="application/json" href="/data.json" title="Blueprint data">
-<script>try{if(localStorage.getItem('bp.theme')!=='light')document.documentElement.dataset.theme='dark'}catch(e){document.documentElement.dataset.theme='dark'}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('bp.theme')==='light'?'light':'dark';if(localStorage.getItem('bp.lang')==='en')document.documentElement.lang='en'}catch(e){document.documentElement.dataset.theme='dark'}</script>
 </head>
 <body>
 <header class="top mono">
   <a class="brand" href="#/"><i aria-hidden="true"></i>BLUEPRINT</a>
   <nav class="steps" aria-label="画面"><a href="#/" data-r="start">01 始める</a><a href="#/map" data-r="map">02 地図</a><span data-r="topic">03 決める</span><a href="#/catalog" data-r="catalog">04 カタログ</a></nav>
+  <button class="tbtn mono" id="lang" aria-label="表示言語を切り替える">JA / EN</button>
   <button class="tbtn mono" id="theme" aria-label="明るさを切り替える">LIGHT / DARK</button>
 </header>
 <main id="app"></main>

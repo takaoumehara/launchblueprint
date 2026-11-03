@@ -1,5 +1,5 @@
 # Blueprint web app（round 5）
-ノンエンジニア向けの4画面：1 始める → 2 地図（上に段ごとの進み具合） → 3 決める → 4 カタログ（全34分野）。既定は黒い画面（右上で切替）。データは `skill/blueprint/catalog/*.yaml` と `skill/blueprint/elements/`。
+ノンエンジニア向けの4画面：1 始める → 2 地図（上に段ごとの進み具合） → 3 決める → 4 カタログ（全42分野）。既定は黒い画面（右上で LIGHT / DARK、JA / EN を切替）。スマホでは段ごとの一覧の左に同じ依存の線を引く。データは `skill/blueprint/catalog/*.yaml` と `skill/blueprint/elements/`。
 - `npm ci && npm run build` → `dist/`（静的。`/data.json` と `/llms.txt` も出る）
 - 地図の線は `tactics.yaml` の `depends_on` だけから引く。段の帯は `tactics.yaml` の `stage` と `stages[]` から数える
 - `data.json` にはカタログ全項目（`items`）と分野の一覧（`catalog`）が入る。歩き方は `../skill/blueprint/reference/walkthrough-non-engineer.md`

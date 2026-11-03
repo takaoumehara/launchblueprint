@@ -39,9 +39,9 @@ fs.mkdirSync(path.resolve(import.meta.dirname, '../public'), { recursive: true }
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/data.json'), JSON.stringify(data, null, 1));
 const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わりにくい原則）→ 選択肢（tactics）→ プロジェクトの地図。`, '',
   `- データ全体（JSON）: /data.json`, `- 地図の書式: project-map.template.yaml（下に全文）`, `- アプリで「YAMLで書き出す」を押すと、この書式のプロジェクト地図が出る`, '',
-  '## 段（stage）。決めることはどれか1つの段に属する', ...stages.map(s => `- ${s.id} ${s.ja}: ${s.what_ja}（${tactics.filter(t => t.stage === s.id).length} 件）`), '',
+  '## 段（stage）。決めることはどれか1つの段に属する（5 段：idea → launch → operate → scale → exit）', ...stages.map(s => `- ${s.id} ${s.ja} / ${s.what_en || ''}: ${s.what_ja}（${tactics.filter(t => t.stage === s.id).length} 件）`), '',
   '## 要素', ...elements.map(e => `- ${e.id} ${e.name_ja}: ${e.principle_ja}（カテゴリー ${e.categories.join(',')}）`), '',
-  '## 決めること（topic）。depends_on が先に決めるもの', ...tactics.map(t => `- ${t.topic}（${t.element}, stage=${t.stage}, lane=${t.lane}, ${t.kind}）${t.label_ja}: options=${t.options.join(',')}${t.ai_pick ? ' pick=' + t.ai_pick : ''} depends_on=[${t.depends_on.join(',')}]`), '',
+  '## 決めること（topic）。depends_on が先に決めるもの', ...tactics.map(t => `- ${t.topic}（${t.element}, stage=${t.stage}, lane=${t.lane}, ${t.kind}）${t.label_ja}${t.label_en ? ' / ' + t.label_en : ''}: options=${t.options.join(',')}${t.ai_pick ? ' pick=' + t.ai_pick : ''} depends_on=[${t.depends_on.join(',')}]`), '',
   '## スタック比較（R-030）。技術の選択ごと', ...Object.values(comparisons).map(c => `- ${c.topic}: pick=${c.recommendation.pick} 切り替え=${c.switch_points.map(w => w.when + '→' + w.upgrade_to).join(' / ')}`), '',
   '## カタログの分野（domain）。MCP の get_catalog(domain) / get_item(id) で読める', ...Object.values(catalog).map(c => `- ${c.domain}: ${c.title}（${c.ids.length} 件）`), '',
   '## AI から使う：MCP サーバー', '- リポジトリの mcp/ を build して `node mcp/dist/index.js` を MCP サーバーとして登録。list_topics → draft_project_map(profile) → get_comparison / get_item → draft_project_map(decided) の順', '',
