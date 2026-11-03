@@ -3,9 +3,10 @@
 # kind：choose（1つ選ぶ）／ checklist（全部確かめる）
 # ai_pick / ai_reason_ja：既定のおすすめ。pick_when は「始める」画面の答えで上書き
 # lane：地図の列（BRAND / UX / UI / TECH / BIZ・LEGAL / RULES）
+# label_en / question_en：英語表示用（アプリの JA/EN 切替）。lanes[].en, stages[].what_en も同じ
 # stage：ライフサイクルの5段（idea / launch / operate / scale / exit。catalog/lifecycle.yaml の macro_stages と同じ id）。地図の上の進み具合はこれで数える。網羅表は reference/coverage.md
 domain: tactics
-updated: '2026-11-02'
+updated: '2026-11-03'
 check_cadence_values: {daily_new_options: 毎日：新しい選択肢が出たかだけ見る（料金・規約は見ない）, deep_when_used: プロジェクトで selected の時だけ、料金・規約を公式で深く確認}
 tactics:
 - element: el.product
@@ -14,6 +15,8 @@ tactics:
   stage: launch
   label_ja: データの置き場所
   question_ja: ユーザーの情報や投稿をどこに保存する？
+  label_en: 'Where the data lives'
+  question_en: 'Where do user records and content get stored?'
   kind: choose
   options: [db.supabase, db.firestore, db.neon]
   ai_pick: db.supabase
@@ -22,7 +25,7 @@ tactics:
   - if: {platform: app}
     pick: db.firestore
     reason_ja: スマホアプリと相性がよく、電波が弱くても動く。
-  depends_on: []
+  depends_on: [build_vs_buy]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.product
@@ -31,6 +34,8 @@ tactics:
   stage: launch
   label_ja: 使われ方の計測
   question_ja: 何人が来て、どこで止まったかをどう見る？
+  label_en: 'Measuring usage'
+  question_en: 'How will you see what people actually do?'
   kind: choose
   options: [an.posthog, an.vercel-analytics]
   ai_pick: an.posthog
@@ -44,6 +49,8 @@ tactics:
   stage: idea
   label_ja: 画面づくりの約束
   question_ja: 迷わない画面にするための確認
+  label_en: 'Screen-building rules'
+  question_en: 'Which rules keep every screen obvious to use?'
   kind: checklist
   options: [ui_ux.primary-action-color, ui_ux.selected-state-tint, ui_ux.hints-on-demand, ui_ux.short-scannable-copy]
   depends_on: []
@@ -55,9 +62,11 @@ tactics:
   stage: launch
   label_ja: 事業の立ち上げ
   question_ja: 住所・ブランド名・決済アカウントの準備
+  label_en: 'Setting up the business'
+  question_en: 'Entity, bank, tax and vendor accounts: what has to exist before the first sale?'
   kind: checklist
   options: [biz.public-support-address, biz.processor-account-per-brand, biz.llc-full-formation-cost]
-  depends_on: []
+  depends_on: [market_entry]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.business
@@ -66,6 +75,8 @@ tactics:
   stage: launch
   label_ja: お金の受け取り
   question_ja: お客さんからどう支払ってもらう？
+  label_en: 'Taking money'
+  question_en: 'How will customers pay you?'
   kind: choose
   options: [pay.stripe-checkout, pay.stripe-connect, pay.paddle, pay.ryft]
   ai_pick: pay.stripe-checkout
@@ -86,11 +97,13 @@ tactics:
   stage: launch
   label_ja: 発表する場所
   question_ja: 最初のユーザーにどこで知ってもらう？
+  label_en: 'Where to announce'
+  question_en: 'Where will the first strangers hear about it?'
   kind: choose
   options: [gtm.producthunt, gtm.hn, gtm.x, gtm.seo]
   ai_pick: gtm.x
   ai_reason_ja: 作りながら途中経過を出せ、費用ゼロで反応がすぐ分かる。
-  depends_on: [ui_patterns, analytics]
+  depends_on: [ui_patterns, analytics, brand_basics]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.brand
@@ -99,9 +112,11 @@ tactics:
   stage: launch
   label_ja: 海外向けの準備
   question_ja: 言葉・法律・支払いを国に合わせる確認
+  label_en: 'Serving other countries'
+  question_en: 'What changes when users come from another country?'
   kind: checklist
   options: [axis.i18n, axis.legal, axis.payments_tax]
-  depends_on: [payments]
+  depends_on: [payments, market_entry]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.maintenance
@@ -110,6 +125,8 @@ tactics:
   stage: launch
   label_ja: 公開する場所
   question_ja: 作ったものをどこに置いて公開する？
+  label_en: 'Where it runs'
+  question_en: 'Where will the site or app be hosted?'
   kind: choose
   options: [host.vercel, host.cloudflare-pages, host.firebase-hosting]
   ai_pick: host.vercel
@@ -127,6 +144,8 @@ tactics:
   stage: operate
   label_ja: 不具合の見張り
   question_ja: エラーが起きたらどう気づく？
+  label_en: 'Watching for errors'
+  question_en: 'How will you know something broke before users tell you?'
   kind: choose
   options: [mon.sentry, mon.vercel-observability, mon.crashlytics]
   ai_pick: mon.sentry
@@ -144,11 +163,13 @@ tactics:
   stage: launch
   label_ja: お知らせメール
   question_ja: 登録確認やお知らせをどう送る？
+  label_en: 'Transactional email'
+  question_en: 'How will the product send sign-in links, receipts and alerts?'
   kind: choose
   options: [mail.resend, push.fcm]
   ai_pick: mail.resend
   ai_reason_ja: 送るのが簡単で、迷惑メールに入りにくい設定を案内してくれる。
-  depends_on: [hosting]
+  depends_on: [hosting, auth]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.maintenance
@@ -157,6 +178,8 @@ tactics:
   stage: operate
   label_ja: 問い合わせ窓口
   question_ja: 困った人がどこに連絡する？
+  label_en: 'Support channel'
+  question_en: 'Where do people ask for help, and who answers?'
   kind: choose
   options: [sup.email, sup.crisp, sup.docs, sup.status]
   ai_pick: sup.email
@@ -170,6 +193,8 @@ tactics:
   stage: launch
   label_ja: ログイン
   question_ja: ユーザーにどうログインしてもらう？
+  label_en: 'Sign-in'
+  question_en: 'How do people sign in and recover their account?'
   kind: choose
   options: [auth.supabase, auth.firebase, auth.clerk, auth.auth0, auth.better-auth, auth.authjs, auth.stytch, auth.passkeys, auth.magic]
   ai_pick: auth.supabase
@@ -187,6 +212,8 @@ tactics:
   stage: launch
   label_ja: 攻撃からの守り
   question_ja: ロボットや不正アクセスをどう防ぐ？
+  label_en: 'Protection from attacks'
+  question_en: 'What stops bots, abuse and denial-of-service?'
   kind: choose
   options: [sec.turnstile, sec.vercel-firewall, sec.secrets]
   ai_pick: sec.turnstile
@@ -200,6 +227,8 @@ tactics:
   stage: launch
   label_ja: バックアップ
   question_ja: データが消えても戻せる？
+  label_en: 'Backups and data handling'
+  question_en: 'Is user data backed up, deletable and handled lawfully?'
   kind: checklist
   options: [dp.backup-3-2-1, dp.backup-bucket-lock, dp.backup-verify-alert, dp.restore-test-monthly]
   depends_on: [database]
@@ -211,6 +240,8 @@ tactics:
   stage: idea
   label_ja: ブランドの土台
   question_ja: 名前・声・色・伝える順番を決めたか
+  label_en: 'Brand foundation'
+  question_en: 'Name, voice, colours and the order you tell the story in.'
   kind: checklist
   options: [lc.brand.11, lc.brand.12, lc.brand.13, lc.brand.14]
   depends_on: []
@@ -222,6 +253,8 @@ tactics:
   stage: scale
   label_ja: 続けて増やす方法
   question_ja: 発表のあと、どう人を増やし続ける？
+  label_en: 'Growing after launch'
+  question_en: 'Which channel brings the next thousand users?'
   kind: choose
   options: [gtm.content, gtm.referral, gtm.community, gtm.seo, gtm.ads.meta]
   ai_pick: gtm.community
@@ -239,6 +272,8 @@ tactics:
   stage: launch
   label_ja: 届け方
   question_ja: スマホでどう使ってもらう？
+  label_en: 'How it is delivered'
+  question_en: 'Web, store app or both?'
   kind: choose
   options: [dist.pwa, dist.capacitor, dist.expo, dist.native, dist.twa]
   ai_pick: dist.pwa
@@ -256,9 +291,11 @@ tactics:
   stage: idea
   label_ja: 画面の言葉
   question_ja: 誰でも分かる言葉になっているか
+  label_en: 'Words on the screen'
+  question_en: 'Which words, in which language, with which terms?'
   kind: checklist
   options: [ui_ux.short-scannable-copy, ui_ux.plain-localized-terms, ui_ux.plain-screen-labels, ui_ux.no-ellipsis-truncation]
-  depends_on: [brand_basics]
+  depends_on: [brand_basics, i18n]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.product
@@ -267,6 +304,8 @@ tactics:
   stage: launch
   label_ja: 画面の作り方
   question_ja: 画面を何で作る？
+  label_en: 'How screens are built'
+  question_en: 'Which framework builds the screens?'
   kind: choose
   options: [fe.nextjs, fe.astro, fe.expo]
   ai_pick: fe.nextjs
@@ -275,7 +314,7 @@ tactics:
   - if: {platform: app}
     pick: fe.expo
     reason_ja: スマホアプリをそのまま作れる。
-  depends_on: []
+  depends_on: [build_vs_buy]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.product
@@ -284,6 +323,8 @@ tactics:
   stage: launch
   label_ja: 画像・動画の置き場所
   question_ja: 写真や動画をどこに置く？
+  label_en: 'Images and video storage'
+  question_en: 'Where do uploaded files live?'
   kind: choose
   options: [st.supabase-storage, st.vercel-blob, st.mux]
   ai_pick: st.supabase-storage
@@ -297,6 +338,8 @@ tactics:
   stage: launch
   label_ja: 検索
   question_ja: 中身を探せるようにする？
+  label_en: 'Search'
+  question_en: 'How do people find things inside the product?'
   kind: choose
   options: [se.postgres-fts, se.algolia]
   ai_pick: se.postgres-fts
@@ -310,6 +353,8 @@ tactics:
   stage: launch
   label_ja: すぐに反映
   question_ja: 他の人の変更がすぐ見える必要は？
+  label_en: 'Live updates'
+  question_en: 'Do other people''s changes appear without a refresh?'
   kind: choose
   options: [rt.supabase-realtime, rt.firebase-rtdb]
   ai_pick: rt.supabase-realtime
@@ -327,6 +372,8 @@ tactics:
   stage: launch
   label_ja: AIの組み込み
   question_ja: アプリの中でAIを使う？
+  label_en: 'AI inside the product'
+  question_en: 'Which model, through which gateway, with which cap?'
   kind: choose
   options: [ai.gateway, ai.firebase-ai-logic]
   ai_pick: ai.gateway
@@ -344,6 +391,8 @@ tactics:
   stage: launch
   label_ja: 自動チェック
   question_ja: 直すたびに自動で確かめる？
+  label_en: 'Automated checks'
+  question_en: 'What runs on every change before it ships?'
   kind: choose
   options: [ci.vercel-git, ci.github-actions]
   ai_pick: ci.vercel-git
@@ -357,11 +406,13 @@ tactics:
   stage: idea
   label_ja: 作るか借りるか
   question_ja: 自分で作る？サービスを使う？
+  label_en: 'Build or buy'
+  question_en: 'Which parts do you build, and which do you rent?'
   kind: choose
   options: [bvb.platform, bvb.api, bvb.build]
   ai_pick: bvb.platform
   ai_reason_ja: 最初は全部入りのサービスで早く確かめ、強みになる所だけ後で作る。
-  depends_on: []
+  depends_on: [idea_validation]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.business
@@ -370,6 +421,8 @@ tactics:
   stage: idea
   label_ja: どの国から始めるか
   question_ja: 最初にどこで売る？
+  label_en: 'Which country first'
+  question_en: 'Which market, language and currency do you start with?'
   kind: choose
   options: [es.us_first, es.jp_en, es.mor_first]
   ai_pick: es.us_first
@@ -390,9 +443,11 @@ tactics:
   stage: exit
   label_ja: 売却・終了の備え
   question_ja: 会社を売る・やめる時に困らないか
+  label_en: 'Ready for sale or shutdown'
+  question_en: 'Could a buyer or successor take this over tomorrow?'
   kind: checklist
   options: [dd.ip, dd.oss, dd.contracts, dd.privacy, dd.code, dd.infra, dd.metrics, dd.billing_sources, dd.sunset]
-  depends_on: [business_setup]
+  depends_on: [business_setup, legal_terms]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.security
@@ -401,6 +456,8 @@ tactics:
   stage: launch
   label_ja: AIを使った攻撃への守り
   question_ja: ロボットや乗っ取りへの基本の守り
+  label_en: 'Defending against AI-driven attacks'
+  question_en: 'Are sign-up, sign-in and forms protected from automated abuse?'
   kind: checklist
   options: [dp.rate-limit-auth-forms, dp.bot-challenge-server-verified, dp.admin-phishing-resistant-mfa, dp.prompt-injection-untrusted-input, dp.ai-usage-caps]
   depends_on: [auth, protection]
@@ -412,9 +469,11 @@ tactics:
   stage: launch
   label_ja: 確認用ページの約束
   question_ja: 確認用ページで本番データを壊さないか
+  label_en: 'Preview-page rules'
+  question_en: 'Are preview URLs private and never used as public links?'
   kind: checklist
   options: [ci.preview-per-pr-first, ci.preview-db-isolation]
-  depends_on: [ci, database]
+  depends_on: [ci, database, rules_ledger]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.business
@@ -423,6 +482,8 @@ tactics:
   stage: launch
   label_ja: アプリストアの決まり
   question_ja: ストアのお金のルールを守れているか
+  label_en: 'App-store rules'
+  question_en: 'Does the app follow store billing and content rules?'
   kind: checklist
   options: [policy.apple.3_1_1, policy.apple.3_1_1a, policy.google.payments]
   depends_on: [app_distribution, payments]
@@ -434,9 +495,11 @@ tactics:
   stage: scale
   label_ja: 増えた時の備え
   question_ja: 利用者が増えても止まらないか
+  label_en: 'Ready for growth'
+  question_en: 'What breaks first at ten times the users?'
   kind: checklist
   options: [scale.t0, scale.t1, scale.t2, scale.t3]
-  depends_on: [monitoring, data_protection]
+  depends_on: [monitoring, data_protection, uptime]
   last_checked: '2026-10-28'
   check_cadence: daily_new_options
 - element: el.product
@@ -445,6 +508,8 @@ tactics:
   stage: launch
   label_ja: お客さんが更新する仕組み
   question_ja: エンジニアでない人に、文章や写真をどこで直してもらう？
+  label_en: 'Customer-editable content'
+  question_en: 'How do non-engineers update content?'
   kind: choose
   options:
   - cms.microcms
@@ -470,6 +535,8 @@ tactics:
   stage: launch
   label_ja: スマホで編集する画面の部品
   question_ja: スマホで部品を選んで直す画面を何で作る？
+  label_en: 'Phone editing components'
+  question_en: 'Which components make editing work on a phone?'
   kind: choose
   options:
   - edit.vaul
@@ -489,6 +556,8 @@ tactics:
   stage: launch
   label_ja: 画面の部品集
   question_ja: ボタンや入力欄などの部品を何でそろえる？
+  label_en: 'Component library'
+  question_en: 'Which component set do the screens use?'
   kind: choose
   options:
   - ui.shadcn
@@ -508,9 +577,7 @@ tactics:
   - ui.kibo
   ai_pick: ui.shadcn
   ai_reason_ja: AI が一番書き慣れ、コードが自分の物になる。演出系は LP だけ。
-  depends_on:
-  - frontend
-  - brand_basics
+  depends_on: [frontend, brand_basics, ui_patterns]
   last_checked: '2026-10-29'
   check_cadence: daily_new_options
 - element: el.product
@@ -519,6 +586,8 @@ tactics:
   stage: idea
   label_ja: 多言語化のしくみ
   question_ja: 画面の文言をどうやって言語ごとに出し分ける？
+  label_en: 'Multilingual setup'
+  question_en: 'How will the product handle more than one language?'
   kind: choose
   options: [i18n.next-intl, i18n.i18next, i18n.formatjs, i18n.lingui, i18n.paraglide]
   ai_pick: i18n.next-intl
@@ -527,7 +596,7 @@ tactics:
   - if: {platform: app}
     pick: i18n.i18next
     reason_ja: スマホアプリ（Expo）と Web で同じ仕組みを使える。
-  depends_on: [frontend]
+  depends_on: [frontend, market_entry]
   last_checked: '2026-10-30'
   check_cadence: daily_new_options
 - element: el.product
@@ -536,6 +605,8 @@ tactics:
   stage: idea
   label_ja: 需要の確かめ方
   question_ja: 作る前に、知らない人が登録・支払いまでするかをどう測る？
+  label_en: 'Testing demand'
+  question_en: 'How do you measure whether strangers sign up or pay before building?'
   kind: choose
   options: [val.tally, val.lp-own, val.carrd, val.framer, val.typeform, val.google-forms]
   ai_pick: val.tally
@@ -544,7 +615,7 @@ tactics:
   - if: {audience: self}
     pick: val.google-forms
     reason_ja: 自分や知り合い向けなら、最小の調査で十分。
-  depends_on: []
+  depends_on: [problem_discovery]
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
 - element: el.product
@@ -553,6 +624,8 @@ tactics:
   stage: idea
   label_ja: 作る前の約束
   question_ja: 需要の証拠と仕様の抜けを、作る前に確かめたか
+  label_en: 'Rules before building'
+  question_en: 'What must be true before code is written?'
   kind: checklist
   options: [val.alternatives-first, val.strangers-not-friends, val.pay-signal, val.spec-edge-cases, val.north-star-to-money, val.pmf-40]
   depends_on: [idea_validation]
@@ -564,6 +637,8 @@ tactics:
   stage: launch
   label_ja: 値段のつけ方
   question_ja: 無料・試用・従量・買い切りのどの型で売る？
+  label_en: 'Pricing model'
+  question_en: 'Free, trial, usage or seats?'
   kind: choose
   options: [pm.free-trial, pm.freemium, pm.usage, pm.one-time, pm.seats]
   ai_pick: pm.free-trial
@@ -575,7 +650,7 @@ tactics:
   - if: {money: free}
     pick: pm.freemium
     reason_ja: お金を取らないなら、無料枠の上限だけ決めておく。
-  depends_on: [payments]
+  depends_on: [payments, idea_validation]
   last_checked: '2026-11-02'
   check_cadence: deep_when_used
 - element: el.business
@@ -584,6 +659,8 @@ tactics:
   stage: launch
   label_ja: 値段の約束
   question_ja: 原価・解約・返金・税を、初売上の前に決めたか
+  label_en: 'Pricing promises'
+  question_en: 'Are price changes, refunds and tax handled fairly?'
   kind: checklist
   options: [pr.unit-cost-before-price, pr.cancel-as-easy-as-signup, pr.free-tier-cap, pr.refund-policy-written, pr.price-change-notice, pr.tax-handling-decided]
   depends_on: [pricing_model]
@@ -595,6 +672,8 @@ tactics:
   stage: launch
   label_ja: 規約とプライバシー
   question_ja: 利用規約・プライバシーポリシーをどう用意する？
+  label_en: 'Terms and privacy'
+  question_en: 'Who writes terms, privacy policy and disclosures?'
   kind: choose
   options: [lt.termly, lt.iubenda, lt.getterms, lt.termageddon, lt.lawyer]
   ai_pick: lt.termly
@@ -603,7 +682,7 @@ tactics:
   - if: {money: marketplace}
     pick: lt.lawyer
     reason_ja: ユーザー同士でお金が動くので、雛形では責任の所在が決まらない。
-  depends_on: [business_setup, data_protection]
+  depends_on: [business_setup, data_protection, market_entry]
   last_checked: '2026-11-02'
   check_cadence: deep_when_used
 - element: el.business
@@ -612,6 +691,8 @@ tactics:
   stage: launch
   label_ja: 法律まわりの約束
   question_ja: 書いたことと実際が一致し、国ごとの表記があるか
+  label_en: 'Legal promises'
+  question_en: 'Are the legal basics in place before going public?'
   kind: checklist
   options: [lt.policy-matches-practice, lt.consent-before-tracking, lt.required-disclosures-by-country, lt.age-gate-decided, lt.terms-versioned, lt.ai-disclosure]
   depends_on: [legal_terms]
@@ -623,6 +704,8 @@ tactics:
   stage: launch
   label_ja: 公開日の約束
   question_ja: 日付・担当・戻し方・当日の体制が書いてあるか
+  label_en: 'Launch-day promises'
+  question_en: 'Rollback, support cover and monitoring on launch day.'
   kind: checklist
   options: [la.launch-plan-t14, la.rollback-owner, la.support-on-launch-day, la.preview-noindex, la.pr-disclosure, la.seo-basics]
   depends_on: [launch_channels, support]
@@ -634,6 +717,8 @@ tactics:
   stage: operate
   label_ja: 戻せる備え
   question_ja: データが消えた時、どこから・どれだけ戻せる？
+  label_en: 'Restore plan'
+  question_en: 'How do you get data back after a bad day?'
   kind: choose
   options: [bk.dump-to-r2, bk.supabase-builtin, bk.neon-restore, bk.firestore-pitr, bk.backblaze-b2]
   ai_pick: bk.dump-to-r2
@@ -651,6 +736,8 @@ tactics:
   stage: operate
   label_ja: 戻せる約束
   question_ja: 失ってよい量・戻す時間を決め、毎月戻してみたか
+  label_en: 'Backup promises'
+  question_en: 'Has a restore actually been tested?'
   kind: checklist
   options: [bk.rpo-rto-written, bk.restore-drill-timed, bk.no-live-secrets-in-backups, dp.backup-verify-alert, dp.backup-bucket-lock]
   depends_on: [backup_dr]
@@ -662,6 +749,8 @@ tactics:
   stage: operate
   label_ja: お金の上限
   question_ja: 使いすぎた時に、どこで止まる？
+  label_en: 'Spending caps'
+  question_en: 'Where is the kill switch for runaway cost?'
   kind: choose
   options: [cc.vercel-spend, cc.supabase-spend-cap, cc.ai-gateway-budget, cc.gcp-budget, cc.github-actions-budget]
   ai_pick: cc.vercel-spend
@@ -670,7 +759,7 @@ tactics:
   - if: {platform: app}
     pick: cc.gcp-budget
     reason_ja: アプリのデータ置き場（Firebase）の費用は Google Cloud の予算で見張る。通知だけでは止まらないので止め方も決める。
-  depends_on: [hosting, database]
+  depends_on: [hosting, database, ai]
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
 - element: el.maintenance
@@ -679,6 +768,8 @@ tactics:
   stage: operate
   label_ja: お金の約束
   question_ja: 通知・止め方・商用条件・毎月の表があるか
+  label_en: 'Cost promises'
+  question_en: 'Are caps and alerts in place before paid traffic?'
   kind: checklist
   options: [cc.alert-50-80, cc.kill-switch-tested, cc.commercial-terms-before-first-sale, cc.monthly-cost-sheet, cc.retry-with-breaker]
   depends_on: [cost_control]
@@ -690,6 +781,8 @@ tactics:
   stage: operate
   label_ja: 落ちていないかの見張り
   question_ja: サイトが落ちたら誰がどう気づき、利用者にどう知らせる？
+  label_en: 'Uptime watch'
+  question_en: 'How do you know the product is down?'
   kind: choose
   options: [mon.uptimerobot, mon.betterstack, sup.status]
   ai_pick: mon.uptimerobot
@@ -703,11 +796,13 @@ tactics:
   stage: operate
   label_ja: 鍵とパスワードの置き場
   question_ja: 鍵・パスワードをどこに置き、2 人目とどう共有する？
+  label_en: 'Keys and passwords'
+  question_en: 'Where do secrets live, and who can reach them?'
   kind: choose
   options: [ho.bitwarden, ho.1password, ho.doppler, ho.host-env-vars]
   ai_pick: ho.bitwarden
   ai_reason_ja: 個人は無料、共有も月 $3.99 から。会社名義の金庫を初日から作れる。アプリの鍵はホストの環境変数に置き、控えだけ金庫へ。
-  depends_on: [hosting]
+  depends_on: [hosting, ci]
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
 - element: el.maintenance
@@ -716,9 +811,11 @@ tactics:
   stage: operate
   label_ja: 引き継ぎの約束
   question_ja: 自分が倒れても、2 人目が今日中に全部できるか
+  label_en: 'Handover promises'
+  question_en: 'Could someone else run this next month?'
   kind: checklist
   options: [ho.access-inventory, ho.company-owned-accounts, ho.runbook-top5, ho.contractor-ip-assignment, ho.bus-factor-two, ho.offboarding-rotate, ho.hire-trigger-written]
-  depends_on: [secrets_sharing]
+  depends_on: [secrets_sharing, backup_rules]
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
 - element: el.business
@@ -727,6 +824,8 @@ tactics:
   stage: exit
   label_ja: 売り方
   question_ja: 売ると決めたら、買い手にどう届く？
+  label_en: 'How to sell'
+  question_en: 'Marketplace, direct outreach or acquihire?'
   kind: choose
   options: [xt.direct-outreach, xt.acquire, xt.flippa]
   ai_pick: xt.direct-outreach
@@ -740,6 +839,8 @@ tactics:
   stage: exit
   label_ja: 部品表の出し方
   question_ja: 使っている部品とライセンスの一覧を、いつでも出せるか
+  label_en: 'Bill of materials'
+  question_en: 'How do you list every dependency and licence?'
   kind: choose
   options: [xt.syft, xt.fossa]
   ai_pick: xt.syft
@@ -753,6 +854,8 @@ tactics:
   stage: exit
   label_ja: 終わり方の約束
   question_ja: やめる時に、利用者とお金とデータをきれいに終えられるか
+  label_en: 'Shutdown promises'
+  question_en: 'Notice, export, deletion and cancelled subscriptions.'
   kind: checklist
   options: [xs.notice-before-shutdown, xs.export-then-delete, xs.cancel-every-subscription, xs.redirect-and-archive, xs.numbers-regenerable]
   depends_on: [exit_dd, cost_rules]
@@ -764,6 +867,8 @@ tactics:
   stage: idea
   label_ja: 困りごとの確かめ
   question_ja: 作る前に、本当に困っている人がいると確かめたか
+  label_en: 'Confirming the problem'
+  question_en: 'Did you confirm real people have this problem before building?'
   kind: checklist
   options:
   - lc.discover.01
@@ -780,6 +885,8 @@ tactics:
   stage: idea
   label_ja: 最初に守る約束
   question_ja: どのプロジェクトでも守る決まりを確認したか
+  label_en: 'First promises'
+  question_en: 'Have you checked the rules every project keeps?'
   kind: checklist
   options:
   - rules.R-004
@@ -796,6 +903,8 @@ tactics:
   stage: launch
   label_ja: 裏側の処理の置き場所
   question_ja: 画面の裏で動く処理（保存・計算・外部連携）をどこで動かす？
+  label_en: 'Where back-end code runs'
+  question_en: 'Where do saving, calculation and integrations execute?'
   kind: choose
   options:
   - be.route-handlers
@@ -818,6 +927,8 @@ tactics:
   stage: operate
   label_ja: 1日目から残す数字
   question_ja: あとから作れない数字（人数・お金・継続）を記録しているか
+  label_en: 'Numbers kept from day one'
+  question_en: 'Are users, money and retention recorded from the start?'
   kind: checklist
   options:
   - dd.users
@@ -836,6 +947,8 @@ tactics:
   stage: exit
   label_ja: きれいに終わる・引き渡す
   question_ja: やめる時・売る時に、利用者とデータを困らせないか
+  label_en: 'Clean shutdown or handover'
+  question_en: 'Will users and data be safe if you stop or sell?'
   kind: checklist
   options:
   - dd.sunset
@@ -854,6 +967,8 @@ tactics:
   stage: launch
   label_ja: 規約・返金・税の決まり
   question_ja: 利用規約・プライバシー・返金の決まり・税の扱いを公開前に用意したか
+  label_en: 'Terms, refunds and tax rules'
+  question_en: 'Are terms, privacy, refunds and tax handling ready before launch?'
   kind: checklist
   options:
   - lc.legal.30
@@ -867,31 +982,36 @@ tactics:
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
 lanes:
-- {id: brand, label: BRAND, ja: ブランド・発信}
-- {id: ux, label: UX, ja: 体験・届け方}
-- {id: ui, label: UI, ja: 画面}
-- {id: tech, label: TECH, ja: しくみ}
-- {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律}
-- {id: rules, label: RULES, ja: 守ること}
+- {id: brand, label: BRAND, ja: ブランド・発信, en: Brand and voice}
+- {id: ux, label: UX, ja: 体験・届け方, en: Experience and delivery}
+- {id: ui, label: UI, ja: 画面, en: Screens}
+- {id: tech, label: TECH, ja: しくみ, en: Systems}
+- {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律, en: Money, company, law}
+- {id: rules, label: RULES, ja: 守ること, en: Promises to keep}
 # stages：地図の上の段（5 段。catalog/lifecycle.yaml の macro_stages と同じ id）
 stages:
 - id: idea
   label: IDEA
   ja: 構想
   what_ja: 誰の困りごとを、どういう決まりで解くか
+  what_en: Whose problem, solved under which rules
 - id: launch
   label: LAUNCH
   ja: 出す
   what_ja: しくみと画面を決めて作り、守りを固めて、人に知らせる
+  what_en: Decide systems and screens, build, harden, tell people
 - id: operate
   label: OPERATE
   ja: 回す
   what_ja: 見張る・直す・答える・数字を残す
+  what_en: Watch, fix, answer, keep the numbers
 - id: scale
   label: SCALE
   ja: 増やす
   what_ja: 増えても止まらず、増やし続ける
+  what_en: Grow without breaking, keep growing
 - id: exit
   label: EXIT
   ja: 終える
   what_ja: 売る・引き渡す・きれいに閉じる
+  what_en: Sell, hand over, or close cleanly
