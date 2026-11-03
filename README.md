@@ -1,58 +1,48 @@
-# Blueprint (v3, in progress)
+# Blueprint
 
-新しい Blueprint は `skill/blueprint/` にあります。構成は [STRUCTURE.md](STRUCTURE.md)。以下は旧 launch-blueprint v0.2 の説明です。
+日本語：[README.ja.md](README.ja.md) · 5-minute start: [QUICKSTART.md](QUICKSTART.md)
 
-The new Blueprint lives in `skill/blueprint/`; see [STRUCTURE.md](STRUCTURE.md). The text below describes the earlier launch-blueprint v0.2.
+**Blueprint is a "how to build how-to-build".** Before a product is built, it lays out every decision the product will need, from idea to launch, operation, scale and exit, and attaches to each one the options, one recommendation with a reason, the free tiers and limits, who carries the liability, and what it depends on. People use it as a web app with a map. AI agents use the same files through an MCP server, so the plan a person approves is the plan the agent builds from.
 
-© 2026 CREATIVITY IS EVERYWHERE, LLC
+## What you get
 
----
+- **A map of 41 decisions in six stages** (idea, build, launch, operate, scale, exit) and six lanes (brand, UX, UI, tech, business/legal, rules). Lines on the map are real dependencies only.
+- **A catalog of 34 areas and 407 items**: services, rules and lessons, each with a source and the date it was checked. Unverified numbers are marked `verified: false` instead of guessed.
+- **A stack comparison for every tech decision** (rule R-030): similar services and free tiers, one vendor vs combining several, when a cheap paid plan is worth it, the pick and the rejected alternatives.
+- **A project map you own.** The app exports YAML in a fixed shape; an agent can draft the same shape with `draft_project_map`. Nothing is marked decided without the owner.
 
-# launch-blueprint
+## Three ways to use it
 
-A Claude Code Agent Skill that makes the AI look at a new product or big feature the way a whole company would — **before any code is written** — and raise the topics the owner did not think to ask about.
+| You are | Use | Start |
+|---|---|---|
+| A founder or owner who does not code | the web app in `app/` | [QUICKSTART.md §A](QUICKSTART.md#a-five-minutes-as-a-non-engineer-web-app) |
+| An AI agent (Claude Code, Cursor, Claude Desktop) | the MCP server in `mcp/` | [QUICKSTART.md §B](QUICKSTART.md#b-five-minutes-as-an-ai-agent-mcp) |
+| A Claude Code user who wants the procedure as a skill | `skill/blueprint/SKILL.md` (Japanese) | copy `skill/blueprint` into `.claude/skills/` |
 
-It produces one blueprint covering: the facts that change everything (where the owner, entity and users are; whether money moves and between whom; user content; minors; AI), a regions table (serve, limit or block per region, with the obligations that follow), product and customer, pricing and unit cost, tech stack (free-plan commercial use, deploy and preview caps, edge database limits, fail-safe environment detection, kill switches, email caps and deliverability, AI feature caps), legal and business identity, marketing, operations, a mandatory **lifecycle and risk** pass (inactive accounts, cancellation, data deletion, deceased users, takedowns, chargebacks, outages, breaches, minors, privacy law, price changes, sunset, lock-in, 10x/100x cost, money between users, AI features), a **security** pass (account takeover and recovery, backups without credentials, header trust, URL fetching, silent job failure), an ordered to-do list for the human owner, and a decisions log with dates.
+## How to read the map
 
-Every proposal comes with a recommended option, an alternative, and six angles: cost, legal, operations, marketing, implementation, UX. When a fact changes (the owner moves, the first payment, the first user from a new region), the skill revisits the decisions that depended on it.
+The strip at the top shows each stage with a large thin numeral (decided) over the total, and one square per decision: outline open, white AI-pick waiting, orange decided. Below it, dots in six lanes; lines are `depends_on` only; decided dots and lines turn orange; the bottom right numeral counts decided steps. The catalog screen lists every area and item. Details in [QUICKSTART.md §C](QUICKSTART.md#c-how-to-read-the-map).
 
-Why: owners ask about what is in front of them. Costly problems — a host whose free plan forbids commercial use, cost caps that silently fail on serverless, legal blanks found at launch, EU users nobody planned for, a deploy cap spent by lunchtime, backups holding live tokens — live in the parts nobody asked about. See `skills/launch-blueprint/references/why-this-exists.md`.
-
-## Install
-
-```bash
-# per project
-mkdir -p .claude/skills && cp -r skills/launch-blueprint .claude/skills/
-# or for all projects
-mkdir -p ~/.claude/skills && cp -r skills/launch-blueprint ~/.claude/skills/
-```
-
-Optionally add to `CLAUDE.md`:
-
-> Before writing code for any new product or big feature, use the launch-blueprint skill and wait for answers to its open questions.
-
-## Use
-
-Say "kick off <idea>" or paste `skills/launch-blueprint/references/prompt.md`. Output goes to `docs/blueprint/<name>-<date>.md`. Re-run before launch, at the 10th customer, before price changes, when adding a service, and whenever a fact that changes everything changes.
-
-## Layout
+## Repository
 
 ```
-skills/launch-blueprint/
-  SKILL.md
-  assets/blueprint-template.md
-  references/{sections,jurisdictions,lifecycle-risk,security,vendor-check,proactive-tools,why-this-exists,prompt}.md
+QUICKSTART.md, QUICKSTART.ja.md   start here
+skill/blueprint/                  the skill: SKILL.md, catalog/*.yaml, elements/, reference/, templates/
+  catalog/schema.md               shape of every file
+  reference/dry-run-sample.md     a sample project run idea → exit through the MCP, with gaps found
+  reference/walkthrough-non-engineer.md   screen-by-screen walkthrough (Japanese)
+app/                              web app (Vite): npm ci && npm run build → dist/ (+ data.json, llms.txt)
+mcp/                              MCP server: npm ci && npm run build && npm test
+legacy/, skills/, drafts/, ui/    earlier versions (v0.2 README in legacy/launch-blueprint/README-v0.2.md), drafts, prototypes
 ```
 
-Not legal or tax advice. Laws and thresholds in the references must be verified with a primary source and a lawyer. Vendor limits change; the skill checks them live and dates every check.
+## Rules of the house
 
-## Changelog
+- The owner decides. Blueprint shows options, a recommendation and consequences; it never flips `open` to `decided`.
+- Prices, terms and store rules are never asserted from memory. Each has `source.checked` and `verified`; `stale_items` lists what is old.
+- Generic only: no product names of user projects and no personal names in the catalog, lessons or proposals. Vendor names in comparisons are fine.
+- Every rule or lesson has a principle, what to avoid, why, and a yes/no check.
 
-- **v0.2** — Proactive behaviour: the skill asks the facts that change everything at kickoff and on every new fact, gives a recommended option and an alternative with six angles for every proposal, records decisions with dates, and revisits them when facts change. New regions pass (`references/jurisdictions.md`): EU/EEA, UK and Switzerland, US, the owner's home country; serve, limit or block; merchant of record versus own registrations; what blocking does not do. New security pass (`references/security.md`): OAuth-link takeover, email-change and recovery flows, support-desk verification, backups without credentials, header trust per host, SSRF and DNS rebinding, link-safety API terms, silent job failure, fail-safe environment detection. Tech stack and vendor check now cover free-plan flips at the first payment, daily deploy caps and push discipline, preview and database-branch limits, edge SQL limits emulated in tests, testing under realistic latency, email caps and deliverability, AI feature caps and fallback, content and internationalisation. Legal section adds DBA, trademark classes, filings, cyber insurance, company vendor accounts. Lifecycle catalog adds money between users and AI features. Template gains a facts block, a regions table and a decisions log.
-- **v0.1** — First release: eight sections, lifecycle and risk catalog, vendor check, proactive tools scan, kickoff prompt.
+Not legal or tax advice. Verify laws, thresholds and vendor limits with a primary source.
 
-## 日本語
-
-新しい商品や大きな機能を作る前に、会社として必要な全側面（商品、価格と原価、技術構成、法律とお金、集客、運用、利用者のライフサイクルとリスク、セキュリティ、オーナーのやること一覧）を一枚の「ブループリント」にまとめさせるスキルです。オーナーが聞いていないことも先回りして指摘します。推測せず「要確認」として質問し、おすすめ案と代替案、費用の数字を必ず出します。詳しくは `README.ja.md` を参照してください。
-
-License: MIT © CREATIVITY IS EVERYWHERE, LLC · Credits: `CREDITS.md`
+License: MIT © 2026 CREATIVITY IS EVERYWHERE, LLC · Credits: `CREDITS.md`

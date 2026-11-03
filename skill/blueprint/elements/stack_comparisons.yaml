@@ -1617,3 +1617,30 @@ comparisons:
     - option: es.mor_first
       why: 最初から複数国に売るなら第一候補（pick_when）。$10 未満の商品は手数料率が高い。
 
+- topic: backend
+  services:
+  - {id: be.route-handlers, free_tier: ホストの無料枠内（関数の実行時間と回数はホスト側の上限。金額未確認）, paid_entry: ホストの有料プランに含まれる（Vercel Pro $20/月 等。本比較では未確認）, url: 'https://nextjs.org/docs/app/building-your-application/routing/route-handlers', checked: '2026-11-02', verified: false}
+  - {id: be.cloud-run, free_tier: 無料枠あり（月あたりの vCPU 秒・リクエスト数の上限は未確認）, paid_entry: 使った分だけ（金額未確認）, url: 'https://cloud.google.com/run/pricing', checked: '2026-11-02', verified: false}
+  - {id: be.supabase-edge, name: Supabase Edge Functions, free_tier: Supabase 無料プランに含まれる（呼び出し回数の上限は未確認）, paid_entry: Pro $25/月に含まれる（上限は未確認）, url: 'https://supabase.com/pricing', checked: '2026-11-02', verified: false}
+  - {id: be.cloudflare-workers, name: Cloudflare Workers, free_tier: 無料枠あり（1日あたりのリクエスト数と CPU 時間の上限は未確認）, paid_entry: Workers Paid $5/月（金額未確認）, url: 'https://workers.cloudflare.com/', checked: '2026-11-02', verified: false}
+  combine:
+    single: 画面と同じ場所（Next.js の Route Handlers / Server Actions）に裏側も置く。契約・公開作業・環境変数が1つで、AI も一番書き慣れている。
+    combined: 画面はホストに置き、長い処理・定期処理・別言語の処理だけを別の実行環境（コンテナや Workers）に出す。
+    risks: 置き場所が2つになると、秘密情報・ログ・監視・公開作業が2重になる。認可の判断をどちらでするかを決めないと穴ができる。無料枠はそれぞれ別に数えるので、超えた時の挙動（止まる・課金）が違う。
+  switch_points:
+  - when: 1回の処理がホストの関数の制限時間を超える（動画変換・大量メール・長いAI呼び出し）
+    upgrade_to: 長い処理だけコンテナ（Cloud Run 等）か、キューで分割
+    why: 関数はタイムアウトで途中で切れる。1か所だけ外に出せば残りは同居のまま。
+  - when: 定期処理（毎晩の集計・リマインド送信）が3つ以上になった
+    upgrade_to: ホストの定期実行（cron）機能、または小さなワーカーを1つ
+    why: 画面の裏に定期処理を混ぜると、失敗に気づけない。
+  - when: 画面を持たないスマホアプリだけになった
+    upgrade_to: 独立した API の置き場所（Cloud Run / Workers / Supabase Edge Functions）
+    why: 同居させる画面側のサーバーがない。
+  recommendation:
+    pick: be.route-handlers
+    reason: 画面と同じ場所に置けば、作る・直す・公開するが1つで済み、無料枠もホストと共通。長い処理や定期処理が出てきた時だけ、その処理を1つ外に出す。料金と上限は未確認なので、使うと決めた時に公式ページで確かめる。
+    rejected:
+    - {option: be.cloud-run, why: 自由度は高いが、コンテナの作成・公開作業・監視が別に要る。長い処理やスマホアプリ専用の API の時の候補。}
+    - {option: be.supabase-edge, why: データの置き場所が Supabase なら相性がよいが、画面側に Route Handlers があるなら2か所目になる。}
+    - {option: be.cloudflare-workers, why: 速くて安いが実行環境に制約（Node.js の一部 API が使えない）があり、AI の書き慣れが浅い。}

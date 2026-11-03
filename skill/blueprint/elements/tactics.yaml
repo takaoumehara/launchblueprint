@@ -3,7 +3,7 @@
 # kind：choose（1つ選ぶ）／ checklist（全部確かめる）
 # ai_pick / ai_reason_ja：既定のおすすめ。pick_when は「始める」画面の答えで上書き
 # lane：地図の列（BRAND / UX / UI / TECH / BIZ・LEGAL / RULES）
-# stage：macro stage（idea / launch / operate / scale / exit。catalog/lifecycle.yaml の macro_stages）。網羅表は reference/coverage.md
+# stage：ライフサイクルの5段（idea / launch / operate / scale / exit。catalog/lifecycle.yaml の macro_stages と同じ id）。地図の上の進み具合はこれで数える。網羅表は reference/coverage.md
 domain: tactics
 updated: '2026-11-02'
 check_cadence_values: {daily_new_options: 毎日：新しい選択肢が出たかだけ見る（料金・規約は見ない）, deep_when_used: プロジェクトで selected の時だけ、料金・規約を公式で深く確認}
@@ -758,6 +758,114 @@ tactics:
   depends_on: [exit_dd, cost_rules]
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
+- element: el.product
+  topic: problem_discovery
+  lane: ux
+  stage: idea
+  label_ja: 困りごとの確かめ
+  question_ja: 作る前に、本当に困っている人がいると確かめたか
+  kind: checklist
+  options:
+  - lc.discover.01
+  - lc.discover.02
+  - lc.discover.04
+  - lc.strategy.06
+  - lc.strategy.08
+  depends_on: []
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: rules_ledger
+  lane: rules
+  stage: idea
+  label_ja: 最初に守る約束
+  question_ja: どのプロジェクトでも守る決まりを確認したか
+  kind: checklist
+  options:
+  - rules.R-004
+  - rules.R-012
+  - rules.R-016
+  - rules.R-022
+  - rules.R-030
+  depends_on: []
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.product
+  topic: backend
+  lane: tech
+  stage: launch
+  label_ja: 裏側の処理の置き場所
+  question_ja: 画面の裏で動く処理（保存・計算・外部連携）をどこで動かす？
+  kind: choose
+  options:
+  - be.route-handlers
+  - be.cloud-run
+  ai_pick: be.route-handlers
+  ai_reason_ja: 画面と同じ場所に置けて、追加の契約も公開作業もいらない。長い処理が要る所だけ後で分ける。
+  pick_when:
+  - if:
+      platform: app
+    pick: be.cloud-run
+    reason_ja: スマホアプリには画面側のサーバーがないので、独立した置き場所が要る。
+  depends_on:
+  - frontend
+  - hosting
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: dd_metrics
+  lane: biz
+  stage: operate
+  label_ja: 1日目から残す数字
+  question_ja: あとから作れない数字（人数・お金・継続）を記録しているか
+  kind: checklist
+  options:
+  - dd.users
+  - dd.money
+  - dd.cohort
+  - dd.infra
+  - dd.safety
+  depends_on:
+  - analytics
+  - monitoring
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.maintenance
+  topic: sunset_plan
+  lane: biz
+  stage: exit
+  label_ja: きれいに終わる・引き渡す
+  question_ja: やめる時・売る時に、利用者とデータを困らせないか
+  kind: checklist
+  options:
+  - dd.sunset
+  - dd.code
+  - dd.infra
+  - dd.metrics
+  - dd.billing_sources
+  depends_on:
+  - exit_dd
+  - dd_metrics
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
+- element: el.business
+  topic: legal_basics
+  lane: rules
+  stage: launch
+  label_ja: 規約・返金・税の決まり
+  question_ja: 利用規約・プライバシー・返金の決まり・税の扱いを公開前に用意したか
+  kind: checklist
+  options:
+  - lc.legal.30
+  - lc.legal.31
+  - lc.legal.32
+  - lc.legal.33
+  - lc.pricing.35
+  depends_on:
+  - payments
+  - market_entry
+  last_checked: '2026-11-02'
+  check_cadence: daily_new_options
 lanes:
 - {id: brand, label: BRAND, ja: ブランド・発信}
 - {id: ux, label: UX, ja: 体験・届け方}
@@ -765,3 +873,25 @@ lanes:
 - {id: tech, label: TECH, ja: しくみ}
 - {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律}
 - {id: rules, label: RULES, ja: 守ること}
+# stages：地図の上の段（5 段。catalog/lifecycle.yaml の macro_stages と同じ id）
+stages:
+- id: idea
+  label: IDEA
+  ja: 構想
+  what_ja: 誰の困りごとを、どういう決まりで解くか
+- id: launch
+  label: LAUNCH
+  ja: 出す
+  what_ja: しくみと画面を決めて作り、守りを固めて、人に知らせる
+- id: operate
+  label: OPERATE
+  ja: 回す
+  what_ja: 見張る・直す・答える・数字を残す
+- id: scale
+  label: SCALE
+  ja: 増やす
+  what_ja: 増えても止まらず、増やし続ける
+- id: exit
+  label: EXIT
+  ja: 終える
+  what_ja: 売る・引き渡す・きれいに閉じる

@@ -8,6 +8,8 @@ const app = $('#app');
 const T = Object.fromEntries(D.tactics.map(t => [t.topic, t]));
 const E = Object.fromEntries(D.elements.map(e => [e.id, e]));
 const LANES = D.lanes;
+const STAGES = D.stages;
+const CATALOG = D.catalog;
 
 // ---------- 保存 ----------
 const KEY = 'bp.project.v1';
@@ -49,6 +51,18 @@ function nextSteps() {
 const itemName = id => D.items[id]?.name || id;
 const shortName = id => itemName(id).replace(/\s*([（(]|\s\/\s).*$/, '');
 const links = () => D.tactics.flatMap(t => t.depends_on.map(d => [d, t.topic]));
+const stageProgress = () => STAGES.map(s => { const ts = D.tactics.filter(t => t.stage === s.id);
+  return { ...s, total: ts.length, done: ts.filter(t => status(t) === 'done').length, ai: ts.filter(t => status(t) === 'ai').length, topics: ts }; });
+let stageFilter = null;
+// 段の帯：巨大な細い数字（決めた数）と、決めること1件＝四角1つ（未決=枠、仮=白、決定=オレンジ）
+function stageRail(cls = '') {
+  return `<section class="stages ${cls}" aria-label="段ごとの進み具合">${stageProgress().map((p, i) => `<button type="button" class="stg ${stageFilter === p.id ? 'on' : ''} ${p.done === p.total ? 'full' : ''}" data-stage="${p.id}" aria-pressed="${stageFilter === p.id}" title="${esc(p.what_ja)}">
+    <span class="mono m2">${String(i + 1).padStart(2, '0')} ${esc(p.label)}</span><span class="ja">${esc(p.ja)}</span>
+    <span class="num2"><b>${String(p.done).padStart(2, '0')}</b><small>/ ${String(p.total).padStart(2, '0')}</small></span>
+    <span class="sqs">${p.topics.map(t => `<i class="sq ${status(t)}" title="${esc(t.label_ja)}"></i>`).join('')}</span>
+    <span class="what">${esc(p.what_ja)}</span></button>`).join('')}</section>`;
+}
+function bindRail() { app.querySelectorAll('.stg').forEach(b => b.onclick = () => { stageFilter = stageFilter === b.dataset.stage ? null : b.dataset.stage; viewMap(); }); }
 
 // ---------- 書き出し（project-map.template.yaml と同じ形） ----------
 function projectMap() {
@@ -59,7 +73,7 @@ function projectMap() {
       const c = P.choices[t.topic] || {}; const ai = aiPick(t);
       const pick = t.kind === 'choose' ? (c.pick || '') : '';
       return {
-        element: t.element, topic: t.topic, status: c.status === 'decided' ? 'decided' : 'open',
+        element: t.element, topic: t.topic, stage: t.stage, status: c.status === 'decided' ? 'decided' : 'open',
         options: t.options, ai_pick: ai?.id || '', reason: c.reason || ai?.reason || '',
         rejected: t.kind === 'choose' ? t.options.filter(o => o !== (pick || ai?.id)).map(o => ({ option: o, why: D.items[o]?.avoid_when || '' })) : [],
         decided_by: c.status === 'decided' ? (c.by || 'human') : '',
@@ -69,10 +83,10 @@ function projectMap() {
   };
 }
 function toMd() {
-  const m = projectMap(); const L = [`# ${m.name || '無題のプロジェクト'}`, '', `ゴール：${m.goal || '—'}`, ''];
+  const m = projectMap(); const L = [`# ${m.name || '無題のプロジェクト'}`, '', `ゴール：${m.goal || '—'}`, '', '## 進み具合', ...stageProgress().map(p => `- ${p.ja}（${p.label}）：${p.done} / ${p.total}`), ''];
   for (const c of m.choices) {
     const t = T[c.topic];
-    L.push(`## ${t.label_ja}（${c.topic}）— ${c.status === 'decided' ? '決定' : '未決'}`);
+    L.push(`## ${t.label_ja}（${c.topic}）— ${c.status === 'decided' ? '決定' : '未決'} · 段：${t.stage}`);
     if (t.depends_on.length) L.push(`- 先に決めること：${t.depends_on.map(d => T[d].label_ja).join('、')}`);
     if (t.kind === 'choose') {
       L.push(`- 選んだもの：${c.pick ? itemName(c.pick) : '—'}`, `- AIおすすめ：${c.ai_pick ? itemName(c.ai_pick) : '—'}`, `- 理由：${c.reason || '—'}`);
@@ -107,7 +121,7 @@ function viewStart() {
     <div class="q"><div class="k"><div class="mono m3">${n(2)}</div><label class="t" for="gl">ひとことで目的</label><div class="h">誰の、どんな困りごとを、どう楽にするか。</div></div><div><input type="text" id="gl" value="${esc(P.goal)}" placeholder="例：主催者が手数料を気にせずチケットを売れるようにする"></div></div>
     ${Q.map(([k, q, h, opts], i) => `<div class="q"><div class="k"><div class="mono m3">${n(i + 3)}</div><div class="t">${q}</div><div class="h">${h}</div></div>
       <div class="seg" role="group" aria-label="${q}">${opts.map(([v, l, s]) => `<button type="button" data-k="${k}" data-v="${v}" aria-pressed="${P.profile[k] === v}"><span>${l}</span><small>${s}</small><span class="dot"></span></button>`).join('')}</div></div>`).join('')}
-    <div class="q"><div class="k"></div><div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><button class="btn" id="go">地図を見る　→</button><span class="mono m3">答えはこのブラウザの中だけに保存</span></div></div>
+    <div class="q"><div class="k"></div><div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><button class="btn" id="go">地図を見る　→</button><span class="mono m3">答えはこのブラウザの中だけに保存</span><button type="button" class="btn line" id="reset">最初からやり直す</button></div></div>
   </section>`;
   app.querySelectorAll('.seg button').forEach(b => b.onclick = () => {
     P.profile[b.dataset.k] = b.dataset.v; save();
@@ -116,12 +130,13 @@ function viewStart() {
   const sync = () => { P.name = $('#nm').value.trim(); P.goal = $('#gl').value.trim(); save(); };
   $('#nm').oninput = $('#gl').oninput = sync;
   $('#go').onclick = () => { sync(); location.hash = '#/map'; };
+  $('#reset').onclick = () => { if (!confirm('名前・答え・決めたことを全部消します。よろしいですか？')) return; P = blank(); localStorage.removeItem(KEY); toast('最初に戻しました'); viewStart(); };
 }
 
 // ---------- 画面2：地図 ----------
 let traceOnly = false;
 function layout(W, H) {
-  const x0 = 120, x1 = Math.max(x0 + 600, W - 300), y0 = 210, y1 = H - 250;
+  const x0 = 120, x1 = Math.max(x0 + 600, W - 300), y0 = 170, y1 = H - 230;
   const lx = i => x0 + (x1 - x0) * i / (LANES.length - 1);
   const by = Object.fromEntries(LANES.map(l => [l.id, D.tactics.filter(t => t.lane === l.id).sort((a, b) => depth(a) - depth(b))]));
   const max = Math.max(...Object.values(by).map(a => a.length));
@@ -167,8 +182,8 @@ function viewMap() {
   const narrow = innerWidth <= 900;
   const done = D.tactics.filter(t => status(t) === 'done').length;
   const next = nextSteps();
-  const W = Math.max(innerWidth, 1100), H = Math.max(innerHeight - 48, 860);
-  const { pos, lx, y0 } = layout(W, H);
+  const W = Math.max(innerWidth, 1100), H = Math.max(innerHeight - 48 - 150, 760);
+  const { pos, lx, y0, step } = layout(W, H);
   const nodeSub = t => { const s = status(t); const c = P.choices[t.topic]; const ai = aiPick(t);
     if (s === 'done') return '決定' + (t.kind === 'choose' ? ' · ' + shortName(c.pick) : ' · 確認ずみ');
     if (s === 'ai') return '仮 · ' + shortName(ai.id);
@@ -179,29 +194,32 @@ function viewMap() {
     <span class="dot ai"></span><span>仮 — AIのおすすめがある（まだ決定ではない）</span>
     <span class="dot done"></span><span>決定 — あなたが決めた</span>
     <span class="ln"></span><span>線 — 先に決めること → あとで決めること（全部本物のつながり）</span>
-    <span class="ln acc"></span><span>オレンジ — 決めた道すじ</span></div>`;
-  app.innerHTML = `<section class="canvas" style="height:${H}px;--gap:${Math.round(lx(1) - lx(0) - 28)}px">
+    <span class="ln acc"></span><span>オレンジ — 決めた道すじ</span>
+    <span class="sq done"></span><span>四角 — 上の帯。段ごとの決めること1件。押すとその段だけ明るく</span></div>`;
+  const inStage = t => !stageFilter || t.stage === stageFilter;
+  app.innerHTML = `${stageRail('desk')}<section class="canvas ${stageFilter ? 'filtered' : ''} ${step < 36 ? 'tight' : ''}" style="height:${H}px;--gap:${Math.round(lx(1) - lx(0) - 28)}px">
     <div class="corner tl mono"><div>BLUEPRINT — MAP</div><div class="m2">CREATIVITY IS EVERYWHERE, LLC</div></div>
     <div class="corner tr mono"><div class="m1">${esc(P.name || 'UNTITLED')} · ${D.generated}</div><div class="m2">${D.tactics.length} NODES · ${links().length} LINKS · TRACE ${done}</div>
       <div style="margin-top:10px"><button id="exy">EXPORT YAML</button><span class="m3"> · </span><button id="exm">MARKDOWN</button><span class="m3"> · </span><a href="#/" style="text-decoration:none" class="m1">EDIT ANSWERS</a></div></div>
     <svg id="strands" class="${traceOnly ? 'traceonly' : ''}" aria-hidden="true">${strands(pos)}</svg>
     ${LANES.map((l, i) => `<div class="lane" style="left:${lx(i) - 3.5}px;top:${y0 - 72}px"><div class="mono m3">${String(i + 1).padStart(2, '0')}</div><div class="mono">${esc(l.label)}</div><div class="ja">${esc(l.ja)}</div></div>`).join('')}
     ${D.tactics.map(t => { const s = status(t); const p = pos[t.topic];
-      return `<a class="node ${s}" href="#/t/${t.topic}" data-topic="${t.topic}" style="left:${p.x}px;top:${p.y}px" aria-label="${esc(t.label_ja)}：${STATUS_LONG[s]}"><span class="dot ${s}"></span><span><b>${esc(t.label_ja)}</b><small>${esc(nodeSub(t))}</small></span></a>`; }).join('')}
+      return `<a class="node ${s} ${inStage(t) ? 'instage' : ''}" href="#/t/${t.topic}" data-topic="${t.topic}" style="left:${p.x}px;top:${p.y}px" aria-label="${esc(t.label_ja)}：${STATUS_LONG[s]}"><span class="dot ${s}"></span><span><b>${esc(t.label_ja)}</b><small>${esc(nodeSub(t))}</small></span></a>`; }).join('')}
     <div class="quiet" style="left:28px;bottom:84px">${quietNext}</div>
     <div class="quiet" style="left:${Math.min(380, W * .3)}px;bottom:84px;max-width:340px">${legend}</div>
-    <div class="corner bl mono m2"><div><a href="/data.json">/DATA.JSON</a> · <a href="/llms.txt">/LLMS.TXT</a></div><div class="m3">HOVER A DOT · CLICK FOR DETAIL · T TRACE</div></div>
+    <div class="corner bl mono m2"><div><a href="#/catalog">CATALOG ${Object.keys(CATALOG).length} AREAS</a> · <a href="/data.json">/DATA.JSON</a> · <a href="/llms.txt">/LLMS.TXT</a></div><div class="m3">HOVER A DOT · CLICK FOR DETAIL · T TRACE${stageFilter ? ' · STAGE ' + stageFilter.toUpperCase() : ''}</div></div>
     <div class="corner br"><div class="mono m2">TRACE — 決めたステップの数</div><div class="num">${String(done).padStart(2, '0')}</div></div>
   </section>
-  <section class="list"><div class="page">
+  <section class="list">${stageRail()}<div class="page">
     <div class="mono m2">02 — MAP ・ ${D.tactics.length} NODES · TRACE ${done}</div>
     <h1>${esc(P.name || '無題のプロジェクト')}</h1><p class="lead">${esc(P.goal || '目的はまだ書かれていません。')}</p>
     <div class="quiet" style="position:static;max-width:none;margin-bottom:24px">${quietNext}</div>
     ${LANES.map((l, i) => `<div class="lsec"><div class="mono"><span class="m3">${String(i + 1).padStart(2, '0')}</span> ${esc(l.label)} <span class="m2">· ${esc(l.ja)}</span></div>
-      ${D.tactics.filter(t => t.lane === l.id).map(t => { const s = status(t); return `<a class="lrow ${s}" href="#/t/${t.topic}"><span class="dot ${s}"></span><span><b>${esc(t.label_ja)}</b><small>${t.depends_on.length ? '先に：' + t.depends_on.map(d => esc(T[d].label_ja)).join('、') : '最初に決められる'}</small></span><span class="mono m2">${STATUS[s]}</span></a>`; }).join('')}</div>`).join('')}
+      ${D.tactics.filter(t => t.lane === l.id && inStage(t)).map(t => { const s = status(t); return `<a class="lrow ${s}" href="#/t/${t.topic}"><span class="dot ${s}"></span><span><b>${esc(t.label_ja)}</b><small>${t.depends_on.length ? '先に：' + t.depends_on.map(d => esc(T[d].label_ja)).join('、') : '最初に決められる'}</small></span><span class="mono m2">${STATUS[s]}</span></a>`; }).join('')}</div>`).join('')}
     <div class="quiet" style="position:static;max-width:none;margin-top:24px">${legend}</div>
-    <div style="display:flex;gap:8px;margin-top:24px"><button class="btn line" id="exy2">YAMLで書き出す</button><button class="btn line" id="exm2">Markdown</button></div>
+    <div style="display:flex;gap:8px;margin-top:24px"><button class="btn line" id="exy2">YAMLで書き出す</button><button class="btn line" id="exm2">Markdown</button><a class="btn line" href="#/catalog">カタログ</a></div>
   </div></section>`;
+  bindRail();
   for (const id of ['exy', 'exy2']) $('#' + id).onclick = exportYaml;
   for (const id of ['exm', 'exm2']) $('#' + id).onclick = exportMd;
   const svg = $('#strands');
@@ -255,10 +273,11 @@ function viewTopic(topic) {
         ${!choose && it.check ? `<dt>確認</dt><dd>${gloss(it.check, used)}</dd>` : ''}
         ${choose ? `<dt>費用</dt><dd>${it.cost ? gloss(String(it.cost), used) : 'まだ調べていません'}</dd>` : ''}
         ${it.url ? `<dt>出典</dt><dd><a href="${esc(it.url)}" target="_blank" rel="noopener">公式ページ ↗</a></dd>` : ''}
-        <dt>AI用ID</dt><dd class="mono m3" style="text-transform:none">${id}</dd>
+        <dt>AI用ID</dt><dd class="mono m3" style="text-transform:none">${id}${it.domain ? ` · <a href="#/catalog/${it.domain}">カタログ ${it.domain}</a>` : ''}</dd>
       </dl></div></div>`; };
   const opts = t.options.map(optHtml).join('');
-  app.innerHTML = `<section class="page"><div class="mono m2">03 — ${esc(lane.label)} ・ ${esc(e.name_ja)}</div>
+  const stg = STAGES.find(x => x.id === t.stage);
+  app.innerHTML = `<section class="page"><div class="mono m2">03 — ${esc(lane.label)} ・ ${esc(e.name_ja)} ・ 段 ${esc(stg?.label || '')} ${esc(stg?.ja || '')}</div>
     <div class="detail"><div>
       <h1>${esc(t.label_ja)}</h1><p class="lead">${esc(t.question_ja)}</p>
       ${ai ? `<div class="pick"><div class="mono" style="color:var(--acc)">AIのおすすめ${ai.rule ? ' · あなたの答えから' : ''}</div><div class="nm">${esc(itemName(ai.id))}</div><div class="m1">${gloss(ai.reason, used)}</div></div>` : ''}
@@ -302,13 +321,41 @@ function viewTopic(topic) {
   if ($('#undo')) $('#undo').onclick = () => { delete P.choices[topic]; save(); viewTopic(topic); };
 }
 
+// ---------- 画面4：カタログ（全分野） ----------
+const usedBy = id => D.tactics.filter(t => t.options.includes(id));
+function viewCatalog(domain) {
+  const doms = Object.values(CATALOG);
+  if (domain && !CATALOG[domain]) { location.hash = '#/catalog'; return; }
+  if (!domain) {
+    const touched = doms.filter(c => c.ids.some(id => usedBy(id).length)).length;
+    app.innerHTML = `<section class="page"><div class="mono m2">04 — CATALOG ・ ${doms.length} AREAS · ${Object.keys(D.items).length} ITEMS</div>
+      <h1>カタログ</h1><p class="lead">AIが読む全部の分野。地図の選択肢はここから引いています。${touched} 分野が地図の決めることにつながり、残りは参考（見本・鮮度の決まり・網羅表）です。</p>
+      <div class="cat">${doms.map((c, i) => { const n = c.ids.filter(id => usedBy(id).length).length; const topics = [...new Set(c.ids.flatMap(id => usedBy(id).map(t => t.topic)))];
+        return `<a class="crow" href="#/catalog/${c.domain}"><span class="mono m3">${String(i + 1).padStart(2, '0')}</span><span><b>${esc(c.domain)}</b><small>${esc(c.title)}</small></span>
+          <span class="sqs">${c.ids.slice(0, 40).map(id => `<i class="sq ${usedBy(id).length ? 'done' : ''}"></i>`).join('')}${c.ids.length > 40 ? `<i class="mono m3">+${c.ids.length - 40}</i>` : ''}</span>
+          <span class="mono m2">${c.ids.length} 件${n ? ` · 地図 ${n}` : ''}${topics.length ? `<br><span class="m3">${topics.map(x => esc(T[x].label_ja)).join('・')}</span>` : ''}</span></a>`; }).join('')}</div></section>`;
+    return;
+  }
+  const c = CATALOG[domain]; const used = new Set();
+  app.innerHTML = `<section class="page"><div class="mono m2"><a href="#/catalog" style="text-decoration:none">04 — CATALOG</a> ・ ${esc(domain)}</div>
+    <h1>${esc(c.title)}</h1><p class="lead mono m2" style="text-transform:none">${esc(domain)} · ${c.ids.length} 件${c.updated ? ' · 更新 ' + esc(c.updated) : ''} · AI: get_catalog("${esc(domain)}")</p>
+    <div class="opts">${c.ids.map(id => { const it = D.items[id]; if (!it) return ''; const ts = usedBy(id);
+      return `<div class="opt static"><span class="sq ${ts.length ? 'done' : ''}" style="margin-top:5px"></span><div>
+        <div class="nm2"><span>${esc(it.name)}</span>${it.verified === true || it.verified === 'True' ? `<span class="tagv ok">確認済み${it.checked ? ' ' + esc(it.checked) : ''}</span>` : '<span class="tagv">未確認</span>'}</div>
+        <dl>${it.what ? `<dt>内容</dt><dd>${gloss(it.what, used)}</dd>` : ''}${it.best_for ? `<dt>向いている</dt><dd>${gloss(it.best_for, used)}</dd>` : ''}${it.avoid_when ? `<dt>向かない</dt><dd>${gloss(it.avoid_when, used)}</dd>` : ''}
+          ${it.why ? `<dt>なぜ</dt><dd>${gloss(it.why, used)}</dd>` : ''}${it.check ? `<dt>確認</dt><dd>${gloss(it.check, used)}</dd>` : ''}${it.cost ? `<dt>費用</dt><dd>${gloss(String(it.cost), used)}</dd>` : ''}
+          ${it.url ? `<dt>出典</dt><dd><a href="${esc(it.url)}" target="_blank" rel="noopener">公式ページ ↗</a></dd>` : ''}
+          <dt>AI用ID</dt><dd class="mono m3" style="text-transform:none">${esc(id)}</dd>
+          ${ts.length ? `<dt>地図</dt><dd>${ts.map(t => `<a href="#/t/${t.topic}">${esc(t.label_ja)}</a>`).join('、')}</dd>` : ''}</dl></div></div>`; }).join('')}</div></section>`;
+}
+
 // ---------- ルーター ----------
 function route() {
   const h = location.hash.slice(1) || '/'; const [, r, arg] = h.split('/');
-  const name = r === 'map' ? 'map' : r === 't' ? 'topic' : 'start';
+  const name = r === 'map' ? 'map' : r === 't' ? 'topic' : r === 'catalog' ? 'catalog' : 'start';
   document.querySelectorAll('.steps [data-r]').forEach(a => a.classList.toggle('on', a.dataset.r === name));
   scrollTo(0, 0);
-  name === 'map' ? viewMap() : name === 'topic' ? viewTopic(arg) : viewStart();
+  name === 'map' ? viewMap() : name === 'topic' ? viewTopic(arg) : name === 'catalog' ? viewCatalog(arg) : viewStart();
 }
 addEventListener('hashchange', route);
 $('#theme').onclick = () => { const d = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = d; localStorage.setItem('bp.theme', d); };

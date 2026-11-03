@@ -74,6 +74,6 @@ test("ui_ux_checklist returns gates filtered by lifecycle", async () => {
       assert.ok(g.gates.length > 0 && g.gates.every(x => x.lifecycle === l), `lifecycle ${l}`);
     }
     const req = await call({ phase: "requirements" });
-    assert.ok(req.checklist.some(i => i.id === "define-every-screen-state"));
+    assert.ok(req.checklist.some(i => i.rule === "define-every-screen-state"));
   } finally { await c.close(); }
 });
