@@ -1,6 +1,6 @@
 # 網羅表：段階 × 要素 × tactic（coverage）
 
-提供：CREATIVITY IS EVERYWHERE, LLC ／ 生成：2026-11-02（`elements/tactics.yaml`・`elements/stack_comparisons.yaml`・`catalog/lifecycle.yaml` から）
+提供：CREATIVITY IS EVERYWHERE, LLC ／ 生成：2026-11-02、更新：2026-11-03（60 tactics・5 段）（`elements/tactics.yaml`・`elements/stack_comparisons.yaml`・`catalog/lifecycle.yaml` から）
 
 目的：**idea → launch → operate → scale → exit の 5 段すべてに、要素（elements）と決めること（tactics）があり、choose には 選択肢・おすすめ・理由・選ばなかった理由・無料枠・払う境目 が、checklist には 原則・避ける形・なぜ・確認 がそろっているか** を 1 枚で見る。
 更新：tactic や比較を足したら、この表の該当行と `catalog/lifecycle.yaml` の `items[].status/evidence` を直す（手順：`reference/feedback-loop.md`）。
@@ -14,11 +14,11 @@
 
 | 段階 | 含む stage | 要素 | tactics（choose / checklist） | covered | thin | lifecycle 項目 covered / thin / missing |
 |---|---|---|---|---|---|---|
-| **idea**（構想） | discover, strategy, brand, design | 4（brand, business, experience, product） | 8（4 / 4） | 8 | 0 | 20 / 11 / 6 |
-| **launch**（公開） | build, legal, pricing, gtm | 7（brand, business, experience, maintenance, marketing, product, security） | 29（20 / 9） | 29 | 0 | 14 / 24 / 18 |
-| **operate**（運営） | operate, maintain, finance | 2（maintenance, security） | 9（6 / 3） | 9 | 0 | 7 / 5 / 1 |
+| **idea**（構想） | discover, strategy, brand, design | 4（brand, business, experience, product） | 10（4 / 6） | 10 | 0 | 20 / 11 / 6 |
+| **launch**（公開） | build, legal, pricing, gtm | 7（brand, business, experience, maintenance, marketing, product, security） | 32（21 / 11） | 32 | 0 | 14 / 24 / 18 |
+| **operate**（運営） | operate, maintain, finance | 3（business, maintenance, security） | 10（6 / 4） | 10 | 0 | 7 / 5 / 1 |
 | **scale**（拡大） | growth | 2（maintenance, marketing） | 2（1 / 1） | 2 | 0 | 0 / 3 / 4 |
-| **exit**（出口） | sunset, exit | 2（business, maintenance） | 4（2 / 2） | 4 | 0 | 12 / 0 / 0 |
+| **exit**（出口） | sunset, exit | 2（business, maintenance） | 5（2 / 3） | 5 | 0 | 12 / 0 / 0 |
 
 ## idea — 構想（discover, strategy, brand, design）
 
@@ -36,6 +36,9 @@
 | `i18n` 多言語化のしくみ | プロダクト | tech | choose | 5 | `i18n.next-intl` | Next.js で一番自然に書け、複数形や日付も標準で扱える。初日から文言をキーにし、直書きは l… | 5 件 | MIT・無料 | 開発者以外の翻訳者・校正者が1人でも入る、または3言語以上 → Tolgee 無料（3人・3万語）→ Translat… | covered |
 | `idea_validation` 需要の確かめ方 | プロダクト | ux | choose | 6 | `val.tally` | 無料で回答数に上限がなく、どの紹介ページにも埋め込める。ホストが決まったら本番側の LP に移す。 | 5 件 | フォーム・回答ともに無制限（フェアユース） | 独自ドメインで公開リンクを出す（SNS・広告に貼る） → Carrd Pro Standard $19/年 か Fra… | covered |
 | `validation_rules` 作る前の約束 | プロダクト | rules | checklist | 6 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `problem_discovery` 困りごとの確かめ | プロダクト | ux | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `rules_ledger` 最初に守る約束 | ビジネス | rules | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `planning_pass` 計画の手順 | ビジネス | biz | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
 
 **lifecycle で まだ thin / missing の項目（17）**：
 
@@ -94,6 +97,9 @@
 | `legal_terms` 規約とプライバシー | ビジネス | biz | choose | 5 | `lt.termly` | 無料でプライバシーポリシーと Cookie バナーを今日出せ、必要になったら月 $10 で規約も足… | 4 件 | 基本ポリシー 1 本・バナー 1 万回/月 | 規約とプライバシーの 2 本以上、または Cookie バナーの表示が月 1 万回を超える → Termly Star… | covered |
 | `legal_rules` 法律まわりの約束 | ビジネス | rules | checklist | 6 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
 | `launch_rules` 公開日の約束 | マーケティング | rules | checklist | 6 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `backend` 裏側の処理の置き場所 | プロダクト | tech | choose | 2 | `be.route-handlers` | 画面と同じ場所に置けて、追加の契約も公開作業もいらない。長い処理が要る所だけ後で分ける。 | 1 件 | ホストの無料枠内。Vercel Hobby $0（個人・非商用のみ）：Active CPU 4 時間・メモリ 360 G… | 1回の処理がホストの関数の制限時間を超える（動画変換・大量メール・長いAI呼び出し） → 長い処理だけコンテナ（Clou… | covered |
+| `legal_basics` 規約・返金・税の決まり | ビジネス | rules | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `foresight_traps` 現場の罠 | 保守 | rules | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
 
 **lifecycle で まだ thin / missing の項目（42）**：
 
@@ -157,6 +163,7 @@
 | `uptime` 落ちていないかの見張り | 保守 | tech | choose | 3 | `mon.uptimerobot` | 無料で 50 サイト・5 分おき・ステータスページ 1 つ。1 人運用の最初はこれで足りる。 | 2 件 | 50 モニター・5 分間隔・ステータスページ 1 | 運用する人が 2 人以上（誰が起きるかを決める） → Better Stack（オンコール・インシデント管理が一体） | covered |
 | `secrets_sharing` 鍵とパスワードの置き場 | セキュリティ | tech | choose | 4 | `ho.bitwarden` | 個人は無料、共有も月 $3.99 から。会社名義の金庫を初日から作れる。アプリの鍵はホストの環境変… | 3 件 | 個人は無料。共有は Families $3.99/月（6 人） | 2 人目が運用に入る → Bitwarden Families $3.99/月 か Teams $4/人 | covered |
 | `handoff_rules` 引き継ぎの約束 | 保守 | rules | checklist | 7 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `dd_metrics` 1日目から残す数字 | ビジネス | biz | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
 
 **lifecycle で まだ thin / missing の項目（6）**：
 
@@ -200,6 +207,7 @@
 | `exit_route` 売り方 | ビジネス | biz | choose | 3 | `xt.direct-outreach` | 小さなプロダクトの買い手は機能かチーム目当てで、すでに関係のある相手が多い。手数料ゼロ。 | 2 件 | 手数料ゼロ（弁護士費用のみ） | 直接打診 5 件に 2 か月反応がない → Acquire.com（掲載 $25/月〜） | covered |
 | `sbom_tool` 部品表の出し方 | 保守 | tech | choose | 2 | `xt.syft` | 無料で CI に 1 行。売却の調査で求められる部品表を初日から出せる。 | 1 件 | Apache-2.0・無料（CLI） | 買い手・企業顧客に「継続的に見ている」証拠を求められた → FOSSA Free（5 プロジェクト） | covered |
 | `sunset_rules` 終わり方の約束 | 保守 | rules | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
+| `sunset_plan` きれいに終わる・引き渡す | 保守 | biz | checklist | 5 | — | 全項目に 原則・避ける形・なぜ・確認 | — | — | — | covered |
 
 ## 今回埋めた隙間（2026-11-02）
 

@@ -981,6 +981,32 @@ tactics:
   - market_entry
   last_checked: '2026-11-02'
   check_cadence: daily_new_options
+- element: el.business
+  topic: planning_pass
+  lane: biz
+  stage: idea
+  label_ja: 計画の手順
+  question_ja: 前提を最悪から並べ、やめる線と次の 10 営業日を書いたか
+  label_en: 'Planning pass'
+  question_en: 'Did you rank assumptions worst-first, write the kill lines and the next ten working days?'
+  kind: checklist
+  options: [fs.A, fs.C, fs.E, fs.D, fs.F]
+  depends_on: [problem_discovery]
+  last_checked: '2026-11-03'
+  check_cadence: deep_when_used
+- element: el.maintenance
+  topic: foresight_traps
+  lane: rules
+  stage: launch
+  label_ja: 現場の罠
+  question_ja: 公開前に毎回起きる罠（上限・URL・鍵・影響範囲・無料 AI）を先回りしたか
+  label_en: 'Field traps'
+  question_en: 'Did you get ahead of the traps that hit every launch (caps, URLs, secrets, blast radius, free AI)?'
+  kind: checklist
+  options: [fs.L01, fs.L03, fs.L04, fs.L05, fs.L14]
+  depends_on: [hosting]
+  last_checked: '2026-11-03'
+  check_cadence: deep_when_used
 lanes:
 - {id: brand, label: BRAND, ja: ブランド・発信, en: Brand and voice}
 - {id: ux, label: UX, ja: 体験・届け方, en: Experience and delivery}
@@ -998,7 +1024,7 @@ stages:
 - id: launch
   label: LAUNCH
   ja: 出す
-  what_ja: しくみと画面を決めて作り、守りを固めて、人に知らせる
+  what_ja: しくみと画面を作り、守りを固め、人に知らせる
   what_en: Decide systems and screens, build, harden, tell people
 - id: operate
   label: OPERATE
