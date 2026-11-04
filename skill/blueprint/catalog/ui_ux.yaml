@@ -1063,6 +1063,286 @@ rules:
     check: "After upgrading, is the badge gone with no extra action?"
     source: 'product iteration 2026-10'
     date: '2026-10-28'
+  - id: shared-screen-shows-senders-input
+    category: feedback
+    phase: [design, qa]
+    principle: "When a phone sends something to a shared big screen, show it there in a form the sender recognises as theirs (same shape and colour)."
+    anti_pattern: "Replacing the player's actual input with abstract effects (glows, rings) for style."
+    why: "In playtest the sender could not find their own drawing and the game stopped feeling played from the phone."
+    check: "Can a first-time player point at the shared screen and find their own input within 2 seconds?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: score-changes-only-from-input
+    category: feedback
+    phase: [design, qa]
+    principle: "Scores and goals change only from a player's action; idle physics never scores."
+    anti_pattern: "Objects that drift or bounce into goals on their own."
+    why: "Pieces drifted into goals with no input and testers read the game as broken."
+    check: "With no input for 60 seconds, does the score stay unchanged?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: no-button-duplicating-gesture
+    category: guidance
+    phase: [design, qa]
+    principle: "If the core input is a gesture, do not add a button that does the same thing, and keep instructions off a small drawing area."
+    anti_pattern: "A confirm/release button next to a swipe or throw gesture, and big instruction text over the canvas."
+    why: "Testers found the button unclear and the overlay text in the way."
+    check: "Can the main action be done with no on-screen button and nothing covering the input area?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: join-code-fits-and-copies
+    category: mobile
+    phase: [design, qa]
+    principle: "Room or join codes fit the smallest phone width, and the join URL is tap-to-copy."
+    anti_pattern: "An oversized code that overflows and a URL that cannot be copied."
+    why: "Players could not join in playtest."
+    check: "At 375 px is the whole code visible, and does tapping it copy the join URL?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: hidden-panels-are-inert
+    category: accessibility
+    phase: [design, qa]
+    principle: "Panels moved off screen (drawers, mobile bars) also get visibility hidden or inert so they leave the tab order."
+    anti_pattern: "Hiding a panel with a transform alone."
+    why: "Keyboard focus reached an invisible bar during review."
+    check: "With the panel hidden, does Tab skip every control inside it?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: invisible-elements-not-tappable
+    category: motion
+    phase: [design, qa]
+    principle: "An element that is not visibly shown cannot receive taps; entrance animations finish within about 1 second of their trigger."
+    anti_pattern: "Elements at opacity 0 (or inside a transparent parent) that still accept pointer events."
+    why: "Invisible buttons were tapped by mistake and reported as 'nothing happens' or 'it moved by itself'."
+    check: "In a touch test, does every element with combined opacity below 0.5 refuse taps?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: hero-visible-in-first-frame
+    category: performance
+    phase: [design, qa]
+    principle: "Keep the above-the-fold hero visible in the first frame; animate transform only, not a fade from opacity 0."
+    anti_pattern: "Fading in the hero heading or image from opacity 0."
+    why: "It delays the largest paint and gives a blank first impression (and blank review screenshots)."
+    check: "With JavaScript disabled, is the hero visible in the first frame?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: split-decorative-and-text-accent
+    category: accessibility
+    phase: [design, qa]
+    principle: "Keep separate tokens for decorative accent and for text, links and focus rings, each checked for contrast."
+    anti_pattern: "Using a light brand tint for links, borders of options or focus rings."
+    why: "Links and option borders failed 4.5:1 and 3:1 contrast (a mid grey border on white was about 2.8:1)."
+    check: "Does every text, link, focus and control-border token pass 4.5:1 (text) or 3:1 (non-text)?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: dark-borders-computed
+    category: accessibility
+    phase: [design, qa]
+    principle: "Check dark-mode borders by computing the real blended colour against the background."
+    anti_pattern: "Lowering a line colour's opacity on a dark background."
+    why: "A 60% line on dark came out near 1.3:1 and card edges disappeared."
+    check: "In dark mode, are unselected controls and card borders clearly distinguishable from the background?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: two-width-reading-layout
+    category: layout
+    phase: [design, qa]
+    principle: "Use two widths on desktop: prose about 40-45em, wide tables and cards up to about 1200 px; body 16-17 px and nothing under 12 px; tables on desktop, cards on phones."
+    anti_pattern: "Putting a whole report page in one narrow column with 11-14 px tables."
+    why: "On a 1440 px screen the page looked tiny with wide empty margins and had to be redone in two rounds."
+    check: "At 1440 px and 375 px, is there no text under 12 px and do wide tables use the wide container?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: one-bordered-layer
+    category: layout
+    phase: [design, qa]
+    principle: "At most one bordered or shadowed layer; inside it use tone differences, borderless filled fields and full-bleed photos; inner radius = outer radius minus padding."
+    anti_pattern: "Cards in bordered cards, and photos on a slightly different coloured card (a box in a box)."
+    why: "Editors felt overwhelming and 'all squares', and product photos looked cheap."
+    check: "Is there no bordered element inside another bordered element, and no colour band between a photo's edge and its card?"
+    occurrences: 3
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: progressive-editor-panels
+    category: guidance
+    phase: [design, qa]
+    principle: "In editors, open one section at a time and show at most about 5 inputs at first; the rest go under 'More options', a section with hidden changes says 'Edited', and a section with an error opens itself."
+    anti_pattern: "Expanding every field at once, or hiding changed fields with no sign on the header."
+    why: "Users of a mobile site editor were overwhelmed by the amount on screen."
+    check: "On first open, does each panel show 5 or fewer inputs, mark hidden edits, and auto-open sections with errors?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: placeholders-never-look-like-data
+    category: forms
+    phase: [design, qa]
+    principle: "Never use sample values (numbers, example URLs) as input placeholders; use real defaults or helper text."
+    anti_pattern: "A placeholder like '48' or 'example.com' in an empty field."
+    why: "The owner repeatedly read sample placeholders as values already entered."
+    check: "Is there no numeric, URL or sample-value placeholder in any input (enforced by a test)?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: payment-labels-from-buyer-view
+    category: forms
+    phase: [design, qa]
+    principle: "Name payment options as the buyer knows them; when only one method is enabled, show no choice."
+    anti_pattern: "Seller-side wording such as 'pay the organiser' as a choice label."
+    why: "Even the owner could not tell what the option meant."
+    check: "With one method enabled, does checkout go straight to paying, and are labels the buyer's own words?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: slug-rename-redirects
+    category: navigation
+    phase: [requirements, qa]
+    principle: "Renaming a public URL slug keeps the old one working with a permanent redirect, and internal links warn when their target does not exist."
+    anti_pattern: "Changing a slug and letting old links 404."
+    why: "An owner edited a link to a slug the page did not have and visitors got a 404."
+    check: "After renaming a slug, does the old URL still reach the page?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: device-error-keeps-view
+    category: states
+    phase: [design, qa]
+    principle: "When a camera or scanner fails, keep the view mounted and show the reason in place."
+    anti_pattern: "An error callback that unmounts the camera so it flashes and vanishes."
+    why: "Door staff could not scan tickets and saw no reason why."
+    check: "When camera access or decoding fails, is the video still there or a readable reason shown?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: videos-play-only-in-view
+    category: performance
+    phase: [design, qa]
+    principle: "On pages with many videos, play only those in view and pause the rest, with a fallback where in-view detection is missing."
+    anti_pattern: "Autoplaying every tile video at once."
+    why: "All tiles played together, causing jank and battery drain on phones."
+    check: "Are off-screen videos paused, and does the page still work without in-view detection?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: silence-when-idle
+    category: motion
+    phase: [design, qa]
+    principle: "Interactive sound is silent when there is no input, and sustained tones avoid fast pitch wobble with capped highs and volume."
+    anti_pattern: "An always-on ambient drone, or about 4 Hz vibrato on bright layers."
+    why: "Users called the hum and wobble annoying and every piece was redone before filming."
+    check: "With no input, is the output silent, and does a held tone for 10 seconds sound steady?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: logo-marks-outlined-and-small-tested
+    category: design_system
+    phase: [design, qa]
+    principle: "Logo files outline their text and the mark has a hand-checked small (16 px) version tested on dark backgrounds for unintended readings."
+    anti_pattern: "Live text with a web font inside a logo image file; a mark only checked at large size."
+    why: "Logos shown as images fell back to a system font, and abstract marks closed up or read as other symbols at icon size."
+    check: "Does the logo file contain no live text, and was the mark checked at 16 px on light and dark?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: index-cards-equal-and-linked
+    category: navigation
+    phase: [design, qa]
+    principle: "On a category index, show items as equal cards whose image and title both open the detail page; long explanations live on the detail page."
+    anti_pattern: "One item's long explanation under the page title, or large images that do nothing when clicked."
+    why: "Visitors thought the page was about one item and clicked images that did nothing."
+    check: "Are all index cards the same size, and does clicking a card's image open its detail page?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: small-thumbnail-own-crop
+    category: content
+    phase: [design, qa]
+    principle: "Give tiny slots (64 px or less) their own simplified crop."
+    anti_pattern: "Scaling a wide diagram down into an icon."
+    why: "The small menu thumbnail was unreadable."
+    check: "Is each small thumbnail readable at its real size?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: narrow-width-no-overlap
+    category: mobile
+    phase: [design, qa]
+    principle: "At the smallest supported width, fixed bars do not overlap, page edges are not clipped, heroes have no inner scrollbar, separators do not orphan, and URLs break only at slashes."
+    anti_pattern: "Approving from desktop screenshots; centred and side-pinned items on the same row."
+    why: "Overlapping top bars, a clipped left edge and an inner scrollbar shipped to production."
+    check: "At 375-390 px, is there no overlap, clipping, inner scrollbar, orphan separator or mid-word URL break?"
+    occurrences: 4
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: one-canonical-host
+    category: content
+    phase: [requirements, qa]
+    principle: "Set one canonical host and absolute canonical and hreflang URLs from a single site URL setting; every page has a share image."
+    anti_pattern: "Hardcoded per-page canonicals pointing at a different host than the live one, or relative canonicals."
+    why: "Share cards were blank and pages pointed at the wrong host across about 30 files."
+    check: "Does every page's canonical start with https:// on the live host and have a share image?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: marketing-shows-real-ui
+    category: content
+    phase: [qa]
+    principle: "Product screens on marketing pages are captures of the real UI, and gallery captions are unique per item."
+    anti_pattern: "Wireframes or mock UI shown as the product; one caption reused across a gallery."
+    why: "A fake UI on a landing page was sent back as critical, and duplicate captions blocked a release."
+    check: "Are all product screens real captures, and are all gallery captions distinct?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: modes-named-and-visible
+    category: states
+    phase: [design, qa]
+    principle: "Give each special mode (capture, debug, demo) its own name and show the active mode on screen."
+    anti_pattern: "One URL flag reused for several purposes."
+    why: "The capture screen the owner asked for did not appear and extra rounds followed."
+    check: "Can you tell at a glance which mode is active?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: flag-off-is-pixel-identical
+    category: design_system
+    phase: [qa]
+    principle: "When a new look is behind a flag, keep changes inside the new scope and prove the old look is unchanged with a screenshot diff."
+    anti_pattern: "Editing shared components or tokens for the new look; inline styles overriding tokens; committing dev-generated files."
+    why: "A 'no visible change' flag changed the existing theme."
+    check: "With the flag off, is the screenshot diff zero and the diff free of generated files?"
+    occurrences: 2
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: location-named-on-book-button
+    category: navigation
+    phase: [requirements, design]
+    principle: "With several locations, put the booking button inside each location card with its name, and repeat name and address at the top of the booking screen."
+    anti_pattern: "One shared 'Book now' for all locations."
+    why: "Customers could book the wrong location."
+    check: "Does every booking screen show the location name and address first?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
+  - id: consent-on-subject-device
+    category: privacy
+    phase: [requirements, design]
+    principle: "Take publishing consent for photos on the subject's own phone in one screen (simple choices plus a withdraw link); keep the photo as a draft until then."
+    anti_pattern: "Staff ticking a box on their own device, or a long terms page."
+    why: "Without a consent record there is no proof later."
+    check: "Are consent time, choice and photo id recorded, and is publishing blocked until consent?"
+    occurrences: 1
+    source: 'project PO learnings 2026-11-04 (generalised)'
+    date: '2026-11-04'
 # phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階（idea → launch → operate → scale → exit）、phase はその中のどの場面か。
 # MCP の ui_ux_checklist（lifecycle 引数）と reference/ui-ux.md の "Phase gates" に出る。全段階に少なくとも1つ置く。
 phase_gate_checks:

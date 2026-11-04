@@ -3,7 +3,7 @@
 # lessons：現場の罠（原則・避ける形・なぜ・確認・引き金・段）。procedures：先回りの手順（本文は reference/foresight.md）。cross_rules：複数の罠にまたがる決まり
 # 固有名詞・製品名・ベンダー名は入れない。段は idea / launch / operate / scale / exit（catalog/lifecycle.yaml の macro_stages と同じ id）
 domain: foresight
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 365
 lessons:
 - id: fs.L01
@@ -156,6 +156,393 @@ lessons:
   see_also: [fs.F, ho.bus-factor-two]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+- id: fs.L16
+  principle: 'プレビューを誰がどう見るかをキックオフで決める：ボット・レビュアー用はログインなしで開ける経路（ローカルビルド、またはバイパストークン）、テスト用アカウントとプレビュー用シークレットも最初のプレビューと同時に用意する。外部に渡す前は保護をかけ直す。'
+  anti_pattern: 'ホスティングのログイン保護付きプレビュー URL を画面証拠のゲートや共有リンクに頼る。確認しやすいよう保護を外したまま顧客に送る。'
+  why: 'プレビューがチームのログインを要求し、ボットのスクショ・オーナー以外の確認・ログイン後画面の QA が毎回止まった。逆に保護を外した URL は数字や店舗情報を外に出す。'
+  check: 'ログインなしのヘッドレスブラウザ（またはシークレットウィンドウ）で見るべき人だけが開け、テストアカウントでサインインと主要操作ができるか？'
+  trigger: '最初のプレビューを作る時、ビジュアルゲートを設計する時、顧客にリンクを送る前'
+  stage: launch
+  occurrences: 5
+  facts_unverified: '主要ホスティングの一部はプレビューに既定でログイン保護をかける（プラン別の既定値は未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L17
+  principle: '「本番に出た」と言う前に、本番がどのリポ・どのブランチ・どのコミットから出ているかを本番側で確かめ、出したいコミットと一致させる。ゲート依頼の前にはプレビューが最新 head のビルドかも確かめる。停止したリポはアーカイブして README に明記する。'
+  anti_pattern: 'main にマージしたから出たはずと思い込む。1か月前の依頼をそのまま再開して旧リポから本番を上書きしかける。push 直後に「直った」とレビューを頼む。'
+  why: '本番ブランチ設定が古い作業ブランチのままで約1か月前のビルドが出続けた。後継リポが本番なのに旧リポからデプロイしかけた。プレビューが旧ビルドのままでレビューが BLOCK を出し直した。'
+  check: '本番デプロイのコミット SHA（とソースリポ）が、出したいコミットと一致しているか？'
+  trigger: 'マージ後・リリース報告の前・久しぶりに再開する作業の前'
+  stage: launch
+  occurrences: 4
+  facts_unverified: 'ホスティングによっては本番ブランチがプロジェクト設定で決まり、プレビューチャネルが push で自動更新されない構成がある（未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L18
+  principle: '本番に出す前に main との差分を見る。1 PR = 1 目的で、ベースから作り直したブランチだけを出す。'
+  anti_pattern: '別の作業ブランチの上に積んだブランチをそのまま本番に配備する。長命ブランチから派生した PR。'
+  why: '台本の小修正 PR の配備で未確認の約 58 ファイル（別機能と DB の前提）が一緒に本番に出た。IA の小修正 PR に決済・SMS・DB 移行が丸ごと混ざり BLOCK。'
+  check: '`git diff --stat origin/main...HEAD` と `git log main..HEAD` の中身が、その PR の目的だけか？'
+  trigger: '手動デプロイの前、PR を開く時'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L19
+  principle: '配備・デプロイの手順の最初に、CLI とトークンの認証・権限の事前確認を入れる（DB など権限ごとに別々に）。CI はサービスアカウント等の非対話の認証にする。配備用設定は秘密を抜いて git に入れ、本番は専用の 1 つの作業ツリーから出す。'
+  anti_pattern: 'マージ後に初めて CLI を叩いて期限切れに気づく。本番用設定がローカルにしかなく worktree ごとに手でコピーする。'
+  why: 'CLI の再認証待ちでマージ済みの変更が約1か月出せなかった。共有マシンの CLI ログイン切れで DB ルールの配備が止まった。同じトークンが途中から DB 権限エラーを返し、書き込みが反映されたか分からなかった。'
+  check: 'マージ前に、使う全 CLI の認証と DB を含む各権限の確認コマンドが通り、新しい clone だけで配備設定が揃うか？'
+  trigger: 'デプロイ手順を作る時、毎日の認証チェック、担当や作業ツリーが変わる時'
+  stage: operate
+  occurrences: 4
+  facts_unverified: 'トークンが途中で DB 権限だけ失う事象を観測（原因未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L20
+  principle: 'DB のセキュリティルールの変更は、それが検証するクライアントの新しい項目と同時に出す。出せない時はクライアントが劣化動作する。'
+  anti_pattern: '本番ルールが未知の項目を拒否するのに、新しい項目を送るクライアントを先に出す。'
+  why: '本番ルールが新しい項目を拒否し、クライアント側で項目を外して送る回避が要った。'
+  check: 'エミュレータのテストで、本番ルールが現在のクライアントの送信内容を受け付けるか？'
+  trigger: 'クライアントのデータ形を変える PR'
+  stage: launch
+  occurrences: 1
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L21
+  principle: 'エッジのマネージド SQLite 系 DB では、マイグレーションでテーブルを作り直さず（列追加と新テーブルだけ）、バックフィルの条件には既存の列だけを使い、マイグレーションとバックフィルは本体機能とは別項目でレビューし（本番適用済み番号・再実行で同じ結果）、DB テストは本番が呼ぶ関数を通す。'
+  anti_pattern: '外部キー無効化の PRAGMA を書いて DROP→作り直し。追加したばかりの列を WHERE に使う UPDATE。部品のクエリ1つだけで「実 DB テスト済み」とする。'
+  why: '外部キーが常に有効でトランザクション内で流れる環境で、DROP がカスケード削除を起こし子テーブルのデータが消えかけた。新列は全部 NULL なのでバックフィルが 0 件になった。44 件のテストが通るのに本番の経路は全部 500 だった。'
+  check: 'マイグレーションに DROP/RENAME での作り直しがなく、データ入りの DB で件数と更新件数を確かめ、テストが本番のエントリポイントを通っているか？'
+  trigger: 'マイグレーションを書く時・レビューする時'
+  stage: launch
+  occurrences: 2
+  facts_unverified: '一部のエッジ SQLite は外部キーが常時有効でマイグレーションをトランザクションで流す、SQL の json() は素の文字列を拒否する（json_quote を使う）、2 つのマイグレーションツールで適用順の決め方が違う（いずれも実測、公式未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L22
+  principle: '外部への問い合わせの「無い」は確定した答え（例：404、DNS の NXDOMAIN）だけで判断し、通信エラー・5xx・タイムアウト・SERVFAIL は「不明」として不可逆な処理（削除・返金・所有権の解除）を走らせない。ドメインの所有確認は定期的にやり直し、新しい検証条件を足す時は自社で発行・購入した既存の行を検証済みとして埋める。'
+  anti_pattern: '`Status !== 0` や catch で空配列を返し「レコードなし」とみなす。所有確認を一度で終える。検証列を NULL で足すだけ。'
+  why: '一時的な障害で検証済みのドメインが外れかけた。登録業者の障害で返金処理が走る作りだった。手放したドメインを第三者が取り直すとサブドメインを乗っ取られる。'
+  check: '障害を模したテストで、不可逆な処理が走らず、既存の正当な行が配信から外れないか？'
+  trigger: '外部 API・DNS に依存する判定を書く時、検証条件を足す時'
+  stage: launch
+  occurrences: 3
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L23
+  principle: '決済 Webhook は状態遷移を確定したあとで「処理済み」を同じトランザクション（またはバージョン付き）で記録する。支出上限・在庫は条件付きの 1 文で原子的に予約し、変更行数を確かめる。'
+  anti_pattern: '先に処理済みを記録し、後続が失敗すると再送でも二度と処理されない。残高を SELECT で見てから INSERT。'
+  why: '再送されても状態が進まない作りや、並列リクエストで上限を超える作りがレビューで見つかった。'
+  check: '途中で失敗した再送で状態が正しく進み、並列 2 リクエストで上限を超えないテストがあるか？'
+  trigger: '決済・課金・上限の処理を書く時'
+  stage: launch
+  occurrences: 2
+  facts_unverified: '大手決済の一部は失敗した Webhook を数日間再送する（公式ドキュメント記載、本日は再確認していない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L24
+  principle: 'プレースホルダの値（仮の価格・手数料・紹介料・文言）は一か所に定義し、本番ビルドに未確定値が残ればビルドを失敗させる。外向きの下書きでは数字を [X%] のように空欄にする。'
+  anti_pattern: '仮の数字を規約・FAQ・サポートボット・投稿に直書きする。'
+  why: '仮の価格が規約・FAQ・サポートボットに出ていた。内部の仮手数料が投稿に入れば公の約束になる。'
+  check: '本番ビルド出力と外向きの下書きに、未確定の値が grep で 0 件か？'
+  trigger: '価格・手数料を決める前、公開前'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L25
+  principle: 'CSP は公開前に nonce を使った強制モードへ移す日を決め、インライン script は全部同時に移す。管理者はサーバー側に保存したロールで判定し、管理操作には 2FA か再認証を必須にする。'
+  anti_pattern: 'Report-Only や ''unsafe-inline'' を「設定済み」と数える。一部だけ nonce 化する。環境変数のメール一覧との一致だけで管理者にする。'
+  why: '監査で Report-Only のまま放置された CSP が見つかった（何も防がない）。メールや OAuth を乗っ取られるとそのまま管理者になる。'
+  check: '本番の CSP が強制モードで unsafe-inline を含まず、違反ログ 0、管理操作に 2FA/再認証が要るか？'
+  trigger: '公開前のセキュリティ点検'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L26
+  principle: '外部のリポジトリを clone したら、AI コーディングツールやエディタで開く前に、ツールの設定ファイル（エージェント設定・MCP 設定・ルール・エディタのタスク）を確認する。MCP の自動承認は切り、拡張は配布元と更新履歴を確かめて入れる。'
+  anti_pattern: 'clone してすぐ AI ツールで開く。MCP を自動承認にする。'
+  why: '乗っ取られたリポジトリに、フォルダを開く・セッションを始めるだけで動く仕掛けが入っていた事例があり、手元の認証情報が盗まれうる。'
+  check: '外部リポジトリの AI ツール設定ファイルを、開く前に確認しているか？'
+  trigger: '外部リポジトリを clone した時、拡張を入れる時'
+  stage: idea
+  occurrences: 1
+  facts_unverified: '2026-10 にこの種の事例が報告された（出典は PO 提出の公開記事。本日は再確認していない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L27
+  principle: '仕様・監査・戦略を書く前に、ブリーフやメモではなく実コード（依存ファイル・デプロイ設定・課金コード、コミットハッシュ付き）か担当者の確認で実際のスタックと機能・料金を確かめる。'
+  anti_pattern: '依頼文や README や決定メモの構成・手数料・機能の有無をそのまま前提にする。'
+  why: '依頼文と実リポのスタックが違い点検リストをやり直した。決済があるのに「決済なし」と書いた。方針メモの手数料とコードの値が違っていた。'
+  check: '文書の冒頭に、基準にしたリポとコミットと、確認した課金設定の値が書いてあるか？'
+  trigger: '仕様・監査・収益案を書き始める時'
+  stage: idea
+  occurrences: 3
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L28
+  principle: '決済は、本番で実際の少額購入から返金までを 1 回通すまで「売上の経路」として数えない。本番で一度も動かしていない機能（例：登録待ちの SMS）はプランに入れて売らず、開通予定日つきの予約受付にする。'
+  anti_pattern: '設定ファイルや Webhook があるだけで本番準備完了とみなす。登録が終わっていない機能を料金表に入れる。'
+  why: 'live の鍵と Webhook 登録が未確認のまま「売れる」と数えていた。送信者登録が終わるまで送れない SMS 機能を売りかけた。'
+  check: '本番で実購入→返金を通し、プランの全機能を本番で一度動かしたか？'
+  trigger: '収益化の直前、プランを作る時'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L29
+  principle: '既存 SaaS を置き換える・上に重ねる・連携する計画は、最初に (1) 位置づけ（replace / overlay / integrate と正本の置き場所）を 1 行で決め、(2) 相手の公開 API で必要な書き込み（作成・更新）ができるかを公式リファレンスで確かめ、第三者の連携主張と突き合わせ、(3) 移せないデータ（保存済みカードなど）を棚卸しする。payload が確定しない連携は寛容なパーサ＋生イベント保存＋イベント ID の重複排除で作る。'
+  anti_pattern: '「API がある」＝「予約を自動で入れられる」と思い込む。段階計画の第 1 段を製品の位置づけとして書く。ドキュメントの例から厳密な型を決め打ちする。'
+  why: '予約作成の公開 API がなく自動確定の設計をやり直した。位置づけが逆のまま設計・実装が 2 段階進んだ。'
+  check: 'context に位置づけと正本が書かれ、連携先 API の書き込み可否・移せないデータ・生イベントの再処理手段を確認したか？'
+  trigger: '構想段階、連携・移行を設計する前'
+  stage: idea
+  occurrences: 4
+  facts_unverified: 'ある業種の予約 SaaS は公開 API で予約を作れず、Webhook は有料・申請制（PO が公式ヘルプで 2026-11-03 確認と報告。本日は再確認していない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L30
+  principle: '外部送信・課金・AI 呼び出しは、`*_MODE=live` 以外では偽の transport、live は承認まで例外を投げる形で作る。'
+  anti_pattern: '本物の鍵が入った瞬間に送信できるコード。'
+  why: '承認前の誤送信を構造で防げ、テストも決定的になった（うまくいった型）。'
+  check: '外部連携ごとに偽実装と live のガードがあるか？'
+  trigger: '外部連携を実装し始める時'
+  stage: launch
+  occurrences: 1
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L31
+  principle: '共有マシンの長い背景ジョブは、セッションから切り離して起動し、終了コード付きの完了ファイルで次のジョブにつなぎ、待ちに上限時間を付ける。再利用するスクリプトと判定待ちの証拠は /tmp ではなく永続の作業パスに置き、ゲートが閉じるまで消さない。削除は持ち主が承認したパス一覧だけ。重いジョブには優先順位と 1 本あたりの上限時間を書く。'
+  anti_pattern: 'pgrep やプロセス名で無期限に待つ。前景のセッションで長いジョブを始める。フォルダやワイルドカードで掃除する。'
+  why: '後続ジョブのログが空のまま進まなかった。セッション終了でジョブが黙って死んだ。掃除で別の作業のソースや判定前の証拠が消えた。1 つのプロジェクトの連続ジョブが唯一の枠を何時間も占有した。'
+  check: 'ジョブが切り離され完了ファイルと上限時間を持ち、削除対象が承認済みの一覧にあるか？'
+  trigger: '共有マシンで長い処理・掃除をする時'
+  stage: operate
+  occurrences: 5
+  facts_unverified: 'ディスクに空きがあっても inode が尽きると書けない（`df -i` で確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L32
+  principle: 'フェーズを始める前に、使う AI・計算・生成 API の残量とリセット日を確かめ、主・副・予備の実行経路と予算を書く。有料の生成 API は残高確認と安い 1 回のスモーク呼び出し（パラメータも公式ドキュメントで確認）を通してから大きなラウンドを約束する。同じ起動が 2 回続けて失敗したら分割するか別経路に回す。'
+  anti_pattern: '1 つのエージェント基盤だけに依存する。残高を見ずに「AI 生成の品質」を約束する。同じ起動を何度もリトライする。'
+  why: 'クレジット枯渇で実装経路が週単位で変わり待ちが出た。デザインスプリントの途中で生成 API が残高不足になり 10 回中 1 回しか生成できなかった。作業が途中で止まり再実行が要った。'
+  check: '主・副・予備の経路とリセット日・予算が書かれ、スモーク呼び出しが成功してから始めたか？'
+  trigger: '重い実装・生成ラウンドを始める前'
+  stage: launch
+  occurrences: 5
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L33
+  principle: '公開・送信・マージ・本番リリースの承認は、オーナー本人の発言で確かめる。別エージェントの「OK と言っていた」は未確認として扱う。'
+  anti_pattern: '伝聞の承認でマージや公開をする。'
+  why: '別のボットが「承認済み」と中継したが、マージは本人の言葉を待つ必要があった。'
+  check: '承認の一次ソース（本人のメッセージ）を示せるか？'
+  trigger: 'マージ・公開・送信の前'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L34
+  principle: '認証コード（2FA）は、本人がその場で入力できると言った時だけ送らせる。チャットに貼られた秘密は使わず、再発行してフォームか vault で受け取る。'
+  anti_pattern: '先にコードを送らせて本人を待つ。貼られた値を便利だからそのまま設定する。'
+  why: 'コードが待っている間に期限切れになり作業が 1 日以上止まった。チャットの秘密はログに残り漏えい扱いになる。'
+  check: '本人が「今いける」と言ってからコードを送らせ、貼られた秘密は再発行したか？'
+  trigger: '外部サービスの管理画面に入る時、秘密を受け取る時'
+  stage: operate
+  occurrences: 1
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L35
+  principle: '利用者の端末から作業マシンへファイルを移す前に、送れるフォルダと 1 ファイルの上限を確かめ、上限より小さく分割し、配信に不要な元素材は除く。受け取った添付はすぐ開いて件数を確かめる。'
+  anti_pattern: '1 つの大きなアーカイブや /tmp からの転送。中身を見ずに作業を始める。'
+  why: '上限超えと許可外フォルダで転送が 2 回失敗した。空の zip を前提に調べ始めた。'
+  check: '各ファイルが上限未満で許可されたフォルダにあり、添付の件数を確認したか？'
+  trigger: 'ファイルの受け渡しの前'
+  stage: operate
+  occurrences: 2
+  facts_unverified: '転送ツールの上限は 1 ファイル約 100 MB と観測（正確な値は未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L36
+  principle: '新機能を足す時は main で同じテストを走らせ、新しく増えた失敗だけで判定する。依存を足したら lock ファイルを同じコミットに入れ、カタログやシードから削除した ID は全リポを grep してテストからも消す。'
+  anti_pattern: '既知の失敗件数で毎回議論する。lock を更新しない。テストに削除済みの ID を残す。'
+  why: '23 件の既知失敗で議論が止まった。lock 不一致で CI が落ちた。削除済み ID の参照でエミュレータ CI が 144 件失敗した。'
+  check: 'main との差で新しい失敗が 0、クリーン環境で依存のインストールが通り、削除した ID の参照が 0 件か？'
+  trigger: 'PR の CI が赤の時'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L37
+  principle: '画面の証拠は最初の演出が終わってから（約 3 秒後）撮り、reduced-motion の 1 枚も撮る。屈折・透過など GPU に依存する 3D は、確認する人の GPU で動くリンクで判断してもらう。スクロール連動の動画は HTTP Range に対応したサーバーで確認する。'
+  anti_pattern: 'ページを開いた直後のスクショで合否を決める。ソフトウェア描画の静止画だけで見た目を判断させる。Range 非対応の簡易サーバーで確認する。'
+  why: '演出途中の 1 枚がほぼ空白に写りブロッカーに見えた。ソフトウェア描画の絵で「平たい」と言われ 3 回作り直した。簡易サーバーで後半の章が止まり誤判定した。'
+  check: '演出後と reduced-motion のスクショがあり、GPU 依存の表現は本人の GPU で見て、動画の Range 要求に 206 が返るか？'
+  trigger: 'ビジュアルゲートの前'
+  stage: launch
+  occurrences: 3
+  facts_unverified: '一部の言語標準の簡易 HTTP サーバーは Range に対応しない（実測、公式未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L38
+  principle: 'ブランド・アイデンティティの作業は、言葉で概念（洞察・なぜこのブランドだけか・マークの体系）と見た目の方向を決めて承認を取ってから、2〜3 案だけを見せ、サイトのコードはそのあとに始める。マーク本体はコードではなくベクター生成＋光学補正か人のデザイナーで作る。'
+  anti_pattern: '20 案以上の量産を探索として決裁者に見せる。見た目が決まる前に 1 週目からサイトの PR を開く。'
+  why: '概念のない量が素人っぽく見え、レビュー 1 回分を失った。見た目が変わってサイトのコードが 1〜2 日分保留になった。'
+  check: '見た目を出す前に書面の概念が承認され、最初のサイトのコミットより前に見た目の方向が決まっているか？'
+  trigger: 'ブランド段階の最初'
+  stage: idea
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L39
+  principle: '画像・映像の生成では、守るべき構造ルール（禁止の部品・決まった場所と時刻・画風）をプロンプトだけでなく、全カットへの目視の QA ゲートにする。新しいポーズや小物は安い単発テストを通してから絵コンテに入れ、ベクターの代替を手元に持つ。'
+  anti_pattern: 'プロンプトに書いたから守られると思う。章ごとに別々の景色を生成する。'
+  why: '人が着た状態の画像が禁止の部品を何ラウンドも足し続けた。都市のブランドで名所の決まり絵が出続けた。章ごとに土地が変わりブランドがぶれた。'
+  check: '全カットを並べた一覧で、禁止事項と画風・場所の一貫性を人が確認したか？'
+  trigger: '生成ビジュアルの各ラウンド'
+  stage: idea
+  occurrences: 4
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L40
+  principle: '動画の納品前に、字幕ファイルを機械で検査（重なりなし・2 行まで・行の長さ・最短表示時間）、全レンダーのラウドネスを測り、ループは最後のフレーム＝最初のフレームで作り、縦横比ごとの文字の安全域・色空間のタグ・同梱フォントを確かめ、翻訳版は画面内の文字まで訳し、未公開機能の表示は差し替えられる層にする。'
+  anti_pattern: '手で合わせた字幕をそのまま出す。最初の 1 本だけ測る。ループの継ぎ目をクロスフェードする。字幕だけ訳す。'
+  why: '字幕の重なりと長い行、ラウドネスの幅、継ぎ目の二重写り、比率ごとの文字切れ、翻訳版に英語の画面が残るなどで差し戻された。'
+  check: '字幕検査とラウドネス測定を全レンダーで通し、全比率と全言語の確認一覧で問題が 0 か？'
+  trigger: '動画の書き出し・納品の前'
+  stage: launch
+  occurrences: 4
+  facts_unverified: '作業基準：字幕 EN 42 字/行・JA 20 字/行、約 -16 LUFS・LRA 11 以下（社内基準、プラットフォーム仕様としては未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L41
+  principle: '料金は、決める前に競合の公式価格ページで表を作る（課金単位・対面/オンライン/手入力の料率・従量項目・オプション・試用期間、出典と確認日つき）。代行込みの月額は作業時間×時給から逆算し、解約率を入れて必要な顧客数に何か月で届くかを書き、手元資金が乏しければ初期費用か年払いで初日の現金を作る。最初の画面に出す値段は 1〜3 個にし、全価格は別に見られるようにする。'
+  anti_pattern: '月額だけで比べ決済手数料と従量課金を見落とす。作業時間を測らず安い月額を置く。解約を入れない売上目標。7 商品以上の値段一覧を最初に並べる。'
+  why: 'この種の業界では収益の多くが決済手数料とオプションから来る。安い月額だけでは数件取れても現金が足りず、解約込みでは目標到達に年単位かかり計画が NO-GO になった。値段の多い一覧は小規模事業者を離れさせた。'
+  check: '競合の公式価格表（出典・確認日つき）と、作業時間・解約率・到達月数・初日の現金の計算が書かれているか？'
+  trigger: '価格を決める段階'
+  stage: launch
+  occurrences: 4
+  facts_unverified: 'PO が報告した競合の料率・月額（本日は再確認していない。採用前に公式ページで確認する）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L42
+  principle: '割引を見せる時、実際にその価格で売った実績のない「通常価格」に取り消し線を引かない。期間・数量限定の申し込み特典にする。'
+  anti_pattern: '決済開始前に元値を消して見せる。'
+  why: '実売の記録がない元値の比較は表示規制の対象になりうる。'
+  check: '「通常価格」での実際の販売実績があるか？'
+  trigger: 'ローンチ価格を作る時'
+  stage: launch
+  occurrences: 1
+  facts_unverified: '米国の表示規則（元値比較）に関する規定がある（PO 提出、本日は再確認していない。法律助言ではない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L43
+  principle: '対象国を選ぶ前に、各国で現地のデータ保護代理人の義務があるかを確かめる。'
+  anti_pattern: '候補国を計画に入れてから代理人の義務に気づく。'
+  why: '計画の途中で代理人の義務が分かり、候補国を外した。'
+  check: '対象国ごとに代理人の義務を確認したか？'
+  trigger: '対象国を決める時'
+  stage: idea
+  occurrences: 1
+  facts_unverified: 'EU・英国・一部のアジアの国に代理人の規定がある（一次調査、未確認・法律助言ではない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L44
+  principle: '特許にしたい仕組みは、デモ・投稿・公開リポ・LP・外向きの提案書より前に仮出願し、大きな機能を足したら公開前に追加出願する。期限の通知は出願日に 3 本入れる。外向き資料からは出願前の仕組みと未公開の数字を消し、社内向けの行には「社内のみ」と印を付ける。'
+  anti_pattern: '先に公開してから特許を考える。社内のオファー文書をそのまま外に出す。'
+  why: '公開日から各国の期限が動き、猶予のない国では公開した時点で権利を失う。'
+  check: '公開する新しい仕組みがすべて出願済みの書類に書かれ、外向き版から未出願の仕組みが消えているか？'
+  trigger: '公開日・ベータ・デモ動画・外向き資料を決める前'
+  stage: idea
+  occurrences: 2
+  facts_unverified: '猶予期間は国ごとに違い、一部の地域は原則なし（PO 提出、法律助言ではない、本日は再確認していない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L45
+  principle: '名前を決める前に、自分の区分と近い区分で同じ・近い商標を検索する。出願人は出願日の時点の持ち主（法人）にし、規約・決済・ドメインの名義とそろえ、公開欄に個人の住所・メールを入れない。'
+  anti_pattern: 'ドメインやロゴを先に決める。名義がそろわないまま出願する。'
+  why: '名前の変更はブランドとドメインのやり直しになり、持ち主でない出願人の出願は無効で料金がむだになり、書類は永久に公開される。'
+  check: '商標検索をし、出願人と規約・決済・ドメインの名義が一致し、公開欄に個人情報がないか？'
+  trigger: '名前を決める時、商標の出願前'
+  stage: idea
+  occurrences: 1
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L46
+  principle: '投稿するチャネルごとに、誰がどの端末・ブラウザから投稿するかを day 0 に決め、ローンチ前に全チャネルで実際にログインして 1 回投稿しておく。戦略文書を渡す時は相手が開けるか確かめるか、ファイルで送る。'
+  anti_pattern: 'サーバーや共有クラウドのブラウザからの自動投稿を、ログインを確かめずに計画する。'
+  why: '共有マシンからのログインが繰り返し制限され、予定が何日も止まった。4 チャネル中 2 つが未ログインで投稿が遅れた。共有された戦略が開けなかった。'
+  check: 'カレンダーの全チャネルで、使う端末からログインとテスト投稿を済ませたか？'
+  trigger: 'ローンチの準備'
+  stage: launch
+  occurrences: 1
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L47
+  principle: 'AI 電話受付を本番番号につなぐ前に、業種別の台本・聞き返しへの対応・過去の実通話の再生テストを確かめ、変更のたびに 20〜50 本のテスト会話を回す。電話は最初の応答までの時間で決まるので無料の LLM 枠は使わない。不在着信へのテキストは AI が対応できなかった電話にだけ送る。'
+  anti_pattern: '汎用の台本でつなぐ。無料枠で電話を受ける。不在着信のたびに無条件でテキストを送る。'
+  why: '別業種の台本が入っていて、聞き返しを答えとして処理し最初の通話で信頼を失った。テキストとの二重連絡が起きる。'
+  check: '業種別の台本・聞き返し検知・実通話の回帰テストがあり、テキストの送信条件に「AI が対応したか」を使っているか？'
+  trigger: 'AI 電話を本番につなぐ前'
+  stage: launch
+  occurrences: 1
+  facts_unverified: '無料の LLM ルーター枠には分あたり・日あたりの回数上限がある（第三者記事、未確認）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L48
+  principle: '対面会話の録音や AI のメモは、最も厳しい地域に合わせて全員の同意を取り、AI が聞いていることを見せ、音声は残さない。事例に使うデータは項目ごとに「そのまま出す／丸める／出さない」を決めてオーナーの同意を記録する。'
+  anti_pattern: '一方同意の地域だからと同意の UI を省く。事例を作ってから同意を取る。'
+  why: '全員同意の地域で AI 文字起こしに関する訴訟が起きている（要約情報、未確認）。後から断られると事例を作り直す。'
+  check: '同意取得・可視表示・音声破棄があり、事例の各項目に段階と同意の記録があるか？'
+  trigger: '会話記録・事例の設計時'
+  stage: idea
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L49
+  principle: '店名の違う複数店舗は、店名のグループ（またはエリア）を単位に扱い、看板・サイト・地図のプロフィールの店名を実際に使っている名前にそろえ、共通マークで束ねる。'
+  anti_pattern: 'ブランド名 1 つで全店舗が見つかると思い込む。統一のためにプロフィールの名前だけ先に変える。'
+  why: '名前の違う店舗が検索から漏れた。プロフィール名は実使用名が規定とされる。'
+  check: '名前の違う店舗を 1 グループで登録でき、看板・サイト・プロフィールの店名が一致しているか？'
+  trigger: '複数店舗の機能・ドメイン構成を決める時'
+  stage: idea
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L50
+  principle: '取引台帳（予約・会計・残高）を置く DB は、3 年後の容量見込みと、重複予約を防ぐ排他制約の有無で選ぶ。'
+  anti_pattern: '既存のエッジ SQLite 系 DB にそのまま台帳を足す。'
+  why: '容量上限や二重予約防止の作り直しで、後から台帳と残高の移行が要る（見積もり 1〜2 週）。'
+  check: '台帳の容量見込みと重なり防止の手段が書かれているか？'
+  trigger: 'DB を選ぶ時'
+  stage: idea
+  occurrences: 1
+  facts_unverified: 'エッジ SQLite 系の一部は 1 DB あたりの容量上限が小さい（PO 報告、本日は再確認していない）'
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L51
+  principle: '確定した文言・構成・定義（ヒーローの見出し、段階の数など）は 1 つの正本に「LOCKED」と確定日を書き、記事・映像・サイト・実装の指示はそこを参照する。未実現の機能や次回予告には時間の注記を付け、公開直前に確かめ直す。'
+  anti_pattern: 'チャットごとに見出しを言い換える。媒体ごとに定義を個別に書く。'
+  why: '1 日に見出しが 2 回変わり古い文言で実装されかけた。過去記事が古い段階数のまま残った。続編計画が変わり締めの言葉が合わなくなった。'
+  check: '実装の指示が正本の節と確定日を指し、未実現の機能に時間の注記があるか？'
+  trigger: '文言を決めた時、公開の直前'
+  stage: launch
+  occurrences: 2
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
+- id: fs.L52
+  principle: '差別化の軸を決める前に、主要な既存プレイヤー上位 4 社の機能表を公式ページで確かめる。'
+  anti_pattern: '既存大手がすでに出している機能を売りにする。'
+  why: '売りにしようとした機能を大手の一部がすでに提供していた（要約情報、未確認）。'
+  check: '上位 4 社の機能表を確認したか？'
+  trigger: '差別化を決める時'
+  stage: idea
+  occurrences: 1
+  verified: false
+  source: 'project PO learnings 2026-11-04, generalized (facts are unverified claims until rechecked against official sources)'
 procedures:
 - id: fs.A
   name_ja: 決定の先読み
