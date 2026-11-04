@@ -1,0 +1,19 @@
+// Blueprint hub — Cloudflare Worker config (phase 1, internal bots). CREATIVITY IS EVERYWHERE, LLC
+// workers_dev only; no routes or custom domains yet (DESIGN.md §10: the public hostname comes with phase 2).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blueprint-hub",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "build": { "command": "node scripts/build-catalog.mjs" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blueprint-hub",
+      "database_id": "662bf5c2-4aa6-4ecd-8537-b992454ae530",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
