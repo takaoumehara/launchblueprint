@@ -131,7 +131,7 @@ function draftMap(opts: { name?: string; goal?: string; profile: Profile; decide
 const LIFECYCLE = ["idea", "launch", "operate", "scale", "exit"] as const;
 const server = new McpServer({ name: "blueprint", version: "0.2.0" }, { instructions: [
   "Blueprint: a map of every decision a product needs from idea to exit, with a catalog of options (free tiers, limits, lock-in, sources).",
-  "Typical agent flow: 1) list_topics to see the decisions and their order (depends_on); 2) draft_project_map with the owner's profile to get the first project map with AI picks and next_steps; 3) for each next step call get_comparison (tech choices) or get_item for each option, then ask the owner to decide; 4) call draft_project_map again with `decided` to advance; 5) propose_learning for anything learned.",
+  "Typical agent flow: 1) list_topics to see the decisions and their order (depends_on); 2) draft_project_map with the owner's profile to get the first project map with AI picks and next_steps; 3) for each next step call get_comparison (tech choices) or get_item for each option, then ask the owner to decide; 4) call draft_project_map again with `decided` to advance; 5) at every stage gate (before a decision moves the map to the next stage) ask the owner two questions: 'what happened that was not in the plan?' and 'what would you have needed to know earlier?', and send each answer with propose_learning in four layers (principle, claims to verify, context without names, occurrence). Do not wait for a retrospective.",
   "Never mark a decision as decided without the owner. Treat verified:false or missing checked dates as unverified; say so instead of asserting prices.",
   "Text is mostly Japanese; ids are stable English keys (e.g. db.supabase, tactics topic `payments`).",
 ].join("\n") });
@@ -299,13 +299,66 @@ server.tool("ui_ux_checklist", "UI/UX yes/no checklist. Optional phase: requirem
       lifecycle: lifecycle ?? "all", gates: gates.map(g => ({ id: g.id, lifecycle: g.lifecycle ?? null, phase: g.phase, check: g.check, why: g.why, rules: g.rules ?? [] })) });
   });
 
-server.tool("propose_learning", "Propose a new learning. Appends to the inbox only; the master is never edited. kind: rule (default) | component_map_update (a review fix to feed back into the component map).",
-  { text: z.string().min(5).max(2000), category: z.string().min(1).max(64),
-    kind: z.enum(["rule", "component_map_update"]).optional() }, async ({ text: t, category, kind }) => {
-    const rec = { ts: new Date().toISOString(), kind: kind ?? "rule", category, text: t, status: "proposed" };
+// propose_learning — four layers (hub design, docs/hub/DESIGN.md §6). Layer 1 principle, layer 2 claims to verify,
+// layer 3 context with names stripped, layer 4 occurrence (count starts at 1; the hub adds up across submitters by fingerprint).
+// `text` alone is still accepted so older agents keep working; it is stored as layer 0 (unstructured) and flagged for a person.
+const principleSchema = z.object({
+  principle: z.string().min(5).max(400),
+  anti_pattern: z.string().min(5).max(400),
+  why: z.string().min(5).max(300),
+  check: z.string().min(5).max(300),
+});
+const claimSchema = z.object({
+  claim: z.string().min(5).max(400),
+  source_url: z.string().url().max(500).optional(),
+  checked: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+});
+const contextSchema = z.object({
+  stage: z.enum(LIFECYCLE),
+  fine_stage: z.string().max(32).optional(),
+  stack_type: z.string().max(64).optional(),
+  product_type: z.string().max(64).optional(),
+  severity: z.enum(["near_miss", "delay", "loss"]).optional(),
+  cost_days: z.number().min(0).max(3650).optional(),
+  cost_money_usd: z.number().min(0).optional(),
+  cost_is_estimate: z.boolean().optional(),
+});
+const PII_PATTERNS: [string, RegExp][] = [
+  ["email", /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/],
+  ["phone", /(?<!\d)(\+\d{1,3}[\s-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}(?!\d)/],
+  ["secret", /\b(sk_(live|test)_[A-Za-z0-9]{8,}|AKIA[0-9A-Z]{12,}|ghp_[A-Za-z0-9]{20,}|xox[abp]-[A-Za-z0-9-]{10,}|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,})/],
+  ["private_key", /-----BEGIN [A-Z ]*PRIVATE KEY-----/],
+];
+const piiHits = (o: unknown) => { const t = JSON.stringify(o); return PII_PATTERNS.filter(([, re]) => re.test(t)).map(([k]) => k); };
+const fingerprint = (s: string) => { let h = 0x811c9dc5; for (const ch of s.toLowerCase().replace(/[^a-z0-9\u3040-\u30ff\u4e00-\u9fff]+/g, " ").trim()) { h ^= ch.codePointAt(0)!; h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
+
+server.tool("propose_learning", "Propose a learning in four layers. Appends to the inbox only; the master is never edited. Layer 1 `principle` {principle, anti_pattern, why, check(yes/no)}; layer 2 `claims` [{claim, source_url?, checked?}] = concrete facts kept as claims to verify (never asserted as verified here); layer 3 `context` {stage, fine_stage?, stack_type?, product_type?, severity?, cost_days?, cost_money_usd?} with no product, project or personal names; layer 4 occurrence starts at 1 and is counted across submitters by fingerprint. `text` alone is accepted for older agents and stored unstructured. Submissions containing an email, phone number or secret are rejected. kind: rule (default) | component_map_update.",
+  { category: z.string().min(1).max(64),
+    kind: z.enum(["rule", "component_map_update"]).optional(),
+    text: z.string().min(5).max(2000).optional(),
+    principle: principleSchema.optional(),
+    claims: z.array(claimSchema).max(20).optional(),
+    context: contextSchema.optional(),
+  }, async ({ category, kind, text: t, principle, claims, context }) => {
+    if (!t && !principle) return err("Give either `principle` {principle, anti_pattern, why, check} or `text`.");
+    const pii = piiHits({ t, principle, claims, context, category });
+    if (pii.length) return err(`Rejected: looks like it contains ${pii.join(", ")}. Strip personal data and secrets; describe the pattern, not the person.`);
+    const rec = {
+      ts: new Date().toISOString(), kind: kind ?? "rule", category, status: "proposed",
+      schema: "blueprint.learning/v2",
+      layers: {
+        principle: principle ?? null,
+        claims: (claims ?? []).map(c => ({ ...c, verified: false })),
+        context: context ?? null,
+        occurrence: { count: 1, fingerprint: fingerprint(principle?.principle ?? t ?? "") },
+      },
+      ...(t ? { text: t } : {}),
+      needs_structuring: !principle,
+    };
     fs.mkdirSync(path.dirname(INBOX), { recursive: true });
     fs.appendFileSync(INBOX, JSON.stringify(rec) + "\n");
-    return json({ saved: true, inbox: "mcp/inbox/learnings.jsonl", record: rec });
+    return json({ saved: true, inbox: "mcp/inbox/learnings.jsonl", record: rec,
+      next: principle ? "A person verifies each claim against a primary source before it enters the catalog." : "Unstructured: a person will split it into principle / claims / context." });
   });
 
 await server.connect(new StdioServerTransport());

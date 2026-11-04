@@ -1,0 +1,1646 @@
+# Blueprint Hub — project map (shape: elements/project-map.template.yaml) — CREATIVITY IS EVERYWHERE, LLC
+# Generated with draft_project_map on 2026-11-04, then edited by hand. Owner decides; see hub_decisions for the decisions the brief made.
+domain: project_map
+name: Blueprint Hub (hosted MCP)
+goal: >-
+  One central hosted Blueprint MCP server that bots, friends' AIs and later public users connect to after consenting to terms; it serves the
+  catalog and collects in-flow learnings as 4-layer submissions reviewed before merge.
+profile:
+  audience: public
+  platform: web
+  money: free
+  country: global
+elements:
+  - el.experience
+  - el.product
+  - el.business
+  - el.marketing
+  - el.brand
+  - el.maintenance
+  - el.security
+choices:
+  - element: el.product
+    topic: database
+    stage: launch
+    lane: tech
+    label_ja: データの置き場所
+    status: open
+    options:
+      - db.supabase
+      - db.firestore
+      - db.neon
+    ai_pick: db.neon
+    reason: >-
+      Options list has no Cloudflare D1; of the listed options Neon (serverless Postgres, scale-to-zero, no pause) is the fallback if D1 is
+      outgrown. Proposed addition: db.cloudflare-d1 (see proposed_catalog_additions).
+    rejected:
+      - option: db.supabase
+        why: see get_comparison
+      - option: db.firestore
+        why: 表どうしをつないで集計したい時（売上の一覧など）、あとで別の場所へ移したい時
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - build_vs_buy
+    last_checked: '2026-10-28'
+  - element: el.product
+    topic: analytics
+    stage: launch
+    lane: ux
+    label_ja: 使われ方の計測
+    status: open
+    options:
+      - an.posthog
+      - an.vercel-analytics
+    ai_pick: an.posthog
+    reason: For the consent/key pages only. MCP calls are logged as counts per key, not as product analytics; no PII in events.
+    rejected:
+      - option: an.vercel-analytics
+        why: どの画面で離れたかなど、使われ方を細かく見たい時
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - hosting
+    last_checked: '2026-10-28'
+  - element: el.experience
+    topic: ui_patterns
+    stage: idea
+    lane: ui
+    label_ja: 画面づくりの約束
+    status: deferred
+    options:
+      - ui_ux.primary-action-color
+      - ui_ux.selected-state-tint
+      - ui_ux.hints-on-demand
+      - ui_ux.short-scannable-copy
+    ai_pick: ''
+    reason: 'Same as ui_library: reuse the app''s existing rules; revisit when the review UI is built (phase 2).'
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked: []
+    depends_on: []
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.business
+    topic: business_setup
+    stage: launch
+    lane: biz
+    label_ja: 事業の立ち上げ
+    status: deferred
+    options:
+      - biz.public-support-address
+      - biz.processor-account-per-brand
+      - biz.llc-full-formation-cost
+    ai_pick: ''
+    reason: >-
+      Company exists; no new processor account is needed for a free service. biz.public-support-address applies from phase 2 (support
+      address in the terms).
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked: []
+    depends_on:
+      - market_entry
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.business
+    topic: payments
+    stage: launch
+    lane: biz
+    label_ja: お金の受け取り
+    status: deferred
+    options:
+      - pay.stripe-checkout
+      - pay.stripe-connect
+      - pay.paddle
+      - pay.ryft
+    ai_pick: pay.paddle
+    reason: No payments. Kept deferred, not decided, so that a paid tier later re-opens it.
+    rejected:
+      - option: pay.stripe-checkout
+        why: ユーザー同士でお金が動く場（受け取り手ごとの口座と本人確認が要る）
+      - option: pay.stripe-connect
+        why: 自分だけが売る普通のお店（仕組みが大きすぎ、手間が増える）
+      - option: pay.ryft
+        why: 米国中心の販売、日本向け、公開料金で即日始めたい小規模、Stripe 並みの周辺機能（Billing/Tax/Radar 等）を一式で使いたい場合
+    decided_by: human
+    pick: ''
+    depends_on:
+      - business_setup
+      - auth
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.marketing
+    topic: launch_channels
+    stage: launch
+    lane: brand
+    label_ja: 発表する場所
+    status: deferred
+    options:
+      - gtm.producthunt
+      - gtm.hn
+      - gtm.x
+      - gtm.seo
+    ai_pick: gtm.x
+    reason: 'Same: no announcement until phase 3.'
+    rejected:
+      - option: gtm.producthunt
+        why: 一般消費者向け・地域限定サービス
+      - option: gtm.hn
+        why: マーケ色の強い文面
+      - option: gtm.seo
+        why: 検索需要がない新カテゴリ
+    decided_by: human
+    pick: ''
+    depends_on:
+      - ui_patterns
+      - analytics
+      - brand_basics
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.brand
+    topic: cross_border
+    stage: launch
+    lane: biz
+    label_ja: 海外向けの準備
+    status: deferred
+    options:
+      - axis.i18n
+      - axis.legal
+      - axis.payments_tax
+    ai_pick: ''
+    reason: Users are worldwide from phase 3; handled as legal_rules (privacy notice per region) not as a market entry.
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked: []
+    depends_on:
+      - payments
+      - market_entry
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.maintenance
+    topic: hosting
+    stage: launch
+    lane: tech
+    label_ja: 公開する場所
+    status: decided
+    options:
+      - host.vercel
+      - host.cloudflare-pages
+      - host.firebase-hosting
+    ai_pick: host.vercel
+    reason: 'Owner: keep the app UI on Vercel. The MCP server is a separate decision (hub_decisions.stack).'
+    rejected:
+      - option: host.cloudflare-pages
+        why: Next.js の機能をそのまま全部使いたい時（一部が動かないことがある）
+      - option: host.firebase-hosting
+        why: 変更ごとの確認用ページを手軽に出したいウェブ中心の時
+    decided_by: human
+    pick: host.vercel
+    depends_on:
+      - frontend
+    last_checked: '2026-10-28'
+    decision_source: owner brief 2026-11-04
+  - element: el.maintenance
+    topic: monitoring
+    stage: operate
+    lane: tech
+    label_ja: 不具合の見張り
+    status: open
+    options:
+      - mon.sentry
+      - mon.vercel-observability
+      - mon.crashlytics
+    ai_pick: mon.sentry
+    reason: Sentry free tier for the Worker (Toucan/Sentry SDK) plus Cloudflare's own analytics. mon.vercel-observability covers only the app.
+    rejected:
+      - option: mon.vercel-observability
+        why: Vercel 以外に置いている時、画面側のエラーも集めたい時
+      - option: mon.crashlytics
+        why: ウェブだけのサービス（ウェブのエラーは集められない）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - hosting
+    last_checked: '2026-10-28'
+  - element: el.maintenance
+    topic: email
+    stage: launch
+    lane: ux
+    label_ja: お知らせメール
+    status: deferred
+    options:
+      - mail.resend
+      - push.fcm
+    ai_pick: mail.resend
+    reason: 'Phase 1 bots need no mail. Phase 2: terms-change notices and key-issue mails → revisit (mail.resend is the ai pick then).'
+    rejected:
+      - option: push.fcm
+        why: 登録確認などのメールを送りたい時（メールは送れない）
+    decided_by: human
+    pick: ''
+    depends_on:
+      - hosting
+      - auth
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.maintenance
+    topic: support
+    stage: operate
+    lane: ux
+    label_ja: 問い合わせ窓口
+    status: deferred
+    options:
+      - sup.email
+      - sup.crisp
+      - sup.docs
+      - sup.status
+    ai_pick: sup.email
+    reason: 'Phase 1: GitHub issues on the repo. Phase 2+: one support address on the company domain.'
+    rejected:
+      - option: sup.crisp
+        why: 24時間対応を約束できない
+      - option: sup.docs
+        why: —
+      - option: sup.status
+        why: —
+    decided_by: human
+    pick: ''
+    depends_on:
+      - email
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.security
+    topic: auth
+    stage: launch
+    lane: tech
+    label_ja: ログイン
+    status: open
+    options:
+      - auth.supabase
+      - auth.firebase
+      - auth.clerk
+      - auth.auth0
+      - auth.better-auth
+      - auth.authjs
+      - auth.stytch
+      - auth.passkeys
+      - auth.magic
+    ai_pick: auth.better-auth
+    reason: >-
+      None of the listed options is an MCP OAuth 2.1 authorization server. Proposed addition: auth.workers-oauth-provider. Of the listed
+      options, a self-hosted library (Better Auth) is closest in shape; a vendor (Stytch) is the switch point when enterprise SSO is asked
+      for.
+    rejected:
+      - option: auth.supabase
+        why: see get_comparison
+      - option: auth.firebase
+        why: データの置き場所が Supabase の時（2か所に分かれる）
+      - option: auth.clerk
+        why: 無料・低単価で大量ユーザーの B2C（公式FAQも Supabase/Firebase を勧める）
+      - option: auth.auth0
+        why: 無料枠を超えて伸びる B2C（MAU 段階で急に高くなる）
+      - option: auth.authjs
+        why: パスワード・二段階認証・管理画面まで要る時。公式が「Better Auth の一部になった」と案内しているため、新規なら Better Auth も並べて比べる
+      - option: auth.stytch
+        why: see get_comparison
+      - option: auth.passkeys
+        why: 端末をなくした時の復旧手段がない
+      - option: auth.magic
+        why: 普通のウェブのログイン（今は財布向けの料金体系）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - database
+    last_checked: '2026-10-28'
+  - element: el.security
+    topic: protection
+    stage: launch
+    lane: tech
+    label_ja: 攻撃からの守り
+    status: open
+    options:
+      - sec.turnstile
+      - sec.vercel-firewall
+      - sec.secrets
+    ai_pick: sec.turnstile
+    reason: 'Turnstile on the consent and key-issue pages; Workers rate-limit binding per key; WAF rate rule (Free: 1 rule) on the MCP endpoint.'
+    rejected:
+      - option: sec.vercel-firewall
+        why: Vercel 以外に置いている時
+      - option: sec.secrets
+        why: 「選ぶ」ものではなく必ずやること。鍵をコードに書かない
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - hosting
+    last_checked: '2026-10-28'
+  - element: el.security
+    topic: data_protection
+    stage: launch
+    lane: rules
+    label_ja: バックアップ
+    status: open
+    options:
+      - dp.backup-3-2-1
+      - dp.backup-bucket-lock
+      - dp.backup-verify-alert
+      - dp.restore-test-monthly
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - database
+    last_checked: '2026-10-28'
+  - element: el.brand
+    topic: brand_basics
+    stage: idea
+    lane: brand
+    label_ja: ブランドの土台
+    status: open
+    options:
+      - lc.brand.11
+      - lc.brand.12
+      - lc.brand.13
+      - lc.brand.14
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on: []
+    last_checked: '2026-10-28'
+  - element: el.marketing
+    topic: growth_channels
+    stage: scale
+    lane: brand
+    label_ja: 続けて増やす方法
+    status: deferred
+    options:
+      - gtm.content
+      - gtm.referral
+      - gtm.community
+      - gtm.seo
+      - gtm.ads.meta
+    ai_pick: gtm.community
+    reason: Deliberately none until the public phase; growth is by invitation.
+    rejected:
+      - option: gtm.content
+        why: 更新を続ける人がいない
+      - option: gtm.referral
+        why: 特典目当ての不正が起きやすい商品
+      - option: gtm.seo
+        why: 検索需要がない新カテゴリ
+      - option: gtm.ads.meta
+        why: B2B の高単価
+    decided_by: human
+    pick: ''
+    depends_on:
+      - launch_channels
+      - analytics
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.experience
+    topic: app_distribution
+    stage: launch
+    lane: ux
+    label_ja: 届け方
+    status: deferred
+    options:
+      - dist.pwa
+      - dist.capacitor
+      - dist.expo
+      - dist.native
+      - dist.twa
+    ai_pick: dist.pwa
+    reason: The hub has no mobile surface; the app's distribution is the app's own map.
+    rejected:
+      - option: dist.capacitor
+        why: ウェブのコードがまだない時（最初から Expo の方が早い）
+      - option: dist.expo
+        why: Webの仕様がまだ動いている（2重保守）
+      - option: dist.native
+        why: 小さく早く確かめたい時（iPhone 用と Android 用を2回作ることになる）
+      - option: dist.twa
+        why: iPhone にも出したい時（Android だけ）
+    decided_by: human
+    pick: ''
+    depends_on:
+      - frontend
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.experience
+    topic: ui_copy
+    stage: idea
+    lane: ui
+    label_ja: 画面の言葉
+    status: deferred
+    options:
+      - ui_ux.short-scannable-copy
+      - ui_ux.plain-localized-terms
+      - ui_ux.plain-screen-labels
+      - ui_ux.no-ellipsis-truncation
+    ai_pick: ''
+    reason: Two pages in phase 1; revisit with the review UI.
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked: []
+    depends_on:
+      - brand_basics
+      - i18n
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.product
+    topic: frontend
+    stage: launch
+    lane: tech
+    label_ja: 画面の作り方
+    status: open
+    options:
+      - fe.nextjs
+      - fe.astro
+      - fe.expo
+    ai_pick: fe.nextjs
+    reason: ページもログインも1つでそろい、AIが一番うまく書ける。
+    rejected:
+      - option: fe.astro
+        why: ログイン後のアプリ本体
+      - option: fe.expo
+        why: ウェブだけで十分な時（作る量が増える）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - build_vs_buy
+    last_checked: '2026-10-28'
+  - element: el.product
+    topic: storage
+    stage: launch
+    lane: tech
+    label_ja: 画像・動画の置き場所
+    status: deferred
+    options:
+      - st.supabase-storage
+      - st.vercel-blob
+      - st.mux
+    ai_pick: st.supabase-storage
+    reason: No user files. Catalog snapshots go to R2 (not a user-facing storage decision).
+    rejected:
+      - option: st.vercel-blob
+        why: ファイルごとに細かく見られる人を決めたい時
+      - option: st.mux
+        why: 動画を扱わない時（費用が無駄になる）
+    decided_by: human
+    pick: ''
+    depends_on:
+      - database
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.product
+    topic: search
+    stage: launch
+    lane: tech
+    label_ja: 検索
+    status: open
+    options:
+      - se.postgres-fts
+      - se.algolia
+    ai_pick: se.postgres-fts
+    reason: Catalog search already exists in the MCP (`search` tool, in-memory). D1 has FTS5 if it is ever needed; no external search service.
+    rejected:
+      - option: se.algolia
+        why: 件数が少ない時（月額が無駄になる）、データの置き場所で足りる時
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - database
+    last_checked: '2026-10-28'
+  - element: el.product
+    topic: realtime
+    stage: launch
+    lane: tech
+    label_ja: すぐに反映
+    status: deferred
+    options:
+      - rt.supabase-realtime
+      - rt.firebase-rtdb
+    ai_pick: rt.supabase-realtime
+    reason: Not needed; the review queue is polled.
+    rejected:
+      - option: rt.firebase-rtdb
+        why: データの置き場所が Supabase の時
+    decided_by: human
+    pick: ''
+    depends_on:
+      - database
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.product
+    topic: ai
+    stage: launch
+    lane: tech
+    label_ja: AIの組み込み
+    status: deferred
+    options:
+      - ai.gateway
+      - ai.firebase-ai-logic
+    ai_pick: ai.gateway
+    reason: >-
+      No LLM inside the hub in phases 1–2. Phase 3 may add an LLM screen for PII/promo detection: then dp.ai-usage-caps and
+      cc.retry-with-breaker apply.
+    rejected:
+      - option: ai.firebase-ai-logic
+        why: AI の会社をあとで切り替えたい時、ウェブ中心の時
+    decided_by: human
+    pick: ''
+    depends_on:
+      - hosting
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.maintenance
+    topic: ci
+    stage: launch
+    lane: tech
+    label_ja: 自動チェック
+    status: open
+    options:
+      - ci.vercel-git
+      - ci.github-actions
+    ai_pick: ci.github-actions
+    reason: >-
+      Two deploy targets (Vercel for the app, wrangler for the Worker) must build the same catalog commit; GitHub Actions runs lint → types
+      → mcp tests → wrangler deploy from main.
+    rejected:
+      - option: ci.vercel-git
+        why: see get_comparison
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - hosting
+    last_checked: '2026-10-28'
+  - element: el.business
+    topic: build_vs_buy
+    stage: idea
+    lane: tech
+    label_ja: 作るか借りるか
+    status: open
+    options:
+      - bvb.platform
+      - bvb.api
+      - bvb.build
+    ai_pick: bvb.platform
+    reason: 最初は全部入りのサービスで早く確かめ、強みになる所だけ後で作る。
+    rejected:
+      - option: bvb.api
+        why: つなぎのコードも保守したくない
+      - option: bvb.build
+        why: 検証前、保守できる人がいない、規制対応を自分で持てない
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - idea_validation
+    last_checked: '2026-10-28'
+  - element: el.business
+    topic: market_entry
+    stage: idea
+    lane: biz
+    label_ja: どの国から始めるか
+    status: decided
+    options:
+      - es.us_first
+      - es.jp_en
+      - es.mor_first
+    ai_pick: es.mor_first
+    reason: >-
+      Hub is a free service of a US LLC; no sales, so the MoR question does not arise. Worldwide users are a rollout phase, not a market
+      entry.
+    rejected:
+      - option: es.jp_en
+        why: ''
+      - option: es.mor_first
+        why: ''
+    decided_by: human
+    pick: es.us_first
+    depends_on: []
+    last_checked: '2026-10-28'
+    decision_source: owner brief 2026-11-04
+  - element: el.business
+    topic: exit_dd
+    stage: exit
+    lane: biz
+    label_ja: 売却・終了の備え
+    status: open
+    options:
+      - dd.ip
+      - dd.oss
+      - dd.contracts
+      - dd.privacy
+      - dd.code
+      - dd.infra
+      - dd.metrics
+      - dd.billing_sources
+      - dd.sunset
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - business_setup
+      - legal_terms
+    last_checked: '2026-10-28'
+  - element: el.security
+    topic: ai_defense
+    stage: launch
+    lane: rules
+    label_ja: AIを使った攻撃への守り
+    status: open
+    options:
+      - dp.rate-limit-auth-forms
+      - dp.bot-challenge-server-verified
+      - dp.admin-phishing-resistant-mfa
+      - dp.prompt-injection-untrusted-input
+      - dp.ai-usage-caps
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - auth
+      - protection
+    last_checked: '2026-10-28'
+  - element: el.maintenance
+    topic: preview_rules
+    stage: launch
+    lane: rules
+    label_ja: 確認用ページの約束
+    status: open
+    options:
+      - ci.preview-per-pr-first
+      - ci.preview-db-isolation
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - ci
+      - database
+      - rules_ledger
+    last_checked: '2026-10-28'
+  - element: el.business
+    topic: store_rules
+    stage: launch
+    lane: rules
+    label_ja: アプリストアの決まり
+    status: deferred
+    options:
+      - policy.apple.3_1_1
+      - policy.apple.3_1_1a
+      - policy.google.payments
+    ai_pick: ''
+    reason: No store presence.
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked: []
+    depends_on:
+      - app_distribution
+      - payments
+    last_checked: '2026-10-28'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.maintenance
+    topic: scale_plan
+    stage: scale
+    lane: rules
+    label_ja: 増えた時の備え
+    status: open
+    options:
+      - scale.t0
+      - scale.t1
+      - scale.t2
+      - scale.t3
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - monitoring
+      - data_protection
+      - uptime
+    last_checked: '2026-10-28'
+  - element: el.product
+    topic: cms
+    stage: launch
+    lane: tech
+    label_ja: お客さんが更新する仕組み
+    status: deferred
+    options:
+      - cms.microcms
+      - cms.sanity
+      - cms.storyblok
+      - cms.tina
+      - cms.sheets
+      - cms.notion
+    ai_pick: cms.sanity
+    reason: Content is the catalog in Git; no CMS.
+    rejected:
+      - option: cms.microcms
+        why: 見たまま編集したい時
+      - option: cms.storyblok
+        why: スマホでの編集、無料で2人超
+      - option: cms.tina
+        why: DBの動的データ
+      - option: cms.sheets
+        why: 画像が多い、権限や下書きが要る
+      - option: cms.notion
+        why: 表示を速くしたい（画像URLが期限切れになる・回数制限あり）
+    decided_by: human
+    pick: ''
+    depends_on:
+      - frontend
+    last_checked: '2026-10-29'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.experience
+    topic: editor_ui
+    stage: launch
+    lane: ui
+    label_ja: スマホで編集する画面の部品
+    status: deferred
+    options:
+      - edit.vaul
+      - edit.dnd-kit
+      - edit.puck
+      - edit.tiptap
+      - edit.blocknote
+    ai_pick: edit.vaul
+    reason: No editing screens; review UI is a plain table (phase 2).
+    rejected:
+      - option: edit.dnd-kit
+        why: 上下ボタンで足りる時（その方が誤操作が少ない）
+      - option: edit.puck
+        why: 画面の動きを全部自分で決めたい
+      - option: edit.tiptap
+        why: 共同編集や履歴まで要る時は有料
+      - option: edit.blocknote
+        why: 細かく見た目を決めたい
+    decided_by: human
+    pick: ''
+    depends_on:
+      - ui_library
+    last_checked: '2026-10-29'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.experience
+    topic: ui_library
+    stage: launch
+    lane: ui
+    label_ja: 画面の部品集
+    status: deferred
+    options:
+      - ui.shadcn
+      - ui.base-ui
+      - ui.react-aria
+      - ui.heroui
+      - ui.untitled
+      - ui.coss
+      - ui.daisyui
+      - ui.tremor
+      - ui.magicui
+      - ui.aceternity
+      - ui.smoothui
+      - ui.transitions
+      - ui.reactbits
+      - ui.21st
+      - ui.kibo
+    ai_pick: ui.shadcn
+    reason: Only two tiny pages (consent, key issue) in phase 1; reuse the app's components.
+    rejected:
+      - option: ui.base-ui
+        why: —
+      - option: ui.react-aria
+        why: —
+      - option: ui.heroui
+        why: 独自ブランドを強く出したい
+      - option: ui.untitled
+        why: 1人で安く
+      - option: ui.coss
+        why: —
+      - option: ui.daisyui
+        why: 細かい動き
+      - option: ui.tremor
+        why: —
+      - option: ui.magicui
+        why: アプリの作業画面で多用
+      - option: ui.aceternity
+        why: アプリの作業画面（重い・動きすぎ）
+      - option: ui.smoothui
+        why: アプリ画面
+      - option: ui.transitions
+        why: そのまま全部コピー
+      - option: ui.reactbits
+        why: アプリ画面
+      - option: ui.21st
+        why: 品質と作者ごとのライセンスを確かめずに使う
+      - option: ui.kibo
+        why: —
+    decided_by: human
+    pick: ''
+    depends_on:
+      - frontend
+      - brand_basics
+      - ui_patterns
+    last_checked: '2026-10-29'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.product
+    topic: i18n
+    stage: idea
+    lane: tech
+    label_ja: 多言語化のしくみ
+    status: deferred
+    options:
+      - i18n.next-intl
+      - i18n.i18next
+      - i18n.formatjs
+      - i18n.lingui
+      - i18n.paraglide
+    ai_pick: i18n.next-intl
+    reason: The MCP speaks ids + Japanese/English text already present in the catalog; consent pages ship JA/EN from the app's message keys.
+    rejected:
+      - option: i18n.i18next
+        why: ICU を標準で使いたい（プラグインが要る）
+      - option: i18n.formatjs
+        why: 小さく始めたい（書き方が冗長）
+      - option: i18n.lingui
+        why: キーを手で設計したい
+      - option: i18n.paraglide
+        why: 実績や情報量を重視（比較的新しい）
+    decided_by: human
+    pick: ''
+    depends_on:
+      - frontend
+      - market_entry
+    last_checked: '2026-10-30'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.product
+    topic: idea_validation
+    stage: idea
+    lane: ux
+    label_ja: 需要の確かめ方
+    status: open
+    options:
+      - val.tally
+      - val.lp-own
+      - val.carrd
+      - val.framer
+      - val.typeform
+      - val.google-forms
+    ai_pick: val.tally
+    reason: 無料で回答数に上限がなく、どの紹介ページにも埋め込める。ホストが決まったら本番側の LP に移す。
+    rejected:
+      - option: val.lp-own
+        why: まだ何もホストしていない時（作る手間が検証より大きい）
+      - option: val.carrd
+        why: 本番サイトと同じドメイン・デザインで続けたい時（後で作り直す）
+      - option: val.framer
+        why: 独自ドメインを無料で使いたい時（有料プランから）
+      - option: val.typeform
+        why: 無料で回答数を集めたい時（無料の回答数は少ない。料金ページに数値なし）
+      - option: val.google-forms
+        why: 見た目や埋め込みをブランドに合わせたい時
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - problem_discovery
+    last_checked: '2026-11-02'
+  - element: el.product
+    topic: validation_rules
+    stage: idea
+    lane: rules
+    label_ja: 作る前の約束
+    status: open
+    options:
+      - val.alternatives-first
+      - val.strangers-not-friends
+      - val.pay-signal
+      - val.spec-edge-cases
+      - val.north-star-to-money
+      - val.pmf-40
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - idea_validation
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: pricing_model
+    stage: launch
+    lane: biz
+    label_ja: 値段のつけ方
+    status: open
+    options:
+      - pm.free-trial
+      - pm.freemium
+      - pm.usage
+      - pm.one-time
+      - pm.seats
+    ai_pick: pm.freemium
+    reason: money=free. The hub is free for consenting users; the only cap to write down is the per-key rate limit and the submission quota.
+    rejected:
+      - option: pm.free-trial
+        why: 価値が出るまで数週間かかる、または使う人が増えるほど価値が増えるもの
+      - option: pm.usage
+        why: 請求額が読めないと嫌がる個人向け（上限や定額の組み合わせが要る）
+      - option: pm.one-time
+        why: 保守・サーバー・AI の費用がずっとかかるもの（売上が止まり費用が続く）
+      - option: pm.seats
+        why: 1人利用が主、または席を共有されやすいもの
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - payments
+      - idea_validation
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: pricing_rules
+    stage: launch
+    lane: rules
+    label_ja: 値段の約束
+    status: deferred
+    options:
+      - pr.unit-cost-before-price
+      - pr.cancel-as-easy-as-signup
+      - pr.free-tier-cap
+      - pr.refund-policy-written
+      - pr.price-change-notice
+      - pr.tax-handling-decided
+    ai_pick: ''
+    reason: Depends on pricing_model; only pr.free-tier-cap applies (per-key quotas written in the terms).
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked: []
+    depends_on:
+      - pricing_model
+    last_checked: '2026-11-02'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.business
+    topic: legal_terms
+    stage: launch
+    lane: biz
+    label_ja: 規約とプライバシー
+    status: open
+    options:
+      - lt.termly
+      - lt.iubenda
+      - lt.getterms
+      - lt.termageddon
+      - lt.lawyer
+    ai_pick: lt.lawyer
+    reason: >-
+      Terms include a contribution licence, a privacy notice for a global free service and an acceptable-use policy; a generator does not
+      cover contribution licences. AI draft in docs/hub/TERMS-draft.md, then counsel review before the friends phase.
+    rejected:
+      - option: lt.termly
+        why: see get_comparison
+      - option: lt.iubenda
+        why: 月 5,000 PV を超えるサイトを無料で済ませたい時（超えるとバナーがその月は止まる）
+      - option: lt.getterms
+        why: Cookie 同意の管理まで要る時
+      - option: lt.termageddon
+        why: 無料で始めたい時（無料プランなし）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - business_setup
+      - data_protection
+      - market_entry
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: legal_rules
+    stage: launch
+    lane: rules
+    label_ja: 法律まわりの約束
+    status: open
+    options:
+      - lt.policy-matches-practice
+      - lt.consent-before-tracking
+      - lt.required-disclosures-by-country
+      - lt.age-gate-decided
+      - lt.terms-versioned
+      - lt.ai-disclosure
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - legal_terms
+    last_checked: '2026-11-02'
+  - element: el.marketing
+    topic: launch_rules
+    stage: launch
+    lane: rules
+    label_ja: 公開日の約束
+    status: open
+    options:
+      - la.launch-plan-t14
+      - la.rollback-owner
+      - la.support-on-launch-day
+      - la.preview-noindex
+      - la.pr-disclosure
+      - la.seo-basics
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - launch_channels
+      - support
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: backup_dr
+    stage: operate
+    lane: tech
+    label_ja: 戻せる備え
+    status: open
+    options:
+      - bk.dump-to-r2
+      - bk.supabase-builtin
+      - bk.neon-restore
+      - bk.firestore-pitr
+      - bk.backblaze-b2
+    ai_pick: bk.dump-to-r2
+    reason: どの DB でも同じ手順で費用ほぼゼロ、別の会社に置ける。付属の復元は「あれば使う」。
+    rejected:
+      - option: bk.supabase-builtin
+        why: Free のまま（バックアップなし）、または別事業者コピーを 1 つも持っていない時
+      - option: bk.neon-restore
+        why: 数日前に戻したい（Free は 6 時間・履歴 1GB まで）
+      - option: bk.firestore-pitr
+        why: 課金未連携（Spark）のまま（どちらも使えない）
+      - option: bk.backblaze-b2
+        why: 主クラウドと同じ会社に置いて済ませたい時（別事業者の意味がない）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - database
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: backup_rules
+    stage: operate
+    lane: rules
+    label_ja: 戻せる約束
+    status: open
+    options:
+      - bk.rpo-rto-written
+      - bk.restore-drill-timed
+      - bk.no-live-secrets-in-backups
+      - dp.backup-verify-alert
+      - dp.backup-bucket-lock
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - backup_dr
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: cost_control
+    stage: operate
+    lane: tech
+    label_ja: お金の上限
+    status: open
+    options:
+      - cc.vercel-spend
+      - cc.supabase-spend-cap
+      - cc.ai-gateway-budget
+      - cc.gcp-budget
+      - cc.github-actions-budget
+    ai_pick: cc.vercel-spend
+    reason: >-
+      The app is already on Vercel Pro; the Worker side has no spend-cap product, so the cap is 'stay on Workers Free until the switch
+      point, then Paid with a billing alert'. Proposed addition: cc.cloudflare-billing-alert.
+    rejected:
+      - option: cc.supabase-spend-cap
+        why: 止まるより払いたい本番（キャップを切る判断を書面で）。計算・ブランチ・独自ドメイン・PITR は対象外
+      - option: cc.ai-gateway-budget
+        why: 自分の鍵を持ち込む（BYOK）分は予算の対象外
+      - option: cc.gcp-budget
+        why: 通知だけで安心する時
+      - option: cc.github-actions-budget
+        why: 公開リポジトリ（無料・無制限）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - hosting
+      - database
+      - ai
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: cost_rules
+    stage: operate
+    lane: rules
+    label_ja: お金の約束
+    status: open
+    options:
+      - cc.alert-50-80
+      - cc.kill-switch-tested
+      - cc.commercial-terms-before-first-sale
+      - cc.monthly-cost-sheet
+      - cc.retry-with-breaker
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - cost_control
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: uptime
+    stage: operate
+    lane: tech
+    label_ja: 落ちていないかの見張り
+    status: open
+    options:
+      - mon.uptimerobot
+      - mon.betterstack
+      - sup.status
+    ai_pick: mon.uptimerobot
+    reason: 無料で 50 サイト・5 分おき・ステータスページ 1 つ。1 人運用の最初はこれで足りる。
+    rejected:
+      - option: mon.betterstack
+        why: 無料で 10 サイト超を見張りたい時（UptimeRobot の方が多い）
+      - option: sup.status
+        why: —
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - monitoring
+      - hosting
+    last_checked: '2026-11-02'
+  - element: el.security
+    topic: secrets_sharing
+    stage: operate
+    lane: tech
+    label_ja: 鍵とパスワードの置き場
+    status: open
+    options:
+      - ho.bitwarden
+      - ho.1password
+      - ho.doppler
+      - ho.host-env-vars
+    ai_pick: ho.bitwarden
+    reason: >-
+      Company vault; Worker secrets via wrangler secret; KV encryption key and GitHub App key stored there with a second person's access
+      (handoff_rules).
+    rejected:
+      - option: ho.1password
+        why: 無料で始めたい時（無料プランなし）
+      - option: ho.doppler
+        why: ホスト 1 つで環境変数の画面で足りる時（ho.host-env-vars）
+      - option: ho.host-env-vars
+        why: 同じ鍵を複数ホストに手で配る時（同期ミス）
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - hosting
+      - ci
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: handoff_rules
+    stage: operate
+    lane: rules
+    label_ja: 引き継ぎの約束
+    status: open
+    options:
+      - ho.access-inventory
+      - ho.company-owned-accounts
+      - ho.runbook-top5
+      - ho.contractor-ip-assignment
+      - ho.bus-factor-two
+      - ho.offboarding-rotate
+      - ho.hire-trigger-written
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - secrets_sharing
+      - backup_rules
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: exit_route
+    stage: exit
+    lane: biz
+    label_ja: 売り方
+    status: deferred
+    options:
+      - xt.direct-outreach
+      - xt.acquire
+      - xt.flippa
+    ai_pick: xt.direct-outreach
+    reason: Not applicable yet; the exit question for the hub is 'hand the data back' (sunset_rules), not a sale.
+    rejected:
+      - option: xt.acquire
+        why: 成約手数料（6〜8%）より直接打診の方が安い相手がいる時
+      - option: xt.flippa
+        why: 手数料の帯の対応が読めないまま出す時（出品前に見積もり画面で確認）
+    decided_by: human
+    pick: ''
+    depends_on:
+      - exit_dd
+    last_checked: '2026-11-02'
+    decision_source: design 2026-11-04 (docs/hub/DESIGN.md); owner to confirm
+  - element: el.maintenance
+    topic: sbom_tool
+    stage: exit
+    lane: tech
+    label_ja: 部品表の出し方
+    status: open
+    options:
+      - xt.syft
+      - xt.fossa
+    ai_pick: xt.syft
+    reason: 無料で CI に 1 行。売却の調査で求められる部品表を初日から出せる。
+    rejected:
+      - option: xt.fossa
+        why: 無料の SBOM で足りる時
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - ci
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: sunset_rules
+    stage: exit
+    lane: rules
+    label_ja: 終わり方の約束
+    status: open
+    options:
+      - xs.notice-before-shutdown
+      - xs.export-then-delete
+      - xs.cancel-every-subscription
+      - xs.redirect-and-archive
+      - xs.numbers-regenerable
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - exit_dd
+      - cost_rules
+    last_checked: '2026-11-02'
+  - element: el.product
+    topic: problem_discovery
+    stage: idea
+    lane: ux
+    label_ja: 困りごとの確かめ
+    status: open
+    options:
+      - lc.discover.01
+      - lc.discover.02
+      - lc.discover.04
+      - lc.strategy.06
+      - lc.strategy.08
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on: []
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: rules_ledger
+    stage: idea
+    lane: rules
+    label_ja: 最初に守る約束
+    status: decided
+    options:
+      - rules.R-004
+      - rules.R-012
+      - rules.R-016
+      - rules.R-022
+      - rules.R-030
+    ai_pick: ''
+    reason: The brief invokes R-030 (stack comparison), R-004 (company domain only), R-022 (say what was excluded) and the no-personal-names rule.
+    rejected: []
+    decided_by: human
+    pick: ''
+    checked:
+      - rules.R-004
+      - rules.R-012
+      - rules.R-016
+      - rules.R-022
+      - rules.R-030
+    depends_on: []
+    last_checked: '2026-11-02'
+    decision_source: owner brief 2026-11-04
+  - element: el.product
+    topic: backend
+    stage: launch
+    lane: tech
+    label_ja: 裏側の処理の置き場所
+    status: open
+    options:
+      - be.route-handlers
+      - be.cloud-run
+    ai_pick: be.cloudflare-workers
+    reason: >-
+      The MCP server has no screens to sit next to; the R-030 comparison in docs/hub/stack-comparison.yaml picks Workers (free tier without
+      a non-commercial clause, OAuth provider library, D1/Queues/KV in one account). Owner expectation matches; needs the owner's explicit
+      OK.
+    rejected:
+      - option: be.route-handlers
+        why: see get_comparison
+      - option: be.cloud-run
+        why: see get_comparison
+    decided_by: ''
+    pick: ''
+    depends_on:
+      - frontend
+      - hosting
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: dd_metrics
+    stage: operate
+    lane: biz
+    label_ja: 1日目から残す数字
+    status: open
+    options:
+      - dd.users
+      - dd.money
+      - dd.cohort
+      - dd.infra
+      - dd.safety
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - analytics
+      - monitoring
+    last_checked: '2026-11-02'
+  - element: el.maintenance
+    topic: sunset_plan
+    stage: exit
+    lane: biz
+    label_ja: きれいに終わる・引き渡す
+    status: open
+    options:
+      - dd.sunset
+      - dd.code
+      - dd.infra
+      - dd.metrics
+      - dd.billing_sources
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - exit_dd
+      - dd_metrics
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: legal_basics
+    stage: launch
+    lane: rules
+    label_ja: 規約・返金・税の決まり
+    status: open
+    options:
+      - lc.legal.30
+      - lc.legal.31
+      - lc.legal.32
+      - lc.legal.33
+      - lc.pricing.35
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - payments
+      - market_entry
+    last_checked: '2026-11-02'
+  - element: el.business
+    topic: planning_pass
+    stage: idea
+    lane: biz
+    label_ja: 計画の手順
+    status: open
+    options:
+      - fs.A
+      - fs.C
+      - fs.E
+      - fs.D
+      - fs.F
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - problem_discovery
+    last_checked: '2026-11-03'
+  - element: el.maintenance
+    topic: foresight_traps
+    stage: launch
+    lane: rules
+    label_ja: 現場の罠
+    status: open
+    options:
+      - fs.L01
+      - fs.L03
+      - fs.L04
+      - fs.L05
+      - fs.L14
+    ai_pick: ''
+    reason: ''
+    rejected: []
+    decided_by: ''
+    pick: ''
+    checked: []
+    depends_on:
+      - hosting
+    last_checked: '2026-11-03'
+version: '2026-11-04'
+owner: CREATIVITY IS EVERYWHERE, LLC
+source_of_decisions: owner brief 2026-11-04
+how_to_read: >-
+  Produced by the MCP tool draft_project_map(profile) on 2026-11-04 and then edited: status decided/deferred only where the owner's brief
+  determines it; everything else is open with an ai_pick and a reason. Nothing here is a decision until the owner says so.
+hub_decisions:
+  - id: hub.topology
+    decision: >-
+      One central hosted MCP server. All bots, friends' AIs and later public users connect to the same endpoint; the catalog they read is
+      one commit of this repository.
+    decided_by: human
+    source: owner brief 2026-11-04
+    rejected:
+      - option: Each user runs the stdio server locally (status quo)
+        why: No shared learning intake, no occurrence counting across submitters, stale catalogs.
+      - option: Per-tenant servers
+        why: Multiplies auth, deploys and review queues; nothing to count across.
+  - id: hub.access
+    decision: >-
+      Access only after the user has agreed to the terms. Two credential types issued after consent: OAuth 2.1 tokens (human-driven MCP
+      clients) and API keys (headless bots). Both are bound to the terms version accepted.
+    decided_by: human
+    source: owner brief 2026-11-04
+  - id: hub.intake_in_flow
+    decision: >-
+      Learnings are captured in-flow at each stage gate: the AI asks 'what happened that was not planned?' and 'what would you have needed
+      to know?' and submits right then. No batch retrospectives, no scheduled collection.
+    decided_by: human
+    source: owner brief 2026-11-04
+    evidence:
+      - Batch requests produced input exactly once.
+      - Daily collection was mostly empty.
+  - id: hub.four_layers
+    decision: >-
+      Every submission keeps four layers: (1) principle / anti-pattern / one-line why / yes-no check; (2) concrete facts as claims to
+      verify, kept not discarded, verified against a primary source before entering the catalog with source + checked date, unverifiable
+      ones stay 'unverified' and are prioritised by count; (3) context (stage, stack type, product type, cost in days/money) with names
+      stripped; (4) occurrence count across submitters. Project-specific taste is dropped.
+    decided_by: human
+    source: owner brief 2026-11-04
+    evidence:
+      - Concrete facts were the most valuable part of lessons.
+      - 21 lessons carry verified:true with a text note as source and no URL (catalog/foresight.yaml, counted 2026-11-04).
+  - id: hub.merge_gates
+    decision: >-
+      Before anything enters core: corroboration across submitters, no contradiction with existing items, spam / PII / promo filter. Single
+      high-stakes items (legal, security, money) go to owner review even without corroboration.
+    decided_by: human
+    source: owner brief 2026-11-04
+  - id: hub.review_mode
+    decision: >-
+      Start fully human-reviewed. Move about half of the gates to automation later (schema, PII/secret scan, fingerprint dedup, occurrence
+      counting, source-URL reachability); keep contradiction judgement, pick changes and legal items human.
+    decided_by: human
+    source: owner brief 2026-11-04
+  - id: hub.rollout
+    decision: 'Phases: bots (own agents) → friends (invited) → public. Each phase has numeric exit criteria (docs/hub/DESIGN.md §10).'
+    decided_by: human
+    source: owner brief 2026-11-04
+  - id: hub.stack
+    decision: >-
+      Cloudflare Workers (Agents SDK createMcpHandler, workers-oauth-provider, D1, Queues, KV, R2) for the MCP server; the app UI stays on
+      Vercel. R-030 comparison: docs/hub/stack-comparison.yaml.
+    decided_by: ai
+    status: proposed — owner said this was the expected outcome; confirm before any resource is created
+    source: design 2026-11-04
+  - id: hub.terms_legal_review
+    decision: >-
+      docs/hub/TERMS-draft.md is a draft and is not published until counsel has reviewed the flagged items (contribution licence, privacy
+      notice, governing law, age limit, data deletion vs. occurrence counts).
+    decided_by: human
+    source: owner brief 2026-11-04
+proposed_catalog_additions:
+  - id: host.cloudflare-workers-mcp
+    domain: hosting
+    why: Hosting option for an MCP server; the existing host.cloudflare-pages row describes static sites.
+  - id: auth.workers-oauth-provider
+    domain: auth
+    why: >-
+      OAuth 2.1 authorization + resource server library for Workers (RFC 9728, PKCE, RFC 8707, CIMD, DCR). Pin >= 0.0.5 (CVE-2025-4143,
+      CVE-2025-4144).
+  - id: db.cloudflare-d1
+    domain: database
+    why: SQLite at the edge, 5 GB free, 100k rows written/day free.
+  - id: queue.cloudflare-queues
+    domain: backend
+    why: 10k ops/day free, 24 h retention on Free.
+  - id: cc.cloudflare-billing-alert
+    domain: cost_control
+    why: Cloudflare has billing notifications but no hard spend cap; write that down as a cost_rules check.
+  - id: lesson hub.verified-needs-url
+    domain: freshness
+    why: verified:true requires a primary-source URL and a checked date; a text note is not a source.
+  - id: lesson hub.claims-stay-unverified
+    domain: freshness
+    why: Concrete facts enter as claims with verified:false and are never promoted by the submitter.
+  - id: lesson hub.capture-at-gate
+    domain: lifecycle
+    why: Ask for surprises at each stage gate, not in a retrospective; batch asks produce one answer.
+  - id: lesson hub.oauth-kv-write-cap
+    domain: auth
+    why: >-
+      On Workers Free, KV allows 1,000 writes/day; each OAuth grant costs several writes, so a login-heavy day hits the cap before the
+      request cap.
+  - id: lesson hub.mcp-sessionless
+    domain: backend
+    why: MCP 2026-07-28 removed protocol sessions; keep per-user state keyed by the authenticated user, never by a session id.
+learnings:
+  - Concrete facts were the most valuable part of lessons (owner, local experience).
+  - 21 lessons claimed verified with no URL source (catalog/foresight.yaml, 2026-11-04 count).
+  - Batch requests for lessons produced input once; daily collection was mostly empty.
+  - >-
+    McpAgent is deprecated and feature-frozen (Agents SDK v0.20.0); design on createMcpHandler + MCP SDK v2 (spec 2026-07-28, no sessions,
+    Streamable HTTP only). Found 2026-11-04 while comparing stacks.
+  - >-
+    The MCP authorization spec requires RFC 9728 metadata, audience validation and no token passthrough; API keys are fine as long as the
+    server itself validates them and never forwards them.
+progress:
+  - stage: idea
+    label: IDEA
+    ja: 構想
+    decided: 2
+    total: 11
+    deferred: 3
+  - stage: launch
+    label: LAUNCH
+    ja: 出す
+    decided: 1
+    total: 32
+    deferred: 14
+  - stage: operate
+    label: OPERATE
+    ja: 回す
+    decided: 0
+    total: 10
+    deferred: 1
+  - stage: scale
+    label: SCALE
+    ja: 増やす
+    decided: 0
+    total: 2
+    deferred: 1
+  - stage: exit
+    label: EXIT
+    ja: 終える
+    decided: 0
+    total: 5
+    deferred: 1

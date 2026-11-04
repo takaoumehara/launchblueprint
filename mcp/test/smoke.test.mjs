@@ -79,11 +79,28 @@ test("all tools respond", async () => {
     assert.ok(JSON.parse(await call("ui_ux_checklist", { phase: "design" })).checklist.every(r => r.id.startsWith("ui_ux.")));
     await call("propose_learning", { text: "smoke test learning", category: "test" });
     await call("propose_learning", { text: "map: add color.danger token", category: "ui_ux", kind: "component_map_update" });
+    // four layers: principle / claims to verify / context / occurrence
+    const layered = JSON.parse(await call("propose_learning", { category: "cost_control",
+      principle: { principle: "Read the free plan's commercial terms before the first sale.", anti_pattern: "Taking payment on a hobby plan.", why: "The first sale flips several services into violation at once.", check: "Is every free plan confirmed commercial-OK before the first sale?" },
+      claims: [{ claim: "Hobby plan is restricted to non-commercial personal use.", source_url: "https://vercel.com/docs/limits/fair-use-guidelines", checked: "2026-11-03" }],
+      context: { stage: "launch", fine_stage: "pricing", stack_type: "nextjs+serverless", product_type: "saas", severity: "delay", cost_days: 2, cost_is_estimate: true } }));
+    assert.equal(layered.record.schema, "blueprint.learning/v2");
+    assert.equal(layered.record.layers.claims[0].verified, false, "claims enter as unverified");
+    assert.equal(layered.record.layers.occurrence.count, 1);
+    assert.match(layered.record.layers.occurrence.fingerprint, /^[0-9a-f]{8}$/);
+    assert.equal(layered.record.needs_structuring, false);
     const lines = fs.readFileSync(inbox, "utf8").trim().split("\n").map(l => JSON.parse(l));
-    assert.equal(lines.length, 2);
+    assert.equal(lines.length, 3);
     assert.equal(lines[0].kind, "rule"); assert.equal(lines[1].kind, "component_map_update");
+    assert.equal(lines[0].needs_structuring, true, "text-only is flagged for a person to structure");
     const badKind = await c.callTool({ name: "propose_learning", arguments: { text: "xxxxx", category: "t", kind: "nope" } });
     assert.ok(badKind.isError);
+    // neither text nor principle; PII and secrets are rejected and not written
+    assert.ok((await callRaw("propose_learning", { category: "t" })).isError);
+    assert.ok((await callRaw("propose_learning", { category: "t", text: "contact someone@example.com for the fix" })).isError);
+    assert.ok((await callRaw("propose_learning", { category: "t", text: "the key was sk_live_abcdefghijklmnop and it leaked" })).isError);
+    assert.ok((await callRaw("propose_learning", { category: "t", principle: { principle: "Rotate keys after a leak.", anti_pattern: "Leaving the key.", why: "x", check: "Rotated?" }, claims: [{ claim: "bad", source_url: "not a url" }] })).isError);
+    assert.equal(fs.readFileSync(inbox, "utf8").trim().split("\n").length, 3, "rejected submissions are not written");
     assert.ok(JSON.parse(await call("search", { query: "component-map-only" })).count > 0);
     assert.ok(ld.references.includes("component-map-template") && ld.references.includes("capsule-template"));
     assert.ok((await callRaw("get_catalog", { domain: "../../etc/passwd" })).isError);

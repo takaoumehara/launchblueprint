@@ -1,0 +1,154 @@
+# Blueprint Hub — stack comparison for the hosted MCP server (rule R-030) — CREATIVITY IS EVERYWHERE, LLC
+# Same shape as elements/stack_comparisons.yaml. Lives here until the `mcp_hosting` decision becomes a tactic;
+# promotion path: add topic to elements/tactics.yaml (lane tech, stage launch) and move this block into stack_comparisons.yaml.
+# Numbers were read on the official pages on the `checked` date. Anything not read on an official page is verified: false.
+domain: stack_comparisons
+updated: '2026-11-04'
+comparisons:
+- topic: mcp_hosting
+  question_en: Where does the one central Blueprint MCP server run, and where do its OAuth state, submissions and review queue live?
+  services:
+  - id: host.cloudflare-workers-mcp
+    name: Cloudflare Workers + Agents SDK (createMcpHandler) + workers-oauth-provider + D1 + Queues + KV
+    free_tier: >-
+      Workers Free: 100,000 requests/day, 10 ms CPU per request, 50 subrequests/request. Durable Objects on Free (SQLite only):
+      100,000 requests/day, 5 GB storage. D1 Free: 5M rows read/day, 100,000 rows written/day, 5 GB, 10 databases.
+      Queues Free: 10,000 operations/day, 24 h retention. KV Free: 100,000 reads/day, 1,000 writes/day, 1,000 deletes/day, 1 GB.
+      R2 Free: 10 GB-month, 1M Class A, 10M Class B. No non-commercial clause on the pricing pages read.
+    paid_entry: >-
+      Workers Paid $5/month minimum: 10M requests/month then $0.30/M, 30M CPU-ms/month then $0.02/M, max 5 min per invocation;
+      D1 25B rows read + 50M rows written/month then $0.001/M and $1.00/M; Queues 1M ops/month then $0.40/M;
+      KV 10M reads + 1M writes/month then $0.50/M and $5.00/M; Durable Objects 1M requests + 400,000 GB-s/month.
+    url: https://developers.cloudflare.com/workers/platform/pricing/
+    more_urls:
+      - https://developers.cloudflare.com/workers/platform/limits/
+      - https://developers.cloudflare.com/durable-objects/platform/pricing/
+      - https://developers.cloudflare.com/d1/platform/pricing/
+      - https://developers.cloudflare.com/queues/platform/pricing/
+      - https://developers.cloudflare.com/kv/platform/pricing/
+      - https://developers.cloudflare.com/agents/model-context-protocol/transport/
+      - https://github.com/cloudflare/workers-oauth-provider
+    checked: '2026-11-04'
+    verified: true
+    notes: >-
+      McpAgent (Durable-Object-backed sessions, SSE) is deprecated and feature-frozen since Agents SDK v0.20.0; the current path is
+      the stateless `createMcpHandler` from `agents/mcp/server` with `McpServer` from `@modelcontextprotocol/server` (MCP SDK v2,
+      spec 2026-07-28, Streamable HTTP only, no protocol sessions). workers-oauth-provider gives OAuthAuthorizationServer +
+      OAuthResourceServer (RFC 9728 metadata, PKCE, RFC 8707 resource, CIMD, DCR), tokens hashed in KV; two advisories
+      (CVE-2025-4143, CVE-2025-4144) fixed in 0.0.5 — pin >= that. KV 1,000 writes/day on Free caps OAuth logins to roughly
+      200–300/day (3–5 KV writes per grant); API keys for bots avoid KV entirely.
+  - id: host.vercel-mcp-handler
+    name: Vercel Functions + mcp-handler 2.x + external Postgres (Neon) + external queue (Upstash Redis/QStash)
+    free_tier: >-
+      Vercel Hobby $0: 1M function invocations/month, 4 CPU-hours, 360 GB-hours memory, 100 GB transfer, 300 s max duration.
+      "Hobby teams are restricted to non-commercial personal use only"; over the cap you wait up to 30 days, you cannot buy more.
+      Neon Free: 100 projects, 100 CU-hours/project/month, 1 GB storage/project (20 GB account), scale-to-zero after 5 min.
+      Upstash Redis Free: 500,000 commands/month, 250 MB. mcp-handler 2.x: Streamable HTTP only, stateless, no Redis needed;
+      withMcpAuth validates tokens and issues RFC 9728 challenges but does not issue tokens or run an authorization server.
+    paid_entry: >-
+      Vercel Pro $20/month per developer seat ($20 usage credit included; Active CPU from $0.128/h, invocations $0.60/M,
+      1 TB transfer included), max 800 s (1800 s beta). Neon Launch pay-as-you-go ($0.106/CU-hour, $0.35/GB-month, no minimum).
+      Upstash pay-as-you-go $0.20 per 100,000 commands. Plus an authorization server from a vendor (Auth0 / Stytch / WorkOS /
+      Clerk) or self-built — mcp-handler does not include one.
+    url: https://vercel.com/pricing
+    more_urls:
+      - https://vercel.com/docs/plans/hobby
+      - https://vercel.com/docs/limits/fair-use-guidelines
+      - https://vercel.com/docs/functions/limitations
+      - https://vercel.com/docs/mcp/deploy-mcp-servers-to-vercel
+      - https://github.com/vercel/mcp-handler
+      - https://neon.com/pricing
+      - https://upstash.com/pricing/redis
+    checked: '2026-11-04'
+    verified: true
+  - id: host.supabase-edge-mcp
+    name: Supabase Edge Functions (Deno) + Supabase Postgres + Supabase Auth, MCP via @modelcontextprotocol/server in the function
+    free_tier: >-
+      Supabase Free $0: 500,000 Edge Function invocations/month, 500 MB database, 50,000 MAU auth, 5 GB egress, 1 GB storage,
+      2 active projects, "Free projects are paused after 1 week of inactivity."
+    paid_entry: Pro from $25/month (2M invocations then $2/M, 8 GB disk, no pause, daily backups).
+    url: https://supabase.com/pricing
+    checked: '2026-11-04'
+    verified: true
+    notes: Supabase Auth is a user login, not an MCP OAuth 2.1 authorization server with RFC 9728 metadata; that layer would still be built.
+  - id: host.deno-deploy-mcp
+    name: Deno Deploy + Deno KV or external Postgres
+    free_tier: 'Free $0: 1M requests/month, 20 GiB egress, 10 h active CPU, 5 custom domains ("For personal use and smaller projects").'
+    paid_entry: Pro $20/month (5M requests then $2/M, 200 GiB egress).
+    url: https://deno.com/deploy/pricing
+    checked: '2026-11-04'
+    verified: true
+  - id: host.fly-container-mcp
+    name: Fly.io Machine running the existing Node MCP server behind Streamable HTTP + SQLite volume or Managed Postgres
+    free_tier: 'None. Trial only: "up to 2 hours of Machine runtime or 7 days, whichever comes first." Card required afterwards.'
+    paid_entry: Pay-as-you-go, no platform fee; cheapest always-on Machine shared-cpu-1x 256 MB $2.19/month; Managed Postgres Basic $38/month.
+    url: https://docs.fly.io/about/pricing
+    checked: '2026-11-04'
+    verified: true
+  - id: host.railway-mcp
+    name: Railway service running the Node MCP server + Railway Postgres
+    free_tier: Free trial $5 one-time credit for 30 days (no card); Free plan $0 with $1/month usage credit.
+    paid_entry: Hobby $5/month including $5 of usage credits.
+    url: https://railway.com/pricing
+    checked: '2026-11-04'
+    verified: true
+  - id: host.render-mcp
+    name: Render web service running the Node MCP server
+    free_tier: not read — the pricing page loaded without plan details on 2026-11-04
+    paid_entry: not read
+    url: https://render.com/pricing
+    checked: null
+    verified: false
+  combine:
+    single: >-
+      One account (Cloudflare) holds the MCP endpoint, the OAuth authorization server, the key/consent store (KV), the submissions
+      and review queue (D1 + Queues) and the published catalog snapshot (R2). One bill, one set of logs, one secret store, one
+      spend view; the whole hub stays inside the free tiers through the bots phase.
+    combined: >-
+      Keep the web app on Vercel (already there, Pro for the company domain per R-004), the MCP server on Cloudflare, and point both
+      at the same Git repository as the source of truth. Alternatively Vercel for everything plus Neon + Upstash + an auth vendor.
+    risks: >-
+      Two deployment pipelines (Vercel + Cloudflare) must build the same catalog commit or the app and the MCP disagree on a price;
+      pin both to the main branch and show the catalog commit hash in both. The combined Vercel route adds three vendors (DB, queue,
+      auth) with three free-tier clocks and three places where user data lives; the Hobby plan is barred for a company service.
+      Cloudflare's Node compatibility is narrower than Node on Vercel/Fly: the current `mcp/src/index.ts` reads YAML from disk with
+      `fs`, which must become a build-time bundle or R2/D1 read.
+  switch_points:
+  - when: Any human (not a bot) signs in with OAuth more than about 200 times a day, or the first friend is invited
+    upgrade_to: Workers Paid $5/month
+    why: KV Free allows 1,000 writes/day and each OAuth grant writes several keys; Paid gives 1M writes/month and removes the 10 ms CPU cap (verification + YAML parsing).
+  - when: Requests exceed 80,000/day (80% of the 100,000/day Free cap) or any single day shows a Workers 1015/429 from the cap
+    upgrade_to: Workers Paid $5/month (10M requests/month included)
+    why: Free stops serving at the cap; every connected agent fails at once.
+  - when: Review queue needs more than ~8,000 queue operations/day or more than 24 h retention
+    upgrade_to: Workers Paid (1M queue ops/month) or move the queue into a D1 table polled by a Cron Trigger
+    why: Free Queues keep messages 24 h; a weekend of unreviewed submissions would be lost.
+  - when: Submissions and claims exceed 4 GB in D1 or the review UI needs cross-region reads
+    upgrade_to: D1 Paid storage ($0.75/GB-month) or Postgres on Neon Launch
+    why: D1 is 5 GB on both plans before overage; relational review tooling is easier on Postgres if the data outgrows it.
+  - when: Enterprise users ask for SSO, audit exports or a DPA
+    upgrade_to: An external authorization server (Stytch / WorkOS / Auth0) in front of the same resource server
+    why: workers-oauth-provider is a library; SSO federation, SCIM and audit logs are vendor features.
+  recommendation:
+    pick: host.cloudflare-workers-mcp
+    reason: >-
+      The MCP endpoint, the OAuth 2.1 authorization server, the consent store and the review queue fit in one free account with
+      no non-commercial clause, and the Cloudflare docs are the reference implementation of remote MCP authorization (RFC 9728
+      metadata, PKCE, resource indicators, CIMD) so the auth code is a library, not a project. The expected first paid step is
+      Workers Paid $5/month at the friends phase. The web app stays on Vercel; both deploy from the same catalog commit.
+    rejected:
+    - option: host.vercel-mcp-handler
+      why: >-
+        mcp-handler verifies tokens but issues none, so an authorization server has to come from a vendor or be built; the
+        database and queue are two more vendors with their own free-tier clocks; Hobby is non-commercial so the realistic entry
+        is $20/month before any user. Right choice if the MCP must share Next.js code with the app.
+    - option: host.supabase-edge-mcp
+      why: Free project pauses after a week idle, which is exactly the shape of a quiet bots-only phase; auth layer still has to be built.
+    - option: host.deno-deploy-mcp
+      why: Fits in the free tier and Deno runs the MCP SDK, but no OAuth-provider library of the same maturity and "personal use" wording on Free.
+    - option: host.fly-container-mcp
+      why: Runs the existing Node server unchanged (lowest porting cost) but has no free tier and needs a card on day one; keep as the fallback if Workers' Node compatibility bites.
+    - option: host.railway-mcp
+      why: Same as Fly with a $5/month floor after the trial; no free steady state.
+    - option: host.render-mcp
+      why: Pricing not read on 2026-11-04 (page loaded without plan details); unverified, so not chosen.
