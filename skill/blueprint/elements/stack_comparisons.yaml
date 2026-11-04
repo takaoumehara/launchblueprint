@@ -4,7 +4,7 @@
 #        switch_points（安い有料プランと、払った方が運用が楽になる境目：人数・データ量・運用時間）
 #        recommendation（おすすめ・理由・選ばなかったもの）
 domain: stack_comparisons
-updated: '2026-10-29'
+updated: '2026-11-03'
 comparisons:
 - topic: database
   services:
@@ -12,19 +12,19 @@ comparisons:
     free_tier: 500MB の DB・5GB 転送・1GB ファイル。1週間使わないと一時停止。無料は2プロジェクトまで
     paid_entry: Pro $25/月（8GB・毎日バックアップ7日分・停止なし）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: db.neon
     free_tier: 1プロジェクト 1GB（合計 20GB）・計算 100時間/月・5分で自動停止・転送 5GB
     paid_entry: Launch 使った分だけ（計算 $0.106/時・保存 $0.35/GB月。最低料金なし）
     url: https://neon.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: db.firestore
     free_tier: 1GiB 保存・読み取り 5万回/日・書き込み 2万回/日・削除 2万回/日・転送 10GiB/月
     paid_entry: Blaze（使った分だけ。無料分は差し引き）
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: Supabase 1社でデータ・ログイン・ファイル・すぐ反映がそろう。権限の仕組みが1つで、障害時に見る所も1か所。
@@ -54,55 +54,55 @@ comparisons:
     free_tier: 月 5万人（MAU）まで。メール・SNSログイン・匿名・基本の二段階認証
     paid_entry: Pro $25/月で月 10万人まで（その後 1人 $0.00325）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.clerk
     free_tier: 1アプリ 月 5万人（翌日以降も戻った人だけ数える）。SNS 3種まで。二段階認証・パスキーは無し
     paid_entry: Pro $25/月（年払い $20）。パスキー・二段階認証・ロゴ非表示
     url: https://clerk.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.firebase
     free_tier: 月 5万人（Identity Platform）まで。電話の SMS は1通ごとに課金
     paid_entry: 5万人を超えた分は Google Cloud の料金
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.auth0
     free_tier: 月 2.5万人・SNS ログイン無制限・パスキー・独自ドメイン1つ
     paid_entry: Essentials $35/月〜（500人まで。1,000人で $70、1万人で $700）
     url: https://auth0.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: auth.better-auth
-    free_tier: OSS 無料。ユーザーは自分の DB に残る
+    free_tier: OSS 無料（MIT）。ユーザーは自分の DB に残る
     paid_entry: —（DB・メール代だけ）
-    url: https://www.better-auth.com/
-    checked: null
-    verified: false
+    url: https://github.com/better-auth/better-auth/blob/main/LICENSE.md
+    checked: '2026-11-02'
+    verified: true
   - id: auth.authjs
-    free_tier: OSS 無料。SNS ログイン中心
+    free_tier: OSS 無料（ISC）。SNS ログイン中心。パスキーは実験的（本番非推奨）。Better Auth 傘下
     paid_entry: —
-    url: https://authjs.dev/
-    checked: null
-    verified: false
+    url: https://authjs.dev/getting-started/authentication/webauthn
+    checked: '2026-11-02'
+    verified: true
   - id: auth.passkeys
     free_tier: SimpleWebAuthn（MIT）で他の認証にパスキーを足す
     paid_entry: —
-    url: https://simplewebauthn.dev/
-    checked: null
-    verified: false
+    url: https://github.com/MasterKale/SimpleWebAuthn/blob/master/LICENSE.md
+    checked: '2026-11-02'
+    verified: true
   - id: auth.stytch
     free_tier: 1万アクティブ・SSO/SCIM 5接続まで無料。急に高くならない従量
     paid_entry: ブランド変更 $99・SSO追加 $125/接続
     url: https://stytch.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: auth.magic
     free_tier: 月1,000ウォレットまで無料（暗号資産ウォレット向けの料金体系）
     paid_entry: $99/月で2,500人
     url: https://magic.link/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: データの置き場所と同じ会社のログインを使うと、ユーザーIDと権限が自動でつながる。
@@ -144,7 +144,7 @@ comparisons:
     free_tier: 月 3,000通・1日 100通まで・独自ドメイン 3つ
     paid_entry: Pro $20/月で月 5万通（1日の上限なし）
     url: https://resend.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: mail.postmark
     name: Postmark
@@ -187,19 +187,19 @@ comparisons:
     free_tier: Hobby 無料：転送 100GB/月・関数 100万回/月。個人・非商用のみ
     paid_entry: Pro $20/月（1人。転送 1TB 込み・商用可）
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: host.cloudflare-pages
     free_tier: ビルド 月500回・同時1つ・1サイト2万ファイル・確認用ページ無制限。関数は 1日10万回まで
     paid_entry: Workers Paid $5/月〜（月1,000万回込み）
     url: https://www.cloudflare.com/plans/developer-platform/
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: host.firebase-hosting
     free_tier: 保存 10GB・転送 1日 360MB
     paid_entry: Blaze：保存 $0.026/GB・転送 $0.15/GB
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: 画面・関数・確認用ページを1社に置くと、公開作業が1回で、ログも1か所。
@@ -223,10 +223,10 @@ comparisons:
 - topic: payments
   services:
   - id: pay.stripe-checkout
-    free_tier: 月額なし。米国カード 2.9%＋30¢／件・チャージバック $15／件
+    free_tier: 月額なし。米国カード 2.9%＋30¢／件（海外カード +1.5%・通貨換算 +1%）・チャージバック $15／件
     paid_entry: 同じ（手数料だけ）。税の自動計算は別料金
-    url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    url: 'https://stripe.com/pricing'
+    checked: '2026-11-03'
     verified: true
   - id: pay.stripe-connect
     free_tier: Stripe が手数料を売り手から取る方式なら、プラットフォームの追加料金なし
@@ -286,7 +286,7 @@ comparisons:
     free_tier: 無料（オープンソース）。EAS 無料：月 iOS 15回・Android 15回のビルド、更新配信 1,000人まで
     paid_entry: Starter $19/月（ビルド代 $45 分・優先キュー・更新 3,000人）
     url: https://expo.dev/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: ウェブは Next.js 1つで画面もサーバー処理も書く。AI が一番書き慣れている。
@@ -313,13 +313,13 @@ comparisons:
     free_tier: 1GB・転送 5GB・1ファイル 50MB まで
     paid_entry: Pro $25/月（100GB・1ファイル 500GB まで）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: st.vercel-blob
     free_tier: 1GB・読み取り 1万回/月・書き込み 2千回/月・転送 10GB
     paid_entry: Pro：保存 $0.023/GB
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: st.r2
     name: Cloudflare R2
@@ -332,7 +332,7 @@ comparisons:
     free_tier: 動画の取り込み無料・視聴 月10万分無料・毎月 $20 分の利用枠
     paid_entry: 保存 1分 $0.003/月・視聴 10万分を超えたら 1分 $0.001
     url: https://www.mux.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: データの置き場所（Supabase）にファイルも置くと、誰が見られるかの決まりを1つで書ける。
@@ -370,7 +370,7 @@ comparisons:
     free_tier: 検索 月1万回・5万件・おすすめ 5千回
     paid_entry: Grow：1万回を超えたら 1,000回 $0.50・10万件を超えたら 1,000件 $0.40
     url: https://www.algolia.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: データの置き場所の中で検索すると、データを写す仕組みがいらない。
@@ -395,13 +395,13 @@ comparisons:
     free_tier: 同時接続 200・メッセージ 月200万
     paid_entry: Pro $25/月（同時 500・月500万。その後 1,000接続 $10）
     url: https://supabase.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: rt.firebase-rtdb
     free_tier: 同時接続 100・保存 1GB・転送 月10GB
     paid_entry: Blaze：保存 $5/GB・転送 $1/GB
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: rt.ably
     name: Ably
@@ -435,7 +435,7 @@ comparisons:
     free_tier: 毎月の無料クレジットあり（使えるモデルは一部・回数制限あり）
     paid_entry: AI 会社の定価そのまま（上乗せなし）。予算の上限を設定できる
     url: https://vercel.com/docs/ai-gateway/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: ai.firebase-ai-logic
     free_tier: Gemini の無料枠に従う
@@ -445,11 +445,12 @@ comparisons:
     verified: true
   - id: ai.direct
     name: AI 会社に直接つなぐ
-    free_tier: 各 AI 会社の無料枠（会社ごとに違う・要確認）
-    paid_entry: 各社の定価
-    url: https://vercel.com/docs/ai-gateway/pricing
-    checked: null
+    free_tier: 各 AI 会社の無料枠（会社ごとに違う。使う会社の料金ページで確認）
+    paid_entry: 各社の定価（例：Anthropic https://www.anthropic.com/pricing、OpenAI https://openai.com/api/pricing/、Google https://ai.google.dev/gemini-api/docs/pricing）
+    url: https://www.anthropic.com/pricing
+    checked: '2026-11-03'
     verified: false
+    note: 会社ごとに違う一般項目のため金額は書かない（未確認のまま）。URL は代表例
   combine:
     single: 1つの窓口を通すと、AI 会社を後から切り替えても書き直しが少なく、使いすぎの上限も1か所。
     combined: 各社の無料枠を足すために直接つなぐと、無料で試せる量は増える。
@@ -475,13 +476,13 @@ comparisons:
     free_tier: Hobby に含まれる（変更ごとの確認用ページ・自動公開）
     paid_entry: Pro $20/月に含まれる
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: ci.github-actions
     free_tier: 公開リポジトリは無料。非公開は月 $12 分（Linux で約2,000分）・成果物 500MB
     paid_entry: 超えた分：Linux 1分 $0.006
     url: https://docs.github.com/en/billing/concepts/product-billing/github-actions
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: ci.eas-workflows
     name: Expo EAS Workflows
@@ -512,22 +513,22 @@ comparisons:
 - topic: monitoring
   services:
   - id: mon.sentry
-    free_tier: 1人・エラー 月5万件・トレース・メール通知
-    paid_entry: Team $26/月（人数無制限・外部連携）
-    url: https://sentry.io/pricing/
-    checked: '2026-10-28'
+    free_tier: 1人・エラー 月5,000件・トレース・メール通知
+    paid_entry: Team $29/月（年払い $26、人数無制限・外部連携）
+    url: 'https://sentry.io/pricing/'
+    checked: '2026-11-03'
     verified: true
   - id: mon.crashlytics
     free_tier: 無料（アプリの落ち方の収集）
     paid_entry: —
     url: https://firebase.google.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: mon.vercel-observability
     free_tier: Hobby に含まれる（関数ログは1時間分）
     paid_entry: Pro で1日分。Observability Plus 30日分（イベント 100万件 $1.20）
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   combine:
     single: エラーは Sentry 1つに集めると、画面とサーバーの両方の失敗を1か所で見られる。
@@ -560,7 +561,7 @@ comparisons:
     free_tier: Hobby：自動の DDoS 対策・AI ボット/ボット対策ルール・独自ルール3つ・IP 遮断10件
     paid_entry: Pro：独自ルール40・回数制限 100万回 $0.50〜
     url: https://vercel.com/pricing
-    checked: '2026-10-28'
+    checked: '2026-11-03'
     verified: true
   - id: sec.secrets
     free_tier: ホストの環境変数は無料
@@ -605,7 +606,7 @@ comparisons:
     free_tier: サービス代はゼロ。代わりに作る時間・直す時間・夜中の障害対応
     paid_entry: 自分の時間（例：月10時間の保守 × 時給）
     url: null
-    checked: null
+    checked: '2026-11-03'
     verified: false
   combine:
     single: 全部入りサービス1つなら、作る量も保守も最小。
@@ -630,40 +631,40 @@ comparisons:
   services:
   - id: cms.microcms
     free_tier: Hobby 0円：API 5個・3人・転送 20GB/月（超えると翌月までAPI停止）・1万件
-    paid_entry: Team（有料・金額は料金ページで要確認）：転送 200GB・ファイル添付
+    paid_entry: Team 4,900円〜/月（税抜）：3人・API 10個・転送 200GB・ファイル添付
     url: https://microcms.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-02'
     verified: true
   - id: cms.sanity
     free_tier: Free：20人・1万件・API 25万回/月・公開データのみ・編集者ロールなし
     paid_entry: Growth $15/人/月
     url: https://www.sanity.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: cms.storyblok
-    free_tier: Starter：1人（+$15で2人まで）・API 10万回/月
+    free_tier: Starter：1人（最大2人、追加席の購入は不可）・API 10万回/月
     paid_entry: Growth $99/月（年払い $90.75）・5人
-    url: https://www.storyblok.com/pricing
-    checked: '2026-10-29'
+    url: 'https://www.storyblok.com/pricing'
+    checked: '2026-11-03'
     verified: true
   - id: cms.tina
     free_tier: Free：2人・100GB
     paid_entry: Team $29/月（年払い $24）・3人
     url: https://tina.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: cms.sheets
-    free_tier: Sheets API 無料（回数制限は要確認）／SheetDB Free：月500回
+    free_tier: Sheets API 無料（読み書き各 300回/分/プロジェクト）／SheetDB Free：月500回
     paid_entry: SheetDB $29.99/月で月1万回
     url: https://sheetdb.io/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-02'
     verified: true
   - id: cms.notion
-    free_tier: API 無料（Notion のプラン内）
+    free_tier: API 無料（Notion のプラン内）。180回/分（Business・Enterprise は 600回/分）
     paid_entry: Notion のプラン
-    url: https://developers.notion.com/
-    checked: null
-    verified: false
+    url: https://developers.notion.com/reference/request-limits
+    checked: '2026-11-02'
+    verified: true
   combine:
     single: CMS 1つに文章・画像・予約公開をまとめると、お客さんが見る管理画面も1つで迷わない。
     combined: お知らせ・価格表はシート、記事は CMS、と無料枠を分けると $0 のまま長く使える。
@@ -698,36 +699,36 @@ comparisons:
     free_tier: MIT・無料
     paid_entry: —
     url: https://github.com/emilkowalski/vaul
-    checked: null
-    verified: false
+    checked: '2026-11-02'
+    verified: true
   - id: edit.dnd-kit
     free_tier: MIT・無料
     paid_entry: —
-    url: https://dndkit.com/
-    checked: null
-    verified: false
+    url: https://github.com/clauderic/dnd-kit/blob/master/LICENSE
+    checked: '2026-11-02'
+    verified: true
   - id: edit.puck
     free_tier: MIT・無料
     paid_entry: —
-    url: https://puckeditor.com/
-    checked: null
-    verified: false
+    url: https://github.com/puckeditor/puck/blob/main/LICENSE
+    checked: '2026-11-02'
+    verified: true
   - id: edit.tiptap
     free_tier: エディタ本体 MIT・無料
     paid_entry: Start $59/月（年払い $49）：共同編集・履歴・コメント
     url: https://tiptap.dev/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: edit.blocknote
-    free_tier: MPL-2.0・無料（一部拡張は有料の可能性・要確認）
-    paid_entry: —
-    url: https://www.blocknotejs.org/
-    checked: null
-    verified: false
+    free_tier: 本体 MPL-2.0・無料（@blocknote/xl-* は GPL-3.0 か商用）
+    paid_entry: Business $195/月（年払い $2,340。xl の商用ライセンス込み）
+    url: https://www.blocknotejs.org/pricing
+    checked: '2026-11-02'
+    verified: true
   combine:
     single: Puck 1つに乗れば、部品の登録・並べ替え・設定欄が最初からそろう。
     combined: vaul（下からの入力パネル）＋ dnd-kit（並べ替え）＋ Tiptap（文字）を自分で組むと、スマホの操作感を細かく作れる。どれも無料。
-    risks: ライブラリ同士のタッチ操作がぶつかる（並べ替え中にパネルが閉じる、スクロールと誤認）。更新のたびに3つの互換を確かめる。Puck はパソコン前提の画面なので、スマホでは結局作り直しが要る。
+    risks: ライブラリ同士のタッチ操作がぶつかる（並べ替え中にパネルが閉じる、スクロールと誤認）。更新のたびに3つの互換を確かめる。Puck はパソコン前提の画面なので、スマホでは結局作り直しが要る。vaul は 2026-11 時点でリポジトリが「保守停止」と明記（安定して動くが、不具合は自分で直す前提）。
   switch_points:
   - when: 2人以上で同じページを同時に編集したい
     upgrade_to: Tiptap Start $49/月（年払い）
@@ -752,51 +753,51 @@ comparisons:
   - id: ui.shadcn
     free_tier: MIT・無料
     paid_entry: —
-    url: https://ui.shadcn.com/
-    checked: null
-    verified: false
+    url: https://github.com/shadcn-ui/ui/blob/main/LICENSE.md
+    checked: '2026-11-02'
+    verified: true
   - id: ui.base-ui
     free_tier: MIT・無料
     paid_entry: —
-    url: https://base-ui.com/
-    checked: null
-    verified: false
+    url: https://github.com/mui/base-ui/blob/master/LICENSE
+    checked: '2026-11-02'
+    verified: true
   - id: ui.react-aria
     free_tier: Apache-2.0・無料
     paid_entry: —
-    url: https://react-spectrum.adobe.com/react-aria/
-    checked: null
-    verified: false
+    url: https://github.com/adobe/react-spectrum/blob/main/LICENSE
+    checked: '2026-11-02'
+    verified: true
   - id: ui.untitled
     free_tier: React FREE（商用可・1人）
     paid_entry: React PRO SOLO $349・Figma PRO SOLO $129（買い切り。似た部品集の再販禁止）
     url: https://www.untitledui.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: ui.magicui
     free_tier: 無料版 MIT
-    paid_entry: Pro $49（買い切り・商用可・再販不可）
-    url: https://pro.magicui.design/
-    checked: '2026-10-29'
+    paid_entry: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
+    url: 'https://pro.magicui.design/'
+    checked: '2026-11-03'
     verified: true
   - id: ui.aceternity
     free_tier: 無料部品あり
     paid_entry: 1年 $169／チーム10人 $1,590
     url: https://ui.aceternity.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
   - id: ui.heroui
-    free_tier: MIT・無料
-    paid_entry: —
-    url: https://www.heroui.com/
-    checked: null
-    verified: false
+    free_tier: Apache-2.0・無料（v3 系）
+    paid_entry: HeroUI Pro（買い切り。先行販売中で金額は未掲載）
+    url: https://github.com/heroui-inc/heroui
+    checked: '2026-11-03'
+    verified: true
   - id: ui.daisyui
     free_tier: MIT・無料
     paid_entry: —
-    url: https://daisyui.com/
-    checked: null
-    verified: false
+    url: https://github.com/saadeghi/daisyui/blob/master/LICENSE
+    checked: '2026-11-02'
+    verified: true
   combine:
     single: shadcn/ui（土台は Base UI）1つなら見た目のルールが1つで、AI も一番書き慣れている。
     combined: 土台 shadcn＋Base UI／React Aria、LP の大きな演出だけ Aceternity・SmoothUI・React Bits、細かい動きは Magic UI・transitions.dev を見本に、足りない部品は 21st.dev から。
@@ -832,15 +833,15 @@ comparisons:
 - topic: i18n
   services:
   - {id: i18n.next-intl, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/next-intl', checked: '2026-10-30', verified: true}
-  - {id: i18n.i18next, free_tier: MIT・無料（react-i18next も MIT）, paid_entry: 公式 TMS の Locize は有料（金額未確認）, url: 'https://www.npmjs.com/package/i18next', checked: '2026-10-30', verified: true}
+  - {id: i18n.i18next, free_tier: MIT・無料（react-i18next も MIT）, paid_entry: 公式 TMS の Locize は Free（2,000語・1人）→ Starter $7/月, url: 'https://www.npmjs.com/package/i18next', checked: '2026-11-02', verified: true}
   - {id: i18n.formatjs, free_tier: BSD-3-Clause・無料, paid_entry: —, url: 'https://www.npmjs.com/package/react-intl', checked: '2026-10-30', verified: true}
   - {id: i18n.lingui, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/@lingui/core', checked: '2026-10-30', verified: true}
   - {id: i18n.paraglide, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/@inlang/paraglide-js', checked: '2026-10-30', verified: true}
   - {id: i18n.lint-i18next, name: eslint-plugin-i18next, free_tier: ISC・無料, paid_entry: —, url: 'https://www.npmjs.com/package/eslint-plugin-i18next', checked: '2026-10-30', verified: true}
   - {id: i18n.lint-formatjs, name: eslint-plugin-formatjs, free_tier: MIT・無料, paid_entry: —, url: 'https://www.npmjs.com/package/eslint-plugin-formatjs', checked: '2026-10-30', verified: true}
-  - {id: i18n.tms-tolgee, name: Tolgee, free_tier: Cloud 無料 3人・30,000語（自前運用も可）, paid_entry: Translate €58/月（年払い・人数無制限）, url: 'https://tolgee.io/pricing', checked: '2026-10-30', verified: true}
-  - {id: i18n.tms-crowdin, name: Crowdin, free_tier: OSS 向け無料・翻訳者人数無制限（個人向け無料枠の上限は未確認）, paid_entry: 未確認, url: 'https://crowdin.com/pricing', checked: '2026-10-30', verified: false}
-  - {id: i18n.tms-lokalise, name: Lokalise, free_tier: 未確認, paid_entry: Explorer $149/月（年払い。月払い $169）, url: 'https://lokalise.com/pricing', checked: '2026-10-30', verified: true}
+  - {id: i18n.tms-tolgee, name: Tolgee, free_tier: Cloud 無料 3人・30,000語（自前運用も可）, paid_entry: Translate €58/月（年払い・人数無制限）, url: 'https://tolgee.io/pricing', checked: '2026-11-03', verified: true}
+  - {id: i18n.tms-crowdin, name: Crowdin, free_tier: OSS 向け無料（OSI 承認ライセンス・申請制）。個人向けは公式比較ページに Freelancer $0/月 とあるが上限は未確認, paid_entry: '公式比較ページに「$50/月から」・Team $150/月、ヘルプに Team $179/月（月払い）の例。料金ページ本文は金額が読めず未確認 2026-11-03', url: 'https://crowdin.com/pricing', checked: '2026-11-03', verified: false}
+  - {id: i18n.tms-lokalise, name: Lokalise, free_tier: 無料プランなし（14日試用のみ）, paid_entry: Explorer $149/月（月払い表示）／Growth $379／Advanced $1,049, url: 'https://lokalise.com/pricing', checked: '2026-11-03', verified: true}
   combine:
     single: 1つのライブラリ＋その lint だけ。翻訳はリポジトリの JSON を AI と人で直し、CI で抜けを検査。費用ゼロで、AI がファイルを直接直せる。
     combined: ライブラリ＋lint＋翻訳管理（TMS）の無料枠。翻訳者が画面で直し、GitHub 連携で JSON に戻る。
@@ -864,3 +865,783 @@ comparisons:
     - {option: i18n.paraglide, why: 軽さと型安全は最良だが比較的新しく情報が少ない。表示速度最優先なら候補。}
     - {option: i18n.tms-lokalise, why: 小規模には高い（$149/月〜）。}
     - {option: i18n.tms-crowdin, why: コミュニティ翻訳・OSS なら有力。料金は未確認。}
+- topic: idea_validation
+  services:
+  - id: val.tally
+    free_tier: フォーム・回答ともに無制限（フェアユース。添付 1 件 10 MB まで）
+    paid_entry: Pro $24/月（年払いは 2 か月分割引）
+    url: https://tally.so/pricing
+    checked: '2026-11-03'
+    verified: true
+  - id: val.lp-own
+    free_tier: ホストの無料枠内（Vercel Hobby $0 は個人・非商用のみ。公開リンクは会社ドメイン）
+    paid_entry: Vercel Pro $20/月
+    url: https://vercel.com/pricing
+    checked: '2026-11-03'
+    verified: true
+  - id: val.carrd
+    free_tier: 無料：3 サイト・1 サイト 50 要素まで。独自ドメイン・フォーム不可・Carrd 表示あり
+    paid_entry: Pro Lite $9/年（3サイト・独自ドメイン不可）／Pro Standard $19/年（10サイト・フォーム・独自ドメイン）
+    url: https://carrd.com/pro
+    checked: '2026-11-03'
+    verified: true
+  - id: val.framer
+    free_tier: Free $0：転送 1GB・Framer ドメイン・CMS 10 コレクション・1,000 ページ・1 言語
+    paid_entry: Basic $10/月（独自ドメイン）
+    url: https://www.framer.com/pricing/
+    checked: '2026-11-03'
+    verified: true
+  - id: val.typeform
+    free_tier: 回答数に上限（料金ページに数値なし。ヘルプの検索抜粋では 10 件/月、本文は読めず未確認）
+    paid_entry: Basic $39/月（年払い $28/月）：100 回答/月・1 人
+    url: https://www.typeform.com/pricing/
+    checked: '2026-11-03'
+    verified: true
+  - id: val.google-forms
+    free_tier: 個人の Google アカウントで無料（公式ページに金額の明記なし）
+    paid_entry: Google Workspace Business Starter $7/ユーザー/月（年契約）
+    url: https://workspace.google.com/pricing
+    checked: '2026-11-03'
+    verified: true
+  combine:
+    single: 本番と同じホストに LP と計測を置けば、公開後もそのまま育てられ、訪問→登録率を本番の分析（analytics）で見られる。
+    combined: Carrd か Framer の無料 LP に Tally を埋め込むと、コードゼロ・費用ゼロで今日中に出せる。
+    risks: 無料の LP ツールは独自ドメインが使えず、確認用 URL のまま公開してしまう（R-004）。LP と本番でブランドが二重になり、後で作り直す。フォームの回答と分析が別の場所に散り、登録率を人が手で集計する。
+  switch_points:
+  - when: 独自ドメインで公開リンクを出す（SNS・広告に貼る）
+    upgrade_to: Carrd Pro Standard $19/年 か Framer Basic $10/月、または自作 LP を本番ホストへ
+    why: 無料プランは独自ドメイン不可。会社ドメインでない公開リンクは禁止（R-004）。
+  - when: インタビューの予約や分岐つきの質問が要る
+    upgrade_to: Typeform Basic $39/月（年払い $28/月）
+    why: 分岐と回答率。少数のインタビュー候補を絞る段階だけ。
+  - when: ホストを決めた（hosting が決定）
+    upgrade_to: val.lp-own（本番ホストの LP）
+    why: 計測・ドメイン・ブランドが本番と 1 つになる。
+  recommendation:
+    pick: val.tally
+    reason: 無料で回答数の上限がなく、Carrd・Framer・自作 LP のどれにも埋め込める。Sean Ellis テストも同じフォームで回せる。ホストが決まったら LP は本番側へ移す。
+    rejected:
+    - option: val.lp-own
+      why: ホスト未決の段階では作る手間が検証より大きい。決まったら第一候補。
+    - option: val.carrd
+      why: LP としては最安だが、フォーム単体では Tally の方が自由。Tally と組み合わせる。
+    - option: val.framer
+      why: 見た目は最良だが、無料は独自ドメイン不可で、LP を後で作り直しやすい。
+    - option: val.typeform
+      why: 無料の回答数が少なく金額非表示。分岐が要る時だけ。
+    - option: val.google-forms
+      why: 埋め込みの見た目が合わない。社内・知り合い向けの最小調査だけ。
+- topic: pricing_model
+  services:
+  - id: pm.free-trial
+    free_tier: 決済側の追加料金なし（手数料のみ）
+    paid_entry: —
+    url: https://stripe.com/pricing
+    checked: '2026-10-26'
+    verified: true
+  - id: pm.freemium
+    free_tier: 決済側の追加料金なし。無料ユーザーの原価は自分持ち
+    paid_entry: —
+    url: https://stripe.com/pricing
+    checked: '2026-10-26'
+    verified: true
+  - id: pm.usage
+    free_tier: 計測（メーター）を自分で作る。Stripe Billing は Pay as you go 0.7%
+    paid_entry: 月額プラン $620/月〜（1年契約）
+    url: 'https://stripe.com/pricing'
+    checked: '2026-11-03'
+    verified: true
+  - id: pm.one-time
+    free_tier: 決済側の追加料金なし（MoR なら 5%+50¢）
+    paid_entry: —
+    url: https://www.paddle.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: pm.seats
+    free_tier: 決済側の追加料金なし
+    paid_entry: —
+    url: https://stripe.com/pricing
+    checked: '2026-10-26'
+    verified: true
+  combine:
+    single: 型を 1 つに絞ると、価格表・規約・返金・解約の文面が 1 つで済み、お客さんも迷わない。
+    combined: 定額（席）＋従量（AI 分だけ）の組み合わせが定番。原価が利用者に比例する部分だけ従量にする。
+    risks: 型が増えるほど、請求の説明・返金・税の扱いが増える。無料枠と試用を両方置くと、無料で試して去る人が増える。従量の計測ミスは売上のミス。
+  switch_points:
+  - when: 1 ユーザーあたりの原価（AI・SMS・転送）が売価の 30% を超える
+    upgrade_to: 従量（pm.usage）を定額に足す、または無料枠に上限
+    why: 定額のまま使われると赤字が利用者数に比例して増える。
+  - when: 会社の購買部門が請求書・年契約を求めてきた
+    upgrade_to: 席数×年払い（pm.seats）
+    why: 請求書払い・年契約が売れる条件になる。
+  - when: 複数国に売り、税の登録義務が出た
+    upgrade_to: 販売代行（MoR：Paddle 等 5%+50¢）
+    why: 国ごとの税の登録・納付を代行してもらう方が、手数料より安い。
+  recommendation:
+    pick: pm.free-trial
+    reason: 原価が利用者数に比例しても赤字にならず、転換率（試用→有料）で需要を測れる。最初の 10 人の有料顧客まではこれで十分。
+    rejected:
+    - option: pm.freemium
+      why: 使うほど価値が増え、無料ユーザーの原価がほぼゼロの時だけ。AI・メッセージの原価があると赤字が先に来る。
+    - option: pm.usage
+      why: 原価が使用量に比例する時に定額へ足す。単独だと個人のお客さんは請求額が読めず嫌がる。
+    - option: pm.one-time
+      why: サーバー・AI の費用が続くものには合わない（売上が止まり費用が続く）。
+    - option: pm.seats
+      why: 会社向けで席を管理者が決める時。個人利用が主なら席は共有される。
+- topic: legal_terms
+  services:
+  - id: lt.termly
+    free_tier: 基本ポリシー 1 本・バナー 1 万回/月・スキャン四半期 1 回・1 サイト
+    paid_entry: Starter $10/サイト/月（年払い。月払い $14）：ポリシー 2 本・バナー 5 万回/月
+    url: https://termly.io/pricing/
+    checked: '2026-11-03'
+    verified: true
+  - id: lt.iubenda
+    free_tier: 無料：5,000 PV/月まで（超えるとその月はバナー停止）・プライバシー／Cookie ポリシーのみ・第三者 3 件・1 言語・ブランド表示
+    paid_entry: Essentials $5.99/サイト/月（年払い。月払い $6.99）：2.5万 PV まで。超過 €0.05/1,000PV
+    url: https://www.iubenda.com/en/pricing
+    checked: '2026-11-03'
+    verified: true
+  - id: lt.getterms
+    free_tier: 無料版（ブランド表示つき）
+    paid_entry: Starter $5/月（年払い。月払い $9）または買い切り $199
+    url: https://getterms.io/pricing
+    checked: '2026-11-03'
+    verified: true
+  - id: lt.termageddon
+    free_tier: —（無料プランなし）
+    paid_entry: $12/月 または $119/年（サイトごと）
+    url: https://termageddon.com/pricing/
+    checked: '2026-11-03'
+    verified: true
+  - id: lt.lawyer
+    free_tier: —
+    paid_entry: 公開料金なし。見積もり（国・案件で大きく違う）
+    url: null
+    checked: '2026-11-03'
+    verified: false
+  combine:
+    single: 生成ツール 1 つでプライバシー・規約・Cookie バナーをそろえ、法改正の更新を任せる。
+    combined: 無料の生成ツールでプライバシーポリシー、規約は AI の下書き＋弁護士レビュー、Cookie バナーは計測ツールの Cookie なし設計で不要にする。
+    risks: 生成文書が実際のベンダー・保存先と食い違う（lt.policy-matches-practice）。複数の文書の版がずれる。弁護士を入れないまま、ユーザー間送金・未成年・複数国に進む。
+  switch_points:
+  - when: 規約とプライバシーの 2 本以上、または Cookie バナーの表示が月 1 万回を超える
+    upgrade_to: Termly Starter $10/月 か GetTerms 買い切り $199
+    why: 無料は 1 本・1 万回まで。
+  - when: ユーザー間でお金が動く・未成年・医療や金融・2 か国以上
+    upgrade_to: 弁護士レビュー（lt.lawyer）
+    why: 雛形では責任の所在が決まらない。買収の調査でも最初に見られる。
+  - when: EU の利用者が主で、同意の記録まで要る
+    upgrade_to: iubenda Essentials $5.99/月
+    why: 同意管理が一体。PV で増えるので上限に注意。
+  recommendation:
+    pick: lt.termly
+    reason: 無料でプライバシーポリシー 1 本と Cookie バナーを今日出せ、必要になったら $10/月 で規約も足せる。実際の構成と一致させる確認（lt.policy-matches-practice）を必ず添える。
+    rejected:
+    - option: lt.iubenda
+      why: EU 中心・同意記録が要る時の第一候補。無料枠は月 5,000 PV・規約なし・1 言語（2026-11-03 確認）で、PV が増えると課金が増える。
+    - option: lt.getterms
+      why: 買い切り $199 は長く使うなら最安。Cookie 同意の管理はない。
+    - option: lt.termageddon
+      why: 米国の州法追跡に強いが無料がなく、サイトごとに $12/月。
+    - option: lt.lawyer
+      why: 試作・社内ツールには過剰。お金が人の間で動く・未成年・複数国なら必須。
+- topic: backup_dr
+  services:
+  - id: bk.dump-to-r2
+    free_tier: R2 10GB・転送無料（自前の cron）
+    paid_entry: 保存 $0.015/GB
+    url: https://developers.cloudflare.com/r2/pricing/
+    checked: '2026-11-03'
+    verified: true
+  - id: bk.supabase-builtin
+    free_tier: —（Free にバックアップなし）
+    paid_entry: Pro $25/月で毎日 7 日保持。PITR アドオン $100/月
+    url: https://supabase.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: bk.neon-restore
+    free_tier: 履歴 6 時間（1GB まで）
+    paid_entry: Launch で最大 7 日。追加履歴 $0.20/GB-月
+    url: https://neon.com/docs/postgres/backup-restore/history-window
+    checked: '2026-11-02'
+    verified: true
+  - id: bk.firestore-pitr
+    free_tier: —（PITR に無料枠なし・Blaze 必須）
+    paid_entry: 保存分（GB-月）。定期バックアップは保持 14 週まで
+    url: https://firebase.google.com/docs/firestore/pitr
+    checked: '2026-11-02'
+    verified: true
+  - id: bk.backblaze-b2
+    free_tier: 10GB・転送は保存量の 3 倍/月まで無料
+    paid_entry: $6.95/TB/月
+    url: https://www.backblaze.com/cloud-storage/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: データの置き場所に付いてくる復元（Supabase Pro・Neon の履歴・Firestore PITR）だけ。設定は数分、同じアカウントの中で完結。
+    combined: 付属の復元＋別ワーカーの夜間ダンプ→ R2 ＋ 別事業者（B2）に削除ロック付きコピー（3-2-1）。小規模なら費用はほぼゼロ。
+    risks: 付属の復元だけだと、アカウントの乗っ取り・解約・事業者障害で本体と一緒に消える。自前ダンプは黙って止まる（失敗通知と月次の復元テストが要る）。ダンプに鍵が混ざる。
+  switch_points:
+  - when: 今すぐ（Free プランで本番データがある）
+    upgrade_to: bk.dump-to-r2（夜間ダンプ・失敗通知・月次復元テスト）
+    why: Free にはバックアップが無い。R2 10GB は小さな DB なら何年分も入る。
+  - when: 有料プラン（Supabase Pro $25 等）を別の理由で払い始めた
+    upgrade_to: 付属の毎日バックアップ＋自前ダンプの両方
+    why: 付属分は追加料金なし。自前ダンプは別事業者コピーとして残す。
+  - when: 数時間の損失が売上や信頼に響く（決済・予約・投稿が多い）
+    upgrade_to: PITR（Supabase $100/月・Neon Launch 最大 7 日・Firestore PITR）
+    why: 時点復元は日次ダンプでは戻せない直前の状態に戻せる。RPO を数分にできる。
+  recommendation:
+    pick: bk.dump-to-r2
+    reason: どの DB でも同じ手順で、費用ほぼゼロ、別アカウント・別事業者に置ける。付属の復元は「あれば使う」で、これを土台にする。失敗通知と月 1 回の復元テスト（dp.restore-test-monthly）を必ず付ける。
+    rejected:
+    - option: bk.supabase-builtin
+      why: Free に無く、Pro でも同じアカウント内。Pro を払うなら併用。
+    - option: bk.neon-restore
+      why: 6 時間は操作ミスの取り消しには便利だが、バックアップではない。併用。
+    - option: bk.firestore-pitr
+      why: アプリ（Firestore）なら土台。Blaze 必須で既定オフなので、有効化を初日に。
+    - option: bk.backblaze-b2
+      why: R2 と役割は同じ。主クラウドが Cloudflare 中心なら、こちらを「別事業者」にする。
+- topic: cost_control
+  services:
+  - id: cc.vercel-spend
+    free_tier: —（Hobby では使えない）
+    paid_entry: Pro $20/月に含まれる（上限・50/75/100% 通知・本番停止）
+    url: https://vercel.com/docs/spend-management
+    checked: '2026-11-02'
+    verified: true
+  - id: cc.supabase-spend-cap
+    free_tier: Free は課金されない（上限で止まる）
+    paid_entry: Pro $25/月：既定オン
+    url: https://supabase.com/docs/guides/platform/spend-cap
+    checked: '2026-11-02'
+    verified: true
+  - id: cc.ai-gateway-budget
+    free_tier: 上乗せなし。予算はチーム・プロジェクト・キー・人ごと
+    paid_entry: —
+    url: https://vercel.com/docs/ai-gateway/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: cc.gcp-budget
+    free_tier: 予算・通知（通知だけでは止まらない）
+    paid_entry: —
+    url: https://docs.cloud.google.com/billing/docs/how-to/budgets
+    checked: '2026-11-02'
+    verified: true
+  - id: cc.github-actions-budget
+    free_tier: 公開リポジトリは無料。予算 75/90/100% 通知・停止可
+    paid_entry: 超過 Linux 1 分 $0.006
+    url: https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/managing-your-spending-limit-for-github-actions
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: ホストとデータの置き場所を同じ会社でそろえれば、上限は 1〜2 か所で済む。
+    combined: サービスごとの上限（Vercel・Supabase・AI Gateway・GitHub）を全部オンにし、1 枚の費用シート（cc.monthly-cost-sheet）で見る。
+    risks: 上限の対象外（Vercel の AI Gateway・保存、Supabase の計算・PITR）を知らずに安心する。止まった時にアプリがどう見えるかを試していない。通知だけの予算（GCP）を上限と思い込む。
+  switch_points:
+  - when: 初めての有料プラン（Vercel Pro・Supabase Pro）
+    upgrade_to: その場で Spend Management と Spend Cap をオン、50/80% 通知を 2 人へ
+    why: 無料は止まるだけだが、有料は請求が来る。
+  - when: AI 機能を公開した
+    upgrade_to: AI Gateway の予算＋利用者ごとの上限（dp.ai-usage-caps）＋再試行の上限（cc.retry-with-breaker）
+    why: AI 費用は一晩で跳ねる。予算は Spend Management の対象外。
+  - when: 月の請求が前月の 2 倍、または無料枠の 80%
+    upgrade_to: 原因の項目に個別の上限、または有料プランへ計画的に
+    why: 黙って止まるより、止める場所と払う場所を自分で決める。
+  recommendation:
+    pick: cc.vercel-spend
+    reason: 最初の有料は Vercel Pro になりやすく、そこで全体の上限・通知・本番停止を 1 か所で決められる。Supabase は Pro で既定オン、AI は Gateway の予算で別に止める。
+    rejected:
+    - option: cc.supabase-spend-cap
+      why: 既定オンなので「選ぶ」ものではなく確認するもの。対象外の項目に注意。
+    - option: cc.ai-gateway-budget
+      why: AI 費用専用。Spend Management と併用する。
+    - option: cc.gcp-budget
+      why: 通知だけで止まらない。Firebase・Cloud Run を使うなら必須だが、止める自動化が別に要る。
+    - option: cc.github-actions-budget
+      why: CI の分数だけ。公開リポジトリなら不要。
+- topic: uptime
+  services:
+  - id: mon.uptimerobot
+    free_tier: 50 モニター・5 分間隔・ステータスページ 1
+    paid_entry: Solo $13/月（年払い $12）：60 秒
+    url: https://uptimerobot.com/pricing/
+    checked: '2026-11-02'
+    verified: true
+  - id: mon.betterstack
+    free_tier: 10 モニター・ステータスページ 1・Slack/メール通知
+    paid_entry: 追加 50 モニター $25/月
+    url: https://betterstack.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: sup.status
+    free_tier: Instatus Starter：15 モニター・2 分間隔・購読者 200（独自ドメイン不可）
+    paid_entry: Instatus Pro $20/月〜
+    url: https://instatus.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: 外形監視とステータスページが 1 つのサービスなら、落ちた時に自動でページが更新される。
+    combined: エラー監視（Sentry）＋外形監視（UptimeRobot）＋ステータスページ（Instatus）を無料枠で分ける。
+    risks: ステータスページを本体と同じホストに置くと一緒に落ちる。通知先が 1 人。サービスが 3 つだと「どれが鳴ったか」が分からない。
+  switch_points:
+  - when: 運用する人が 2 人以上（誰が起きるかを決める）
+    upgrade_to: Better Stack（オンコール・インシデント管理が一体）
+    why: 無料のまま当番表が持てる。
+  - when: 60 秒以内に気づきたい（決済・予約が止まると損失）
+    upgrade_to: UptimeRobot Solo $13/月 か Instatus Pro $20/月
+    why: 無料は 2〜5 分間隔。
+  - when: ステータスページに独自ドメイン・SMS 通知
+    upgrade_to: Instatus Pro $20/月
+    why: 無料は独自ドメイン不可。
+  recommendation:
+    pick: mon.uptimerobot
+    reason: 無料で 50 サイト・5 分間隔・ステータスページ 1 つ。1 人運用の最初はこれで足り、Sentry（エラー）と組み合わせる。
+    rejected:
+    - option: mon.betterstack
+      why: 無料は 10 モニターだが、オンコールとインシデント管理が一体。人が 2 人以上なら第一候補。
+    - option: sup.status
+      why: ステータスページ寄り。独自ドメインは有料。監視は UptimeRobot の方が多い。
+- topic: secrets_sharing
+  services:
+  - id: ho.bitwarden
+    free_tier: 個人は無料。共有は Families $3.99/月（6 人）
+    paid_entry: Teams $4/人/月（年払い）
+    url: https://bitwarden.com/pricing/business/
+    checked: '2026-11-02'
+    verified: true
+  - id: ho.1password
+    free_tier: —
+    paid_entry: Teams Starter Pack $24.95/月（10 人まで）／Business $8.99/人/月
+    url: https://1password.com/business-pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: ho.doppler
+    free_tier: Developer：3 人まで無料
+    paid_entry: 追加 $8/人・Team $21/人/月
+    url: https://www.doppler.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: ho.host-env-vars
+    free_tier: ホスト込み（Vercel は Config/Secret）
+    paid_entry: —
+    url: https://vercel.com/docs/environment-variables
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: 金庫 1 つ（Bitwarden）に、人のパスワードも、アプリの鍵の控えも入れる。
+    combined: 人のパスワードは金庫、アプリの鍵はホストの環境変数（Secret 型）、ホストが複数なら Doppler で同期。
+    risks: 鍵が個人の端末・チャット・メモに散る。ホストごとに手で配った鍵がずれる。退職時にどこを消すか分からない（ho.offboarding-rotate）。
+  switch_points:
+  - when: 2 人目が運用に入る
+    upgrade_to: Bitwarden Families $3.99/月 か Teams $4/人
+    why: 共有は有料プランから。個人アカウントの貸し借りはしない。
+  - when: ホストが 2 つ以上、または環境（dev/stg/prod）で鍵を分ける
+    upgrade_to: Doppler（3 人まで無料）
+    why: 同期の手作業と不一致をなくす。
+  - when: 10 人前後で使いやすさを優先
+    upgrade_to: 1Password Teams Starter Pack $24.95/月
+    why: 定額で 10 人。
+  recommendation:
+    pick: ho.bitwarden
+    reason: 個人は無料、共有も $3.99/月から。オープンソースで書き出しができ、会社名義の金庫を初日から作れる。アプリの鍵はホストの環境変数（Secret 型）に置き、控えだけ金庫へ。
+    rejected:
+    - option: ho.1password
+      why: 使いやすいが無料がなく、10 人以下では Bitwarden の方が安い。
+    - option: ho.doppler
+      why: アプリの鍵の同期専用。ホスト 1 つなら環境変数で足りる。
+    - option: ho.host-env-vars
+      why: 人のパスワードは置けない。鍵の置き場としては併用する。
+- topic: exit_route
+  services:
+  - id: xt.direct-outreach
+    free_tier: 手数料ゼロ（弁護士費用のみ）
+    paid_entry: 弁護士・会計士（見積もり）
+    url: null
+    checked: '2026-11-03'
+    verified: false
+  - id: xt.acquire
+    free_tier: —
+    paid_entry: 掲載 $25〜$100/月＋成約 8%（$25 万未満）〜6%
+    url: https://acquire.com/seller-pricing/
+    checked: '2026-11-02'
+    verified: true
+  - id: xt.flippa
+    free_tier: —
+    paid_entry: 掲載 $29（60 日）〜＋成約 10%〜6%（帯の対応は要確認）
+    url: https://flippa.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: 直接打診だけなら手数料ゼロ。相手が見えている（競合・連携先・顧客）時に最短。
+    combined: 直接打診で反応がなければマーケットプレイスに掲載し、買い手を広げる。データルームは共有フォルダ（xt.shared-folder-dataroom）で両方に同じ物を出す。
+    risks: 数字を先に渡して交渉力を失う（NDA → 意向表明 → 調査の順）。マーケットプレイスの掲載で顧客・競合に売却の意図が知れる。帯ごとの手数料を読み違える。
+  switch_points:
+  - when: 直接打診 5 件に 2 か月反応がない
+    upgrade_to: Acquire.com（掲載 $25/月〜）
+    why: 買い手の母数を増やす。成約手数料 6〜8% は仲介より安い。
+  - when: 小さなサイト・アプリ（$1 万未満）を早く手放したい
+    upgrade_to: Flippa（掲載 $29〜）
+    why: 小額の案件が多い。
+  - when: 買い手候補が見つかり、契約に進む
+    upgrade_to: 弁護士（lt.lawyer）
+    why: 譲渡契約・表明保証は雛形で済ませない。
+  recommendation:
+    pick: xt.direct-outreach
+    reason: 小さなプロダクトの買い手は機能かチーム目当てで、すでに関係のある相手が多い（reference/exit-appdist.md）。手数料ゼロで、データルームと数字（dd.metrics）がそろっていれば調査は数週間で終わる。
+    rejected:
+    - option: xt.acquire
+      why: 母数は増えるが掲載料＋成約 6〜8%。直接打診で反応がない時に。
+    - option: xt.flippa
+      why: 小額のサイト向け。SaaS の買い手は少なめ。帯ごとの手数料は出品前に確認。
+- topic: sbom_tool
+  services:
+  - id: xt.syft
+    free_tier: Apache-2.0・無料（CLI）
+    paid_entry: —
+    url: https://github.com/anchore/syft
+    checked: '2026-11-02'
+    verified: true
+  - id: xt.fossa
+    free_tier: Free：5 プロジェクト・10 人
+    paid_entry: Business $20/プロジェクト/月（年払い）
+    url: https://fossa.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: CI で Syft を回し、SBOM（部品表）を成果物として保存するだけ。
+    combined: Syft の SBOM を FOSSA に取り込み、ライセンス違反と脆弱性を継続して見る。
+    risks: SBOM を出すだけで GPL 系の混入を見ていない。ツールが 2 つだと結果の食い違いを人が判断する。
+  switch_points:
+  - when: 買い手・企業顧客に「継続的に見ている」証拠を求められた
+    upgrade_to: FOSSA Free（5 プロジェクト）
+    why: 判定の履歴が残る。
+  - when: プロジェクトが 6 つ以上、または SOC 2 の準備
+    upgrade_to: FOSSA Business $20/プロジェクト/月
+    why: 無料枠の上限。
+  recommendation:
+    pick: xt.syft
+    reason: 無料で CI に 1 行。dd.oss の「SBOM を出せる」を初日から満たせる。GPL/AGPL の有無は出力を grep で確認する。
+    rejected:
+    - option: xt.fossa
+      why: 継続監視が要る時に足す。小規模には過剰。
+- topic: analytics
+  services:
+  - id: an.posthog
+    free_tier: 月 100 万イベント・録画 5,000・フラグ 100 万・エラー 10 万。上限で止まり課金されない
+    paid_entry: 従量（カード登録）：無料枠は同じ、超えた分だけ。製品ごとに上限額を設定可
+    url: https://posthog.com/pricing
+    checked: '2026-10-26'
+    verified: true
+  - id: an.vercel-analytics
+    free_tier: Hobby：5 万イベント/月（Cookie なし）
+    paid_entry: Pro アドオン $10/月（UTM 等）、超過 $3/10 万イベント
+    url: https://vercel.com/pricing
+    checked: '2026-11-03'
+    verified: true
+  combine:
+    single: PostHog 1 つで訪問・ファネル・録画・フラグ・エラーまで見られ、イベント辞書も 1 つで済む。
+    combined: LP は Vercel Web Analytics（Cookie なし・同意前でも可）、アプリ内は PostHog、と分ける。
+    risks: 2 つに分けると訪問数の定義がずれて合計が合わない。PostHog は設定が多く、個人情報を送ってしまいやすい。EU/UK では同意前の計測に注意（lt.consent-before-tracking）。
+  switch_points:
+  - when: 月 100 万イベントの 80%（80 万）に近づいた
+    upgrade_to: PostHog 従量（カード登録・製品ごとの上限額）
+    why: 無料は上限で止まる。止まるより上限額を決めて払う。
+  - when: Vercel Pro に移り、LP の流入元（UTM）を細かく見たい
+    upgrade_to: Vercel Web Analytics Pro アドオン $10/月
+    why: Hobby は 5 万イベントと基本項目だけ。
+  recommendation:
+    pick: an.posthog
+    reason: どの画面で離れたかまで見られ、無料枠が大きく、上限で止まるので請求の心配がない。EU リージョンを選べる。
+    rejected:
+    - option: an.vercel-analytics
+      why: 訪問数だけで足りる小さな紹介ページ向け。使われ方（ファネル・録画）は見られない。
+- topic: support
+  services:
+  - id: sup.email
+    free_tier: Gmail 等で無料／Help Scout Free：5 人・受信箱 1・連絡先 100/月
+    paid_entry: Help Scout Standard $25/人/月
+    url: https://www.helpscout.com/pricing/
+    checked: '2026-11-02'
+    verified: true
+  - id: sup.crisp
+    free_tier: Free：2 席・顧客プロファイル 100・チャット・共有受信箱
+    paid_entry: Mini $45/月（ワークスペース）
+    url: https://crisp.chat/en/pricing/
+    checked: '2026-11-02'
+    verified: true
+  - id: sup.docs
+    free_tier: 自社サイトで無料／Mintlify Starter 無料：編集者 5 席
+    paid_entry: Mintlify Pro $450/月（年払い）
+    url: https://www.mintlify.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: sup.status
+    free_tier: Instatus Starter 無料：15 モニター・公開ページ・購読者 200
+    paid_entry: Instatus Pro $20/月〜
+    url: https://instatus.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: Crisp 1 つにチャット・受信箱・ヘルプ記事をまとめると、窓口が 1 つで利用者も迷わない。
+    combined: support@ の共有受信箱（無料）＋自社サイトの FAQ＋別ホストのステータスページ。全部無料枠。
+    risks: チャットを置くと「すぐ返事が来る」と期待され、1 人では応答目標を守れない。窓口が複数だと履歴が散る。AI の一次回答が返金や規約を約束してしまう（lt.ai-disclosure）。
+  switch_points:
+  - when: 問い合わせが週 20 件を超え、担当が 2 人になる
+    upgrade_to: Help Scout Free（5 人）→ Standard $25/人/月
+    why: 担当の割当・保留・定型文が要る。Gmail の共有は誰が返したか分からなくなる。
+  - when: アプリ内で即答を売りにする（有料プラン・B2B）
+    upgrade_to: Crisp Free（2 席）→ Mini $45/月
+    why: チャットは応答時間を約束できる体制ができてから。
+  - when: よくある質問が 10 件を超えた
+    upgrade_to: sup.docs（自社サイトの FAQ）
+    why: 同じ質問に人が答え続けるより安い。検索流入にもなる。
+  recommendation:
+    pick: sup.email
+    reason: 無料で今日から、応答目標を自分で決められ、記録が残る。FAQ とステータスページは別ホストで足す。
+    rejected:
+    - option: sup.crisp
+      why: 即答の期待を作る。応答体制ができてから。
+    - option: sup.docs
+      why: 窓口ではなく補助。質問が 10 件を超えたら足す。
+    - option: sup.status
+      why: 窓口ではなく障害の公表。uptime の比較で選ぶ。
+- topic: launch_channels
+  services:
+  - id: gtm.x
+    free_tier: 無料（会社アカウント・2FA）
+    paid_entry: 広告は入札制（最低額は未確認）
+    url: https://business.x.com/
+    checked: '2026-11-02'
+    verified: false
+  - id: gtm.producthunt
+    free_tier: 無料で掲載（公式：100% free）
+    paid_entry: —
+    url: https://www.producthunt.com/launch
+    checked: '2026-11-02'
+    verified: true
+  - id: gtm.hn
+    free_tier: 無料（Show HN）
+    paid_entry: —
+    url: https://news.ycombinator.com/showhn.html
+    checked: '2026-11-03'
+    verified: true
+  - id: gtm.seo
+    free_tier: Search Console 無料
+    paid_entry: Ahrefs Starter $29/月
+    url: https://ahrefs.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: X だけで作りながら途中経過を出し、公開日に同じアカウントで発表する。費用ゼロ、反応がすぐ分かる。
+    combined: X で事前に反応を集め、公開日に Product Hunt と Show HN を同日に出し、SEO は公開前の基本（la.seo-basics）だけ入れる。
+    risks: 全チャネルを少しずつやって何も分からない（Bullseye：3 つ試して 1 つに絞る）。投票の依頼・水増しは規約違反。公開日が審査・DNS でずれると PH/HN の日付も動く。
+  switch_points:
+  - when: X で 2 週間発信して反応（返信・登録）がほぼゼロ
+    upgrade_to: 利用者が本当にいる場（コミュニティ・業界の掲示板）へ切替
+    why: 届く場所が違う。費用をかける前に場所を変える。
+  - when: 検索されている課題で、公開後 3 か月の流入を育てたい
+    upgrade_to: SEO（Search Console 無料 → Ahrefs Starter $29/月）
+    why: 効果まで 3〜6 か月。早く始めるほど安い。
+  - when: 開発者・早期採用者向けで、素材（デモ動画・OGP）がそろった
+    upgrade_to: Product Hunt ＋ Show HN（同日）
+    why: 1 日 1 回の勝負。準備ができていない日に出すと二度目はない。
+  recommendation:
+    pick: gtm.x
+    reason: 作りながら途中経過を出せ、費用ゼロで反応がすぐ分かる。公開日の PH/HN は X で集めた人を連れて行く。
+    rejected:
+    - option: gtm.producthunt
+      why: 1 日勝負。素材と初日の返信体制がそろってから。
+    - option: gtm.hn
+      why: 開発者向け・OSS 向け。宣伝色があると嫌われる。
+    - option: gtm.seo
+      why: 効果まで 3〜6 か月。公開日の発表には向かないが、基本は公開前に入れる。
+- topic: growth_channels
+  services:
+  - id: gtm.community
+    free_tier: Discord 無料（公式ページに明記なし・未確認）
+    paid_entry: Circle Professional $89/月（年払い）＋取引手数料 2%（公式で確認）
+    url: https://circle.so/pricing
+    checked: '2026-11-02'
+    verified: false
+  - id: gtm.content
+    free_tier: 自社サイトで無料
+    paid_entry: 外注・動画制作（見積もり）
+    url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+    checked: '2026-10-26'
+    verified: false
+  - id: gtm.referral
+    free_tier: 自前実装は無料（不正対策・上限が要る）
+    paid_entry: Rewardful Starter $49/月
+    url: https://www.rewardful.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: gtm.seo
+    free_tier: Search Console 無料
+    paid_entry: Ahrefs Starter $29/月・Lite $129/月
+    url: https://ahrefs.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: gtm.ads.meta
+    free_tier: —
+    paid_entry: 1 日 $5 程度から（最低額は未確認）
+    url: https://www.facebook.com/business/ads
+    checked: '2026-10-26'
+    verified: false
+  combine:
+    single: 成長ループを 1 つに決める（招待＝使うほど人を呼ぶ／コンテンツ＝作ったものが流入になる／有料＝売上を広告に回す）。
+    combined: コミュニティで熱心な少数を集め、その声をコンテンツと紹介特典に回す。無料枠だけで回る。
+    risks: 誰も運営しないコミュニティは逆効果。紹介特典の自己紹介・景品表示法の上限。少額広告は判定がぶれ、学習期間で費用だけ消える。
+  switch_points:
+  - when: 紹介が月 20 件を超え、特典の付与と不正判定を手でやっている
+    upgrade_to: Rewardful Starter $49/月
+    why: 付与・取消・不正検知を人がやる時間の方が高い。
+  - when: コミュニティが 100 人を超え、Discord の整理が追いつかない
+    upgrade_to: Circle Professional $89/月
+    why: 有料コース・会員管理・検索が一体。
+  - when: 継続率（D30）が目標を超え、LTV が分かった
+    upgrade_to: 有料広告（Meta／Google）を 1 チャネル 2 週間
+    why: LTV が分からないうちの広告は損失の上限が決まらない。
+  recommendation:
+    pick: gtm.community
+    reason: 熱心な少数と直接話せ、要望・事例・紹介の全部の源になる。無料で始められ、運営の時間だけが費用。
+    rejected:
+    - option: gtm.content
+      why: 続ける人がいないと効かない。コミュニティの声を元に書くと続く。
+    - option: gtm.referral
+      why: 使うほど人を呼ぶ価値（共有・共同作業）がある時だけ。不正対策が先。
+    - option: gtm.seo
+      why: 効果まで 3〜6 か月。launch_rules の基本を入れた上で、コンテンツと一緒に育てる。
+    - option: gtm.ads.meta
+      why: LTV が分かる前は損失の上限が決まらない。D30 継続率の後。
+- topic: app_distribution
+  services:
+  - id: dist.pwa
+    free_tier: 無料（ストア外なので審査も手数料もなし）
+    paid_entry: —
+    url: https://developer.apple.com/app-store/review/guidelines/
+    checked: '2026-11-03'
+    verified: true
+  - id: dist.twa
+    free_tier: —
+    paid_entry: Play Console 初回 US$25（一回限り）
+    url: https://support.google.com/googleplay/android-developer/answer/6112435
+    checked: '2026-11-02'
+    verified: true
+  - id: dist.capacitor
+    free_tier: —
+    paid_entry: Apple Developer Program US$99/年 ＋ Play US$25（一回限り）
+    url: https://developer.apple.com/programs/enroll/
+    checked: '2026-11-03'
+    verified: true
+  - id: dist.expo
+    free_tier: EAS 無料：Android 15・iOS 15 ビルド/月
+    paid_entry: EAS Starter $19/月（$45 分のビルドクレジット）
+    url: https://expo.dev/pricing
+    checked: '2026-11-02'
+    verified: true
+  - id: dist.native
+    free_tier: —
+    paid_entry: 開発費が主（iPhone 用と Android 用を 2 回作る。見積もり）＋ストア費用は上と同じ
+    url: null
+    checked: '2026-11-03'
+    verified: false
+  combine:
+    single: ウェブ（PWA）だけなら審査なし・即日・課金はウェブのまま。
+    combined: ウェブを本体に、Android は TWA（$25）、iPhone は Capacitor の殻、と段階的に足す。コードは 1 つ。
+    risks: ストアに出た瞬間に IAP の規則（policy.apple.3_1_1・policy.google.payments）がかかり、手取りが変わる。審査で公開日がずれる。ウェブを包んだだけだと 4.2 で却下。
+  switch_points:
+  - when: 利用者がストアで探している（検索語にアプリ名・「アプリ」が付く）、または Android の通知が要る
+    upgrade_to: TWA（Play $25）
+    why: PWA をそのまま載せられ、コードは増えない。
+  - when: iPhone の通知・カメラなどネイティブ機能が売上を左右する
+    upgrade_to: Capacitor の殻（Apple の年会費＋ネイティブ機能で 4.2 回避）
+    why: ウェブのコードを再利用しつつ、IAP の設計を先に決める。
+  - when: ウェブが安定し、ネイティブの体験そのものが差別化になった
+    upgrade_to: Expo で書き直し（EAS 無料 → Starter $19/月）
+    why: 二重保守になるので、ウェブの仕様が動いている間は始めない。
+  recommendation:
+    pick: dist.pwa
+    reason: 審査なしで今日出せ、課金はウェブのまま。ストアは利用者がそこで探していると分かってから、TWA → 殻 → 書き直しの順で足す。
+    rejected:
+    - option: dist.twa
+      why: Android だけ。PWA ができてから $25 で載せる。
+    - option: dist.capacitor
+      why: Apple の年会費と IAP の設計が先に要る。ネイティブ機能が必要になってから。
+    - option: dist.expo
+      why: 書き直しは二重保守。ウェブが安定してから。
+    - option: dist.native
+      why: 2 回作る。OS 機能が中核の時だけ。
+- topic: market_entry
+  services:
+  - id: es.us_first
+    free_tier: Stripe 2.9%+30¢ のみ（米国内）。i18n は後回し
+    paid_entry: 州の売上税対応（Stripe Tax 0.5% など）
+    url: https://stripe.com/pricing
+    checked: '2026-10-26'
+    verified: true
+  - id: es.jp_en
+    free_tier: i18n ライブラリは無料。翻訳は AI
+    paid_entry: ネイティブ確認の外注（見積もり）
+    url: https://www.npmjs.com/package/next-intl
+    checked: '2026-10-30'
+    verified: true
+  - id: es.mor_first
+    free_tier: 月額 0。売上ごとに 5%+50¢（Paddle／Lemon Squeezy）
+    paid_entry: 同左（量が増えたら個別料金）
+    url: https://www.paddle.com/pricing
+    checked: '2026-11-02'
+    verified: true
+  combine:
+    single: 1 つの国・1 つの言語・自社決済で始めると、作る量・法務・税が最小。
+    combined: コードは初日から日英（i18n の骨組みだけ）、販売は MoR に任せ、出す順は反応で決める（cross_border.yaml の recommendation）。
+    risks: 後付けの i18n は全画面の作り直し（gate.i18n_keys）。MoR は $10 未満の商品で手数料率が高く、審査・規約変更のロックインがある。日本の消費者向けは特商法表記と消費税（国外事業者）を自分で確認。
+  switch_points:
+  - when: 提供言語が 2 つ以上になりうる（Intake の答え）
+    upgrade_to: es.jp_en の作り方（文言はキー経由、i18n は初日）
+    why: 後付けが最も高くつく。骨組みだけなら費用ゼロ。
+  - when: 2 か国目で売上が立ち、税の登録義務が見えた
+    upgrade_to: es.mor_first（Paddle 5%+50¢）
+    why: 国ごとの登録・納税を 1 人で追うより安い。
+  - when: 月の売上が増え、MoR の手数料差が税の外注費を上回った
+    upgrade_to: Stripe ＋ Stripe Tax Complete
+    why: 規模が出れば自社納税の方が安くなる。移行手順を exit 計画に書く。
+  recommendation:
+    pick: es.us_first
+    reason: 作る量が一番少なく、反応を早く確かめられる。ただし文言は初日からキー経由にして（gate.i18n_keys）、2 か国目を安くする。
+    rejected:
+    - option: es.jp_en
+      why: 日本の人が最初の利用者なら第一候補（pick_when）。ローンチ作業が 2 倍になる。
+    - option: es.mor_first
+      why: 最初から複数国に売るなら第一候補（pick_when）。$10 未満の商品は手数料率が高い。
+
+- topic: backend
+  services:
+  - {id: be.route-handlers, free_tier: 'ホストの無料枠内。Vercel Hobby $0（個人・非商用のみ）：Active CPU 4 時間・メモリ 360 GB時・呼び出し 100万回/月。関数の最長 300 秒', paid_entry: 'Vercel Pro $20/月（$20 分のクレジット込み。超過は Active CPU $0.128/時・呼び出し $0.60/100万回）。最長 800 秒', url: 'https://vercel.com/pricing', checked: '2026-11-03', verified: true}
+  - {id: be.cloud-run, free_tier: '無料枠（請求アカウント単位・月）：リクエスト 200万回・メモリ 360,000 GB秒・vCPU 180,000 秒・北米発送信 1 GB（リクエスト課金の場合）', paid_entry: '使った分だけ（単価は料金ページ本文が読めず未確認 2026-11-03）。リクエスト課金とインスタンス課金の 2 方式', url: 'https://docs.cloud.google.com/free/docs/free-cloud-features', checked: '2026-11-03', verified: true}
+  - {id: be.supabase-edge, name: Supabase Edge Functions, free_tier: 'Supabase Free $0：Edge Functions 呼び出し 50 万回/月。1 週間使わないとプロジェクト停止', paid_entry: 'Pro $25/月〜：200 万回/月込み、超過 $2/100万回', url: 'https://supabase.com/pricing', checked: '2026-11-03', verified: true}
+  - {id: be.cloudflare-workers, name: Cloudflare Workers, free_tier: 'Workers Free：10 万リクエスト/日・1 回あたり CPU 10 ms', paid_entry: 'Workers Paid $5/月〜：1,000 万リクエスト/月・CPU 3,000 万 ms/月込み。超過 $0.30/100万リクエスト・$0.02/100万 CPU ms', url: 'https://developers.cloudflare.com/workers/platform/pricing/', checked: '2026-11-03', verified: true}
+  combine:
+    single: 画面と同じ場所（Next.js の Route Handlers / Server Actions）に裏側も置く。契約・公開作業・環境変数が1つで、AI も一番書き慣れている。
+    combined: 画面はホストに置き、長い処理・定期処理・別言語の処理だけを別の実行環境（コンテナや Workers）に出す。
+    risks: 置き場所が2つになると、秘密情報・ログ・監視・公開作業が2重になる。認可の判断をどちらでするかを決めないと穴ができる。無料枠はそれぞれ別に数えるので、超えた時の挙動（止まる・課金）が違う。
+  switch_points:
+  - when: 1回の処理がホストの関数の制限時間を超える（動画変換・大量メール・長いAI呼び出し）
+    upgrade_to: 長い処理だけコンテナ（Cloud Run 等）か、キューで分割
+    why: 関数はタイムアウトで途中で切れる。1か所だけ外に出せば残りは同居のまま。
+  - when: 定期処理（毎晩の集計・リマインド送信）が3つ以上になった
+    upgrade_to: ホストの定期実行（cron）機能、または小さなワーカーを1つ
+    why: 画面の裏に定期処理を混ぜると、失敗に気づけない。
+  - when: 画面を持たないスマホアプリだけになった
+    upgrade_to: 独立した API の置き場所（Cloud Run / Workers / Supabase Edge Functions）
+    why: 同居させる画面側のサーバーがない。
+  recommendation:
+    pick: be.route-handlers
+    reason: 画面と同じ場所に置けば、作る・直す・公開するが1つで済み、無料枠もホストと共通。長い処理や定期処理が出てきた時だけ、その処理を1つ外に出す。料金と上限は 2026-11-03 に公式ページで確認（Hobby は非商用のみ）。
+    rejected:
+    - {option: be.cloud-run, why: 自由度は高いが、コンテナの作成・公開作業・監視が別に要る。長い処理やスマホアプリ専用の API の時の候補。}
+    - {option: be.supabase-edge, why: データの置き場所が Supabase なら相性がよいが、画面側に Route Handlers があるなら2か所目になる。}
+    - {option: be.cloudflare-workers, why: 速くて安いが実行環境に制約（Node.js の一部 API が使えない）があり、AI の書き慣れが浅い。}

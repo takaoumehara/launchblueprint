@@ -1,7 +1,7 @@
 # Blueprint Catalog — gtm_channels
-# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 全件 verified:false（記憶ベースの下書き）。使う前に公式ページで確認
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点（2026-11-02 に一部を公式ページで確認）。verified:false は使う前に要確認
 domain: gtm_channels
-updated: '2026-10-26'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml
 entries:
@@ -11,7 +11,7 @@ entries:
   best_for: 開発者・早期採用者向けのWeb/AIツール
   avoid_when: 一般消費者向け・地域限定サービス
   pricing_bands:
-    free: 無料で掲載
+    free: 無料で掲載（公式：100% free）
     usd5: —
     usd10: —
     usd100: —
@@ -24,8 +24,8 @@ entries:
   - gtm.hn
   source:
     url: https://www.producthunt.com/launch
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: gtm.hn
   name: Hacker News（Show HN）
   what: 技術者向け掲示板の自作発表枠
@@ -36,16 +36,17 @@ entries:
     usd5: —
     usd10: —
     usd100: —
-  limits: 宣伝文は嫌われる。作り手本人が答える
+  limits: 試せるものだけ（LP・登録ページ・資金集め・ブログ記事は不可）。題名は「Show HN:」で始め、作り手本人が答える。宣伝文は嫌われる
   lock_in: 低
-  liability_compliance: 投票操作は禁止
+  liability_compliance: 友人への投票・コメント依頼は禁止
   security: —
   pairs_well_with:
   - gtm.producthunt
   source:
     url: https://news.ycombinator.com/showhn.html
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-03'
+    verified: true
+    note: '公式ルールページで確認（2026-11-03）：料金の記載はなく、投稿の条件と投票依頼の禁止のみ'
 - id: gtm.x
   name: X（旧Twitter）
   what: 短文SNS・作りながら発信（build in public）
@@ -55,7 +56,7 @@ entries:
     free: 無料
     usd5: —
     usd10: —
-    usd100: 広告は入札制（最低額は要確認）
+    usd100: 広告は入札制（公式ヘルプでは最低出稿額なし・日額上限を自分で設定。料金ページは自動取得で読めず未確認）
   limits: アルゴリズム変動が大きい
   lock_in: 中（フォロワーは移せない）
   liability_compliance: ステマ規制：PR表記必須
@@ -65,8 +66,9 @@ entries:
   - gtm.content
   source:
     url: https://business.x.com/
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '広告の料金ページは自動取得を拒否（403）。最低額は未確認。2026-11-03 も同様で公式ページで金額が読めず未確認'
 - id: gtm.seo
   name: SEO（検索流入）
   what: 検索結果からの自然流入
@@ -75,8 +77,8 @@ entries:
   pricing_bands:
     free: Search Console 無料
     usd5: —
-    usd10: —
-    usd100: 有料ツール（Ahrefs 等）は$100帯から（要確認）
+    usd10: Ahrefs Starter $29/月
+    usd100: Ahrefs Lite $129/月〜（無料の Ahrefs Free あり）
   limits: 効果まで3〜6か月
   lock_in: 低
   liability_compliance: —
@@ -85,8 +87,9 @@ entries:
   - gtm.content
   source:
     url: https://developers.google.com/search/docs
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
+    note: 'Ahrefs は https://ahrefs.com/pricing（2026-11-02）'
 - id: gtm.aso
   name: ASO（ストア最適化）
   what: App Store / Google Play 内の検索最適化
@@ -96,7 +99,7 @@ entries:
     free: ストアの分析は無料
     usd5: —
     usd10: —
-    usd100: AppTweak 等は$100帯以上（要確認）
+    usd100: AppTweak Essential $79/月〜（7日試用）
   limits: 審査で掲載文が差し戻されることがある
   lock_in: 中
   liability_compliance: Apple/Google の掲載ガイドライン
@@ -105,8 +108,9 @@ entries:
   - gtm.seo
   source:
     url: https://developer.apple.com/app-store/product-page/
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
+    note: 'AppTweak は https://www.apptweak.com/en/pricing（2026-11-02）'
 - id: gtm.content
   name: コンテンツ（ブログ・動画・事例）
   what: 自社メディアでの継続発信
@@ -126,8 +130,9 @@ entries:
   - gtm.x
   source:
     url: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '公式の作り方ガイド。料金の記載なし 2026-11-03'
 - id: gtm.ads.meta
   name: Meta 広告
   what: Instagram/Facebook 広告
@@ -146,8 +151,9 @@ entries:
   - gtm.ads.google
   source:
     url: https://www.facebook.com/business/ads
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '公式ページで金額が読めず未確認 2026-11-03（最低予算の記載を取得できず）'
 - id: gtm.ads.google
   name: Google 広告
   what: 検索連動・P-MAX
@@ -165,9 +171,10 @@ entries:
   pairs_well_with:
   - gtm.seo
   source:
-    url: https://ads.google.com/
-    checked: '2026-10-26'
+    url: https://business.google.com/us/google-ads/
+    checked: '2026-11-03'
     verified: false
+    note: '公式ページで金額が読めず未確認 2026-11-03（ads.google.com は business.google.com へ転送。最低支出額は未表示）'
 - id: gtm.referral
   name: 紹介プログラム
   what: 既存ユーザーが招待すると双方に特典
@@ -177,7 +184,7 @@ entries:
     free: 自前実装は無料
     usd5: —
     usd10: —
-    usd100: Rewardful 等は$49〜（要確認）
+    usd100: Rewardful Starter $49/月（年 $490）／Growth $99
   limits: 不正（自己紹介）対策が必要
   lock_in: 中
   liability_compliance: 景品表示法の上限・FTC の開示
@@ -186,8 +193,8 @@ entries:
   - pay.stripe
   source:
     url: https://www.rewardful.com/pricing
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: gtm.community
   name: コミュニティ（Discord 等）
   what: ユーザー同士の場
@@ -197,7 +204,7 @@ entries:
     free: Discord 無料
     usd5: —
     usd10: —
-    usd100: Circle 等は有料（要確認）
+    usd100: Circle Professional $89/月（年払い）／Business $199／Scale $419。加えて取引手数料 2%／1%／1%
   limits: 放置すると逆効果
   lock_in: 中
   liability_compliance: モデレーション責任
@@ -206,8 +213,9 @@ entries:
   - gtm.x
   source:
     url: https://discord.com/
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: 'Circle は公式で 2026-11-02 確認。Discord の無料枠は公式ページに明記なし（Nitro $9.99/月・Nitro Basic $2.99/月のみ確認 2026-11-03）'
 - id: gtm.pr
   name: PR・プレスキット
   what: メディアへの情報提供
@@ -217,7 +225,7 @@ entries:
     free: プレスキットは無料
     usd5: —
     usd10: —
-    usd100: PR TIMES 等の配信は有料（要確認）
+    usd100: PR TIMES 従量 3万円/件（税抜）／定額 7万円〜/月（年契約・月 30 件まで）
   limits: 掲載は保証されない
   lock_in: 低
   liability_compliance: 誇大表示の禁止
@@ -225,9 +233,9 @@ entries:
   pairs_well_with:
   - gtm.content
   source:
-    url: https://prtimes.jp/
-    checked: '2026-10-26'
-    verified: false
+    url: https://prtimes.jp/price/
+    checked: '2026-11-02'
+    verified: true
 - id: gtm.partners
   name: 提携・マーケットプレイス
   what: 他社製品への掲載・連携
@@ -245,9 +253,10 @@ entries:
   pairs_well_with:
   - gtm.content
   source:
-    url: https://www.shopify.com/partners
-    checked: '2026-10-26'
-    verified: false
+    url: https://help.shopify.com/en/partners/about
+    checked: '2026-11-03'
+    verified: true
+    note: 'Shopify Partner は公式ヘルプに「free to join」と明記 2026-11-03。他の掲載先は個別に確認'
 - id: gtm.outbound
   name: アウトバウンド営業（B2B）
   what: メール・DM で直接接触
@@ -266,5 +275,49 @@ entries:
   - em.resend
   source:
     url: https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: false
+    note: '価格は見積り（estimate）。公式の価格ではない。URL は CAN-SPAM の公式ガイド'
+lessons:
+- id: la.launch-plan-t14
+  principle: "Write the launch plan as dated rows from T-14 to T+30, each with an owner, before announcing a date."
+  anti_pattern: "A launch date with no rows, or rows with no owner."
+  why: "Store review, processor review and DNS each slip by days; a dated plan absorbs the slip instead of the launch."
+  check: "Do T-14, T-7, T-1, T0, T+1, T+7 and T+30 rows exist, each with an owner?"
+  see_also: [lc.gtm.40]
+  verified: false
+- id: la.rollback-owner
+  principle: "Name one person who decides rollback and the numeric condition (e.g. error rate above 2%) before T0."
+  anti_pattern: "Deciding in the group chat while the error rate climbs."
+  why: "A rollback decided by committee happens an hour late."
+  check: "Is the rollback condition a number, and is exactly one person named to call it?"
+  see_also: [la.launch-plan-t14, mon.sentry]
+  verified: false
+- id: la.support-on-launch-day
+  principle: "On launch day and the day after, someone is on support and watching errors in two-hour shifts, with the first reply template ready."
+  anti_pattern: "Everyone watching the upvotes while the first bug report sits for half a day."
+  why: "The first users decide the reviews; a fast first reply is worth more than a feature."
+  check: "Is the support and error-watch rota for T0 and T+1 written with names?"
+  see_also: [sup.email, ho.runbook-top5]
+  verified: false
+- id: la.preview-noindex
+  principle: "Preview and staging URLs are noindex and never used in a public link; the public domain is the company domain."
+  anti_pattern: "A *.vercel.app link in the launch post, or preview pages in search results."
+  why: "Preview URLs leak, rank, and break when the deployment changes."
+  check: "Do preview and staging send noindex, and does the launch post use only the company domain?"
+  see_also: [R-004, lc.gtm.43]
+  verified: false
+- id: la.pr-disclosure
+  principle: "Every paid or gifted mention (ads, influencers, affiliates) carries the disclosure the country requires, checked before publishing."
+  anti_pattern: "An influencer post without a PR label, or an affiliate link without a disclosure."
+  why: "Stealth-marketing rules (Japan) and endorsement guides (US FTC) are enforced on the brand, not the poster."
+  check: "Does every paid or gifted mention have the disclosure, and is it on the pre-publish checklist?"
+  see_also: [lc.legal.31]
+  verified: false
+- id: la.seo-basics
+  principle: "Before launch, every public page has title, description, canonical and OG image; sitemap and robots exist; and llms.txt is published."
+  anti_pattern: "Launching with default titles and no sitemap, then fixing SEO 'later'."
+  why: "Search and AI answers index the launch-day version; fixing it later costs months."
+  check: "Do all public pages pass title/description/canonical/OG, and are sitemap.xml, robots.txt and llms.txt live?"
+  see_also: [gtm.seo, lc.gtm.43]
+  verified: false

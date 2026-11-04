@@ -1,0 +1,125 @@
+# Blueprint Catalog — backup_dr（バックアップと復旧の置き方）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。教訓（原則）は data_protection.yaml と対で使う
+domain: backup_dr
+updated: '2026-11-03'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: bk.supabase-builtin
+  name: Supabase の毎日バックアップ／時点復元（PITR）
+  what: データの置き場所に付いてくる復元。Free には無く、Pro から毎日分が付く
+  best_for: すでに Supabase Pro を払っていて、7 日以内の戻しで足りる時
+  avoid_when: Free のまま（バックアップなし）、または別事業者コピーを 1 つも持っていない時
+  pricing_bands:
+    free: —（Free にはバックアップなし）
+    usd5: —
+    usd10: —
+    usd100: Pro $25/月：毎日バックアップ 7 日保持（Team は 14 日）。PITR アドオン $100/月（7 日分）
+  limits: 同じ事業者・同じアカウントの中にある（乗っ取り・解約で一緒に消える）
+  lock_in: 中
+  liability_compliance: —
+  security: バックアップは本体と同じ権限で消せる。別事業者コピーと組み合わせる
+  pairs_well_with: [db.supabase, bk.backblaze-b2, dp.backup-3-2-1]
+  source:
+    url: https://supabase.com/pricing
+    checked: '2026-11-02'
+    verified: true
+- id: bk.neon-restore
+  name: Neon の履歴からの即時復元
+  what: ブランチの履歴を使って過去の時点に戻す。Free は 6 時間分
+  best_for: Neon を使っていて、操作ミスを数時間以内に戻したい時
+  avoid_when: 数日前に戻したい（Free は 6 時間・履歴 1GB まで）
+  pricing_bands:
+    free: Free：既定・最大 6 時間（履歴 1GB まで）
+    usd5: —
+    usd10: —
+    usd100: Launch：既定 1 日・最大 7 日／Scale：最大 30 日。追加履歴 $0.20/GB-月
+  limits: ルートブランチのみ。履歴は保存量として課金される
+  lock_in: 中
+  liability_compliance: —
+  security: 同じアカウント内。別事業者コピーを足す
+  pairs_well_with: [db.neon, bk.dump-to-r2]
+  source:
+    url: https://neon.com/docs/postgres/backup-restore/history-window
+    checked: '2026-11-02'
+    verified: true
+- id: bk.firestore-pitr
+  name: Firestore の時点復元（PITR）と定期バックアップ
+  what: 7 日以内の時点に戻す PITR（既定オフ・Blaze 必須）と、日次＋週次の定期バックアップ（保持 14 週まで）
+  best_for: Firebase 上のアプリ
+  avoid_when: 課金未連携（Spark）のまま（どちらも使えない）
+  pricing_bands:
+    free: —（PITR に無料枠なし）
+    usd5: PITR の保存分（GB-月）＋復元時の読み取り。最低 1 日分は課金
+    usd10: 定期バックアップの保存分（単価は料金ページ）
+    usd100: 同左
+  limits: PITR は既定オフ。有効化を忘れると戻せない
+  lock_in: 中
+  liability_compliance: —
+  security: Firebase の権限と別に、書き出し先のバケットに保持ロック
+  pairs_well_with: [db.firestore, dp.backup-bucket-lock]
+  source:
+    url: https://firebase.google.com/docs/firestore/pitr
+    checked: '2026-11-02'
+    verified: true
+    note: 単価はページに無し（GB-月課金とだけ記載）
+- id: bk.dump-to-r2
+  name: 自前の夜間ダンプ → Cloudflare R2
+  what: 別のワーカー（cron）で毎晩 pg_dump を取り、R2 に置く。10GB まで無料・転送は無料
+  best_for: Free プランの DB にバックアップを付ける。費用ほぼゼロ
+  avoid_when: ダンプが数 GB を超えて時間がかかる時（PITR を足す）
+  pricing_bands:
+    free: R2：10GB・書き込み 100 万回/月・読み取り 1,000 万回/月・転送無料
+    usd5: 保存 $0.015/GB
+    usd10: 同左
+    usd100: 同左
+  limits: 自分で動かす。失敗通知と月次の復元テストが要る（dp.backup-verify-alert）
+  lock_in: 低（S3 互換）
+  liability_compliance: 個人情報入りのダンプ。暗号化して保存
+  security: 書き込み専用キー（削除権限なし）。保持ロックはバケット設定で
+  pairs_well_with: [dp.backup-worker-isolated, dp.ai-keys-no-backup-delete, bk.backblaze-b2]
+  source:
+    url: https://developers.cloudflare.com/r2/pricing/
+    checked: '2026-11-03'
+    verified: true
+- id: bk.backblaze-b2
+  name: Backblaze B2（別事業者のコピー）
+  what: 主クラウドと別の会社に、削除ロック付きでコピーを置く
+  best_for: 3-2-1 の「別事業者」の 1 つ。10GB まで無料
+  avoid_when: 主クラウドと同じ会社に置いて済ませたい時（別事業者の意味がない）
+  pricing_bands:
+    free: 10GB まで無料。転送は保存量の 3 倍/月まで無料（超過 $0.01/GB）
+    usd5: $6.95/TB/月
+    usd10: 同左
+    usd100: 同左
+  limits: Object Lock の価格はページに記載なし
+  lock_in: 低（S3 互換）
+  liability_compliance: 保存地域を確認（US/EU）
+  security: Object Lock（保持）をオン。鍵は書き込み専用
+  pairs_well_with: [bk.dump-to-r2, dp.backup-bucket-lock]
+  source:
+    url: https://www.backblaze.com/cloud-storage/pricing
+    checked: '2026-11-02'
+    verified: true
+lessons:
+- id: bk.rpo-rto-written
+  principle: "Write the recovery point (how much data you can lose) and recovery time (how long restore may take) per stage, and pick the backup design from those two numbers."
+  anti_pattern: "Choosing backups by what the provider includes, with no stated loss or downtime tolerance."
+  why: "Without targets you cannot tell whether a 6-hour window or a daily dump is enough, and you find out during the incident."
+  check: "Are RPO and RTO written as numbers for the current stage?"
+  see_also: [dp.backup-3-2-1, scale.t0]
+  verified: false
+- id: bk.restore-drill-timed
+  principle: "Restore into a scratch project every month, time it, and record start, end and data lost."
+  anti_pattern: "Trusting the green 'backup succeeded' badge."
+  why: "The restore path, not the backup job, is what fails: wrong credentials, missing extensions, a format nobody tested."
+  check: "Is there a restore log entry within the last 30 days with a duration?"
+  see_also: [dp.restore-test-monthly, scale.t1]
+  verified: false
+- id: bk.no-live-secrets-in-backups
+  principle: "Backups contain data, never live tokens or keys; keys live in the secret store and are rotated after any backup leak."
+  anti_pattern: "Dumping the whole environment, config and all, into the backup bucket."
+  why: "A leaked backup should cost you a disclosure, not a full compromise."
+  check: "Does a grep of the latest backup for key prefixes return nothing?"
+  see_also: [sec.secrets, dp.agent-least-privilege-keys]
+  verified: false

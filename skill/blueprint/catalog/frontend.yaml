@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — frontend
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: frontend
-updated: '2026-10-26'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -25,9 +25,9 @@ entries:
   - db.supabase
   source:
     url: https://nextjs.org/docs
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    checked: '2026-11-02'
+    verified: true
+    note: 'MIT（license.md を 2026-11-02 確認）'
 - id: fe.astro
   name: Astro
   what: コンテンツ中心の静的サイト生成
@@ -47,9 +47,9 @@ entries:
   - host.cloudflare-pages
   source:
     url: https://docs.astro.build
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    checked: '2026-11-02'
+    verified: true
+    note: 'MIT（LICENSE を 2026-11-02 確認）'
 - id: fe.expo
   name: Expo (React Native)
   what: iOS/Android を1つのコードで
@@ -69,5 +69,5 @@ entries:
   - db.firestore
   source:
     url: https://expo.dev/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true

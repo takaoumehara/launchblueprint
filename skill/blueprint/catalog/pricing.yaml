@@ -1,0 +1,159 @@
+# Blueprint Catalog — pricing（価格・パッケージ・単位経済）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格の型（entries）と教訓（lessons）。法律・税の助言ではない
+domain: pricing
+updated: '2026-11-03'
+stale_after_days: 180
+freshness: freshness.yaml
+entries:
+- id: pm.free-trial
+  name: 期間限定の試用（トライアル）→有料
+  what: 数日〜2週間だけ全部使え、その後は払わないと使えない
+  best_for: 価値が数日で分かる業務ツール。原価が利用者数に比例するもの（AI・SMS）
+  avoid_when: 価値が出るまで数週間かかる、または使う人が増えるほど価値が増えるもの
+  pricing_bands:
+    free: 決済側の追加料金なし（Stripe の試用期間機能は手数料のみ）
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 試用終了の通知と、カード登録の要否（登録ありは転換率が高いが開始率は下がる）
+  lock_in: 低
+  liability_compliance: 自動更新の事前通知と、登録と同じ手数での解約（FTC の click-to-cancel・EU の消費者法）
+  security: 試用の使い回し（同じカード・メール）の対策
+  pairs_well_with: [pay.stripe-checkout, pr.cancel-as-easy-as-signup]
+  source:
+    url: https://stripe.com/pricing
+    checked: '2026-11-03'
+    verified: true
+- id: pm.freemium
+  name: 無料枠＋有料プラン
+  what: ずっと無料で使える小さな枠と、上限を超えたら払うプラン
+  best_for: 使う人が増えるほど価値が増える・紹介で伸びる・無料ユーザーの原価がほぼゼロ
+  avoid_when: 無料ユーザー1人ごとに AI・転送・サポートの原価がかかる時
+  pricing_bands:
+    free: 決済側の追加料金なし
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 無料枠には必ず上限と費用の止め方（キルスイッチ）を付ける
+  lock_in: 低
+  liability_compliance: 無料枠の縮小は事前告知
+  security: 無料アカウントの量産（ボット）対策
+  pairs_well_with: [pr.free-tier-cap, dp.ai-usage-caps]
+  source:
+    url: https://stripe.com/pricing
+    checked: '2026-11-03'
+    verified: true
+- id: pm.usage
+  name: 使った分だけ（従量）
+  what: 回数・文字数・時間など、使った量で請求する
+  best_for: AI・API・動画など原価が使用量に比例するもの。会社向け
+  avoid_when: 請求額が読めないと嫌がる個人向け（上限や定額の組み合わせが要る）
+  pricing_bands:
+    free: Stripe Billing（従量・サブスク）は Pay as you go で請求額の 0.7%（月額なし。月額プランは $620/月〜・1年契約）
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 計測（メーター）の正確さが売上の正確さになる。月の上限額を利用者が設定できるようにする
+  lock_in: 低
+  liability_compliance: 請求の内訳を明細で出す
+  security: 計測の二重送信・取りこぼしを監視
+  pairs_well_with: [pay.stripe-checkout, cc.ai-gateway-budget]
+  source:
+    url: https://stripe.com/pricing
+    checked: '2026-11-03'
+    verified: true
+- id: pm.one-time
+  name: 買い切り（ライフタイム）
+  what: 1回払いでずっと使える
+  best_for: ツール・テンプレート・部品集・サーバー費がほぼゼロのアプリ
+  avoid_when: 保守・サーバー・AI の費用がずっとかかるもの（売上が止まり費用が続く）
+  pricing_bands:
+    free: 決済側の追加料金なし
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 「ライフタイム」の定義（製品の寿命か人の寿命か）を規約に書く
+  lock_in: 低
+  liability_compliance: 返金条件（デジタル商品は開封後返金不可など）を購入前に明示
+  security: ライセンスキーの共有対策
+  pairs_well_with: [pay.paddle, pay.lemonsqueezy]
+  source:
+    url: https://www.paddle.com/pricing
+    checked: '2026-11-02'
+    verified: true
+- id: pm.seats
+  name: 席数×プラン（B2B）
+  what: 使う人数ごとに月額。プランで機能を分ける
+  best_for: 会社やチームで使うもの。管理者が人数を決められる
+  avoid_when: 1人利用が主、または席を共有されやすいもの
+  pricing_bands:
+    free: 決済側の追加料金なし
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 年払い割引（現金が先に入る）と、途中の席の増減の日割り
+  lock_in: 低
+  liability_compliance: 請求書払い・購買部門の要件（PO・VAT 番号）が出てくる
+  security: SSO・監査ログの要求が来たら scale_readiness の段を見る
+  pairs_well_with: [pay.stripe-checkout, auth.clerk]
+  source:
+    url: https://stripe.com/pricing
+    checked: '2026-11-03'
+    verified: true
+lessons:
+- id: pr.unit-cost-before-price
+  principle: "Before setting a price, write the cost per user (AI tokens, SMS, egress, storage, support minutes) at 1x and 10x users and the gross margin at each."
+  anti_pattern: "Selling a flat monthly price for a feature whose cost grows with every use."
+  why: "AI and messaging costs scale with usage; a flat price can go negative-margin without anyone noticing until the bill arrives."
+  check: "Is the gross margin at 10x users written down with the formula?"
+  see_also: [pr.free-tier-cap, dp.ai-usage-caps]
+  verified: false
+- id: pr.cancel-as-easy-as-signup
+  principle: "Cancelling takes no more clicks than signing up, works without contacting support, and is confirmed by email."
+  anti_pattern: "Hiding cancellation behind a chat, a phone call or a 'retention' maze."
+  why: "Regulators (FTC click-to-cancel, EU consumer rules) penalise it, and chargebacks cost more than the saved churn."
+  check: "Can a user cancel in the same number of clicks as signing up, with no human in the loop?"
+  see_also: [pm.free-trial, pr.refund-policy-written]
+  verified: false
+- id: pr.free-tier-cap
+  principle: "Every free tier has a hard cap on the costly resource and a kill switch tied to the monthly cost ceiling."
+  anti_pattern: "Unlimited free usage of AI, SMS or storage 'for now'."
+  why: "Abuse and virality both arrive overnight; without a cap the free tier becomes the biggest line on the bill."
+  check: "Does each free tier have a numeric cap and a tested kill switch?"
+  see_also: [cc.kill-switch-tested, pm.freemium]
+  verified: false
+- id: pr.store-fee-in-price
+  principle: "If the product sells inside an app store, price from the net after the store fee, and never show a cheaper web price inside the app."
+  anti_pattern: "Copying the web price into in-app purchase and discovering the margin is gone, or linking out to a cheaper web checkout from inside the app."
+  why: "Store fees change the margin, and store rules reject apps that steer users to outside payment."
+  check: "Is the in-app price computed from the net after the store fee, and is there no in-app link to a cheaper web price?"
+  see_also: [policy.apple.3_1_1, policy.google.payments]
+  verified: false
+- id: pr.refund-policy-written
+  principle: "Write the refund and chargeback policy before the first sale, and use the same text at checkout, in the terms and in the support macro."
+  anti_pattern: "Deciding refunds case by case after the first complaint."
+  why: "Inconsistent answers create disputes, and a dispute costs a fixed fee plus the sale."
+  check: "Is the refund policy identical at checkout, in the terms and in support replies?"
+  see_also: [pr.cancel-as-easy-as-signup, lt.policy-matches-practice]
+  verified: false
+- id: pr.price-change-notice
+  principle: "Change prices with at least 30 days' notice to existing customers, and decide explicitly whether they keep the old price (grandfathering)."
+  anti_pattern: "Silently raising the price on the next renewal."
+  why: "Silent changes break trust and some consumer laws require notice; grandfathering is cheaper than the churn and refunds."
+  check: "Is the notice period and grandfathering rule written before the change is shipped?"
+  see_also: [pr.refund-policy-written]
+  verified: false
+- id: pr.annual-upfront
+  principle: "Offer an annual plan with a 15-25% discount and a written pro-rata refund rule."
+  anti_pattern: "Monthly only, or an annual plan with no stated refund rule."
+  why: "Annual cash funds the runway, and a missing refund rule turns every early cancellation into a dispute."
+  check: "Is there an annual plan with a stated discount and refund rule?"
+  see_also: [pr.refund-policy-written]
+  verified: false
+- id: pr.tax-handling-decided
+  principle: "Decide per country who handles sales tax or VAT (you, a tax tool, or a merchant of record) and show prices tax-inclusive where the law expects it."
+  anti_pattern: "Selling abroad with no tax plan and finding the registration threshold was crossed months ago."
+  why: "Registration duties appear by country and are retroactive; a merchant of record removes them for a fee."
+  check: "For every country sold into, is the tax handler named (self / tool / MoR) with the check date?"
+  see_also: [axis.payments_tax, pay.paddle]
+  verified: false

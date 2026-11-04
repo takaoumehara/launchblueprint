@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — ai_llm
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: ai_llm
-updated: '2026-10-26'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -23,7 +23,7 @@ entries:
   - host.vercel
   source:
     url: https://vercel.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: ai.firebase-ai-logic
   name: Firebase AI Logic
@@ -31,7 +31,7 @@ entries:
   best_for: モバイル・Firebase
   avoid_when: AI の会社をあとで切り替えたい時、ウェブ中心の時
   pricing_bands:
-    free: 無料枠（要確認）
+    free: Firebase AI Logic 自体は無料。Gemini Developer API の無料枠は課金未連携（Spark）のまま使える（枠の数値は ai.google.dev）
     usd5: 従量
     usd10: 従量
     usd100: 従量
@@ -42,6 +42,6 @@ entries:
   pairs_well_with:
   - auth.firebase
   source:
-    url: https://firebase.google.com/pricing
-    checked: '2026-10-26'
+    url: https://firebase.google.com/docs/ai-logic/pricing
+    checked: '2026-11-02'
     verified: true

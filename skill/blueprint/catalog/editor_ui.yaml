@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — editor_ui
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: editor_ui
-updated: '2026-10-29'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -9,7 +9,7 @@ entries:
   name: vaul
   what: 下からせり上がる入力パネル（ボトムシート）
   best_for: スマホでパーツをタップ→編集
-  avoid_when: パソコン中心
+  avoid_when: パソコン中心。保守停止のため、新規なら Base UI 等の Drawer も比べる
   pricing_bands:
     free: MIT・無料
     usd5: —
@@ -19,9 +19,9 @@ entries:
   license: MIT
   source:
     url: https://github.com/emilkowalski/vaul
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    checked: '2026-11-02'
+    verified: true
+    note: 'リポジトリ README に「unmaintained（保守停止）」の記載あり（2026-11-02）'
 - id: edit.dnd-kit
   name: dnd-kit
   what: タッチ対応のドラッグで並べ替え
@@ -35,10 +35,9 @@ entries:
   lock_in: 低
   license: MIT
   source:
-    url: https://dndkit.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/clauderic/dnd-kit/blob/master/LICENSE
+    checked: '2026-11-02'
+    verified: true
 - id: edit.puck
   name: Puck
   what: 自作の部品を並べられる見たまま編集の土台
@@ -52,10 +51,9 @@ entries:
   lock_in: 中
   license: MIT
   source:
-    url: https://puckeditor.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/puckeditor/puck/blob/main/LICENSE
+    checked: '2026-11-02'
+    verified: true
 - id: edit.tiptap
   name: Tiptap
   what: 文字の編集エディタ（太字・リンク・メニュー）
@@ -70,7 +68,7 @@ entries:
   license: MIT
   source:
     url: https://tiptap.dev/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: edit.blocknote
   name: BlockNote
@@ -78,14 +76,13 @@ entries:
   best_for: すぐ使えるブロック編集
   avoid_when: 細かく見た目を決めたい
   pricing_bands:
-    free: 本体 MPL-2.0・無料（一部拡張は有料ライセンスの可能性・要確認）
+    free: 本体 MPL-2.0・無料。@blocknote/xl-* は GPL-3.0（OSS なら無料）か商用ライセンス
     usd5: —
     usd10: —
-    usd100: —
+    usd100: Business $195/月（年払い $2,340。xl パッケージの商用ライセンス込み・1アプリ）
   lock_in: 中
-  license: MPL-2.0（要確認）
+  license: MPL-2.0（本体）／xl-* は GPL-3.0 または商用
   source:
-    url: https://www.blocknotejs.org/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://www.blocknotejs.org/pricing
+    checked: '2026-11-02'
+    verified: true

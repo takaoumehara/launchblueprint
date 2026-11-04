@@ -1,0 +1,147 @@
+# Blueprint Catalog — legal_terms（規約・プライバシーポリシー・表記の作り方）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。法律助言ではない。公開前に弁護士確認
+domain: legal_terms
+updated: '2026-11-03'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: lt.termly
+  name: Termly
+  what: 質問に答えるとプライバシーポリシー・規約・Cookie バナーを作り、法改正で更新してくれる
+  best_for: 無料でまずプライバシーポリシー1本を出す。EU/UK 向けの Cookie バナーも同じ所で
+  avoid_when: 規約も含めて2本以上を無料で欲しい時（無料は1本）
+  pricing_bands:
+    free: Free $0：基本ポリシー1本・バナー表示 1万回/月・Cookie スキャン四半期1回
+    usd5: —
+    usd10: Starter $10/サイト/月（年払い。月払い $14）：ポリシー 2 本・バナー表示 5 万回/月・スキャン月 1 回
+    usd100: Pro+ $15/月（年払い。月払い $20）：ポリシー・バナー無制限
+  limits: 無料はポリシー1本・1 サイト。バナー表示回数の上限
+  lock_in: 低（文書はコピーできる）
+  liability_compliance: 生成文書は雛形。事業内容に合わせて確認。弁護士の代わりではない
+  security: —
+  pairs_well_with: [lt.policy-matches-practice]
+  source:
+    url: https://termly.io/pricing/
+    checked: '2026-11-03'
+    verified: true
+- id: lt.iubenda
+  name: iubenda
+  what: EU 発の規約・ポリシー・同意管理ツール
+  best_for: EU の利用者が主で、同意記録まで1つで済ませたい
+  avoid_when: 月 5,000 PV を超えるサイトを無料で済ませたい時（超えるとバナーがその月は止まる）
+  pricing_bands:
+    free: 無料：5,000 PV/月まで（超過購入不可。超えるとその月はバナー停止）・プライバシー／Cookie ポリシーのみ（規約なし）・第三者サービス 3 件まで（比較表は 4 件表記）・1 言語・iubenda ブランド表示
+    usd5: Essentials $5.99/サイト/月（年払い。月払い $6.99。€4.99／€5.99）：2.5万 PV/月まで。超過 €0.05/1,000PV
+    usd10: —
+    usd100: Advanced $24.99/月（年払い。月払い $27.99）：5 万 PV／Ultimate $99.99（$119.99）：15 万 PV
+  limits: PV で課金が増える。料金は VAT 別
+  lock_in: 低〜中（同意記録は移しにくい）
+  liability_compliance: 雛形。弁護士の代わりではない
+  security: —
+  pairs_well_with: [lt.consent-before-tracking]
+  source:
+    url: https://www.iubenda.com/en/pricing
+    checked: '2026-11-03'
+    verified: true
+    note: '無料枠の上限は https://www.iubenda.com/en/help/379-free-plan-limitations/（2026-08-25 更新）と https://www.iubenda.com/app/en/pricing_comparison で 2026-11-03 確認。料金ページ本文には無料枠の数値なし'
+- id: lt.getterms
+  name: GetTerms
+  what: 安い月額か買い切りで規約・ポリシーを作る
+  best_for: 買い切りで済ませたい小さなサービス
+  avoid_when: Cookie 同意の管理まで要る時
+  pricing_bands:
+    free: 無料版（GetTerms のブランド表示つき。上限はページに非表示）
+    usd5: Starter $5/月（年払い。月払い $9。買い切り $199）
+    usd10: Business $8/月（年払い。月払い $12。買い切り $249）
+    usd100: —
+  limits: —
+  lock_in: 低
+  liability_compliance: 雛形。弁護士の代わりではない
+  security: —
+  pairs_well_with: []
+  source:
+    url: https://getterms.io/pricing
+    checked: '2026-11-03'
+    verified: true
+- id: lt.termageddon
+  name: Termageddon
+  what: 米国の州法の改正に合わせて自動更新するポリシー生成
+  best_for: 米国の複数州の消費者向けで、改正の追跡を任せたい
+  avoid_when: 無料で始めたい時（無料プランなし）
+  pricing_bands:
+    free: —
+    usd5: —
+    usd10: $12/月 または $119/年（サイトごと）
+    usd100: —
+  limits: 1サイトごと
+  lock_in: 低
+  liability_compliance: 雛形。弁護士の代わりではない
+  security: —
+  pairs_well_with: []
+  source:
+    url: https://termageddon.com/pricing/
+    checked: '2026-11-03'
+    verified: true
+- id: lt.lawyer
+  name: 弁護士に依頼（AI の下書き＋レビュー）
+  what: 雛形や AI の下書きを、提供国の弁護士が事業内容に合わせて直す
+  best_for: ユーザー間でお金が動く・未成年・医療や金融・複数国・買収を見据える時
+  avoid_when: 試作や社内ツール（まだ外部の利用者がいない）
+  pricing_bands:
+    free: —
+    usd5: —
+    usd10: —
+    usd100: 数万円〜（国・案件で大きく違う。見積もり必須）
+  limits: 時間がかかる。改正のたびに再依頼
+  lock_in: 低
+  liability_compliance: 責任の所在が明確になる唯一の選択肢
+  security: —
+  pairs_well_with: [dd.contracts, gate.privacy_rep]
+  source:
+    url: null
+    checked: '2026-11-03'
+    verified: false
+    note: 公開料金なし。金額は見積もり次第（estimate）
+lessons:
+- id: lt.policy-matches-practice
+  principle: "The privacy policy names the real processors, regions and retention periods, and is updated in the same PR that adds a vendor."
+  anti_pattern: "A generated policy that lists vendors you don't use and omits the ones you do."
+  why: "A policy that doesn't match practice is evidence against you in a complaint or a sale's due diligence."
+  check: "Does every vendor in the architecture appear in the policy, and nothing else?"
+  see_also: [dd.privacy, lt.termly]
+  verified: false
+- id: lt.consent-before-tracking
+  principle: "In the EU and UK, load analytics and ad tags only after consent; measure with a cookieless tool before consent."
+  anti_pattern: "Firing tags on page load with a banner that only informs."
+  why: "Pre-consent tracking is the most common and easiest-to-prove violation."
+  check: "With consent declined, does the network tab show zero analytics or ad requests?"
+  see_also: [an.vercel-analytics, lt.iubenda]
+  verified: false
+- id: lt.required-disclosures-by-country
+  principle: "For each country you sell into, list the mandatory disclosures (e.g. seller identity, address, price, refund terms, business registration numbers) and put them on one public page linked from checkout."
+  anti_pattern: "Assuming the terms page covers it, or copying another country's format."
+  why: "Consumer-protection laws require specific disclosures per country, and missing ones block store listings and payment processor reviews."
+  check: "Is there one disclosure page per selling country, linked from checkout, reviewed against that country's list?"
+  see_also: [axis.legal, biz.public-support-address]
+  verified: false
+- id: lt.age-gate-decided
+  principle: "Decide in writing whether minors may use the product; if not, add an age gate and delete under-age accounts; if yes, get the required parental consent per country."
+  anti_pattern: "Leaving the question open and discovering children's data in the database."
+  why: "Children's-data rules carry the highest fines and the most invasive remedies."
+  check: "Is the minors policy written, and does signup enforce it?"
+  see_also: [axis.legal]
+  verified: false
+- id: lt.terms-versioned
+  principle: "Version and date the terms, keep every past version, and notify users before material changes take effect."
+  anti_pattern: "Editing the live terms page silently."
+  why: "You cannot prove what a user agreed to without the version they saw."
+  check: "Is each terms version stored with its effective date and the notice that announced it?"
+  see_also: [pr.price-change-notice]
+  verified: false
+- id: lt.ai-disclosure
+  principle: "Tell users when they are talking to an AI or reading AI-generated content, and state what the AI may not do (refunds, legal promises)."
+  anti_pattern: "An AI support reply that reads as a human and promises a refund."
+  why: "Transparency rules (EU AI Act and consumer law) require it, and an unbounded AI makes commitments you must honour."
+  check: "Is AI involvement disclosed where it happens, and is the list of topics the AI must not decide written down?"
+  see_also: [dp.prompt-injection-untrusted-input]
+  verified: false

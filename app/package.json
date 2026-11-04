@@ -5,9 +5,11 @@
   "scripts": {
     "data": "node scripts/build-data.mjs",
     "dev": "npm run data && vite",
-    "build": "npm run data && vite build"
+    "build": "npm run data && vite build",
+    "test": "npm run data && node --test test/*.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource/geist-mono": "^5.3.0",
     "js-yaml": "^4.1.0"

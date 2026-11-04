@@ -41,7 +41,8 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 | アプリ配信 | `catalog/app_distribution.yaml`, `reference/exit-appdist.md` | ストアに出す |
 | 規模への備え | `catalog/scale_readiness.yaml` | 公開プロダクト（今の段と次の引き金だけ示す） |
 | 売却準備 | `catalog/exit_dd.yaml`, `catalog/dd_dashboard.yaml` | 出口に「売る」がある、または投資を受ける |
-| UI/UX の原則 | `catalog/ui_ux.yaml`, `reference/ui-ux.md` | 画面がある（要件・設計・品質の確認で毎回） |
+| UI/UX の原則 | `catalog/ui_ux.yaml`, `reference/ui-ux.md` | 画面がある（要件・設計・品質の確認で毎回。`phase_gate_checks` は構想・公開・運用・拡大・出口の各段階に1つ以上、MCP `ui_ux_checklist` の lifecycle で引く） |
+| クライアントワーク（受託・制作・運用代行） | `catalog/client_collaboration.yaml`, `reference/client-collaboration.md` | 外部のクライアントと進める案件（開始時の基準値と整合監査・合意ページ・通知・無償範囲のパイロット合意・プレビューの公開範囲。`phase_gate_checks` は5段階すべて、MCP `get_catalog("client_collaboration")` で引く） |
 | CMS・編集画面・部品集 | `catalog/cms.yaml`, `catalog/editor_ui.yaml`, `catalog/ui_libraries.yaml`, `reference/design-resources.md` | お客さんが更新する／画面を作る |
 
 規模：大きな基盤を先に作らない。段ごとの引き金に届いたら次へ。売却が目的なら、要るのは大規模インフラより「記録された数字」と「戻せる証拠」。
@@ -63,6 +64,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 
 ### 7. 見直し（いつでも再実行）
 方向・スタック・ホスト・範囲を変えるとき、公開前、各段の引き金に届いたときに再実行。
+0. 今の段（idea / launch / operate / scale / exit）の `known_surprises` を 1 行ずつ「起きていないか」確かめ、`revisit_triggers` に当たるものがあれば先に出す（`catalog/lifecycle.yaml` macro_stages、MCP `lifecycle_stages`）。
 1. 変えるブロックを特定 → `dependencies` を辿り、影響するブロックを全部出す。
 2. リスクの先回り：期限切れの `source.checked`、未決の `open_decisions`、超えそうな無料枠、規約変更を一覧にする。
 3. 影響と新しい推奨を出し、オーナーの OK 後に YAML を更新。
@@ -74,13 +76,18 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - 固有名詞・個人名・プロジェクト名を外して一般化してある。出典と確認日をつける。
 - 数字は catalog（YAML）へ、手順は SKILL.md へ、説明は reference へ。SKILL.md は150行以内を保つ。
 本体の更新はオーナーの OK 後。
+驚き（計画になかったのに起きたこと）は `po-input/TEMPLATE-surprise.md` の形で 1 件 1 枚に記録し、`reference/feedback-loop.md` の手順で lessons・lifecycle（known_surprises / revisit_triggers）・tactics に戻す。
 
 ## ファイル
 - `reference/12-categories.md`：12カテゴリーの中身、フェーズ別チェック、AI特有の注意、海外展開（6軸・入り方3案）
 - `reference/gtm-ops.md`：GTM・運用・保守
 - `reference/exit-appdist.md`：売却準備とアプリ配信
 - `reference/design-resources.md`：デザインの参考サイト・素材・部品集の使い分け
-- `reference/ui-ux.md`：UI/UX の原則（理由つき）。チェックは `catalog/ui_ux.yaml`
-- `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`
+- `reference/ui-ux.md`：UI/UX の原則（原則・避ける形・理由・確認）。チェックと段階ゲートは `catalog/ui_ux.yaml`。専門用語は `elements/glossary.yaml`
+- `reference/coverage.md`：段階（idea → launch → operate → scale → exit）× 要素 × tactic の網羅表。`reference/feedback-loop.md`：驚きを rule・tactic に戻す手順（記録は `po-input/`）
+- `reference/foresight.md`（先読みの手順：決定の先読み・画面操作の下ごしらえ・プレモーテム・「聞かれていないが大事」3 点・クリティカルパスの暦・エージェント環境の一括依頼。罠と手順の id は `catalog/foresight.yaml`）、`reference/planning.md`（計画の手順：地平・制約・前提を最悪から・Now/Next/Later・止める決まりつきマイルストーン・容量計算と次の 10 営業日・決定の議題・シナリオ・やめる線・整合性）
+- `catalog/*.yaml`：技術・サービスのカタログ（料金帯・上限・ロックイン・出典）、`rules.yaml`、`freshness.yaml`、`build_vs_buy.yaml`、`lifecycle.yaml`（段階ごとの known_surprises / revisit_triggers）、`scale_readiness.yaml`、`dd_dashboard.yaml`、`ui_ux.yaml`、`validation.yaml`、`pricing.yaml`、`legal_terms.yaml`、`backup_dr.yaml`、`cost_control.yaml`、`ops_handoff.yaml`、`exit_tools.yaml`
 - `catalog/schema.md`：全 YAML の書式
 - `templates/project.axes.yaml`, `templates/brand-context.md`
+- `reference/dry-run-sample.md`：見本プロジェクトを MCP だけで構想→終了まで通した記録と穴。`reference/walkthrough-non-engineer.md`：アプリの歩き方
+- MCP（`mcp/`）：`list_topics` → `draft_project_map(profile)` → `get_comparison` / `get_item` → オーナーの OK 後に `draft_project_map(decided)`。使い方は `QUICKSTART.md`

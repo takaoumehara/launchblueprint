@@ -1,0 +1,133 @@
+# Blueprint Catalog — ops_handoff（引き継ぎ・権限・採用：1人運用から2人目へ）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。法律助言ではない
+domain: ops_handoff
+updated: '2026-11-02'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: ho.bitwarden
+  name: Bitwarden
+  what: パスワード・鍵の共有金庫。オープンソース。個人は無料
+  best_for: 1〜2 人で無料から始め、人が増えたら $4/人
+  avoid_when: —
+  pricing_bands:
+    free: 個人：無料（端末・件数無制限）
+    usd5: Families $3.99/月（6 人・年払い $47.88）／Teams $4/人/月（年払い）
+    usd10: Enterprise $6/人/月
+    usd100: Secrets Manager：Teams $6/人・Enterprise $12/人
+  limits: 共有は Families か Teams から
+  lock_in: 低（書き出し可）
+  liability_compliance: 会社の金庫は会社名義のアカウントで
+  security: 管理者はパスキーか物理キー（dp.admin-phishing-resistant-mfa）
+  pairs_well_with: [ho.access-inventory, dp.admin-phishing-resistant-mfa]
+  source:
+    url: https://bitwarden.com/pricing/business/
+    checked: '2026-11-02'
+    verified: true
+- id: ho.1password
+  name: 1Password
+  what: 使いやすさ重視の共有金庫
+  best_for: 10 人までのチームを定額で
+  avoid_when: 無料で始めたい時（無料プランなし）
+  pricing_bands:
+    free: —
+    usd5: Individual $3.99/月（年払い。初年は割引あり）／Families $5.99/月（5 人）／Teams Starter Pack $24.95/月（10 人まで。追加 $4.99/席）
+    usd10: Business $8.99/人/月（年払い）
+    usd100: —
+  limits: 年払い
+  lock_in: 低（書き出し可）
+  liability_compliance: —
+  security: 同上
+  pairs_well_with: [ho.access-inventory]
+  source:
+    url: https://1password.com/business-pricing
+    checked: '2026-11-02'
+    verified: true
+- id: ho.doppler
+  name: Doppler
+  what: アプリの秘密情報（環境変数）を 1 か所で管理し、各ホストへ同期
+  best_for: ホストが 2 つ以上、または環境（dev/stg/prod）ごとに鍵を分けたい時
+  avoid_when: ホスト 1 つで環境変数の画面で足りる時（ho.host-env-vars）
+  pricing_bands:
+    free: Developer：3 人まで無料（プロジェクト 10・環境 4・サービストークン 50）
+    usd5: 追加 $8/人/月
+    usd10: —
+    usd100: Team $21/人/月
+  limits: 無料は 3 人・ログ 3 日
+  lock_in: 低
+  liability_compliance: —
+  security: サービストークンは環境ごとに最小権限
+  pairs_well_with: [sec.secrets, ho.offboarding-rotate]
+  source:
+    url: https://www.doppler.com/pricing
+    checked: '2026-11-02'
+    verified: true
+- id: ho.host-env-vars
+  name: ホストの環境変数（Vercel の Config / Secret）
+  what: ホストの画面で環境ごとに鍵を置く。Secret は保存後に読めない
+  best_for: ホスト 1 つの小さなプロジェクト
+  avoid_when: 同じ鍵を複数ホストに手で配る時（同期ミス）
+  pricing_bands:
+    free: ホスト込み
+    usd5: ホスト込み
+    usd10: ホスト込み
+    usd100: ホスト込み
+  limits: 1 デプロイ 64KB まで
+  lock_in: 低
+  liability_compliance: —
+  security: Secret を使う。ローテーション日を記録
+  pairs_well_with: [host.vercel, sec.secrets]
+  source:
+    url: https://vercel.com/docs/environment-variables
+    checked: '2026-11-02'
+    verified: true
+lessons:
+- id: ho.access-inventory
+  principle: "Keep one list of every account, key, domain and billing card: owner, recovery method, 2FA, who else can get in."
+  anti_pattern: "Access that lives in one person's head and phone."
+  why: "A lost phone or a sick founder should not stop deploys, payouts or domain renewals."
+  check: "Can a second person, using only the list, log into every service today?"
+  see_also: [ho.bus-factor-two, dd.ip]
+  verified: false
+- id: ho.company-owned-accounts
+  principle: "Every vendor account, domain and store listing is registered to a company email and stored in the shared vault, never to a personal address."
+  anti_pattern: "Signing up with a personal Gmail 'for now'."
+  why: "Transferring accounts out of a personal name takes weeks and blocks a sale or a handoff."
+  check: "Does any vendor account use a personal email? (target: zero)"
+  see_also: [dd.ip, biz.processor-account-per-brand]
+  verified: false
+- id: ho.runbook-top5
+  principle: "Write a runbook for the five most likely failures: detection, first action, customer message template, recovery check."
+  anti_pattern: "Debugging from memory at 3 a.m. with the founder as the only one who knows."
+  why: "Most incidents repeat; the runbook is what lets a second person or an AI agent act."
+  check: "Does the runbook cover five failures with the four fields each?"
+  see_also: [lc.operate.58, mon.sentry]
+  verified: false
+- id: ho.contractor-ip-assignment
+  principle: "Before a contractor's first commit, sign an IP assignment and confidentiality agreement, and keep it in the data room."
+  anti_pattern: "Paying a freelancer through a marketplace and assuming the code is yours."
+  why: "Without assignment the contractor keeps rights, and due diligence stops on it."
+  check: "Is a signed IP assignment on file for every non-employee who committed code or designs?"
+  see_also: [dd.ip, dd.contracts]
+  verified: false
+- id: ho.bus-factor-two
+  principle: "Two people can deploy, restore a backup, pay the bills and answer support; test it by having the second person do each once."
+  anti_pattern: "One person for everything, with 'documentation' as the backup plan."
+  why: "A single point of failure in people is the most common cause of a product dying while profitable."
+  check: "Has a second person performed deploy, restore, payment and support in the last 90 days?"
+  see_also: [ho.access-inventory, bk.restore-drill-timed]
+  verified: false
+- id: ho.offboarding-rotate
+  principle: "On the day someone leaves, remove their access and rotate every shared key they could have seen."
+  anti_pattern: "Leaving old contractors in the vault and the repo."
+  why: "Forgotten access is the quietest breach path, and a sale's due diligence asks for the offboarding log."
+  check: "Is there an offboarding entry with the date for every departed person, and were keys rotated?"
+  see_also: [dp.retire-unused-keys, ho.access-inventory]
+  verified: false
+- id: ho.hire-trigger-written
+  principle: "Write the trigger for the first hire or contractor (e.g. ops over 10 hours a week for four weeks, or support response over the target), and start with a scoped contractor task before a hire."
+  anti_pattern: "Hiring on a feeling, or never, while the founder does support at midnight."
+  why: "A numeric trigger stops both premature hiring and burnout; a scoped task tests the handoff cheaply."
+  check: "Is the hiring trigger a number, and is it being measured?"
+  see_also: [lc.strategy.10, ho.runbook-top5]
+  verified: false

@@ -1,5 +1,5 @@
 domain: payments
-updated: '2026-10-27'
+updated: '2026-11-03'
 stale_after_days: 90
 entries:
 - id: pay.stripe-checkout
@@ -12,7 +12,7 @@ entries:
     usd5: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
     usd10: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
     usd100: 固定費なし、米国カード 2.9%+30¢／件、紛争 $15／件
-  limits: 国ごとに対応手段が違う。海外カード +1%
+  limits: 国ごとに対応手段が違う。海外カード +1.5%、通貨換算 +1%
   lock_in: 中
   liability_compliance: チャージバックは販売者（自社）。紛争受付 $15
   security: Webhook 署名を検証
@@ -20,7 +20,7 @@ entries:
   - fe.nextjs
   source:
     url: https://stripe.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: pay.stripe-connect
   name: Stripe Connect
@@ -58,10 +58,10 @@ entries:
   best_for: 英国・EU のマーケットプレイス／プラットフォーム。出店者の KYC 自動化、分割払い（Split Payments）、手数料の取り方を細かく決めたい、個別担当がほしい場合
   avoid_when: 米国中心の販売、日本向け、公開料金で即日始めたい小規模、Stripe 並みの周辺機能（Billing/Tax/Radar 等）を一式で使いたい場合
   pricing_bands:
-    free: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
-    usd5: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
-    usd10: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
-    usd100: 公開料金なし。個別見積り（平均単価・決済種別で決定）。固定費の有無は要確認
+    free: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
+    usd5: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
+    usd10: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
+    usd100: 公開料金なし。個別見積り（平均単価・決済種別・取扱高で決定）。月額の SaaS 料金あり（金額は提案時に決定）
   limits: 営業経由の契約（審査あり）。定期課金は日次／月次サイクル。対応国：英国＋EU 各国（公式の一覧は未確認）。米国対応は第三者ページの記載のみで未確認。通貨・入金サイクル・SDK
     言語は未確認
   lock_in: 中〜高：サブアカウント（出店者）と KYC 情報の移行が重い
@@ -69,8 +69,9 @@ entries:
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
   - url: https://www.ryftpay.com/pricing
-    checked: '2026-10-27'
+    checked: '2026-11-03'
     verified: true
+    note: '2026-11-03 再確認：公開料金なし（取扱高に応じた個別提案。サブアカウント費用込みの月額 SaaS 料金は提案時に合意）'
   - url: https://developer.ryftpay.com/documentation/overview/marketplaces
     checked: '2026-10-27'
     verified: true
@@ -92,126 +93,127 @@ entries:
   best_for: 高取扱高・多国展開・店頭も含む
   avoid_when: 小規模（最低取扱・審査が重い）
   pricing_bands:
-    free: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
-    usd5: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
-    usd10: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
-    usd100: 取引ごと固定費＋決済手段別料金（Interchange++）。月額最低額あり（要確認）
+    free: $0.13＋Interchange++＋0.60%（Visa/MC）。月額・初期費用なし。業種により最低請求額あり（金額非公開）
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
   limits: 営業経由
   lock_in: 高
   liability_compliance: 販売者が責任。PCI DSS L1
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.adyen.com/pricing
-    checked: '2026-10-27'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: pay.checkout-com
   name: Checkout.com
   what: 大企業向けの多国決済
   best_for: 高取扱高・多通貨
   avoid_when: 小規模（個別見積・審査）
   pricing_bands:
-    free: 個別見積
-    usd5: 個別見積
-    usd10: 個別見積
-    usd100: 個別見積
+    free: 個別見積（初期費用・口座維持費なし。料金は非公開）
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
   limits: 営業経由
   lock_in: 高
   liability_compliance: 販売者が責任
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.checkout.com/pricing
-    checked: '2026-10-27'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: pay.paddle
   name: Paddle
   what: Merchant of Record（販売代行。消費税・VATの納付も代行）
   best_for: SaaS・ソフトの世界販売で税務を丸投げしたい
   avoid_when: 物販・マーケットプレイス。料率を下げたい場合
   pricing_bands:
-    free: 5%+50¢／件（公開値・要確認）
-    usd5: 5%+50¢／件（公開値・要確認）
-    usd10: 5%+50¢／件（公開値・要確認）
-    usd100: 5%+50¢／件（公開値・要確認）
+    free: 5%+50¢／件（月額なし。$10 未満の商品は個別相談）
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
   limits: MoR なので請求書・顧客との契約主体は Paddle
   lock_in: 中〜高
   liability_compliance: 税と紛争の主体は Paddle（MoR）
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.paddle.com/pricing
-    checked: '2026-10-27'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: pay.lemonsqueezy
   name: Lemon Squeezy
   what: MoR 型のデジタル販売（Stripe 傘下）
   best_for: 個人・小規模のデジタル商品／SaaS
   avoid_when: 物販・マーケットプレイス・大規模
   pricing_bands:
-    free: 5%+50¢／件（要確認）
-    usd5: 5%+50¢／件（要確認）
-    usd10: 5%+50¢／件（要確認）
-    usd100: 5%+50¢／件（要確認）
-  limits: Stripe 傘下で今後の方針に注意
+    free: 5%+50¢／件（月額なし）
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
+  limits: 2026-01-28 の公式ブログで、今後の重点を Stripe Managed Payments（Stripe の MoR）に移すと発表。新規登録は引き続き可能で、強制移行の期日は出ていない（更新とサポートは遅くなる見込み）。新規は Stripe Managed Payments も並べて比較する
   lock_in: 中
   liability_compliance: 税と紛争の主体は Lemon Squeezy（MoR）
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.lemonsqueezy.com/pricing
-    checked: '2026-10-27'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
+    note: '5%+50¢ は料金ページで確認（2026-11-03）。2026-01-28 公式ブログ：重点を Stripe Managed Payments に移す。移行期日なし・新規登録は継続'
 - id: pay.polar
   name: Polar
   what: 開発者向け MoR（SaaS・デジタル商品）
   best_for: 開発者向けプロダクト、オープンソース収益化
   avoid_when: 物販・マーケットプレイス
   pricing_bands:
-    free: 4%+40¢／件（要確認）
-    usd5: 4%+40¢／件（要確認）
-    usd10: 4%+40¢／件（要確認）
-    usd100: 4%+40¢／件（要確認）
+    free: Starter（月額なし）5%+50¢／件。海外カード +1.5%・紛争 $15
+    usd5: 同左
+    usd10: 同左
+    usd100: Pro $20/月で 3.8%+40¢／Growth $100 で 3.6%+35¢／Scale $400 で 3.4%+30¢（2026-05-27 以前の組織は 4%+40¢＋サブスク 0.5%）
   limits: 新しめのサービス
   lock_in: 中
   liability_compliance: 税の主体は Polar（MoR）
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
-    url: https://polar.sh/pricing
-    checked: '2026-10-27'
-    verified: false
+    url: https://polar.sh/docs/merchant-of-record/fees
+    checked: '2026-11-02'
+    verified: true
 - id: pay.mollie
   name: Mollie
   what: 欧州向けの決済（iDEAL・SEPA 等の地域手段に強い）
   best_for: オランダ・ベルギー・ドイツ等の欧州 B2C
   avoid_when: 米国・日本向け
   pricing_bands:
-    free: 固定費なし、手段別の件数課金（要確認）
-    usd5: 固定費なし、手段別の件数課金（要確認）
-    usd10: 固定費なし、手段別の件数課金（要確認）
-    usd100: 固定費なし、手段別の件数課金（要確認）
+    free: 固定費なし。EEA 消費者カード 1.80%+€0.25・法人カード 2.90%+€0.25・iDEAL €0.32
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
   limits: 欧州の事業者が対象
   lock_in: 中
   liability_compliance: 販売者が責任
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.mollie.com/pricing
-    checked: '2026-10-27'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: pay.square
   name: Square
   what: 店頭＋オンラインの決済
   best_for: 店舗・イベント・対面販売がある
   avoid_when: マーケットプレイスの分配・複雑な課金
   pricing_bands:
-    free: オンライン 2.9%+30¢／件（米国・要確認）
-    usd5: オンライン 2.9%+30¢／件（米国・要確認）
-    usd10: オンライン 2.9%+30¢／件（米国・要確認）
-    usd100: オンライン 2.9%+30¢／件（米国・要確認）
+    free: オンライン 3.3%+30¢（自分のアプリから API 経由は 2.9%+30¢）・対面 2.6%+15¢・手入力 3.5%+15¢・海外カード +1.5%（米国）
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
   limits: 対応国が限定
   lock_in: 中
   liability_compliance: 販売者が責任
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
-    url: https://squareup.com/us/en/payments/pricing
-    checked: '2026-10-27'
-    verified: false
+    url: https://squareup.com/help/us/en/article/5068-what-are-square-s-fees
+    checked: '2026-11-02'
+    verified: true
 - id: pay.paypal-braintree
   name: PayPal / Braintree
   what: PayPal ウォレット＋カード決済（Braintree は開発者向け）。Venmo ボタンもここから出す
@@ -228,7 +230,7 @@ entries:
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://www.paypal.com/us/business/paypal-business-fees
-    checked: '2026-10-27'
+    checked: '2026-11-03'
     verified: true
 - id: pay.venmo
   name: Venmo（Pay with Venmo / ビジネスプロフィール）
@@ -237,7 +239,7 @@ entries:
   avoid_when: 単独の決済基盤にしたい場合・米国外の購入者がいる場合・チケット販売（在庫・QR・払い戻しの仕組みがない）
   recommendation: 単独では使わない。追加の支払い方法として足す
   pricing_bands:
-    free: 'ウェブ（PayPal 経由の Pay with Venmo）3.49%+49¢。アプリ内ビジネスプロフィール 1.9%+10¢（$1超）、Tap to Pay 2.29%+9¢'
+    free: 'ウェブ（PayPal 経由の Pay with Venmo）3.49%+49¢。アプリ内ビジネスプロフィール 1.9%+10¢、Tap to Pay 2.29%+9¢'
     usd5: 同左
     usd10: 同左
     usd100: 同左
@@ -251,7 +253,7 @@ entries:
   source:
     url: https://venmo.com/resources/our-fees
     also: [https://www.paypal.com/us/business/paypal-business-fees, https://venmo.com/business/profiles]
-    checked: '2026-10-27'
+    checked: '2026-11-03'
     verified: true
     note: 'Tap to Pay は料金表 2.29%+9¢、ビジネス紹介ページは 2.9%+9¢ と食い違い。料金表を優先'
 - id: pay.komoju
@@ -260,36 +262,37 @@ entries:
   best_for: 日本市場（カード以外の手段が必要）
   avoid_when: 日本以外が主
   pricing_bands:
-    free: 手段別（カード 3.6% 前後・要確認）
-    usd5: 手段別（カード 3.6% 前後・要確認）
-    usd10: 手段別（カード 3.6% 前後・要確認）
-    usd100: 手段別（カード 3.6% 前後・要確認）
+    free: カード 3.25%・コンビニ 2.75%・初期費用と月額 0 円
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
   limits: 日本の手段中心
   lock_in: 中
   liability_compliance: 販売者が責任
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
     url: https://ja.komoju.com/pricing/
-    checked: '2026-10-27'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
+    note: '2026-10-26 付で不正アクセスの公表あり。契約前に状況を確認'
 - id: pay.payjp
   name: PAY.JP
   what: 日本向けのシンプルなカード決済 API
   best_for: 日本の小規模サービス・定期課金
   avoid_when: 海外販売・マーケットプレイス分配
   pricing_bands:
-    free: カード 3.0%〜（プランにより・要確認）
-    usd5: カード 3.0%〜（プランにより・要確認）
-    usd10: カード 3.0%〜（プランにより・要確認）
-    usd100: カード 3.0%〜（プランにより・要確認）
+    free: スタンダード：カード 3.3%・月額 0 円（月商 400 万円未満）
+    usd5: 同左
+    usd10: 同左
+    usd100: ビジネス：2.78%・月額 20,000 円（税込）／エンタープライズ：2.59%（Visa/MC）・月額 50,000 円。振込手数料 250 円/回
   limits: 日本法人／個人事業主向け（海外法人可否は要確認）
   lock_in: 中
   liability_compliance: 販売者が責任
   security: Webhook 署名を検証。カード情報は自社サーバーに通さない（ホスト型フォーム）
   source:
-    url: https://pay.jp/pricing
-    checked: '2026-10-27'
-    verified: false
+    url: https://pay.jp/plan
+    checked: '2026-11-02'
+    verified: true
 payment_roles:
   updated: '2026-10-27'
   what: 決済の「役割」ごとの選び方（汎用）。1つのサービスに複数の役割がある時は役割ごとに選ぶ

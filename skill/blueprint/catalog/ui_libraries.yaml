@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — ui_libraries
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: ui_libraries
-updated: '2026-10-29'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -18,10 +18,9 @@ entries:
   lock_in: 低
   license: MIT
   source:
-    url: https://ui.shadcn.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/shadcn-ui/ui/blob/main/LICENSE.md
+    checked: '2026-11-02'
+    verified: true
 - id: ui.base-ui
   name: Base UI
   what: 見た目なしの部品（動き・キーボード操作・読み上げ対応だけ）
@@ -35,10 +34,9 @@ entries:
   lock_in: 低
   license: MIT
   source:
-    url: https://base-ui.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/mui/base-ui/blob/master/LICENSE
+    checked: '2026-11-02'
+    verified: true
 - id: ui.react-aria
   name: React Aria
   what: 見た目なしの部品（アクセシビリティが最も厚い）
@@ -52,27 +50,26 @@ entries:
   lock_in: 低
   license: Apache-2.0
   source:
-    url: https://react-spectrum.adobe.com/react-aria/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/adobe/react-spectrum/blob/main/LICENSE
+    checked: '2026-11-02'
+    verified: true
 - id: ui.heroui
   name: HeroUI
   what: 見た目つきの部品集
   best_for: 早く整った画面
   avoid_when: 独自ブランドを強く出したい
   pricing_bands:
-    free: MIT・無料
+    free: Apache-2.0・無料（v3 系）
     usd5: —
     usd10: —
-    usd100: —
+    usd100: HeroUI Pro（買い切りライセンス。先行販売中で公式ページに金額の掲載なし・未確認）
   lock_in: 中
-  license: MIT
+  license: Apache-2.0
   source:
-    url: https://www.heroui.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/heroui-inc/heroui
+    checked: '2026-11-03'
+    verified: true
+    note: 'ライセンスは Apache-2.0（LICENSE で確認）。有料の HeroUI Pro は https://heroui.pro/pricing に金額なし（2026-11-03）'
 - id: ui.untitled
   name: Untitled UI
   what: Figma とコードがそろう大きな部品集（React Aria ベース）
@@ -87,7 +84,7 @@ entries:
   license: 独自ライセンス
   source:
     url: https://www.untitledui.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: ui.coss
   name: coss ui（旧 Origin UI）
@@ -95,16 +92,16 @@ entries:
   best_for: 部品の種類を増やす
   avoid_when: —
   pricing_bands:
-    free: 無料（ライセンス要確認）
+    free: MIT・無料（旧 Origin UI。保守は限定的と公式に記載）
     usd5: —
     usd10: —
     usd100: —
   lock_in: 低
   source:
-    url: https://coss.com/ui
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/origin-space/originui
+    checked: '2026-11-02'
+    verified: true
+  license: MIT
 - id: ui.daisyui
   name: daisyUI
   what: Tailwind にクラス名で見た目をつける
@@ -118,26 +115,25 @@ entries:
   lock_in: 低
   license: MIT
   source:
-    url: https://daisyui.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/saadeghi/daisyui/blob/master/LICENSE
+    checked: '2026-11-02'
+    verified: true
 - id: ui.tremor
   name: Tremor
   what: グラフ・ダッシュボード部品
   best_for: 管理画面の数字表示
   avoid_when: —
   pricing_bands:
-    free: 無料（Apache-2.0・要確認）
+    free: Apache-2.0・無料（一部の部品は MIT）
     usd5: —
     usd10: —
     usd100: —
   lock_in: 低
   source:
-    url: https://tremor.so/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/tremorlabs/tremor/blob/main/LICENSE
+    checked: '2026-11-02'
+    verified: true
+  license: Apache-2.0
 - id: ui.magicui
   name: Magic UI
   what: 小さな動き・演出の部品
@@ -145,15 +141,16 @@ entries:
   avoid_when: アプリの作業画面で多用
   pricing_bands:
     free: 無料版 MIT
-    usd5: Pro $49（買い切り・商用可・再販不可）
-    usd10: Pro $49（買い切り・商用可・再販不可）
-    usd100: Pro $49（買い切り・商用可・再販不可）
+    usd5: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
+    usd10: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
+    usd100: Pro $199（買い切り・個人ライセンス・商用可・再販不可）
   lock_in: 低
   license: MIT／Pro は独自
   source:
     url: https://pro.magicui.design/
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
+    note: '無料版は MIT（github.com/magicuidesign/magicui の LICENSE.md、2026-11-03 確認）'
 - id: ui.aceternity
   name: Aceternity UI
   what: 大きな演出（背景・スクロール効果）
@@ -168,7 +165,7 @@ entries:
   license: 独自
   source:
     url: https://ui.aceternity.com/pricing
-    checked: '2026-10-29'
+    checked: '2026-11-03'
     verified: true
 - id: ui.smoothui
   name: SmoothUI
@@ -176,77 +173,78 @@ entries:
   best_for: LP の演出
   avoid_when: アプリ画面
   pricing_bands:
-    free: 無料（ライセンス要確認）
+    free: MIT・無料
     usd5: —
     usd10: —
     usd100: —
   lock_in: 低
   source:
-    url: https://smoothui.dev/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/educlopez/smoothui
+    checked: '2026-11-02'
+    verified: true
+  license: MIT
 - id: ui.transitions
   name: transitions.dev
   what: 画面切り替え・動きの見本
   best_for: 動きの参考
   avoid_when: そのまま全部コピー
   pricing_bands:
-    free: 無料（要確認）
+    free: Free $0（MIT のコア部品と無料スキル）
     usd5: —
-    usd10: —
-    usd100: —
+    usd10: Pro $12/月（商用・プロジェクト無制限）
+    usd100: Business $59/月（5席、追加 $12/席）／買い切り $149
   lock_in: 低
   source:
-    url: https://transitions.dev/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://transitions.dev/pro.html
+    checked: '2026-11-02'
+    verified: true
+  license: MIT（コア）／Pro は商用ライセンス
 - id: ui.reactbits
   name: React Bits
   what: 動く文字・背景の部品
   best_for: LP の演出
   avoid_when: アプリ画面
   pricing_bands:
-    free: 無料（ライセンス要確認）
+    free: MIT + Commons Clause・無料（アプリに組み込むのは可。部品そのものの販売・再配布は不可）
     usd5: —
     usd10: —
-    usd100: —
+    usd100: Pro 買い切り $129／$249／$349（Starter／Pro／Ultimate。開発者1人あたり、プロジェクト数無制限）
   lock_in: 低
   source:
-    url: https://reactbits.dev/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md
+    checked: '2026-11-03'
+    verified: true
+    note: 'Pro の金額は https://pro.reactbits.dev/ で 2026-11-03 確認'
+  license: MIT + Commons Clause
 - id: ui.21st
   name: 21st.dev
   what: みんなが投稿した部品を AI に取り込ませる場所
   best_for: 足りない部品を探す
   avoid_when: 品質と作者ごとのライセンスを確かめずに使う
   pricing_bands:
-    free: 無料で閲覧（AI 連携の有料プランは要確認）
-    usd5: —
-    usd10: —
-    usd100: —
+    free: Free（Hobby）$0
+    usd5: Builder $6/月（年払い。四半期払い $8）
+    usd10: Builder + AI $15/月〜（年払い。500 クレジット）
+    usd100: Team $7.50/席/月〜（年払い）
   lock_in: 低
   source:
-    url: https://21st.dev/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://21st.dev/pricing
+    checked: '2026-11-02'
+    verified: true
+  license: 投稿者ごと（部品ごとに確認）
 - id: ui.kibo
   name: Kibo UI
   what: shadcn に足す高度な部品（ガント・カンバン等）
   best_for: 複雑な部品
   avoid_when: —
   pricing_bands:
-    free: 無料（ライセンス要確認）
+    free: MIT・無料
     usd5: —
     usd10: —
     usd100: —
   lock_in: 低
   source:
-    url: https://www.kibo-ui.com/
-    checked: null
-    verified: false
-    note: 未確認：使う前に公式ページで確認
+    url: https://github.com/shadcnblocks/kibo
+    checked: '2026-11-02'
+    verified: true
+  license: MIT

@@ -1,0 +1,138 @@
+# Blueprint Catalog — cost_control（費用の上限・通知・止め方）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 2026-11-02 に公式ドキュメントで確認
+domain: cost_control
+updated: '2026-11-02'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: cc.vercel-spend
+  name: Vercel Spend Management
+  what: チームの月額上限を決め、50/75/100% で通知。上限で本番デプロイを止められる
+  best_for: Vercel Pro 上のプロジェクト（Pro で追加料金なし）
+  avoid_when: Hobby（使えない）、または AI Gateway・保存の費用も止めたい時（これらは止まらない）
+  pricing_bands:
+    free: —（Hobby では使えない）
+    usd5: —
+    usd10: —
+    usd100: Pro $20/月に含まれる（Enterprise は Flexible Commitment が必要）
+  limits: 判定は数分ごと（上限を少し超える）。停止しても AI Gateway と保存の課金は続く。SMS 通知は 100% の時だけ
+  lock_in: 低
+  liability_compliance: —
+  security: 停止時の Webhook で自分の側のキルスイッチも動かす
+  pairs_well_with: [host.vercel, cc.ai-gateway-budget]
+  source:
+    url: https://vercel.com/docs/spend-management
+    checked: '2026-11-02'
+    verified: true
+- id: cc.supabase-spend-cap
+  name: Supabase Spend Cap
+  what: Pro で既定オン。上限を超えた項目（ディスク・転送・保存・Realtime）は翌請求期まで止まり、超過分は請求されない
+  best_for: Supabase Pro で請求を $25 に固定したい時
+  avoid_when: 止まるより払いたい本番（キャップを切る判断を書面で）。計算・ブランチ・独自ドメイン・PITR は対象外
+  pricing_bands:
+    free: Free は課金されない（上限で止まる）
+    usd5: —
+    usd10: —
+    usd100: Pro $25/月：既定オン
+  limits: 対象外の項目がある。止まった時にアプリがどう見えるかを先に確かめる
+  lock_in: 低
+  liability_compliance: —
+  security: —
+  pairs_well_with: [db.supabase, cc.alert-50-80]
+  source:
+    url: https://supabase.com/docs/guides/platform/spend-cap
+    checked: '2026-11-02'
+    verified: true
+- id: cc.ai-gateway-budget
+  name: AI Gateway の予算（Vercel）
+  what: チーム・プロジェクト・API キー・人ごとに AI の使用額の上限を設定。トークンに上乗せなし
+  best_for: AI 機能の費用を 1 か所で止めたい時
+  avoid_when: 自分の鍵を持ち込む（BYOK）分は予算の対象外
+  pricing_bands:
+    free: 上乗せなし（AI 会社の定価）
+    usd5: 同左
+    usd10: 同左
+    usd100: 同左
+  limits: BYOK は対象外。予算は Spend Management とは別
+  lock_in: 低
+  liability_compliance: —
+  security: 利用者ごとの上限（dp.ai-usage-caps）はアプリ側で
+  pairs_well_with: [ai.gateway, dp.ai-usage-caps]
+  source:
+    url: https://vercel.com/docs/ai-gateway/pricing
+    checked: '2026-11-02'
+    verified: true
+- id: cc.gcp-budget
+  name: Google Cloud の予算とアラート
+  what: 金額のしきい値で通知。通知だけでは止まらない（対応サービスの spend-cap 予算か、自前の自動化で止める）
+  best_for: Firebase（Blaze）・Cloud Run を使う時の最低限
+  avoid_when: 通知だけで安心する時
+  pricing_bands:
+    free: 予算・通知の設定自体は無料（公式ページに明記はなし）
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: アラートのみの予算は使用を止めない（公式）
+  lock_in: 低
+  liability_compliance: —
+  security: 止める自動化には最小権限のサービスアカウント
+  pairs_well_with: [db.firestore, be.cloud-run, cc.kill-switch-tested]
+  source:
+    url: https://docs.cloud.google.com/billing/docs/how-to/budgets
+    checked: '2026-11-02'
+    verified: true
+- id: cc.github-actions-budget
+  name: GitHub Actions の予算
+  what: 75/90/100% で通知。「上限で停止」を選ぶと止まる
+  best_for: 非公開リポジトリで CI の分数が増え始めた時
+  avoid_when: 公開リポジトリ（無料・無制限）
+  pricing_bands:
+    free: 公開リポジトリは無料。非公開は無料枠内で止めるなら予算 $0
+    usd5: —
+    usd10: —
+    usd100: 超過 Linux 1 分 $0.006
+  limits: 「上限で停止」を選ばないと通知だけ
+  lock_in: 低
+  liability_compliance: —
+  security: —
+  pairs_well_with: [ci.github-actions]
+  source:
+    url: https://docs.github.com/en/billing/managing-billing-for-your-products/managing-billing-for-github-actions/managing-your-spending-limit-for-github-actions
+    checked: '2026-11-02'
+    verified: true
+lessons:
+- id: cc.alert-50-80
+  principle: "Set alerts at 50% and 80% of every free tier and of the monthly budget, delivered to two people."
+  anti_pattern: "Finding out at 100% when the service silently stops or the bill arrives."
+  why: "Free tiers stop without warning; 80% gives time to upgrade or throttle before users notice."
+  check: "Does every paid or capped service have a 50% and an 80% alert going to two people?"
+  see_also: [cc.supabase-spend-cap, cc.vercel-spend]
+  verified: false
+- id: cc.kill-switch-tested
+  principle: "Have one switch that disables the costly features (AI, SMS, uploads) and test it once before launch."
+  anti_pattern: "A kill switch that exists in a doc but was never flipped."
+  why: "An untested switch is a hope; abuse arrives at night and the first use must work."
+  check: "Was the kill switch flipped on and off in staging or production within the last 90 days?"
+  see_also: [pr.free-tier-cap, dp.ai-usage-caps]
+  verified: false
+- id: cc.commercial-terms-before-first-sale
+  principle: "Before the first sale, read the free plan's commercial-use terms of every service and move the ones that forbid it."
+  anti_pattern: "Taking the first payment on a hobby plan that bans commercial use."
+  why: "The first sale flips you into violation on several services at once, and forced upgrades land the same week."
+  check: "Is every service's free plan confirmed commercial-OK, or already on a paid plan, before the first sale?"
+  see_also: [R-004, host.vercel]
+  verified: false
+- id: cc.monthly-cost-sheet
+  principle: "Keep one sheet with every vendor, plan, monthly cost, free-tier usage % and the date it was checked; review it monthly."
+  anti_pattern: "Costs spread across a dozen billing emails nobody opens."
+  why: "The sheet is where the 2x-month and the forgotten subscription show up, and it is the infra line of the data room."
+  check: "Was the cost sheet updated within the last 31 days?"
+  see_also: [dd.infra, lc.finance.65]
+  verified: false
+- id: cc.retry-with-breaker
+  principle: "Every call to a metered API (AI, SMS, email) has a retry limit, a circuit breaker and a daily spend ceiling."
+  anti_pattern: "Infinite retries on a failing LLM call."
+  why: "A retry loop against a paid API is the fastest way to burn a month's budget in a night."
+  check: "Do all metered API calls have a max-retry, a breaker and a daily ceiling?"
+  see_also: [lc.n36, dp.ai-usage-caps]
+  verified: false

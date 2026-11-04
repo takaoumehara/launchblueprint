@@ -1,7 +1,7 @@
 # Blueprint Catalog — support
-# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 全件 verified:false（記憶ベースの下書き）。使う前に公式ページで確認
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。verified:false は使う前に要確認
 domain: support
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 90
 freshness: freshness.yaml
 entries:
@@ -11,10 +11,10 @@ entries:
   best_for: T1〜T2・問い合わせ少
   avoid_when: 即時応答が必要
   pricing_bands:
-    free: Gmail 等で無料
+    free: Gmail 等で無料／Help Scout Free：5人・受信箱1・Docs 1・連絡先 100/月
     usd5: —
     usd10: —
-    usd100: Help Scout 等（要確認）
+    usd100: Help Scout Standard $25/人/月（Plus $45・Pro $75）
   limits: 担当が1人だと休めない
   lock_in: 低
   liability_compliance: 問い合わせ内容の保存期間
@@ -23,18 +23,18 @@ entries:
   - em.resend
   source:
     url: https://www.helpscout.com/pricing/
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: sup.crisp
   name: Crisp
   what: アプリ内チャット＋受信箱
   best_for: アプリ内で質問を受けたい
   avoid_when: 24時間対応を約束できない
   pricing_bands:
-    free: 無料プランあり（要確認）
+    free: Free：2席・顧客プロファイル 100・チャット・共有受信箱
     usd5: —
-    usd10: —
-    usd100: 有料プラン（要確認）
+    usd10: 追加席 $10/月
+    usd100: Mini $45/月（ワークスペース）／Essentials $95／Plus $295
   limits: —
   lock_in: 中
   liability_compliance: EU企業
@@ -43,18 +43,18 @@ entries:
   - sup.email
   source:
     url: https://crisp.chat/en/pricing/
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: sup.status
   name: ステータスページ
   what: 障害の公表ページ
   best_for: T2以上
   avoid_when: —
   pricing_bands:
-    free: Instatus/Better Stack 無料枠（要確認）
+    free: Instatus Starter 無料：15 モニター・2分間隔・公開ページ・購読者 200・独自ドメイン不可／Better Stack 無料：10 モニター・ページ1／UptimeRobot 無料：50 モニター・5分間隔・ページ1
     usd5: —
     usd10: —
-    usd100: —
+    usd100: Instatus Pro $20/月〜（50 モニター・30秒・SMS・独自ドメイン）
   limits: 監視と連動させる
   lock_in: 低
   liability_compliance: —
@@ -63,18 +63,18 @@ entries:
   - mon.sentry
   source:
     url: https://instatus.com/pricing
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true
 - id: sup.docs
   name: ヘルプセンター・FAQ
   what: 自分で解決できる文書
   best_for: よくある質問が10件を超えた
   avoid_when: —
   pricing_bands:
-    free: 自社サイトで無料
+    free: 自社サイトで無料／Mintlify Starter 無料：編集者 5 席・独自ドメイン
     usd5: —
     usd10: —
-    usd100: —
+    usd100: Mintlify Pro $450/月（年払い。月払い $540）
   limits: 古くなると逆効果
   lock_in: 低
   liability_compliance: —
@@ -83,5 +83,5 @@ entries:
   - gtm.seo
   source:
     url: https://www.mintlify.com/pricing
-    checked: '2026-10-26'
-    verified: false
+    checked: '2026-11-02'
+    verified: true

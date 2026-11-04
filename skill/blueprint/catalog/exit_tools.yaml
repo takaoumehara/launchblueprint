@@ -1,0 +1,160 @@
+# Blueprint Catalog — exit_tools（売却・終了の道具：データルーム・SBOM・売却先）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。法律助言ではない。売却前に弁護士確認
+domain: exit_tools
+updated: '2026-11-03'
+stale_after_days: 90
+freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
+entries:
+- id: xt.shared-folder-dataroom
+  name: 共有フォルダのデータルーム（閲覧専用リンク）
+  what: 契約・IP 譲渡・数字・構成図を 1 つの共有フォルダに、閲覧専用で渡す
+  best_for: 最初の買い手との会話。費用ゼロで今日から
+  avoid_when: 誰がどの文書を見たかの記録や透かしが要る時（専用サービスへ）
+  pricing_bands:
+    free: 既存のクラウドドライブの無料枠内
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: 閲覧ログなし。リンクの転送を止められない
+  lock_in: 低
+  liability_compliance: NDA を先に。個人情報は入れない（集計だけ）
+  security: 閲覧専用・期限付きリンク。ダウンロード禁止設定
+  pairs_well_with: [dd.contracts, dd.metrics]
+  source:
+    url: null
+    checked: '2026-11-03'
+    verified: false
+    note: 価格は見積り（estimate）。公式の価格ではない。無料枠はドライブの提供元で確認
+- id: xt.acquire
+  name: Acquire.com
+  what: スタートアップ・SaaS の売買マーケットプレイス
+  best_for: 小さな SaaS を広く買い手に見せたい時
+  avoid_when: 成約手数料（6〜8%）より直接打診の方が安い相手がいる時
+  pricing_bands:
+    free: —
+    usd5: —
+    usd10: —
+    usd100: 売り手：掲載 $25／$50／$100/月＋成約時 8%（$25 万未満）／7%（$25 万〜$100 万）／6%（$100 万超）
+  limits: 買い手も会員制（$390〜）
+  lock_in: 低
+  liability_compliance: 掲載情報は正確に（数字は Stripe から再生成できるものだけ）
+  security: データルームは NDA 後に
+  pairs_well_with: [dd.metrics, dd.billing_sources]
+  source:
+    url: https://acquire.com/seller-pricing/
+    checked: '2026-11-02'
+    verified: true
+- id: xt.flippa
+  name: Flippa
+  what: サイト・アプリ・EC の売買マーケットプレイス（小額から）
+  best_for: 小さなサイト・アプリを早く売る
+  avoid_when: 手数料の帯の対応が読めないまま出す時（出品前に見積もり画面で確認）
+  pricing_bands:
+    free: —
+    usd5: —
+    usd10: —
+    usd100: 掲載 $29（60 日）〜$699／6 か月。成約手数料 10%（$1 万未満）〜6%（帯ごと。帯と率の対応はページで要確認）
+  limits: エスクロー別料金（1%〜1.2%）
+  lock_in: 低
+  liability_compliance: 同上
+  security: 同上
+  pairs_well_with: [dd.metrics]
+  source:
+    url: https://flippa.com/pricing
+    checked: '2026-11-02'
+    verified: true
+    note: 成約手数料の帯と率の対応はページ本文が途中で切れ、要確認
+- id: xt.direct-outreach
+  name: 直接打診（競合・連携先・顧客に）
+  what: 買い手候補の一覧を作り、仲介なしで打診する
+  best_for: 買い手が機能かチーム目当てで、相手がすでに見えている時
+  avoid_when: 交渉と契約を 1 人で回す時間がない時（弁護士か仲介を）
+  pricing_bands:
+    free: 手数料ゼロ（弁護士費用のみ）
+    usd5: —
+    usd10: —
+    usd100: 弁護士・会計士の費用（見積もり）
+  limits: 相手が少ないと価格が付かない
+  lock_in: 低
+  liability_compliance: NDA → 意向表明 → 調査 → 契約の順。先に数字を渡さない
+  security: —
+  pairs_well_with: [lc.exit.buyers, lt.lawyer]
+  source:
+    url: null
+    checked: '2026-11-03'
+    verified: false
+    note: 価格は見積り（estimate）。公式の価格ではない。手順の一般論
+- id: xt.syft
+  name: Syft（SBOM 生成）
+  what: 依存とライセンスの一覧（SBOM）をコマンド 1 つで出す。Apache-2.0
+  best_for: dd.oss の「SBOM を出せる」を無料で満たす
+  avoid_when: —
+  pricing_bands:
+    free: 無料（Apache-2.0）
+    usd5: —
+    usd10: —
+    usd100: —
+  limits: ライセンスの判定は人が確認
+  lock_in: 低
+  liability_compliance: —
+  security: CI で毎回出す
+  pairs_well_with: [dd.oss, dd.code]
+  source:
+    url: https://github.com/anchore/syft
+    checked: '2026-11-02'
+    verified: true
+- id: xt.fossa
+  name: FOSSA
+  what: ライセンス・脆弱性の継続チェック（ホスト型）
+  best_for: 買い手に「継続的に見ている」と示したい時
+  avoid_when: 無料の SBOM で足りる時
+  pricing_bands:
+    free: Free：5 プロジェクト・10 人・SBOM 取り込み 5
+    usd5: —
+    usd10: —
+    usd100: Business $20/プロジェクト/月（年払い）
+  limits: 無料は 5 プロジェクト
+  lock_in: 低
+  liability_compliance: —
+  security: —
+  pairs_well_with: [xt.syft, dd.oss]
+  source:
+    url: https://fossa.com/pricing
+    checked: '2026-11-02'
+    verified: true
+lessons:
+- id: xs.notice-before-shutdown
+  principle: "Announce a shutdown 30 to 90 days ahead, stop new billing the same day, and state the refund rule for prepaid periods."
+  anti_pattern: "Turning the service off with a same-week email, or keeping renewals running."
+  why: "Users need time to export, and prepaid refunds are owed either way; a short notice turns into disputes and reviews."
+  check: "Is the notice date at least 30 days before shutdown, with new billing stopped and the refund rule stated?"
+  see_also: [dd.sunset, lc.n40]
+  verified: false
+- id: xs.export-then-delete
+  principle: "Give every user a one-click export, keep it available until shutdown, then delete all personal data and record the deletion date."
+  anti_pattern: "Deleting without export, or keeping the database 'just in case'."
+  why: "Export is what users remember you for; retained data is a liability with no product behind it."
+  check: "Does export work for every user, and is there a dated deletion record after shutdown?"
+  see_also: [dd.privacy, lc.n41]
+  verified: false
+- id: xs.cancel-every-subscription
+  principle: "Walk the cost sheet and cancel every SaaS, API key, domain and cloud resource, including experiments, and confirm a zero bill the next month."
+  anti_pattern: "Turning off the app and leaving the vector database, storage and monitoring running."
+  why: "Shadow costs run for years after a shutdown because nobody owns the list."
+  check: "Was next month's total bill zero (or only the intended domains)?"
+  see_also: [cc.monthly-cost-sheet, lc.n42, lc.n43]
+  verified: false
+- id: xs.redirect-and-archive
+  principle: "Keep the domain for a year with a redirect and a notice, archive the repo read-only, and write the learnings back into the method before the team forgets."
+  anti_pattern: "Letting the domain lapse (someone else picks it up) and losing the lessons."
+  why: "A lapsed domain can be reused for phishing your old users; the lessons are the only asset a shutdown leaves."
+  check: "Is the domain renewed for 12 months with a redirect, and are the learnings filed through the feedback loop?"
+  see_also: [lc.n44, biz.domain-renewal-funding]
+  verified: false
+- id: xs.numbers-regenerable
+  principle: "From day one, record MRR, churn, refunds and retention monthly from the payment processor by script, so 12 months can be regenerated for a buyer."
+  anti_pattern: "Assembling the numbers by hand from memory and screenshots when a buyer asks."
+  why: "History cannot be rebuilt later, and inconsistent numbers end negotiations."
+  check: "Can a script regenerate the last 12 months of MRR, churn and refunds today?"
+  see_also: [dd.metrics, dd.money]
+  verified: false

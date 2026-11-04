@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — realtime
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: realtime
-updated: '2026-10-26'
+updated: '2026-11-03'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -23,7 +23,7 @@ entries:
   - db.supabase
   source:
     url: https://supabase.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true
 - id: rt.firebase-rtdb
   name: Firebase Realtime Database
@@ -43,5 +43,5 @@ entries:
   - auth.firebase
   source:
     url: https://firebase.google.com/pricing
-    checked: '2026-10-26'
+    checked: '2026-11-03'
     verified: true

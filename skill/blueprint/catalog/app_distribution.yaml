@@ -1,7 +1,7 @@
 # Blueprint Catalog — app_distribution
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ ポリシー部分は 2026-10-26 に公式ページで確認（verified:true）。費用・期間は記憶ベース（verified:false）
 domain: app_distribution
-updated: '2026-10-26'
+updated: '2026-11-02'
 stale_after_days: 30   # ストア規則は rules/APIs 扱い
 freshness: freshness.yaml
 policy_checks:
@@ -10,26 +10,41 @@ policy_checks:
   url: https://developer.apple.com/app-store/review/guidelines/#in-app-purchase
   checked: '2026-10-26'
   verified: true
+  anti_pattern: "ウェブで買ったライセンスキーでアプリ内の機能を解放する"
+  why: "審査で差し戻され、公開日がずれる"
+  check: "アプリ内で解放するデジタル機能・サブスクは全部 IAP で買える？"
 - id: policy.apple.3_1_1a
   rule: 米国ストアでは外部購入へのボタン・リンク・CTAに entitlement 不要。その他の地域は StoreKit External Purchase Link Entitlement を申請
   url: https://developer.apple.com/app-store/review/guidelines/#in-app-purchase
   checked: '2026-10-26'
   verified: true
+  anti_pattern: "米国以外のストアでも外部購入リンクをそのまま出す"
+  why: "地域ごとに entitlement の要否が違い、無申請は却下される"
+  check: "米国外で外部購入リンクを出すなら entitlement を申請した？"
 - id: policy.apple.3_1_3b
   rule: マルチプラットフォーム：他で買ったサブスクをアプリで使える。ただし同じものがアプリ内IAPでも買えることが条件
   url: https://developer.apple.com/app-store/review/guidelines/#multiplatform-services
   checked: '2026-10-26'
   verified: true
+  anti_pattern: "ウェブ課金のみなのに、アプリ内に購入導線を出す"
+  why: "同じものを IAP でも買えない限り、アプリ内の購入導線は 3.1.3(b) の条件を満たさない"
+  check: "ウェブ課金のみなら、アプリ内に購入導線が無い（米国以外）？"
 - id: policy.apple.4_2
   rule: 最小限の機能：ウェブを包んだだけのアプリは不可
   url: https://developer.apple.com/app-store/review/guidelines/#minimum-functionality
   checked: '2026-10-26'
   verified: true
+  anti_pattern: "ウェブをそのまま包んだだけでストアに出す"
+  why: "最小限の機能の規則で却下される"
+  check: "ネイティブ機能（通知・カメラ・ウィジェット等）が 1 つ以上ある？"
 - id: policy.google.payments
   rule: アプリ内のデジタル機能・サブスクの支払いは Google Play 課金必須（Section 3/8/9 の例外を除く）。アプリ内のリンク・ボタン・WebView・登録フローで他の支払いへ誘導しない
   url: https://support.google.com/googleplay/android-developer/answer/9858738
   checked: '2026-10-26'
   verified: true
+  anti_pattern: "アプリ内のリンク・WebView で他の支払いへ誘導する"
+  why: "Play 課金必須の規則違反で削除される"
+  check: "アプリ内のデジタル機能の支払いが Play 課金で、他の支払いへの誘導が無い？"
 entries:
 - id: dist.pwa
   name: PWA（ホーム画面に追加）
@@ -38,34 +53,38 @@ entries:
   pricing_bands: {free: 無料, usd5: —, usd10: —, usd100: —}
   store_billing: 対象外（ウェブ決済のまま）
   depends_on: [manifest, service worker, オフライン画面]
-  review_risk: なし
-  verified: false
+  review_risk: なし（ストア外なので審査も手数料もない。ただし PWA をそのままストア用シェルに包むと App Store 審査 4.2「ウェブサイトの再パッケージ」で落ちる）
+  verified: true
+  source: {url: 'https://developer.apple.com/app-store/review/guidelines/', checked: '2026-11-03', verified: true, note: 'ストア外配布に審査・手数料がないことと、4.2（repackaged website）の条文を確認。「PWA」という語はガイドラインに出てこない'}
 - id: dist.twa
   name: Android TWA（Bubblewrap / PWABuilder）
   best_for: PWAをそのまま Google Play に載せる
   avoid_when: iPhone にも出したい時（Android だけ）
-  pricing_bands: {free: —, usd5: —, usd10: —, usd100: 'Play Console 初回$25'}
+  pricing_bands: {free: —, usd5: —, usd10: —, usd100: 'Play Console 初回 US$25（一回限り）'}
   store_billing: 'ウェブ画面＝アプリ内扱い。デジタル課金はPlay課金、またはTWA内で課金導線を隠す'
   depends_on: [dist.pwa, Digital Asset Links, Play Console組織アカウント, Android開発者本人確認]
   review_risk: 低〜中（課金導線）
-  verified: false
+  verified: true
+  source: {url: 'https://support.google.com/googleplay/android-developer/answer/113468', checked: '2026-11-03', verified: true, note: 'US$25 の一回限りの登録料を確認。本人確認やカードが通らなければ返金なし'}
 - id: dist.capacitor
   name: iOS/Android Capacitor シェル
   best_for: Webコードを再利用しつつネイティブ機能を足す
   avoid_when: ウェブのコードがまだない時（最初から Expo の方が早い）
-  pricing_bands: {free: —, usd5: —, usd10: 'Apple $99/年 ≒ $8.25/月', usd100: —}
+  pricing_bands: {free: —, usd5: —, usd10: 'Apple Developer Program 99 USD/会員年 ≒ $8.25/月（地域により現地通貨で変動。非営利・教育機関・政府は免除申請可）', usd100: —}
   store_billing: 'policy.apple.3_1_1 / 3_1_3b に従う'
-  depends_on: [Apple Developer Program（会社名義はD-U-N-S）, ネイティブ機能で4.2回避]
+  depends_on: [Apple Developer Program（会社名義はD-U-N-S。政府機関を除く）, ネイティブ機能で4.2回避]
   review_risk: 中（4.2・3.1.1）
-  verified: false
+  verified: true
+  source: {url: 'https://developer.apple.com/programs/enroll/', checked: '2026-11-03', verified: true, note: '「99 USD per membership year」を登録ページで確認。compare-memberships ページには金額の記載なし'}
 - id: dist.expo
   name: Expo / React Native 書き直し（EAS Update でOTA）
   best_for: ネイティブ体験が売上を左右し、Webが安定した後
   avoid_when: Webの仕様がまだ動いている（2重保守）
-  pricing_bands: {free: 'EAS 無料枠', usd5: —, usd10: —, usd100: 'EAS 有料プラン帯'}
+  pricing_bands: {free: 'EAS 無料：Android 15・iOS 15 ビルド/月（低優先キュー）', usd5: —, usd10: —, usd100: 'EAS Starter $19/月（$45 分のビルドクレジット）'}
   depends_on: [Web安定, 共有ロジックの切り出し]
   review_risk: 低（ネイティブ）・課金規則は同じ
-  verified: false
+  verified: true
+  source: {url: 'https://expo.dev/pricing', checked: '2026-11-02', verified: true}
 - id: dist.native
   name: Swift / Kotlin ネイティブ
   best_for: OS機能が中核（カメラ・センサー・ウィジェット中心）
@@ -74,6 +93,7 @@ entries:
   depends_on: [プラットフォームごとの実装・保守]
   review_risk: 低
   verified: false
+  source: {url: null, checked: '2026-11-03', verified: false, note: '公式の価格はない（開発費が主。見積もり）。ストア費用は dist.capacitor / dist.twa と同じ：Apple US$99/年、Play US$25 一回限り'}
 decision_dependencies:
 - 'IAPの有無 → 課金アーキテクチャ（Stripe単独 / Stripe＋StoreKit＋Play Billing＋権利統合） → ストア審査リスク → 手取り率'
 - '配布順 → 必要アカウント（D-U-N-S・本人確認） → 公開日'
