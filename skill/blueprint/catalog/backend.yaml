@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — backend
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: backend
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -49,3 +49,102 @@ entries:
     checked: '2026-11-03'
     verified: true
     note: '無料枠の数値は Google Cloud 無料枠ページで 2026-11-03 確認。https://cloud.google.com/run/pricing は本文が読めず単価（vCPU秒・GiB秒・100万リクエストあたり）は未確認。課金方式は https://docs.cloud.google.com/run/docs/configuring/billing-settings'
+lessons:
+- id: be.unknown-is-not-absent
+  principle: Treat only a definite answer as 'not there' (HTTP 404, DNS NOERROR with no record, NXDOMAIN); timeouts, 5xx, SERVFAIL and catch-alls are 'unknown' and never trigger refunds, deletions or ownership removal.
+  anti_pattern: '`if (status !== 0) return []` or treating any registrar error as ''domain not found''.'
+  why: A transient outage nearly removed verified domains and would have run refunds.
+  check: During an upstream outage, does no irreversible action (refund, create, delete, unverify) run?
+  stage: launch
+  see_also:
+  - sec.domain-ownership-reverified
+  - cc.retry-with-breaker
+  context:
+    stack: DNS-over-HTTPS lookups, registrar APIs
+    product: custom domains, domain resale
+    cost: near-miss
+  claims:
+  - id: be.unknown-is-not-absent.c1
+    claim: In the DNS-over-HTTPS JSON API, Status is the standard DNS response code (0 NOERROR, 2 SERVFAIL); NXDOMAIN is 3 in the DNS RCODE registry.
+    source:
+      url: https://developers.google.com/speed/public-dns/docs/doh/json
+      checked: '2026-11-04'
+      verified: true
+    note: the page lists 0 and 2; the value 3 is from the RCODE registry, not this page
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: be.live-mode-guard
+  principle: Every outbound integration (messages, payments, AI) has a fake transport, and live mode throws until it is explicitly approved.
+  anti_pattern: Code that starts sending the moment a real key is present.
+  why: 'The structure prevents sends before approval and makes tests deterministic (a worked pattern: 141 tests, 98.9% line coverage).'
+  check: Does each integration have a fake implementation and a live guard that throws without approval?
+  stage: launch
+  see_also:
+  - cc.kill-switch-tested
+  context:
+    stack: edge workers + payments + LLM + chat channels
+    product: booking / receptionist
+    cost: none (pattern that worked)
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: be.tolerant-webhook-intake
+  principle: When docs do not pin down a webhook payload, accept it tolerantly, store the raw event, de-duplicate by event id, answer 200 fast and tighten parsing after real data arrives.
+  anti_pattern: Strict types guessed from the documentation examples.
+  why: When real payloads differ, a strict parser drops events silently.
+  check: Is every raw event stored and replayable?
+  stage: launch
+  see_also:
+  - fs.L26
+  - be.webhook-record-after-commit
+  context:
+    stack: third-party SaaS webhooks
+    product: integrations
+    cost: silent data loss avoided
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: be.webhook-record-after-commit
+  principle: Mark a webhook event as processed only in the same transaction (or versioned step) that commits its state change.
+  anti_pattern: Recording 'processed' first; when the work then fails, the retry is skipped forever.
+  why: Payment states stayed stuck because retries were treated as duplicates.
+  check: If processing fails half way, does the retried event still move the state forward?
+  stage: launch
+  see_also:
+  - offline-payment-holds-expire
+  context:
+    stack: payment webhooks
+    product: paid products
+    cost: stuck orders
+  claims:
+  - id: be.webhook-record-after-commit.c1
+    claim: 'Stripe retries undelivered webhook events for up to three days with exponential back-off in live mode (sandbox: three times over a few hours).'
+    source:
+      url: https://docs.stripe.com/webhooks
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: be.atomic-cap-reservation
+  principle: Reserve against a spending or quota cap with one conditional write and check that exactly one row changed.
+  anti_pattern: SELECT the balance, then INSERT.
+  why: Two parallel requests both pass the check and exceed the cap.
+  check: Is there a test where two parallel requests cannot exceed the cap?
+  stage: launch
+  see_also:
+  - cc.retry-with-breaker
+  - dp.ai-usage-caps
+  context:
+    stack: SQLite-family edge database
+    product: metered AI / SMS
+    cost: overspend
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

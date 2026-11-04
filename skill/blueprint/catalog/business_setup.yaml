@@ -1,7 +1,7 @@
 # Blueprint Catalog — business_setup（会社・ブランド・住所・決済アカウントの立ち上げ）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 現場の教訓。法律・税の助言ではない。全件 verified:false
 domain: business_setup
-updated: '2026-10-27'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml
 lessons:
@@ -93,3 +93,32 @@ lessons:
     check: "Is renewal collected from the customer before the registrar charges?"
     see_also: [biz.domain-price-per-name]
     verified: false
+  - id: biz.event-income-business-account
+    principle: Route event and ticket income to a business-type account, and give door staff a written check of the payer's confirmation screen (recipient, amount, time) instead of the receiving account's login.
+    anti_pattern: Taking business income on a personal P2P wallet, or sharing the receiving login with staff.
+    why: Personal wallets may not be used for business, bank transfers cannot be reversed or protected, and a shared login is a leak.
+    check: Is ticket income going to a business-type account, with a written door-check procedure?
+    stage: launch
+    see_also:
+    - biz.events-start-sole-prop
+    context:
+      stack: P2P wallets, bank-network transfers
+      product: small offline events (US)
+      cost: frozen account
+    claims:
+    - id: biz.event-income-business-account.c1
+      claim: A P2P wallet's personal accounts may not be used for business transactions; its business profiles pay 1.9% + $0.10 per payment.
+      source:
+        url: https://venmo.com/about/fees/
+        checked: '2026-11-04'
+        verified: true
+    - id: biz.event-income-business-account.c2
+      claim: A bank-network transfer to an enrolled recipient cannot be cancelled, and the FAQ offers no purchase protection (only some impostor scams may be reimbursed).
+      source:
+        url: https://www.zelle.com/faq
+        checked: '2026-11-04'
+        verified: true
+    occurrences: 1
+    learned: '2026-11-04'
+    verified: true
+    source: field learnings 2026-11-04 (1 submission), generalized

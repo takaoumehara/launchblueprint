@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — database
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: database
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -69,3 +69,91 @@ entries:
     url: https://neon.com/pricing
     checked: '2026-11-03'
     verified: true
+lessons:
+- id: db.no-table-rebuild-when-fk-enforced
+  principle: On a managed SQLite that always enforces foreign keys, migrations only add columns and tables; they never drop and rebuild a table.
+  anti_pattern: '`PRAGMA foreign_keys=OFF` then DROP TABLE and recreate.'
+  why: The PRAGMA is ignored inside the migration transaction, so DROP fires ON DELETE CASCADE and deletes child rows.
+  check: Is there no DROP or RENAME rebuild in the migration, or was the row count unchanged on a seeded database with foreign keys on?
+  stage: launch
+  see_also:
+  - db.backfill-reviewed-separately
+  context:
+    stack: SQLite-family edge database
+    product: all
+    cost: production data loss prevented in review
+  claims:
+  - id: db.no-table-rebuild-when-fk-enforced.c1
+    claim: D1 enforces foreign keys in all queries and migrations and a query cannot switch that off; use PRAGMA defer_foreign_keys = on to defer checks to the end of the transaction.
+    source:
+      url: https://developers.cloudflare.com/d1/sql-api/foreign-keys/
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: db.backfill-reviewed-separately
+  principle: 'Review migrations and backfills as their own item: numbers against what production has applied, idempotent re-runs, and a backfill condition that only uses columns that existed before the migration.'
+  anti_pattern: Accepting 'that migration never ran in production' without checking, or `UPDATE ... WHERE newColumn IS NOT NULL` right after adding newColumn.
+  why: A new column is all NULL, so the backfill touched nothing and valid rows stopped being served; one PR took six reviews.
+  check: Did you read the applied migration numbers in production, re-run the backfill with the same result, and check its updated-row count on seeded data?
+  stage: launch
+  see_also:
+  - migration-numbers-by-merge-order
+  - db.no-table-rebuild-when-fk-enforced
+  context:
+    stack: SQLite-family edge database + ORM migrations
+    product: custom domains / verification
+    cost: several days of review
+  field_notes:
+  - When adding a new verification column, backfill rows you issued or sold yourself as verified so they are not dropped by the new rule.
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: db.ledger-store-capacity
+  principle: Choose the store for transaction ledgers (bookings, payments, gift balances) by its size limit and by whether it can prevent overlaps (for example an exclusion constraint).
+  anti_pattern: Adding the ledger to an existing edge SQLite database because it is already there.
+  why: Hitting the size limit or rebuilding double-booking protection later means migrating ledgers and balances (estimated 1-2 weeks).
+  check: Is the ledger's 3-year size estimate and its overlap-prevention mechanism written down?
+  stage: idea
+  see_also:
+  - catalog/database.yaml
+  context:
+    stack: edge workers + SQLite-family DB, Postgres through a connection pooler
+    product: multi-tenant booking
+    cost: estimated 1-2 weeks of migration
+  claims:
+  - id: db.ledger-store-capacity.c1
+    claim: 'Cloudflare D1: max 10 GB per database on Workers Paid, 500 MB on Free.'
+    source:
+      url: https://developers.cloudflare.com/d1/platform/limits/
+      checked: '2026-11-04'
+      verified: true
+  - id: db.ledger-store-capacity.c2
+    claim: Cloudflare Hyperdrive pooling and caching are included in Workers Paid at no extra charge; the Free plan allows 100,000 queries per day.
+    source:
+      url: https://developers.cloudflare.com/hyperdrive/platform/pricing/
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: db.rules-deploy-with-client
+  principle: Deploy database security-rule changes together with the client fields they validate, or make the client degrade when the rules reject a field.
+  anti_pattern: Shipping new client fields while production rules reject unknown keys.
+  why: Production rules rejected the new fields, and the rules deploy was blocked by an expired CLI login.
+  check: Do production rules accept the current client payload in an emulator test?
+  stage: launch
+  see_also:
+  - ci.credential-health-check
+  context:
+    stack: realtime database with security rules; mobile web client
+    product: multiplayer / realtime
+    cost: feature shipped without its data
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

@@ -135,6 +135,10 @@ rules:
     check: "Is there no text ending in '…' at the narrowest supported width (e.g. 360px) in every locale?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: shop and event names cut by an ellipsis changed their meaning and were sent back; check at 390 px that no ''…'' appears.'
   - id: plain-screen-labels
     category: emphasis
     phase: [design, qa]
@@ -198,6 +202,10 @@ rules:
     check: "Does every media embed show its real thumbnail with a play overlay?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a wide diagram scaled into a 64 px menu thumbnail was unreadable; make a separate simplified crop for tiny slots.'
   - id: design-system-fonts-everywhere
     category: visual
     phase: [design, qa]
@@ -207,6 +215,10 @@ rules:
     check: "Do all dialogs and sheets use only design-system type tokens?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: naming only system fonts for a Japanese brand gave a different typeface on each OS; self-host the brand fonts and confirm document.fonts reports them loaded.'
   - id: distinct-motion-styles
     category: motion
     phase: [design, qa]
@@ -243,6 +255,10 @@ rules:
     check: "Does tapping a row open it, with no redundant Edit button?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: on cards, both the image and the title open the detail page (embedded media with its own controls links from the title only).'
   - id: scoped-help-assistant
     category: guidance
     phase: [requirements, qa]
@@ -297,6 +313,10 @@ rules:
     check: "Does every decorative animation have a finite iteration count and a prefers-reduced-motion off switch?"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a looping weight ''breathe'' on a wordmark read as noise; keep the range small, settle at rest and replay on hover only.'
   - id: selected-vs-primary-color
     category: emphasis
     phase: [design, qa]
@@ -344,6 +364,18 @@ rules:
     see_also: "clean-build-before-deploy"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: when two migration tools manage one schema, keep both the file number and the journal timestamp increasing; two PRs took the same number and one tool applied them in a different order.'
+    claims:
+    - id: migration-numbers-by-merge-order.c1
+      claim: D1 migration files carry a sequence number and `migrations apply` runs the ones not yet recorded in d1_migrations; one ORM migration kit applies by its journal timestamp instead, so the two can disagree on order.
+      source:
+        url: https://developers.cloudflare.com/d1/reference/migrations/
+        checked: '2026-11-04'
+        verified: false
+      note: filename order is implied, not stated; the ORM journal behaviour was observed, not documented
   - id: offline-payment-holds-expire
     category: payments
     phase: [requirements, qa]
@@ -354,6 +386,17 @@ rules:
     see_also: "catalog/payments.yaml"
     source: 'product iteration 2026-10'
     date: '2026-10-27'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: holds released only by the payment webhook stay forever when the webhook never arrives; give every hold an expiry and a sweeper job, and assume webhooks arrive late, twice or never.'
+    claims:
+    - id: offline-payment-holds-expire.c1
+      claim: 'Stripe retries undelivered webhook events for up to three days with exponential back-off in live mode (sandbox: three times over a few hours).'
+      source:
+        url: https://docs.stripe.com/webhooks
+        checked: '2026-11-04'
+        verified: true
   - id: money-summary-integrity
     category: payments
     phase: [requirements, qa]
@@ -460,6 +503,10 @@ rules:
     check: "Has each CJK locale been checked by eye for font, glyphs and line breaks (lang attribute set)?"
     source: 'standard practice (ICU MessageFormat / Intl / pseudo-localization) 2026-10'
     date: '2026-10-30'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a Japanese tagline wrapped mid-word and overlapped a tile; a language-wide font override also replaced the monospace UI labels. Check every locale at 390 px and 1440 px.'
   - id: i18n-locale-fallback
     category: i18n
     phase: [qa]
@@ -516,6 +563,24 @@ rules:
     see_also: "selected-vs-primary-color, dark-mode-checked-every-screen"
     source: 'WCAG 2.2 (1.4.3 AA, 1.4.11 AA) https://www.w3.org/TR/WCAG22/#contrast-minimum checked 2026-11-03'
     date: '2026-11-02'
+    occurrences: 2
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a light brand tint used for links and focus rings failed; keep a decorative accent token separate from the text/focus accent. A 60% alpha border on a dark background measured about 1.3:1 and the cards disappeared.'
+    claims:
+    - id: a11y-text-contrast.c1
+      claim: 'WCAG 2.2: SC 1.4.3 text 4.5:1 (large text 3:1); SC 1.4.11 non-text (borders, icons, focus) 3:1 against adjacent colours.'
+      source:
+        url: https://www.w3.org/TR/WCAG22/
+        checked: '2026-11-04'
+        verified: true
+    - id: a11y-text-contrast.c2
+      claim: 'Computed with the WCAG relative-luminance formula: #999999 on #FFFFFF is 2.85:1 (fails 3:1 for a control border); #7A8494 on #FFFFFF is 3.78:1 (passes).'
+      source:
+        url: https://www.w3.org/TR/WCAG22/#dfn-relative-luminance
+        checked: '2026-11-04'
+        verified: true
+      note: computed, not quoted
   - id: a11y-keyboard-reachable
     category: accessibility
     phase: [design, qa]
@@ -596,6 +661,10 @@ rules:
     see_also: "empty-state-teaches-next-step, error-state-recoverable, loading-without-layout-shift"
     source: 'standard practice (screen × state matrix) 2026-11'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: an implementation agent built screens before the all-states mock gate, and a missing error state surfaced later in e2e tests. Write ''no UI until the all-states mock is approved'' into the agent''s brief.'
   - id: empty-state-teaches-next-step
     category: states
     phase: [design, qa]
@@ -626,6 +695,10 @@ rules:
     see_also: "define-every-screen-state, form-validation-timing, single-status-location"
     source: 'standard practice 2026-11'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a scanner''s error handler unmounted the camera view, so it flashed and vanished with no reason shown at the door. Keep the device view mounted and show the reason in place.'
   - id: offline-and-stale-shown-once
     category: states
     phase: [requirements, design, qa]
@@ -656,6 +729,10 @@ rules:
     see_also: "time-inputs-for-novices, a11y-accessible-names"
     source: 'standard practice; WCAG 2.2 (3.3.2 A) https://www.w3.org/TR/WCAG22/#labels-or-instructions checked 2026-11-03'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: sample numbers and example URLs as placeholders were read as already-entered values several times; use real defaults or helper text, and fail the build on sample-looking placeholders.'
   - id: form-validation-timing
     category: forms
     phase: [design, qa]
@@ -736,6 +813,10 @@ rules:
     see_also: "icon-only-secondary-on-narrow, no-overlapping-inserters"
     source: 'Apple HIG / Material (44 pt / 48 dp); WCAG 2.2 (2.5.8 AA: minimum 24 × 24 CSS px, spacing exception) https://www.w3.org/TR/WCAG22/#target-size-minimum checked 2026-11-03'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a brand link under 44 px and a separator dot orphaned at the line end under 400 px; keep separators with nowrap. Desktop tables used 44 px targets, mobile 48 px.'
   - id: thumb-zone-primary-actions
     category: mobile
     phase: [design]
@@ -756,6 +837,17 @@ rules:
     see_also: "hints-on-demand, a11y-accessible-names"
     source: 'standard practice (hover media query) 2026-11'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: hover styles stuck after a tap on phones; wrap :hover rules in @media (hover: hover) and (pointer: fine).'
+    claims:
+    - id: no-hover-only-interactions.c1
+      claim: '@media (hover: hover) tests whether the primary input can hover (Baseline since December 2018); pointer: none | coarse | fine.'
+      source:
+        url: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
+        checked: '2026-11-04'
+        verified: true
   - id: safe-areas-and-viewport
     category: mobile
     phase: [design, qa]
@@ -806,6 +898,17 @@ rules:
     see_also: "reduced-motion-is-global, real-media-thumbnails, perf-images-and-media"
     source: 'WCAG 2.2 (2.2.2 A, 1.4.2 A) https://www.w3.org/TR/WCAG22/#pause-stop-hide checked 2026-11-03'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a grid of tile videos all played at once; play only while in view (IntersectionObserver) and keep the page working where it is missing.'
+    claims:
+    - id: autoplay-is-muted-and-stoppable.c1
+      claim: IntersectionObserver is Baseline since March 2019; first supported in Safari 12.1 (desktop) and 12.2 (iOS) per MDN compat data.
+      source:
+        url: https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
+        checked: '2026-11-04'
+        verified: true
   - id: perf-core-web-vitals-budget
     category: performance
     phase: [requirements, qa]
@@ -816,6 +919,17 @@ rules:
     see_also: "loading-without-layout-shift, perf-images-and-media, perf-ship-less-javascript"
     source: 'Core Web Vitals (LCP ≤2.5 s, INP ≤200 ms, CLS ≤0.1 at p75) https://web.dev/articles/vitals checked 2026-11-03'
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: starting the hero heading or image at opacity 0 for an entrance animation delays LCP; animate transform only, or start visible.'
+    claims:
+    - id: perf-core-web-vitals-budget.c1
+      claim: Chromium excludes elements with opacity 0 from LCP candidates.
+      source:
+        url: https://web.dev/articles/lcp
+        checked: '2026-11-04'
+        verified: true
   - id: perf-images-and-media
     category: performance
     phase: [design, qa]
@@ -908,6 +1022,10 @@ rules:
     why: "Reviews only see the happy path, so breakage in other states reaches production."
     check: "Can reviewers switch every listed state in preview using mock data or test accounts only (no server-side permission change), and is the panel removed from the production bundle at build time (tree-shaken/compiled out, not merely hidden by a runtime flag)?"
     date: '2026-11-02'
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: a demo state switcher reached a build review; confirm the production output contains none of its markup.'
   - id: annotation-to-fix
     category: design_system
     phase: [qa]
@@ -1063,6 +1181,287 @@ rules:
     check: "After upgrading, is the badge gone with no extra action?"
     source: 'product iteration 2026-10'
     date: '2026-10-28'
+  - id: hidden-means-inert
+    category: accessibility
+    phase:
+    - design
+    - qa
+    principle: 'Anything not visible cannot be focused or tapped: hidden panels get visibility:hidden or inert, and elements fading in take no taps until they are readable (finish entrances within 1000 ms).'
+    anti_pattern: A drawer moved off screen with transform only, or a button at opacity 0 with pointer events still on.
+    why: Tab reached an invisible bar, and invisible buttons were tapped by mistake ('nothing happened', 'it moved by itself').
+    check: With a panel hidden, does Tab skip all of its controls, and does no element below 0.5 effective opacity accept a tap?
+    see_also: a11y-focus-in-dialogs, motion-explains-change
+    context:
+      stage: launch
+      stack: web, Playwright touch tests at 390 x 844
+      product: all
+      cost: two to three review rounds
+    claims:
+    - id: hidden-means-inert.c1
+      claim: The HTML inert attribute is Baseline widely available (all major browsers since April 2023).
+      source:
+        url: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert
+        checked: '2026-11-04'
+        verified: true
+    occurrences: 2
+    source: field learnings 2026-11-04 (2 submissions), generalized
+    date: '2026-11-04'
+  - id: one-bordered-layer
+    category: visual
+    phase:
+    - design
+    - qa
+    principle: 'Use at most one bordered layer: inside it, separate with tone (full-width tonal bands, borderless filled inputs), and keep nested radii concentric (inner = outer - padding); match a product photo''s background to its card or fill the frame.'
+    anti_pattern: Cards inside bordered cards, 12 px outer and 8 px inner radius with 12 px padding, or a grey photo on a lighter grey card.
+    why: Editors felt overwhelming and 'all squares' at 390 px, and photos in frames looked cheap.
+    check: Is no bordered element inside another bordered or shadowed element, and is there no colour band between a photo and its card edge?
+    see_also: borders-only-on-pressables, progressive-editor-panels
+    context:
+      stage: launch
+      stack: mobile web editors, product pages
+      product: site builders, brand sites
+      cost: redesign round
+    occurrences: 3
+    source: field learnings 2026-11-04 (3 submissions), generalized
+    date: '2026-11-04'
+  - id: progressive-editor-panels
+    category: forms
+    phase:
+    - requirements
+    - design
+    - qa
+    principle: Editors open one section at a time, show at most five inputs on first open with the rest under 'More options', mark hidden changes with an 'Edited' badge and open sections with errors automatically.
+    anti_pattern: Every field expanded at once, or a hidden field changed with no sign on the header.
+    why: Users were overwhelmed by the edit screen.
+    check: Does each panel show five or fewer inputs on first open, flag hidden changes on its header, and auto-open on errors?
+    see_also: one-bordered-layer, long-forms-keep-progress
+    context:
+      stage: launch
+      stack: mobile web editors
+      product: site builders
+      cost: beta fixes
+    claims:
+    - id: progressive-editor-panels.c1
+      claim: iOS Safari zooms into a focused input whose font size is under 16 px.
+      source:
+        url: null
+        checked: '2026-11-04'
+        verified: false
+      note: widely reported; no Apple or WebKit page found on 2026-11-04
+    occurrences: 3
+    source: field learnings 2026-11-04 (3 submissions), generalized
+    date: '2026-11-04'
+  - id: two-width-reading-layout
+    category: visual
+    phase:
+    - design
+    - qa
+    principle: Reports and reference pages use two widths, about 40em (Japanese) or 760 px for prose and up to 1200 px for tables and cards; desktop body 16-17 px and nothing under 12 px; tables on desktop become cards on phones.
+    anti_pattern: A single 860 px column with 11-14 px tables, or 70ch applied to Japanese text.
+    why: At 1440 px about 290 px stayed empty on each side while the text stayed tiny.
+    check: At 1440 px and 375 px, is no text under 12 px and do tables use the wide container?
+    see_also: touch-targets-and-spacing
+    context:
+      stage: launch
+      stack: static HTML
+      product: client agreement / report pages
+      cost: two rounds
+    field_notes:
+    - Use tabular-nums for numbers, and min-width:0 on card children so cards do not scroll sideways.
+    claims:
+    - id: two-width-reading-layout.c1
+      claim: 'Computed with the WCAG relative-luminance formula: #999999 on #FFFFFF is 2.85:1 (fails 3:1 for a control border); #7A8494 on #FFFFFF is 3.78:1 (passes).'
+      source:
+        url: https://www.w3.org/TR/WCAG22/#dfn-relative-luminance
+        checked: '2026-11-04'
+        verified: true
+      note: computed, not quoted
+    occurrences: 2
+    source: field learnings 2026-11-04 (2 submissions), generalized
+    date: '2026-11-04'
+  - id: narrow-width-screenshot-gate
+    category: mobile
+    phase:
+    - qa
+    principle: Before approval, screenshot every changed page at 375-390 px and check that fixed bars do not overlap, edges are not clipped, no inner scrollbar appears, and layout wrappers behave the same at every breakpoint.
+    anti_pattern: Approving from desktop screenshots, centred and side-pinned elements on the same row, or display:contents only inside a wide breakpoint.
+    why: Top bars overlapped, the left edge was clipped and gaps vanished on phones, after launch.
+    check: At 390 px, are there no overlaps, clipped edges or inner scrollbars?
+    see_also: header-title-wraps-to-own-row, safe-areas-and-viewport
+    context:
+      stage: launch
+      stack: web
+      product: all
+      cost: post-launch fixes
+    occurrences: 3
+    source: field learnings 2026-11-04 (3 submissions), generalized
+    date: '2026-11-04'
+  - id: qa-evidence-matches-real-render
+    category: engineering
+    phase:
+    - qa
+    principle: 'Visual evidence must show what users really see: capture after intro animations settle (about 3 s) plus one reduced-motion shot, serve video with byte-range support, and review GPU-heavy 3D on the reviewer''s own device through a live link.'
+    anti_pattern: Judging from a screenshot taken at page open, a static server without range requests, or headless software-GPU stills of refraction effects.
+    why: An almost blank hero looked like a blocker, scroll-scrubbed video froze, and 3D looked 'flat' three times over.
+    check: Was the evidence taken after motion settled (plus reduced motion), with range requests returning 206, and is 3D reviewed on a real GPU?
+    see_also: decorative-motion-once, reduced-motion-is-global
+    context:
+      stage: launch
+      stack: static sites with three.js and scrubbed video
+      product: portfolio, brand sites
+      cost: about one day per case
+    claims:
+    - id: qa-evidence-matches-real-render.c1
+      claim: Python's built-in http.server did not answer byte-range requests with 206 in one project, so scroll-scrubbed video stopped; the docs neither confirm nor deny Range support and say it is not for production.
+      source:
+        url: https://docs.python.org/3/library/http.server.html
+        checked: '2026-11-04'
+        verified: false
+      note: observed; docs silent
+    occurrences: 3
+    source: field learnings 2026-11-04 (3 submissions), generalized
+    date: '2026-11-04'
+  - id: flagged-redesign-no-regression
+    category: engineering
+    phase:
+    - qa
+    principle: 'Keep a flagged UI refresh inside its own scope: list every change outside the flag (shared components, tokens, CSS) and prove with a screenshot diff that the flag-off UI is unchanged.'
+    anti_pattern: Inline styles overriding tokens, committing dev-generated files, or adding client-side html attributes without hydration guards.
+    why: '''No visual change'' flags changed the existing theme twice.'
+    check: With the flag off, is the screenshot diff zero and the diff free of generated files?
+    see_also: theme-tokens-not-hardcoded
+    context:
+      stage: operate
+      stack: React framework apps with feature flags
+      product: all
+      cost: review rounds
+    occurrences: 2
+    source: field learnings 2026-11-04 (2 submissions), generalized
+    date: '2026-11-04'
+  - id: url-changes-redirect
+    category: engineering
+    phase:
+    - requirements
+    - qa
+    principle: Renaming a public slug keeps the old one with a 301; internal links warn when the target does not exist; hiding content is a visibility field, not a deletion (and hidden pages answer 404 by design).
+    anti_pattern: Editing a slug that breaks shared links, or deleting files to hide items.
+    why: An owner renamed a link to a slug that did not exist and got a 404; another wanted to hide without deleting.
+    check: Does the old slug still resolve after a rename, and can an item be hidden by one field change?
+    see_also: undoable-delete
+    context:
+      stage: operate
+      stack: site builders, content-file sites
+      product: link-in-bio, portfolios
+      cost: broken shared links
+    occurrences: 2
+    source: field learnings 2026-11-04 (2 submissions), generalized
+    date: '2026-11-04'
+  - id: own-input-visible-on-shared-screen
+    category: feedback
+    phase:
+    - design
+    - qa
+    principle: When a device sends something to a shared screen, show it there in a form the sender recognises as theirs (same shape and colour).
+    anti_pattern: Replacing the user's actual input with abstract effects for style.
+    why: In a playtest the player could not tell what came from their drawing, and it no longer felt like playing from the phone.
+    check: Can a first-time user find their own input on the shared screen within two seconds?
+    see_also: motion-explains-change
+    context:
+      stage: launch
+      stack: mobile web sender + WebGL big screen
+      product: multiplayer party games, live installations
+      cost: one redesign cycle (~2 days)
+    occurrences: 1
+    source: field learnings 2026-11-04 (1 submission), generalized
+    date: '2026-11-04'
+  - id: share-codes-fit-and-copy
+    category: mobile
+    phase:
+    - design
+    - qa
+    principle: Codes and URLs people must type or share fit the narrowest phone width and copy on tap.
+    anti_pattern: An oversized room code, or a join URL that cannot be copied.
+    why: Joining was blocked in a playtest.
+    check: Is the code fully visible at 375 px, and does tapping it copy the link?
+    see_also: touch-targets-and-spacing
+    context:
+      stage: launch
+      stack: mobile web
+      product: join flows
+      cost: blocked joins
+    occurrences: 1
+    source: field learnings 2026-11-04 (1 submission), generalized
+    date: '2026-11-04'
+  - id: mode-flags-named-and-shown
+    category: engineering
+    phase:
+    - design
+    - qa
+    principle: Give each special mode (capture, debug, demo) its own name and show the active mode on screen.
+    anti_pattern: One flag such as ?capture=1 reused for several purposes.
+    why: The capture screen the owner asked for did not appear and the exchange dragged on.
+    check: Can you tell at a glance on screen which mode is active?
+    see_also: preview-state-switcher
+    context:
+      stage: launch
+      stack: web
+      product: interactive pieces, demos
+      cost: extra round trips
+    occurrences: 1
+    source: field learnings 2026-11-04 (1 submission), generalized
+    date: '2026-11-04'
+  - id: pay-options-in-buyer-words
+    category: payments
+    phase:
+    - design
+    - qa
+    principle: Name payment options from the buyer's view (card incl. wallets, named transfer apps), and skip the choice when only one method is on.
+    anti_pattern: Seller-side labels such as 'pay the organizer'.
+    why: Even the owner could not tell what the label meant.
+    check: With one method enabled, does checkout go straight to paying, and are labels in buyer terms?
+    see_also: plain-screen-labels
+    context:
+      stage: launch
+      stack: ticket checkout
+      product: events
+      cost: confused buyers
+    occurrences: 1
+    source: field learnings 2026-11-04 (1 submission), generalized
+    date: '2026-11-04'
+  - id: index-cards-equal
+    category: lists
+    phase:
+    - design
+    principle: On a category index, show items as equal cards that each link to a detail page; long explanations belong on the detail page.
+    anti_pattern: One item's long explanation directly under the page title.
+    why: Visitors read the whole page as being about one project.
+    check: Is every card on the index the same size and linked to its detail page?
+    see_also: tap-row-to-open
+    context:
+      stage: launch
+      stack: static site
+      product: portfolio, catalogs
+      cost: confused IA
+    occurrences: 1
+    source: field learnings 2026-11-04 (1 submission), generalized
+    date: '2026-11-04'
+  - id: urls-break-at-separators
+    category: visual
+    phase:
+    - qa
+    principle: Long URLs and monospace identifiers wrap at '/' or other separators, or stay on one line; never mid-word.
+    anti_pattern: A URL split in the middle of a word on a narrow screen.
+    why: URLs were hard to read on phones.
+    check: At 390 px, does no URL break in the middle of a word?
+    see_also: no-ellipsis-truncation
+    context:
+      stage: launch
+      stack: web
+      product: all
+      cost: low
+    occurrences: 1
+    source: field learnings 2026-11-04 (1 submission), generalized
+    date: '2026-11-04'
 # phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階（idea → launch → operate → scale → exit）、phase はその中のどの場面か。
 # MCP の ui_ux_checklist（lifecycle 引数）と reference/ui-ux.md の "Phase gates" に出る。全段階に少なくとも1つ置く。
 phase_gate_checks:

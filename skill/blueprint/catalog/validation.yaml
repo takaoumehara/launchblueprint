@@ -1,7 +1,7 @@
 # Blueprint Catalog — validation（構想の検証：需要テスト・インタビュー・PMF）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。verified:false は使う前に要確認
 domain: validation
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -130,6 +130,18 @@ lessons:
   check: "Does the alternatives table have a 'do nothing' row and a price for every row?"
   see_also: [val.pay-signal]
   verified: false
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: before choosing a differentiator, read the feature tables of the top four incumbents: an ''AI books by phone'' pitch was already shipped by two of them.'
+  claims:
+  - id: val.alternatives-first.c1
+    claim: Two large salon-booking SaaS already completed bookings inside AI phone calls; one more was in beta.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: '[要約のみ] search summaries only, 2026-11-03'
 - id: val.strangers-not-friends
   principle: "Measure demand with strangers (a landing page reached by search, a community post or a small ad), and set the pass number before the test starts."
   anti_pattern: "Counting friends' and followers' enthusiasm as demand, or deciding the threshold after seeing the numbers."
@@ -165,3 +177,28 @@ lessons:
   check: "Is the line 'north star → input metrics → revenue' written in one sentence?"
   see_also: [val.pmf-40]
   verified: false
+- id: val.positioning-replace-or-overlay
+  principle: At the idea stage ask once whether the product replaces the existing tool (becomes the source of truth), sits on top of it, or integrates with it, write the answer down, and list the data that cannot be migrated.
+  anti_pattern: Writing the first phase of a phased plan ('sit on top for now') as the product's positioning, or pricing a switch as if all data migrates.
+  why: An inverted premise forced a design rewrite and late migration features; saved cards could not move between systems.
+  check: Does the context state replace / overlay / integrate, where the source of truth is, and which data cannot be migrated?
+  stage: idea
+  see_also:
+  - fs.L26
+  - val.alternatives-first
+  context:
+    stack: booking SaaS replacement
+    product: multi-tenant booking
+    cost: half a day of rewrite + an estimated sprint of migration work
+  claims:
+  - id: val.positioning-replace-or-overlay.c1
+    claim: Saved cards could not be migrated between booking systems; customer notes might only export one by one.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: '[要約のみ] 2026-11-03'
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized

@@ -43,6 +43,8 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 | 売却準備 | `catalog/exit_dd.yaml`, `catalog/dd_dashboard.yaml` | 出口に「売る」がある、または投資を受ける |
 | UI/UX の原則 | `catalog/ui_ux.yaml`, `reference/ui-ux.md` | 画面がある（要件・設計・品質の確認で毎回。`phase_gate_checks` は構想・公開・運用・拡大・出口の各段階に1つ以上、MCP `ui_ux_checklist` の lifecycle で引く） |
 | クライアントワーク（受託・制作・運用代行） | `catalog/client_collaboration.yaml`, `reference/client-collaboration.md` | 外部のクライアントと進める案件（開始時の基準値と整合監査・合意ページ・通知・無償範囲のパイロット合意・プレビューの公開範囲。`phase_gate_checks` は5段階すべて、MCP `get_catalog("client_collaboration")` で引く） |
+| ブランド・映像・生成画像 | `catalog/brand_media.yaml`, `reference/brand-media.md` | ロゴ・ブランドの見た目・製品動画・字幕・生成画像を作る（字幕は別ファイル＝R-009、生成画像は人の目で毎回確認） |
+| 現場の学びの台帳 | `reference/field-learnings.md` | 学びを取り込んだ時（何件・どこへ・確認済みの事実・矛盾・落としたもの） |
 | CMS・編集画面・部品集 | `catalog/cms.yaml`, `catalog/editor_ui.yaml`, `catalog/ui_libraries.yaml`, `reference/design-resources.md` | お客さんが更新する／画面を作る |
 
 規模：大きな基盤を先に作らない。段ごとの引き金に届いたら次へ。売却が目的なら、要るのは大規模インフラより「記録された数字」と「戻せる証拠」。

@@ -50,7 +50,7 @@ test("every catalog area is reachable and consistent", async () => {
       for (const s of cmp.services) assert.ok(s.verified === false || (s.url && s.checked), `${topic}: ${s.id} verified without url + checked`);
     }
     // every lesson / rule has principle, avoid, why, check
-    for (const d of ["business_setup", "data_protection", "ui_ux", "client_collaboration"]) {
+    for (const d of ["business_setup", "data_protection", "ui_ux", "client_collaboration", "brand_media", "foresight"]) {
       const it = JSON.parse(await call("get_catalog", { domain: d, format: "items" }));
       for (const i of it.items.filter(i => i.kind === "lessons" || i.kind === "rules"))
         assert.ok(i.summary && i.avoid && i.why && i.check, `${i.id}: principle/avoid/why/check`);

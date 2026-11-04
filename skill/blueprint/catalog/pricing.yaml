@@ -1,7 +1,7 @@
 # Blueprint Catalog — pricing（価格・パッケージ・単位経済）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格の型（entries）と教訓（lessons）。法律・税の助言ではない
 domain: pricing
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 180
 freshness: freshness.yaml
 entries:
@@ -108,6 +108,25 @@ lessons:
   check: "Is the gross margin at 10x users written down with the formula?"
   see_also: [pr.free-tier-cap, dp.ai-usage-caps]
   verified: false
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: for done-for-you services, price from measured hours times the target hourly rate, not from what the tools cost: $99 for 2 hours of work a month is $23-46 an hour and caps revenue at what one person can serve.'
+  claims:
+  - id: pr.unit-cost-before-price.c1
+    claim: 'Website-builder entry plans: $19/month billed annually ($25 monthly) for one; $22/month annual ($25 monthly) for another; a local-business suite lists $99 and $399 per month.'
+    source:
+      url: https://www.squarespace.com/pricing
+      checked: '2026-11-04'
+      verified: true
+    note: A submission said $16/month for the first builder; the official page says $19 (corrected). Other figures from durable.com/pricing and thryv.com/pricing the same day.
+  - id: pr.unit-cost-before-price.c2
+    claim: Local-SEO tools at $41/$54/$65 per location per month and done-for-you plans at $499/$1,299 per month on 12-month terms; another vendor publishes no price (third-party aggregators say $299-$449 per month).
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: from another agent's research, not re-read
 - id: pr.cancel-as-easy-as-signup
   principle: "Cancelling takes no more clicks than signing up, works without contacting support, and is confirmed by email."
   anti_pattern: "Hiding cancellation behind a chat, a phone call or a 'retention' maze."
@@ -157,3 +176,146 @@ lessons:
   check: "For every country sold into, is the tax handler named (self / tool / MoR) with the check date?"
   see_also: [axis.payments_tax, pay.paddle]
   verified: false
+- id: pr.one-recommendation-first
+  principle: Ask about the problem first and show one recommended plan with its price; keep the full price list reachable for anyone.
+  anti_pattern: Seven or more priced products side by side on the first screen.
+  why: Small business owners stop comparing and leave when prices come before their problem (internal review; not measured).
+  check: Does the first screen show at most one to three prices?
+  stage: launch
+  see_also:
+  - pr.competitor-price-table-first
+  context:
+    stack: web + automation bundle
+    product: services for local businesses
+    cost: two review rounds
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: pr.setup-fee-vs-monthly
+  principle: Compare first-year total cost against competitors by model (setup + monthly vs monthly only) and against your own cash need before choosing a setup fee.
+  anti_pattern: Assuming setup + monthly is market-normal, or starting with a low monthly only when cash is short.
+  why: 'Two teams reached opposite answers: one needed day-one cash from a setup fee, the other found the setup fee was the buyer''s main barrier.'
+  check: Is there a table of first-year totals by competitor model, and does the first sale cover this month's fixed costs?
+  stage: launch
+  see_also:
+  - pr.annual-upfront
+  - pr.unit-cost-before-price
+  context:
+    stack: web + automation bundle
+    product: services for local businesses
+    cost: three pricing revisions
+  claims:
+  - id: pr.setup-fee-vs-monthly.c1
+    claim: 'Website-builder entry plans: $19/month billed annually ($25 monthly) for one; $22/month annual ($25 monthly) for another; a local-business suite lists $99 and $399 per month.'
+    source:
+      url: https://www.squarespace.com/pricing
+      checked: '2026-11-04'
+      verified: true
+    note: A submission said $16/month for the first builder; the official page says $19 (corrected). Other figures from durable.com/pricing and thryv.com/pricing the same day.
+  - id: pr.setup-fee-vs-monthly.c2
+    claim: Monthly-only local-service bundles centre on $0 setup and about $99 per month.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: '[要約のみ] 2026-10-21/22'
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: pr.churn-in-revenue-plan
+  principle: Judge a subscription plan by the number of paying customers needed after churn and the months to reach it.
+  anti_pattern: A '$20 a month to $8K net' target with no churn in the model.
+  why: With churn, adding customers every month can still take years to reach the target; the plan was judged no-go.
+  check: Does the plan state the churn rate and the month the required customer count is reached?
+  stage: idea
+  see_also:
+  - val.north-star-to-money
+  context:
+    stack: any
+    product: subscriptions
+    cost: plan switched to client work
+  claims:
+  - id: pr.churn-in-revenue-plan.c1
+    claim: At $20 per month, $8K net needs about 420 paying customers; with 6% monthly churn, 50 new a month takes about 11 months and 30 a month about 29 months.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: internal estimate with assumed margins
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: pr.one-source-for-public-numbers
+  principle: 'Prices, fees and rewards that leave the building come from one source: the billing config in code; unconfirmed values are placeholders like [X%] defined in one place, and a production build fails while any remain.'
+  anti_pattern: Copying numbers from a decision memo, or provisional prices appearing in terms, FAQ and the support bot.
+  why: A memo said 2% while the code charged 0%, and provisional prices reached public pages.
+  check: Does every public price match the billing code or payment dashboard, and does a grep of the production build find zero placeholder values?
+  stage: launch
+  see_also:
+  - la.claims-match-live
+  - la.no-placeholder-in-deliverables
+  context:
+    stack: payments config in code; content and support-bot copy
+    product: all
+    cost: wrong public promise avoided
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: pr.competitor-price-table-first
+  principle: 'Before schema or billing work, tabulate competitors'' official prices: billing unit, in-person / online / keyed card rates, usage fees (SMS, AI, marketplace), trial and contract terms, each with URL and date.'
+  anti_pattern: Comparing only the monthly fee, or guessing prices for quote-only vendors.
+  why: In booking software most revenue comes from card fees and add-ons, so monthly-only comparisons misread the market.
+  check: Is there a dated table with source URLs covering billing unit, card rates, usage fees and trial terms?
+  stage: idea
+  see_also:
+  - pr.unit-cost-before-price
+  context:
+    stack: Connect-type payments, edge workers
+    product: booking / payments SaaS (US)
+    cost: none (done before pricing)
+  claims:
+  - id: pr.competitor-price-table-first.c1
+    claim: 'US salon/booking card rates cluster at 2.29-2.6% + 10-20 cents in person and 3.3-3.5% keyed: 2.29% + $0.20 / 2.79% online / 3.30% keyed; 2.6% / 2.5% / 2.4% + 15 cents by plan and 3.5% + 15 cents keyed; 2.45% + 15 cents / 2.90% + 30 cents; 2.49% + $0.10 / 2.69% + $0.30; 2.6% + $0.10 / 3.5% + $0.19.'
+    source:
+      url: https://www.fresha.com/pricing
+      checked: '2026-11-04'
+      verified: true
+    note: each rate read on the vendor's own pricing page 2026-11-04 (fresha.com, squareup.com/us/en/appointments/pricing, mangomint.com/pricing, biz.booksy.com/en-us/pricing, Vagaro help centre); one more vendor's 2.4% + 15 cents appears only in its FAQ
+  - id: pr.competitor-price-table-first.c2
+    claim: 'Billing units seen: per staff member ($14.95), per user ($10) plus per location ($120), per location plans ($0/$49/$149); marketplace new-client fee 20% (min $6).'
+    source:
+      url: https://www.fresha.com/pricing
+      checked: '2026-11-04'
+      verified: true
+    note: per-location plans from squareup.com and mangomint.com the same day; other vendor prices in the submission (AI receptionist add-ons, per-SMS) were not re-read
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: pr.no-unsold-former-price
+  principle: Show a launch discount as a time- or quantity-limited offer at the listed price; strike through a 'regular price' only if you have really sold at it.
+  anti_pattern: A crossed-out regular price on a product that has never been sold.
+  why: US rules require a former price to be one actually offered for a substantial period; payments were not even live.
+  check: Is there a record of real sales at the struck-through price?
+  stage: launch
+  see_also:
+  - pr.price-change-notice
+  context:
+    stack: any
+    product: beta pricing
+    cost: regulatory risk
+  claims:
+  - id: pr.no-unsold-former-price.c1
+    claim: '16 CFR 233.1: a former price must be the actual, bona fide price at which the article was offered to the public on a regular basis for a reasonably substantial period of time.'
+    source:
+      url: https://www.ecfr.gov/current/title-16/chapter-I/subchapter-B/part-233/section-233.1
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized

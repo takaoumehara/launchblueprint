@@ -1,7 +1,7 @@
 # Blueprint Catalog — gtm_channels
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点（2026-11-02 に一部を公式ページで確認）。verified:false は使う前に要確認
 domain: gtm_channels
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml
 entries:
@@ -307,6 +307,10 @@ lessons:
   check: "Do preview and staging send noindex, and does the launch post use only the company domain?"
   see_also: [R-004, lc.gtm.43]
   verified: false
+  occurrences: 2
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: two more teams caught drafts whose main link was the host''s default subdomain; the public link is always the own domain (rule R-004).'
 - id: la.pr-disclosure
   principle: "Every paid or gifted mention (ads, influencers, affiliates) carries the disclosure the country requires, checked before publishing."
   anti_pattern: "An influencer post without a PR label, or an affiliate link without a disclosure."
@@ -314,6 +318,29 @@ lessons:
   check: "Does every paid or gifted mention have the disclosure, and is it on the pre-publish checklist?"
   see_also: [lc.legal.31]
   verified: false
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: disclosure rules re-checked for the US, Japan and Korea (see claims).'
+  claims:
+  - id: la.pr-disclosure.c1
+    claim: 'US FTC: endorsement disclosures are likely to be missed if they appear only on an ''about me'' or profile page (16 CFR Part 255 guides).'
+    source:
+      url: https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers
+      checked: '2026-11-04'
+      verified: true
+  - id: la.pr-disclosure.c2
+    claim: 'Japan: stealth marketing is a violation of the Premiums and Representations Act from 2023-10-01, and only the advertising business is regulated (not the influencer).'
+    source:
+      url: https://www.caa.go.jp/policies/policy/representation/fair_labeling/stealth_marketing/
+      checked: '2026-11-04'
+      verified: true
+  - id: la.pr-disclosure.c3
+    claim: 'Korea KFTC: from 2024-12-01 the economic-interest disclosure goes in the title or first part of blog posts; from 2026-06-01 AI-generated virtual endorsers must be labelled.'
+    source:
+      url: https://www.ftc.go.kr/www/selectBbsNttView.do?bordCd=3&key=12&nttSn=47547&searchCtgry=01%2C02
+      checked: '2026-11-04'
+      verified: true
 - id: la.seo-basics
   principle: "Before launch, every public page has title, description, canonical and OG image; sitemap and robots exist; and llms.txt is published."
   anti_pattern: "Launching with default titles and no sitemap, then fixing SEO 'later'."
@@ -321,3 +348,92 @@ lessons:
   check: "Do all public pages pass title/description/canonical/OG, and are sitemap.xml, robots.txt and llms.txt live?"
   see_also: [gtm.seo, lc.gtm.43]
   verified: false
+  occurrences: 2
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: canonical and og:url pointed at the apex while the live host was www, across about 30 files, and there was no og:image. Set the site URL once (environment variable), make canonical and hreflang absolute, and keep hreflang pairs reciprocal.'
+  claims:
+  - id: la.seo-basics.c1
+    claim: Meta recommends Open Graph images of at least 1200 x 630 px for high-resolution displays (minimum 200 x 200).
+    source:
+      url: https://developers.facebook.com/docs/sharing/webmasters/images
+      checked: '2026-11-04'
+      verified: true
+  - id: la.seo-basics.c2
+    claim: 'X cards: twitter:card summary_large_image for a large share image.'
+    source:
+      url: https://developer.x.com/en/docs/x-for-websites/cards/overview/summary-card-with-large-image
+      checked: '2026-11-04'
+      verified: false
+    note: page returned 402/404 on 2026-11-04
+- id: la.claims-match-live
+  principle: 'Every public claim matches what is live on publish day: plans include only features run once in production, future capabilities are labelled as not yet, and status parts of films and pages are swappable.'
+  anti_pattern: Selling SMS auto-replies before carrier registration, counting payments as a revenue path before a real live purchase, or baking 'coming soon' and next-episode lines into a master.
+  why: Promises that cannot run break trust with the first customers and force late re-edits.
+  check: Has every feature in the plan or film run once in production (a real $1 purchase and refund for payments), and can status lines be swapped without a full re-render?
+  stage: launch
+  see_also:
+  - fs.L10
+  - pr.refund-policy-written
+  context:
+    stack: SMS / phone automation, payments, video
+    product: local-service bundles, product films
+    cost: avoided late re-edit; delayed billing start
+  claims:
+  - id: la.claims-match-live.c1
+    claim: Anyone sending SMS/MMS from an application to US numbers over 10DLC must register a Brand and a Campaign; the official page says unregistered traffic incurs additional carrier fees.
+    source:
+      url: https://www.twilio.com/docs/messaging/compliance/a2p-10dlc
+      checked: '2026-11-04'
+      verified: true
+    note: Submissions said unregistered US SMS cannot be sent at all; the official page says 'additional carrier fees', not 'blocked'. Fees and vetting time are not on that page (unverified).
+  occurrences: 4
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (4 submissions), generalized
+- id: la.no-placeholder-in-deliverables
+  principle: 'Nothing fake or placeholder reaches a gate or the public: product screens are real captured UI, every gallery item has its own caption, and placeholders live in a non-delivered folder.'
+  anti_pattern: A wireframe shown as the product on a landing page, grey tiles in a render, the same caption repeated across a gallery.
+  why: Each was a release blocker and cost about a day of re-deploy and re-review.
+  check: Is every product screen a real capture, every caption unique, and the delivery folder free of placeholder files or frames?
+  stage: launch
+  see_also:
+  - la.claims-match-live
+  - pr.one-source-for-public-numbers
+  context:
+    stack: landing pages, films
+    product: all
+    cost: about one day per case
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: la.channel-logins-before-launch
+  principle: On day 0 decide who posts to each channel from which device, and sign in and test-post on every channel before launch day.
+  anti_pattern: Planning automated posting from a server or cloud browser before anyone has logged in from it.
+  why: A login from the shared cloud browser was locked repeatedly and two of four launch channels were never signed in, so posts slipped.
+  check: Has every channel in the launch calendar been signed in to and test-posted from the device that will post?
+  stage: launch
+  see_also:
+  - la.launch-plan-t14
+  context:
+    stack: social networks, community forums
+    product: all
+    cost: several hours over several days
+  claims:
+  - id: la.channel-logins-before-launch.c1
+    claim: A social network's login from a shared cloud browser was repeatedly 'temporarily limited'; the length of the limit is not published.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+  - id: la.channel-logins-before-launch.c2
+    claim: Community forums set their own self-promotion rules per community; one post per community per day was used as a safe pace.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

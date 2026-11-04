@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — ai_llm
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: ai_llm
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -45,3 +45,36 @@ entries:
     url: https://firebase.google.com/docs/ai-logic/pricing
     checked: '2026-11-02'
     verified: true
+lessons:
+- id: ai.voice-agent-preflight
+  principle: Before connecting an AI phone agent to a real number, check that the script matches the business type, that 'what did you say?' is handled as a repeat request and not an answer, and replay recorded real calls as a regression test.
+  anti_pattern: Connecting a generic script because 'it should work'.
+  why: A home-services script answered a salon's first caller, mistook a repeat request for an answer and hung up in 49 seconds.
+  check: Is the script for this business type, is repeat-request detection in place, and did recorded real calls pass?
+  stage: launch
+  see_also:
+  - fs.L14
+  - lt.ai-disclosure
+  context:
+    stack: edge worker + voice relay + small LLM
+    product: AI receptionist for local businesses
+    cost: half a day and the first impression
+  claims:
+  - id: ai.voice-agent-preflight.c1
+    claim: A voice-AI relay product costs $0.07 per minute with voice billed separately; inbound local voice is $0.0085 per minute.
+    source:
+      url: https://www.twilio.com/en-us/products/conversational-ai/pricing
+      checked: '2026-11-04'
+      verified: true
+    note: inbound voice rate from https://www.twilio.com/en-us/voice/pricing/us, same day
+  - id: ai.voice-agent-preflight.c2
+    claim: Hosted voice-agent platforms list $0.07-$0.31 per minute (one) and $0.05 per minute hosting plus model costs (another).
+    source:
+      url: https://www.retellai.com/pricing
+      checked: '2026-11-04'
+      verified: true
+    note: second figure from https://vapi.ai/pricing, same day
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized

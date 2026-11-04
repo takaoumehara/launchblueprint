@@ -1,7 +1,7 @@
 # Blueprint Catalog — support
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。verified:false は使う前に要確認
 domain: support
-updated: '2026-11-02'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml
 entries:
@@ -85,3 +85,20 @@ entries:
     url: https://www.mintlify.com/pricing
     checked: '2026-11-02'
     verified: true
+lessons:
+- id: sup.one-contact-per-event
+  principle: When two automations can reach the same customer (AI call handling and missed-call texts), one recorded flag decides which one acts.
+  anti_pattern: Texting after every missed call regardless of whether the AI handled it.
+  why: The same customer was contacted twice.
+  check: Does the call record mark whether the AI handled it, and does the text rule use that mark?
+  stage: launch
+  see_also:
+  - ai.voice-agent-preflight
+  context:
+    stack: AI phone + SMS
+    product: AI receptionist
+    cost: annoyed customers
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

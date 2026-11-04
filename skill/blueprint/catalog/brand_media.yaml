@@ -1,0 +1,233 @@
+# Blueprint Catalog — brand_media（ブランド・映像・生成画像の現場の学び）— CREATIVITY IS EVERYWHERE, LLC
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 出典：現場の学び 2026-11-04（複数チームの提出を一般化。固有名詞・個人名・製品名なし）
+# lessons[]：id `bm.*`, stage, principle, anti_pattern, why（1 行）, check（はい／いいえ）, see_also, context{stack, product, cost},
+#   claims[]（事実。公式ページで確かめたら source.verified: true と確認日。未確認は false のまま残す）, occurrences（同じ学びを出したファイルの数）, learned, verified（claims が全部 true の時だけ true）, source
+# 人向けは reference/brand-media.md
+domain: brand_media
+updated: '2026-11-04'
+stale_after_days: 180
+reference: reference/brand-media.md
+lessons:
+- id: bm.captions-separate-and-validated
+  principle: 'Deliver a clean video plus one SRT/VTT caption file per language (player track off by default), and validate every caption file with a script before any review: no overlaps, at most two lines, line length within the language''s limit, minimum cue duration.'
+  anti_pattern: Burning captions into the picture, or shipping hand-timed cues unchecked.
+  why: Every language change or fix needed a re-render, and overlapping or long cues were sent back (rule R-009, now seen in six teams).
+  check: Is there a caption-free master plus a validated caption file per language?
+  stage: launch
+  see_also:
+  - rules.R-009
+  - bm.localize-on-screen-text
+  context:
+    stack: ffmpeg pipelines, web players, social video
+    product: explainer and product films
+    cost: re-renders; one send-back per film
+  claims:
+  - id: bm.captions-separate-and-validated.c1
+    claim: 'Netflix timed-text style guides: English 42 characters per line; Japanese horizontal subtitles 13 full-width characters per line (SDH 16).'
+    source:
+      url: https://partnerhelp.netflixstudios.com/hc/en-us/articles/215767517-Japanese-Timed-Text-Style-Guide
+      checked: '2026-11-04'
+      verified: true
+    note: One submission used JA <= 20 characters per line as its working standard; that is looser than this guide (contradiction noted, not overwritten).
+  - id: bm.captions-separate-and-validated.c2
+    claim: 'Working caption checks used: no overlapping cues, max 2 lines, minimum cue duration 1.0 s.'
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: internal standard from one production; not checked against a platform spec
+  occurrences: 6
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (6 submissions), generalized
+- id: bm.look-before-code
+  principle: For brand work, write the concept (insight, why only this brand, the mark system) and get the look and mood signed off by a creative reviewer before any visual round or site code; then show two or three finished options.
+  anti_pattern: Opening a site PR in week one, or showing twenty quick variations to a decision-maker.
+  why: Volume without a concept read as amateur and cost a review round; site code was parked when the look changed.
+  check: Was a written concept and look direction approved before the first visual was shown and the first site commit?
+  stage: idea
+  see_also:
+  - fs.L07
+  context:
+    stack: image generation + site framework
+    product: apparel and event brands
+    cost: one to two days parked
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: bm.genimage-qa-gate
+  principle: Treat brief constraints (banned construction details, no clichés, one place and time of day, house style) as a human visual gate on every generated image, and run a cheap single-pose or single-prop style test before committing a shot list; keep a local vector fallback.
+  anti_pattern: 'Trusting the prompt text: on-model images that only passed a prompt check, city landmarks returned despite instructions, chapters generated separately so the landscape changes.'
+  why: The same defect failed three rounds in a row, and off-style poses and drifting locations forced regeneration.
+  check: Did a person check every shown image against each banned detail, and did each new pose or prop pass a style test first?
+  stage: launch
+  see_also:
+  - fs.L19
+  - bm.look-before-code
+  context:
+    stack: text-to-image and vector generation APIs
+    product: apparel, nightlife and product brands, films
+    cost: about a day per regeneration round
+  claims:
+  - id: bm.genimage-qa-gate.c1
+    claim: Image generation through a reseller API cost about $0.04 per image; a set of pose tests cost about $0.87.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: observed charges
+  occurrences: 4
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (4 submissions), generalized
+- id: bm.logo-mark-craft
+  principle: Draw the mark itself with a vector tool plus manual optical correction (or a designer); outline all text in logo SVGs; test the mark at 16 px, on dark icon backgrounds and for unintended readings.
+  anti_pattern: A code-drawn SVG wordmark with live <text> and a web font.
+  why: Code-drawn marks lacked kerning and weight balance, the logo rendered in a fallback font as an image, and small marks read as other symbols.
+  check: Does the logo SVG contain no <text>, and was the mark checked at 16 px and for unintended readings?
+  stage: idea
+  see_also:
+  - bm.look-before-code
+  context:
+    stack: SVG, static sites
+    product: brand identity
+    cost: half a day to a review round
+  claims:
+  - id: bm.logo-mark-craft.c1
+    claim: 'An SVG used as an image runs with JavaScript disabled and cannot load external resources (images, stylesheets, so web fonts) unless they are inlined as data: URLs.'
+    source:
+      url: https://developer.mozilla.org/en-US/docs/Web/SVG/Guides/SVG_as_an_image
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: bm.safe-area-per-ratio
+  principle: Design text-safe areas separately for each aspect ratio (4:5, 9:16, 16:9) and check a contact sheet of every ratio for clipped text.
+  anti_pattern: Reusing a composition made for one ratio in another.
+  why: Result text was cut off in 4:5, and the bottom of 9:16 is covered by app interfaces.
+  check: Did a contact sheet of every ratio show zero clipped text?
+  stage: launch
+  see_also:
+  - bm.captions-separate-and-validated
+  context:
+    stack: still-to-video assembly pipeline
+    product: social video
+    cost: found at finishing
+  claims:
+  - id: bm.safe-area-per-ratio.c1
+    claim: On 9:16 vertical video, keep captions and text within the top 80% of the height; the bottom is covered by the short-video apps' interface.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: internal judgement
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: bm.render-qc-every-file
+  principle: 'Measure every rendered file, not just the first: integrated loudness and loudness range, colour tags (primaries/transfer), and output identical on another machine (fonts bundled, temp files unique).'
+  anti_pattern: Assuming a shared mix chain or export script gives the same result for every film.
+  why: One film came out with LRA 19.4, untagged colour shifted on players, and system-font scripts broke on another machine.
+  check: Does every render pass the loudness target, carry colour tags (e.g. bt709) and match when rendered elsewhere?
+  stage: launch
+  see_also:
+  - bm.captions-separate-and-validated
+  context:
+    stack: ffmpeg / ffprobe pipelines
+    product: films
+    cost: small rework per film
+  claims:
+  - id: bm.render-qc-every-file.c1
+    claim: ffmpeg ships ssim, ebur128 and loudnorm filters; loudnorm defaults to an integrated target of -24 LUFS (LRA 7, true peak -2), so a -16 LUFS web target must be set explicitly.
+    source:
+      url: https://ffmpeg.org/ffmpeg-filters.html
+      checked: '2026-11-04'
+      verified: true
+  - id: bm.render-qc-every-file.c2
+    claim: -16 LUFS integrated with LRA about 10-11 was the working target for web films.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: working target from one production, not a platform spec
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: bm.recordings-legible-on-phone
+  principle: Record site screens for zoom and crop (smaller viewport, device scale factor 2) and check legibility at real phone size.
+  anti_pattern: Shrinking a full desktop-width recording.
+  why: Text in the film could not be read on phones.
+  check: Is body text readable when the film plays at real phone size?
+  stage: launch
+  see_also:
+  - bm.safe-area-per-ratio
+  context:
+    stack: headless browser recording
+    product: explainer films
+    cost: re-recording
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: bm.seamless-loop-identical-frame
+  principle: Build a loop so its last frame is its first (a hard cut on an identical frame) and measure the seam.
+  anti_pattern: Crossfading the tail into the head.
+  why: The crossfade showed two poses at once and failed technical review.
+  check: Is SSIM between the last and first frame 0.99 or higher?
+  stage: launch
+  see_also:
+  - autoplay-is-muted-and-stoppable
+  context:
+    stack: ffmpeg
+    product: muted autoplay loops on landing pages
+    cost: one send-back
+  claims:
+  - id: bm.seamless-loop-identical-frame.c1
+    claim: ffmpeg ships ssim, ebur128 and loudnorm filters; loudnorm defaults to an integrated target of -24 LUFS (LRA 7, true peak -2), so a -16 LUFS web target must be set explicitly.
+    source:
+      url: https://ffmpeg.org/ffmpeg-filters.html
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: bm.localize-on-screen-text
+  principle: A localized film or page translates the text visible on screen (UI captures, titles), not only the captions.
+  anti_pattern: Translating the subtitles and leaving a screen in the original language.
+  why: One scene of a translated film kept English body text, and the release waited for the owner's decision.
+  check: In every scene of the localized version, is the on-screen text translated?
+  stage: launch
+  see_also:
+  - bm.captions-separate-and-validated
+  - i18n-ci-completeness
+  context:
+    stack: screen captures in films
+    product: product films
+    cost: release on hold
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: bm.apparel-brand-sections
+  principle: 'An apparel brand blueprint has these sections before visuals start: origin and values, allowed moods on top of fixed rules, garment rules, series and wave plan (first capsule of about 6-10 pieces), inclusive casting, palette, image-generation rules, competitor research, the manufacturing path, no-fake-claims rules (generated images never shown as real stock), and the site and social look.'
+  anti_pattern: Discovering these as course corrections one by one.
+  why: Each section came up as a correction during the work, not in the plan.
+  check: Does the brand blueprint have every section before visuals start?
+  stage: idea
+  see_also:
+  - bm.look-before-code
+  - la.claims-match-live
+  context:
+    stack: image generation
+    product: apparel brands (pre-production)
+    cost: repeated corrections
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

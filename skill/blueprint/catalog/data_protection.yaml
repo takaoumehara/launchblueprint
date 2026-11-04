@@ -1,7 +1,7 @@
 # Blueprint Catalog — data_protection（バックアップ・データ保護）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 現場の教訓。小規模ならコストはほぼゼロ。全件 verified:false
 domain: data_protection
-updated: '2026-10-28'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml
 note: "At small scale the cost of all of this is near zero (object storage for a small DB is cents per month)."
@@ -89,6 +89,10 @@ lessons:
     check: "Do all admin accounts use passkeys or hardware keys?"
     sources: [https://blog.cloudflare.com/2022-07-sms-phishing-attacks/]
     verified: false
+    occurrences: 1
+    learned: '2026-11-04'
+    field_notes:
+    - '2026-11-04: an admin check that only compares the signed-in email with an environment-variable list was found in an audit. Store roles server-side and require 2FA or re-authentication for admin actions.'
   - id: dp.prompt-injection-untrusted-input
     tier: now-free
     principle: "Treat inbound mail and user input as untrusted data; keep FAQ AI read-only with no tools or personal data; require human approval before AI drafts are sent."

@@ -3,7 +3,7 @@
 # lessons：現場の罠（原則・避ける形・なぜ・確認・引き金・段）。procedures：先回りの手順（本文は reference/foresight.md）。cross_rules：複数の罠にまたがる決まり
 # 固有名詞・製品名・ベンダー名は入れない。段は idea / launch / operate / scale / exit（catalog/lifecycle.yaml の macro_stages と同じ id）
 domain: foresight
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 365
 lessons:
 - id: fs.L01
@@ -16,6 +16,23 @@ lessons:
   see_also: [rules.R-004, cc.commercial-terms-before-first-sale, catalog/hosting.yaml]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: 反復の多い試作期に無料プランの 1 日のデプロイ上限に当たり、その日のうちに有料プランへ上げた（解約のリマインダーを入れた）。'
+  claims:
+  - id: fs.L01.c1
+    claim: Vercel Hobby allows 100 deployments created per day (Pro 6000) and is for non-commercial personal use only.
+    source:
+      url: https://vercel.com/docs/limits
+      checked: '2026-11-04'
+      verified: true
+  - id: fs.L01.c2
+    claim: Vercel Pro developer seats cost $20 per user per month (viewer seats free).
+    source:
+      url: https://vercel.com/pricing
+      checked: '2026-11-04'
+      verified: true
 - id: fs.L02
   principle: キックオフで関わる全ドメイン・サブドメインを、レジストラと DNS の置き場ごとに一覧にし、URL に依存する設定を始める前に製品の正式ドメインを決める。
   anti_pattern: 親ブランドのドメインの DNS が想定したクラウドに無く、権限を絞ったトークンでゾーンが選べない。移行の途中でオーナーが新しい製品ドメインを買う。
@@ -56,6 +73,10 @@ lessons:
   see_also: [sec.secrets, ho.offboarding-rotate]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: 利用者が Webhook の秘密の URL をチャットに貼った。貼られた値は使わず再発行を頼み、新しい値はフォームか秘密の置き場で受け取る。'
 - id: fs.L06
   principle: 設定を入力してもらう時は名前をコードが期待する通りに示して「そのままコピー」と言い、コード側で別名を受け付けるか設定確認の手段を用意し、入力後の確認の一手を必ず添える。
   anti_pattern: 環境変数を少し違う名前（`FOO_API` と `FOO_API_KEY`）で入れてしまい、動かない理由を探して時間が溶ける。
@@ -86,6 +107,17 @@ lessons:
   see_also: [biz.public-support-address, lt.required-disclosures-by-country]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: 商標の出願書類も永久に公開される。出願人は法人、本拠地の住所は非公開欄、公開される郵送先とメールは専用のものにする。'
+  claims:
+  - id: fs.L08.c1
+    claim: 'US trademark records: the domicile address stays non-public only when a different mailing address is given; all email addresses become public; every submitted document is public.'
+    source:
+      url: https://www.uspto.gov/trademarks/apply/faqs-personal-information-trademark-records
+      checked: '2026-11-04'
+      verified: true
 - id: fs.L09
   principle: 法人設立の直後に、公的な郵便（登記した役所・税務当局・登録代理人）と売り込み（偽の「コンプライアンス」「証明書」の請求書）の見分け方を先に伝え、郵便で来た請求は払う前に聞いてもらう。
   anti_pattern: 設立直後に届く本物そっくりの高額な「届出代行」「証明書発行」の請求書を、必要なものだと思って払う。
@@ -106,6 +138,24 @@ lessons:
   see_also: [fs.E, biz.processor-account-per-brand]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: 米国の事業者 SMS（A2P 10DLC）の登録より先に自動返信を作り、出荷も課金もできずに止まった。登録の期間と費用を計画の最初に入れる。'
+  claims:
+  - id: fs.L10.c1
+    claim: Anyone sending SMS/MMS from an application to US numbers over 10DLC must register a Brand and a Campaign; the official page says unregistered traffic incurs additional carrier fees.
+    source:
+      url: https://www.twilio.com/docs/messaging/compliance/a2p-10dlc
+      checked: '2026-11-04'
+      verified: true
+    note: Submissions said unregistered US SMS cannot be sent at all; the official page says 'additional carrier fees', not 'blocked'. Fees and vetting time are not on that page (unverified).
+  - id: fs.L10.c2
+    claim: 'US SMS: $0.0083 per outbound segment plus carrier fees ($0.0035-$0.005); a long-code number is $1.15 per month.'
+    source:
+      url: https://www.twilio.com/en-us/sms/pricing/us
+      checked: '2026-11-04'
+      verified: true
 - id: fs.L11
   principle: マージの前に、全レビュアー（人・レビューボット・CI・デプロイのプレビュー）が終わって報告したことを確かめる。「チェック実行中」は待つ。
   anti_pattern: 自動レビューがまだ走っている間に PR をマージする。
@@ -116,6 +166,10 @@ lessons:
   see_also: [ci.preview-per-pr-first, fs.F]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: プレビューのビルドが 20 分止まったままマージし、本番を目で確かめなかった。プレビューが緑になるか手元のビルドを確かめてからマージし、マージ後に本番を見る。'
 - id: fs.L12
   principle: エージェント環境の前提（API ホストへの通信許可・API トークン・権限）は、最初の外部呼び出しの前に 1 通にまとめて頼む：要るもの・なぜ・最小の権限範囲・誰が作る・置き場・確認方法。
   anti_pattern: 通信許可・トークン・権限を、詰まるたびに 1 つずつ頼む。
@@ -146,6 +200,25 @@ lessons:
   see_also: [ai.gateway, dp.ai-usage-caps, cc.kill-switch-tested, cc.retry-with-breaker]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: 電話の受付は最初の応答までの時間で決まるので、無料のルーター枠（回数上限）では受けない。小さい有料モデルにし、変更のたびに 20〜50 本のテスト会話を回す。'
+  claims:
+  - id: fs.L14.c1
+    claim: Free (:free) router models allow 20 requests per minute and 50 per day, or 1000 per day once 10 credits have been purchased.
+    source:
+      url: https://openrouter.ai/docs/api-reference/limits
+      checked: '2026-11-04'
+      verified: true
+    note: the submission cited a third-party blog; replaced by the official page
+  - id: fs.L14.c2
+    claim: Voice-receptionist vendors do not publish which language model they use; a self-built stack ran about $0.085-$0.11 per minute.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: one project's estimate
 - id: fs.L15
   principle: 2 つ目のエージェント（または 2 人目の人）が同じリポジトリで始める前に、エージェントごとに 1 ブランチ・「触るファイル」を書く作業ボード・1 つの調整スレッド・マージする人 1 人、を書面で決める。
   anti_pattern: 2 つの AI エージェントが決まりなしに同じリポジトリで並行作業する。
@@ -156,6 +229,290 @@ lessons:
   see_also: [fs.F, ho.bus-factor-two]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: 同じページを触る 3 本の PR を並行で進め、最後に衝突が集中した。マージ順を先に決め、1 本マージするたびに衝突を数え直す。'
+- id: fs.L16
+  principle: マージ・公開・送信・本番リリースは、オーナー本人の発言で承認を確かめてから行う。別のエージェントの「OK と言っていた」は未確認として扱う。
+  anti_pattern: 他のボットが中継した「承認済み」でマージや公開をする。
+  why: 伝聞の承認は条件や範囲が落ち、間違っていた時に誰も責任を持てない。
+  check: 承認の一次ソース（オーナー本人のメッセージ）を示せるか？
+  trigger: マージ・公開・送信・本番リリースの直前
+  stage: launch
+  see_also:
+  - fs.X6
+  - fs.L11
+  context:
+    stack: 複数エージェントのチャット運用
+    product: 全般
+    cost: 誤った公開 1 回分の手戻り
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: fs.L17
+  principle: 大きな素材を渡す前に、転送の上限（1 ファイルの大きさ・置ける場所）を確かめ、配信に要るものだけを上限より小さく分けて渡す。
+  anti_pattern: 1 つの大きなアーカイブを /tmp から送り、2 回拒否されてから分ける。元素材・書き出し・検証用フォルダまで含めて渡す。
+  why: 上限は失敗して初めて分かり、そのたびに往復が増える。不要なフォルダを除くだけで 1/10 になることがある。
+  check: 各ファイルが転送の上限より小さく、許可された場所にあり、index から参照されないフォルダを除いたか？
+  trigger: 大きなファイルやフォルダを作業マシンへ・レビューへ渡す前
+  stage: idea
+  see_also:
+  - fs.L18
+  context:
+    stack: エージェントの作業マシンとファイル転送ツール
+    product: 画像・映像・静的サイト
+    cost: 失敗 2 回分の待ち
+  claims:
+  - id: fs.L17.c1
+    claim: One agent file-copy tool refused files over about 100 MiB and paths outside allowed folders (such as /tmp).
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: observed twice; the exact cap is not published
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: fs.L18
+  principle: 受け渡しは両側で確かめる。渡す側は相手が開けることを確かめ（開けなければファイルで送る）、受け取る側はすぐ中身を一覧にして、空や不足ならその場で言う。
+  anti_pattern: 共有した戦略ドキュメントが相手には「見つからない」で、依頼文だけで計画を作る。添付の zip にフォルダ名しか無いのに気づかず調査を始める。
+  why: 開けない・空の資料は、間違った前提での作業になって後から全部やり直しになる。
+  check: 受け取った資料のファイル数と中身を作業の前に確認し、渡した資料は相手が開けたと返事をもらったか？
+  trigger: 資料・添付・共有リンクを渡す時と受け取った時
+  stage: launch
+  see_also:
+  - fs.X6
+  context:
+    stack: チャット・共有ドキュメント・添付
+    product: 全般
+    cost: 誤った前提での作業 1 回分
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: fs.L19
+  principle: 段階を始める前に、使う AI・画像生成・計算の残高（クレジット・週の上限）とリセット日を全部確かめ、安い 1 回の試し呼び出しを通し、主・副・予備の実行経路を書いておく。同じ起動が 2 回続けて失敗したら、作業を小さく分けるか別の経路に回す。
+  anti_pattern: 「AI で作れます」と約束してから残高不足で 10 回中 9 回が失敗する。1 つのエージェント基盤だけに頼り、週の上限で作業が止まる。同じ起動を 3 回以上やり直す。
+  why: 残高とリセット日は締め切りより先に来て、止まった作業は途中のまま再実行になる。
+  check: 段階ごとに経路（主・副・予備）・残高・リセット日・予算が書いてあり、試し呼び出しが成功してから始めたか？
+  trigger: 生成や実装が多い段階を始める前、計画を約束する前
+  stage: idea
+  see_also:
+  - fs.X1
+  - fs.L14
+  - cc.alert-50-80
+  - rules.R-020
+  context:
+    stack: クラウドのコーディングエージェント、CLI エージェント、画像・ベクター生成 API
+    product: 全般（特に生成の多いブランド・映像）
+    cost: 止まった作業のやり直し、約束した品質の未達
+  claims:
+  - id: fs.L19.c1
+    claim: Coding-agent plans have weekly quotas that reset at a fixed time without carry-over; a plan downgrade applies from the start of the next month; on-demand spend capped at $0 rejects launches.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: from users' plan dashboards; not checked on a public page
+  - id: fs.L19.c2
+    claim: Image generation through a reseller API cost about $0.04 per image; a set of pose tests cost about $0.87.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: observed charges
+  occurrences: 5
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (5 submissions), generalized
+- id: fs.L20
+  principle: 長いジョブはセッションから切り離して（nohup / setsid / tmux）動かし、ログと「完了ファイル（終了コード入り）」を書かせる。後続ジョブはプロセス名ではなく完了ファイルで待ち、待ちには上限時間を付ける。
+  anti_pattern: 前景のセッションで長いジョブを始め、セッションが閉じて空のログのまま死ぬ。`while pgrep -f ...; do sleep 60; done` で無期限に待つ。
+  why: ジョブは黙って死に、待つ側は終わったことに気づけないので、朝まで何も進まない。
+  check: ジョブがセッション終了後も生き残り、完了ファイルを書き、待ちループに上限時間があるか？
+  trigger: 長時間のエージェント実行・後続ジョブを仕掛ける時
+  stage: launch
+  see_also:
+  - fs.L21
+  context:
+    stack: 共有の Linux 作業マシン、ヘッドレスの CLI エージェント
+    product: 全般
+    cost: 一晩分の待ち
+  claims:
+  - id: fs.L20.c1
+    claim: '`pgrep -f <pattern>` can match the waiting script itself, so a wait loop on it may never end.'
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: suspected cause, not confirmed
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: fs.L21
+  principle: 共有マシンは予約する資源として扱う：重い処理は同時に 1 本（R-020）、書面の優先順位と 1 本あたりの最長時間を決め、作業後はプロセスを止め、ディスクと inode の使用率を見る。
+  anti_pattern: 先着で枠を取り、1 つのプロジェクトが連続ジョブで何時間も枠を占める。動画レンダーを並列に走らせて他の作業が止まる。node_modules の複製で inode が尽きる。
+  why: 枠の取り合いは上限のリセット直前に起き、他のプロジェクトの使える枠が無駄になる。inode が 0 だと空き容量があっても書き込めない。
+  check: 優先順位と 1 本あたりの上限時間が書いてあり、同時に走る重い処理は 1 本で、df -i の使用率は 80% 未満か？
+  trigger: 共有マシンで重い処理（レンダー・ビルド・長い実装）を始める時
+  stage: launch
+  see_also:
+  - rules.R-020
+  - fs.L20
+  - fs.L22
+  context:
+    stack: 複数ボットの共有 Linux マシン
+    product: 全般
+    cost: 数時間の待ち、使えなかった週の枠
+  claims:
+  - id: fs.L21.c1
+    claim: A disk with free space but 0 free inodes refuses new files; `df -i` shows it.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+  - id: fs.L21.c2
+    claim: Coding-agent plans have weekly quotas that reset at a fixed time without carry-over; a plan downgrade applies from the start of the next month; on-demand spend capped at $0 rejects launches.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: from users' plan dashboards; not checked on a public page
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: fs.L22
+  principle: 削除は持ち主が承認したパスの一覧に限って行い、ゲートの判断が全部終わるまで証拠（スクリーンショット・書き出し）を残す。再利用する道具は /tmp ではなく消えない作業場所に置く。
+  anti_pattern: 「片付け」でフォルダごと消し、別の作業が使っていた試作の元ファイルまで消える。マージ直後に証拠フォルダを消し、最後の判断者が見られない。
+  why: 消えたものは作り直すしかなく、証拠が無いと判断がやり直しになる。
+  check: 消したパスが全部、持ち主の承認した一覧にあり、最後の判断者が見るまで証拠が残っているか？
+  trigger: 掃除・削除・ディスク整理の前、ゲートの判断が終わる前
+  stage: launch
+  see_also:
+  - fs.L21
+  - xs.export-then-delete
+  context:
+    stack: 共有マシンのシェルを持つサブエージェント
+    product: 映像・ウェブ
+    cost: 半日の作り直し、追加のレビュー往復
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: fs.L23
+  principle: 作り直しはブランチか PR で進め、前の版と前のモードを URL で開ける状態に残し、「何も消していない」とオーナーに明言する。
+  anti_pattern: 見た目の作り直しで前の版を上書きし、オーナーが「前のは消えたのか」と不安になる。
+  why: 戻れると分かっていれば判断が早く、戻れないと思うと判断が止まる。
+  check: 前の版が URL で開けて、そのことをオーナーに伝えたか？
+  trigger: 作り直し（リデザイン）を始める時
+  stage: operate
+  see_also:
+  - fs.A
+  context:
+    stack: ウェブ（プレビュー URL あり）
+    product: 全般
+    cost: 判断の遅れ
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: fs.L24
+  principle: スタック・機能・料金の前提は、依頼文や README ではなく main の実際のコード（コミットハッシュ付き）か担当者の確認から取る。
+  anti_pattern: 依頼文にある構成で監査の点検リストを作るが、実際は別のスタックだった。README だけを見て「決済なし」と書き、収益案の前提がずれる。
+  why: 前提が違うと、仕様・監査・戦略の対象そのものが存在せず、全部やり直しになる。
+  check: 文書の冒頭に、基準にしたリポジトリとコミットハッシュ（または確認した人と日付）が書いてあるか？
+  trigger: 仕様・監査・戦略を書き始める時
+  stage: idea
+  see_also:
+  - fs.L25
+  - val.spec-edge-cases
+  context:
+    stack: エッジのサーバーレス＋Postgres＋SQLite 系 DB など複数世代が並ぶ構成
+    product: 全般
+    cost: 半日の書き直し
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: fs.L25
+  principle: 確定した文言・定義・承認済みの要素は 1 つの正本に「LOCKED」と日付つきで書き、古い案は捨てたと明記する。実装もレビューも記事も映像も、その節を指して使う。
+  anti_pattern: チャットごとに見出しを言い換え、実装が古い案を拾う。媒体ごとに段階数を書き、過去の記事が古い数のまま残る。承認済みのロゴを知らずに「作り込み不足」と指摘する。
+  why: 正本が無いと、どれが最新か分からず、確定したものが何度も開き直される。
+  check: 実装・レビューの依頼が正本の節と確定日を指していて、レビューの前に固定項目の一覧を渡したか？
+  trigger: 文言・段階数・承認済みのブランド要素が決まった時、実装やレビューを頼む時
+  stage: launch
+  see_also:
+  - fs.L24
+  context:
+    stack: 文書・サイト・映像の複数媒体
+    product: 全般
+    cost: 半日の手戻りと信頼の低下
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: fs.L26
+  principle: 連携先の公式 API リファレンスで、必要な書き込み（作成・更新）・Webhook の有無と料金と申請・公開の連携条件を一覧にして確かめ、第三者の「連携できる」という主張とも突き合わせてから計画を描く。
+  anti_pattern: 「API がある」を「予約を自動で入れられる」と思い込み、自動確定の設計を先に描く。一度の調査結果を固定の前提にする。
+  why: 書けない API は自動化を不可能にし、受付の手入力や確認リンクの送付といった回り道の設計になる。
+  check: 連携先の公式リファレンスで必要な書き込みエンドポイントと Webhook の条件を確かめ、出典 URL と確認日を書いたか？
+  trigger: 既存 SaaS と連携・置き換え・その上に乗せる計画を描く前
+  stage: idea
+  see_also:
+  - val.positioning-replace-or-overlay
+  - be.tolerant-webhook-intake
+  context:
+    stack: 予約 SaaS・地図の予約ボタンとの連携
+    product: 地元サービス業向けの受付・予約
+    cost: 自動確定前提の設計のやり直し
+  claims:
+  - id: fs.L26.c1
+    claim: One salon-booking SaaS's public API can read appointments but has no create or update endpoint.
+    source:
+      url: https://docs.vagaro.com/public/reference/api-introduction
+      checked: '2026-11-04'
+      verified: true
+  - id: fs.L26.c2
+    claim: 'The same SaaS sells webhooks as an add-on: $10 per month including 5,000 calls, $0.002 per extra call, request form with up to 7 business days, at most 10 webhooks, only with its own card processing and not during the trial.'
+    source:
+      url: https://support.vagaro.com/hc/en-us/articles/29521637950875-Set-Up-Webhooks-From-Vagaro
+      checked: '2026-11-04'
+      verified: true
+    note: HTML page answers 403; read through the same help centre's JSON API
+  - id: fs.L26.c3
+    claim: A map-listing booking button needs online booking switched on, at least one booking in the last 30 days and an exact name and address match, and can take up to a week to appear.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: taken from a vendor help page, not from the map provider; unverified
+  occurrences: 4
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (4 submissions), generalized
+- id: fs.L27
+  principle: 確認コードは、本人がその場にいて入力できると言った時にだけ送らせる。
+  anti_pattern: 先にコードを送らせてから本人の返事を待ち、期限が切れてやり直す。
+  why: コードはすぐ期限が切れ、作業が丸 1 日止まることがある。
+  check: コードを送る前に、本人が「今入力できる」と答えたか？
+  trigger: オーナーに 2 段階認証のコードを入力してもらう時
+  stage: launch
+  see_also:
+  - fs.B
+  - fs.L13
+  context:
+    stack: 管理画面へのログイン代行
+    product: 全般
+    cost: 1 日以上の停止
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
 procedures:
 - id: fs.A
   name_ja: 決定の先読み
