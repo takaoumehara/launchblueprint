@@ -8,7 +8,7 @@
 ## 読み方
 - **状態**：covered＝choose なら比較（R-030）の 4 点（無料枠つき services・1社 vs 組み合わせ・払う境目・pick/理由/rejected）が全部ある、checklist なら全 option に 原則（principle / item / rule / must・add）・避ける形（anti_pattern / avoid_when）・why・確認（check / acceptance）がある。thin＝どれかが欠ける。
 - **無料枠／払う境目**：おすすめ（pick）の `free_tier` と、比較の最初の `switch_points`。
-- **lifecycle 項目**：`catalog/lifecycle.yaml` の items を macro stage ごとに数えたもの（covered / thin / missing）。12cat の項目は category 番号で段に割り当て（01–04 idea、05–09 launch、10 operate、11 scale、12 exit）。
+- **lifecycle 項目**：`catalog/lifecycle.yaml` の items を macro stage ごとに数えたもの（covered / thin / missing）。カテゴリー別の項目（`stage: by_category`）は category 番号で段に割り当て（段は `elements/categories.yaml` の各カテゴリーの `macro`）。
 
 ## 段階ごとの数
 
@@ -43,7 +43,7 @@
 **lifecycle で まだ thin / missing の項目（17）**：
 
 - `lc.discover.02` ペイン×ペルソナのひもづけ（根拠つき）（thin・P1）→ pains.md に persona_id と根拠必須（既定の残タスク）
-- `lc.n01` 最もリスクの高い仮説（価値・成長）と検証KPI（thin・P1）→ 12cat §01
+- `lc.n01` 最もリスクの高い仮説（価値・成長）と検証KPI（thin・P1）→ categories §01
 - `lc.brand.14` メッセージ階層（見出し・3本柱・証拠・反論）（missing・P1）→ gtm-ops §G3 メッセージ階層
 - `lc.design.19` UI詳細の受け入れ基準の集約（thin・P2）→ ux/ui-detail.md
 - `lc.n05` ブランドコンテキストファイル（brand.yaml → CLAUDE.md/.cursorrules の生成節）（missing・P1）→ templates/brand-context.md
@@ -51,13 +51,13 @@
 - `lc.n07` AIペルソナ（チャット機能の性格・口調・禁止事項）（missing・P2）→ brand.yaml ai_persona
 - `lc.n48` カルチャライズ（翻訳ではなく再創作・社会的証明の出し方）（thin・P2）→ cross_border.yaml axis.culturalization
 - `lc.design.17` オンボーディングとアクティベーション（Aha までの時間）（thin・P1）→ gtm-ops §G9 アクティベーション定義と初回体験
-- `lc.n08` MVPスコープ（Must／Nice-to-have）とPRD（thin・P1）→ 12cat §03 prd.md
-- `lc.n09` 非機能要件（同時接続・レイテンシ・対応端末・可用性）（thin・P1）→ 12cat §03
-- `lc.n10` エッジケースと例外状態をPRDに明記（AIは正常系を優先する）（thin・P1）→ 12cat §03
-- `lc.n11` AIツールの選定と役割分担（エディタ型／ターミナル型／API）（thin・P2）→ 12cat §04
-- `lc.n12` ルールファイル（CLAUDE.md/.cursorrules/AGENTS.md）の配備（missing・P1）→ 12cat §04
-- `lc.n13` 不要ファイルの除外（.cursorignore 等）とモジュール分割（missing・P2）→ 12cat §04
-- `lc.n14` ルールの過積載を防ぐ（短く・例つき・参照型）（missing・P1）→ 12cat §04
+- `lc.n08` MVPスコープ（Must／Nice-to-have）とPRD（thin・P1）→ categories §03 prd.md
+- `lc.n09` 非機能要件（同時接続・レイテンシ・対応端末・可用性）（thin・P1）→ categories §03
+- `lc.n10` エッジケースと例外状態をPRDに明記（AIは正常系を優先する）（thin・P1）→ categories §03
+- `lc.n11` AIツールの選定と役割分担（エディタ型／ターミナル型／API）（thin・P2）→ categories §04
+- `lc.n12` ルールファイル（CLAUDE.md/.cursorrules/AGENTS.md）の配備（missing・P1）→ categories §04
+- `lc.n13` 不要ファイルの除外（.cursorignore 等）とモジュール分割（missing・P2）→ categories §04
+- `lc.n14` ルールの過積載を防ぐ（短く・例つき・参照型）（missing・P1）→ categories §04
 - `lc.strategy.09` 会社・名義・口座・会計（thin・P2）→ gtm-ops §O9 会社・会計・税
 
 ## launch — 公開（build, legal, pricing, gtm）
@@ -103,26 +103,26 @@
 
 **lifecycle で まだ thin / missing の項目（42）**：
 
-- `lc.n15` DBスキーマ・マイグレーション・API設計の規約（thin・P2）→ 12cat §05
+- `lc.n15` DBスキーマ・マイグレーション・API設計の規約（thin・P2）→ categories §05
 - `lc.n16` AIがよく知る型付きの普及スタックを選ぶ（missing・P2）→ catalog の各エントリに ai_familiarity を追加
-- `lc.n17` 疎結合・小さな責務（AIが修正箇所を見失わない）（missing・P3）→ 12cat §05
+- `lc.n17` 疎結合・小さな責務（AIが修正箇所を見失わない）（missing・P3）→ categories §05
 - `lc.n45` i18n キー管理・Intl・UTC保存・可変幅UI（thin・P1）→ cross_border.yaml axis.i18n
 - `lc.n50` レイテンシ（エッジ配信・DBリージョン）（thin・P3）→ cross_border.yaml axis.latency
-- `lc.n18` テスト先行（AIにまずテストを書かせる）（missing・P2）→ 12cat §06
-- `lc.n19` モック → ロジック → API/DB の段階実装（thin・P3）→ 12cat §06
-- `lc.n20` 定期リファクタリング（スプリント単位）（missing・P2）→ 12cat §06
-- `lc.n21` 「動くが破綻したコード」の監視（any・グローバル状態・メモリリーク・再描画）（missing・P1）→ 12cat §06
+- `lc.n18` テスト先行（AIにまずテストを書かせる）（missing・P2）→ categories §06
+- `lc.n19` モック → ロジック → API/DB の段階実装（thin・P3）→ categories §06
+- `lc.n20` 定期リファクタリング（スプリント単位）（missing・P2）→ categories §06
+- `lc.n21` 「動くが破綻したコード」の監視（any・グローバル状態・メモリリーク・再描画）（missing・P1）→ categories §06
 - `lc.build.26` 脅威モデル・脆弱性診断・依存の脆弱性（thin・P2）→ gtm-ops §O7 依存更新と脆弱性
 - `lc.build.27` テスト戦略（単体/E2E/Visual gate）（thin・P2）→ gtm-ops §O8 QAの最小セット
 - `lc.legal.32` 税（売上税・VAT・消費税・インボイス）とMoR（thin・P2）→ gtm-ops §O9
 - `lc.legal.33` 知財（商標出願・OSSライセンス）（thin・P3）→ OSSライセンス棚卸しを追加
 - `lc.n22` 単体・結合・E2E とカバレッジ（thin・P2）→ gtm-ops §O8
 - `lc.n23` SQLi/XSS/CSRF・依存の脆弱性チェック（thin・P1）→ gtm-ops §O7
-- `lc.n26` 実在しないパッケージ（パッケージ幻覚）とサプライチェーン攻撃（missing・P1）→ 12cat §07
+- `lc.n26` 実在しないパッケージ（パッケージ幻覚）とサプライチェーン攻撃（missing・P1）→ categories §07
 - `lc.n46` 国別のデータ主権・同意（GDPR リージョン・CCPA オプトアウト・年齢ゲート）（thin・P1）→ cross_border.yaml axis.legal
-- `lc.n27` CI：Lint→型→テスト→ビルド→プレビュー（thin・P2）→ 12cat §08
-- `lc.n28` ステージングで永続化・認証・Webhook を確認（thin・P1）→ 12cat §08
-- `lc.n30` IaC・CI設定の版を公式ドキュメントで照合（AIは古いAPIを書く）（missing・P2）→ 12cat §08
+- `lc.n27` CI：Lint→型→テスト→ビルド→プレビュー（thin・P2）→ categories §08
+- `lc.n28` ステージングで永続化・認証・Webhook を確認（thin・P1）→ categories §08
+- `lc.n30` IaC・CI設定の版を公式ドキュメントで照合（AIは古いAPIを書く）（missing・P2）→ categories §08
 - `lc.build.29` 計測設計（イベント辞書・同意）（thin・P1）→ gtm-ops §G8 イベント辞書
 - `lc.gtm.37` ポジショニング（Dunford 5要素）（missing・P1）→ gtm-ops §G3
 - `lc.gtm.38` ICP と非対象（トリガーイベント）（thin・P1）→ gtm-ops §G3 ICP（トリガー必須）
@@ -133,7 +133,7 @@
 - `lc.gtm.51` 営業（B2B：デモ・CRM・提案書）（missing・P2）→ gtm-ops §G4 販売モーション（PLG/SLG/MLG）
 - `lc.n31` LP公開と Core Web Vitals（thin・P1）→ gtm-ops §G7
 - `lc.n32` プロモーション素材（デモ動画・OGP・プレスキット・告知文）（thin・P1）→ gtm-ops §G5
-- `lc.n33` 販促素材をスプリント内で生成（コードと仕様から同期）（missing・P1）→ 12cat §09 『スプリント内の販促素材』
+- `lc.n33` 販促素材をスプリント内で生成（コードと仕様から同期）（missing・P1）→ categories §09 『スプリント内の販促素材』
 - `lc.n47` 国別の決済手段と税（MoR か Stripe Tax か）（thin・P1）→ cross_border.yaml axis.payments_tax
 - `lc.n49` 国別ローンチチャネル（US：PH/HN/Reddit/X、JP：X/Zenn/Qiita/note/PR TIMES）（missing・P2）→ cross_border.yaml axis.channels
 - `lc.gtm.44` コンテンツ計画（ブログ・動画・事例）（thin・P2）→ gtm-ops §G4 コンテンツカレンダー
@@ -192,8 +192,8 @@
 - `lc.growth.54` 実験（A/B・フラグ・判定ルール）（thin・P2）→ gtm-ops §G8 実験の書式
 - `lc.growth.55` フィードバック収集とロードマップ公開（missing・P3）→ gtm-ops §O3
 - `lc.n37` フィードバックウィジェット・ユーザーインタビュー（missing・P2）→ gtm-ops §O3
-- `lc.n38` 学びを CLAUDE.md・プロンプトに戻す（AIワークフローの振り返り）（thin・P2）→ 12cat §11
-- `lc.n39` AI負債の監査スプリント（デッドコード・共通化）（missing・P2）→ 12cat §11
+- `lc.n38` 学びを CLAUDE.md・プロンプトに戻す（AIワークフローの振り返り）（thin・P2）→ categories §11
+- `lc.n39` AI負債の監査スプリント（デッドコード・共通化）（missing・P2）→ categories §11
 
 ## exit — 出口（sunset, exit）
 
