@@ -1,0 +1,238 @@
+# Blueprint Catalog — client_collaboration（クライアントワークの進め方：基準値・整合監査・合意ページ・通知・パイロット合意・プレビュー公開）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 受託・制作・運用代行など、外部のクライアントと一緒に進めるすべての案件で使う。
+# 固有の会社名・店名・人名・製品名は書かない。道具は「社内チャット」「メッセージアプリ」「予約システム」「地図・検索の店舗情報（ローカル掲載）」のように役割で呼ぶ。
+domain: client_collaboration
+updated: '2026-11-03'
+stale_after_days: 365   # 料金を持たない（進め方の原則だけ）
+load: lazy              # クライアント案件のときだけ読む
+reference: reference/client-collaboration.md
+
+# lessons: 1件 = 原則・避ける形・なぜ（1行）・はい／いいえの確認。stage は Blueprint の5段階（idea/launch/operate/scale/exit）のどこで効くか。
+lessons:
+# 1) 開始時の基準値（before / after の「before」）
+- id: collab.baseline-at-kickoff
+  stage: idea
+  principle: "At kickoff, before changing anything, save a dated snapshot of the client's current numbers and settings: local listing views, actions (calls, directions, website clicks, bookings) and reviews (count, average rating), website visits, and the booking system's settings (services, durations, prices, lead time, deposit and cancellation rules)."
+  anti_pattern: "Starting work first and trying to reconstruct the 'before' from memory or from charts that only keep recent months."
+  why: "Without a dated before-snapshot there is no honest after, and most dashboards cannot show the past later."
+  check: "Is there a dated snapshot of listing views/actions/reviews, site visits and booking settings, taken before the first change?"
+  see_also: [collab.baseline-same-definitions, collab.pilot-summary-is-the-agreement]
+  verified: false
+  date: '2026-11-03'
+- id: collab.baseline-same-definitions
+  stage: idea
+  principle: "Record, next to every baseline number, its source, metric definition and date window, and measure the after with the same source, definition and window length."
+  anti_pattern: "Comparing a 7-day 'before' from one dashboard with a 30-day 'after' from another."
+  why: "A change of source or window makes any before/after claim unprovable, and the client will notice."
+  check: "Does every baseline number name its source, definition and window, so the after can be measured the same way?"
+  see_also: [collab.baseline-at-kickoff]
+  verified: false
+  date: '2026-11-03'
+
+# 2) 名前・住所・電話・営業時間・構造化データの整合監査
+- id: collab.consistency-audit
+  stage: idea
+  principle: "Audit name, address, phone and hours in one table: one row per field, one column per place it appears (local listings, website, booking system, social profiles, directories), with mismatches marked."
+  anti_pattern: "Fixing the one wrong value someone happened to notice, and leaving the other copies untouched."
+  why: "Search engines and AI assistants trust consistent details; one stale copy spreads wrong hours and lost calls."
+  check: "Is there one table of name/address/phone/hours across every place they appear, with every mismatch marked and assigned?"
+  see_also: [collab.structured-data-matches, collab.fix-list-where-no-access]
+  verified: false
+  date: '2026-11-03'
+- id: collab.structured-data-matches
+  stage: idea
+  principle: "Check the site's structured data (business markup) against the visible page and the local listing: same name, address, phone, hours and booking link."
+  anti_pattern: "Structured data copied from a template once and never updated when the visible page changed."
+  why: "Machines read the markup, not the page, so a mismatch there is a mismatch everywhere they repeat it."
+  check: "Do the structured-data name, address, phone, hours and booking link match the visible page and the listing exactly?"
+  see_also: [collab.consistency-audit]
+  verified: false
+  date: '2026-11-03'
+- id: collab.fix-list-where-no-access
+  stage: launch
+  principle: "Where you cannot edit a source (no write access or no API), give the client a per-source fix list with the exact value to enter and a link to the setting, and tick it off together."
+  anti_pattern: "Telling the client 'please make your hours consistent everywhere'."
+  why: "A vague request is never done; an exact value and a link is done in minutes."
+  check: "Does every mismatch you cannot fix yourself have an owner, the exact correct value and a link to where it is changed?"
+  see_also: [collab.consistency-audit]
+  verified: false
+  date: '2026-11-03'
+
+# 3) 合意ページ（唯一の正）
+- id: collab.single-agreement-page
+  stage: launch
+  principle: "Keep one agreement page per engagement as the source of truth for every proposal, decision and open question; chat, calls and email point to it and are written back into it."
+  anti_pattern: "Decisions scattered across chat threads, call notes and emails, with no single place that says what was agreed."
+  why: "When the record is scattered, each side remembers a different agreement."
+  check: "Can anyone answer 'what did we agree on X?' by opening one page, without searching chat?"
+  see_also: [collab.item-deep-links, collab.decide-by-call-write-back]
+  verified: false
+  date: '2026-11-03'
+- id: collab.item-deep-links
+  stage: launch
+  principle: "Give every item on the agreement page a stable id and a deep link that opens, scrolls to and highlights that item."
+  anti_pattern: "Sending 'see section 3 of the page' or a link to the top of a long page."
+  why: "A link to the exact item is the difference between a reply today and a reply never."
+  check: "Does every item have a stable id and a copyable link that opens the page at that item?"
+  see_also: [collab.single-agreement-page, collab.client-action-notifies-team]
+  verified: false
+  date: '2026-11-03'
+- id: collab.tri-state-response
+  stage: launch
+  principle: "Let the client answer each item with one of three states: OK (agreed), Ack (seen, nothing to decide) or Discuss (I want to talk about this)."
+  anti_pattern: "Only Yes/No, or only a free-text box."
+  why: "Yes/No forces a false agreement or a hard no; Discuss gives the polite middle answer people actually mean."
+  check: "Can the client mark every item OK, Ack or Discuss with one tap?"
+  see_also: [collab.value-picks, collab.threaded-item-comments]
+  verified: false
+  date: '2026-11-03'
+- id: collab.value-picks
+  stage: launch
+  principle: "When an item is a choice of values (hours, wording, option A/B, a price tier), show the options inline and let the client pick one; record the pick with who and when."
+  anti_pattern: "Asking 'which do you prefer?' in chat and transcribing the answer by hand."
+  why: "Picks made on the page are exact and timestamped; transcribed chat answers drift."
+  check: "Is every multiple-choice item answered by picking a value on the page, stored with who and when?"
+  see_also: [collab.tri-state-response]
+  verified: false
+  date: '2026-11-03'
+- id: collab.threaded-item-comments
+  stage: launch
+  principle: "Attach a comment thread to each item, with client and team messages visually distinct and each reply kept under the message it answers."
+  anti_pattern: "One long comment box at the bottom of the page for everything."
+  why: "Without per-item threads, answers lose their question and nobody knows which item is still open."
+  check: "Does each item have its own thread, with client and team messages told apart at a glance?"
+  see_also: [collab.new-and-unanswered-on-entry]
+  verified: false
+  date: '2026-11-03'
+- id: collab.new-and-unanswered-on-entry
+  stage: launch
+  principle: "When anyone opens the page, show first a short list of what is new since their last visit (including the other side's replies) and which items are still unanswered, each linking to its item."
+  anti_pattern: "Making the client reread the whole page to find what changed."
+  why: "People return to a long page only if it tells them in seconds what needs them."
+  check: "Does opening the page show 'new since last visit' and 'unanswered' lists that link to the items?"
+  see_also: [collab.threaded-item-comments, collab.item-deep-links]
+  verified: false
+  date: '2026-11-03'
+
+# 4) 通知と連絡の流れ
+- id: collab.client-action-notifies-team
+  stage: operate
+  principle: "Every client action on the page (a response, a value pick, a comment) posts a short message to the team's internal chat with the item name and a deep link to that item."
+  anti_pattern: "Checking the page by hand every few days to see whether the client answered."
+  why: "A reply nobody sees for three days teaches the client that the page is not where things happen."
+  check: "Does each client action reach the internal chat within minutes, with the item name and a link to it?"
+  see_also: [collab.copy-paste-ready-reply, collab.item-deep-links]
+  verified: false
+  date: '2026-11-03'
+- id: collab.copy-paste-ready-reply
+  stage: operate
+  principle: "When the team replies on the page, offer a one-tap copy of a paste-ready message ('I replied about <item>; you can see it here: <client link to the item>') for the messaging app the client already uses; automatic sending stays off until the client agrees to it."
+  anti_pattern: "Expecting the client to check the page unprompted, or pushing automatic messages into the client's personal chat without asking."
+  why: "Clients live in their messaging app; one pasted line brings them back to the exact item without new accounts or surprise bots."
+  check: "Does every team reply offer a one-tap copy of a message plus the client-facing item link, with auto-send off by default?"
+  see_also: [collab.client-action-notifies-team]
+  verified: false
+  date: '2026-11-03'
+- id: collab.decide-by-call-write-back
+  stage: operate
+  principle: "Move a topic to a call when it has more than one open question or needs a trade-off explained; after the call, write the decision back to the item within one working day and ask the client to mark it OK."
+  anti_pattern: "Long comment threads for complex trade-offs, or calls whose decisions live only in someone's notes."
+  why: "Complex topics settle faster by voice, but only the written-back item is a decision both sides can point to."
+  check: "Is every decision made on a call written back to its item, and marked OK by the client?"
+  see_also: [collab.single-agreement-page, collab.tri-state-response]
+  verified: false
+  date: '2026-11-03'
+
+# 5) 無償範囲のまとめ＝パイロット合意
+- id: collab.pilot-summary-is-the-agreement
+  stage: idea
+  principle: "Write a one-page summary of only the free (pilot) scope that doubles as the pilot agreement: the period, the before/after metrics and how they are measured, the case-study rights, and the data promise."
+  anti_pattern: "Mixing paid options, prices and future upsells into the pilot summary, or starting a pilot on a verbal 'let's try it'."
+  why: "A pilot with no written period, metrics and rights ends in an argument about what success meant and what can be shown."
+  check: "Does the summary cover only the free scope and state the period, the before/after metrics, the case-study choice and the data promise?"
+  see_also: [collab.case-study-rights, collab.no-data-leaves, collab.baseline-at-kickoff]
+  verified: false
+  date: '2026-11-03'
+- id: collab.case-study-rights
+  stage: idea
+  principle: "Ask the client to choose case-study rights up front: named (name, logo and numbers), anonymous (type of business and numbers only) or not published, and record the choice on the agreement page."
+  anti_pattern: "Assuming you may publish results, or asking only after the numbers turn out good."
+  why: "Asking after the results looks like a favour; asking first is a fair term both sides accept."
+  check: "Is the case-study choice (named / anonymous / not published) recorded before the pilot starts?"
+  see_also: [collab.pilot-summary-is-the-agreement]
+  verified: false
+  date: '2026-11-03'
+- id: collab.no-data-leaves
+  stage: idea
+  principle: "State in the pilot agreement that the client's customer data stays in the client's own systems, is used only for this engagement, is not used to train or sell anything, and is deleted or returned at the end."
+  anti_pattern: "Exporting customer lists into personal spreadsheets or third-party tools 'just for analysis'."
+  why: "Small businesses agree to a pilot only if their customer list is safe; one leak ends the relationship."
+  check: "Does the agreement say where customer data stays, what it is used for, and that it is deleted or returned at the end?"
+  see_also: [collab.pilot-summary-is-the-agreement]
+  verified: false
+  date: '2026-11-03'
+
+# 6) プレビューの公開範囲
+- id: collab.preview-access-by-audience
+  stage: launch
+  principle: "Keep previews open (unlisted) while the team reviews internally, and put them behind a password or access token before sending to the client; send the password through a different channel from the link and never commit it or paste it in chat."
+  anti_pattern: "Sharing an open preview link with the client, or locking internal previews so reviewers cannot click through quickly."
+  why: "Internal review needs speed, but a client preview holds unreleased work and client details that must not be indexed or forwarded."
+  check: "Is every preview shared with the client behind a password or token, with the secret kept out of chat and the repository?"
+  see_also: [collab.stable-client-link]
+  verified: false
+  date: '2026-11-03'
+- id: collab.stable-client-link
+  stage: operate
+  principle: "Give the client one stable link (a fixed alias or domain) that always points at the latest approved preview, instead of a new per-deploy URL each time."
+  anti_pattern: "A new preview URL in every message, so old links in the client's chat open stale pages."
+  why: "Clients bookmark the first link they get, and comments on a stale version are wasted on both sides."
+  check: "Does the link the client holds always open the latest version?"
+  see_also: [collab.preview-access-by-audience, collab.item-deep-links]
+  verified: false
+  date: '2026-11-03'
+
+# phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階。rules はそのゲートがまとめる lessons の id。
+phase_gate_checks:
+- id: gate.collab_kickoff
+  lifecycle: idea
+  phase: 開始時（キックオフ。最初の変更を加える前）
+  check: "Before the first change: is there a dated baseline (listing views/actions/reviews, site visits, booking settings, each with source and window) and a name/address/phone/hours/structured-data audit table with every mismatch assigned? — yes/no"
+  why: "Before-numbers cannot be recovered later, and fixing details piecemeal leaves stale copies."
+  rules: [collab.baseline-at-kickoff, collab.baseline-same-definitions, collab.consistency-audit, collab.structured-data-matches, collab.fix-list-where-no-access]
+- id: gate.collab_pilot_agreement
+  lifecycle: idea
+  phase: 開始時（パイロットの作業を始める前）
+  check: "Has the client confirmed the free-scope summary with the period, before/after metrics, case-study choice (named/anonymous/not published) and data promise? — yes/no"
+  why: "Starting without written terms turns the end of the pilot into a negotiation."
+  rules: [collab.pilot-summary-is-the-agreement, collab.case-study-rights, collab.no-data-leaves]
+- id: gate.collab_agreement_page
+  lifecycle: launch
+  phase: クライアントに合意ページを初めて送る前
+  check: "Does every item have a deep link, OK/Ack/Discuss, value picks where there are options and its own thread, and does the page open with 'new' and 'unanswered' lists? — yes/no"
+  why: "The first visit decides whether the client treats the page as the place where things are decided."
+  rules: [collab.single-agreement-page, collab.item-deep-links, collab.tri-state-response, collab.value-picks, collab.threaded-item-comments, collab.new-and-unanswered-on-entry]
+- id: gate.collab_preview_shared
+  lifecycle: launch
+  phase: プレビューをクライアントに共有する前
+  check: "Is the client-facing preview behind a password or token, sent separately from the link, kept out of chat and the repository, on a link that stays stable across deploys? — yes/no"
+  why: "Open previews get forwarded and indexed; changing links send the client to stale pages."
+  rules: [collab.preview-access-by-audience, collab.stable-client-link]
+- id: gate.collab_loop_weekly
+  lifecycle: operate
+  phase: 運用中（毎週）
+  check: "This week: did every client action reach internal chat with a link, did every team reply go out as a pasted message with the item link, and were all call decisions written back and marked OK? — yes/no"
+  why: "The page stays the source of truth only if nothing is decided outside it."
+  rules: [collab.client-action-notifies-team, collab.copy-paste-ready-reply, collab.decide-by-call-write-back]
+- id: gate.collab_reuse
+  lifecycle: scale
+  phase: 次のクライアントを受ける前
+  check: "Are the agreement page, audit table, baseline sheet and pilot summary templates free of the previous client's names and data, so the next engagement starts from them? — yes/no"
+  why: "The second client costs half as much only if the first one left reusable templates, not copies with someone else's details."
+  rules: [collab.single-agreement-page, collab.consistency-audit, collab.baseline-at-kickoff, collab.pilot-summary-is-the-agreement]
+- id: gate.collab_pilot_close
+  lifecycle: exit
+  phase: パイロット終了時（または契約終了・引き継ぎ時）
+  check: "At the end: were the after-numbers measured with the same sources and windows as the baseline, is any case study within the recorded choice, and was client data deleted or returned as promised? — yes/no"
+  why: "The pilot's value to both sides is a fair comparison and kept promises."
+  rules: [collab.baseline-same-definitions, collab.case-study-rights, collab.no-data-leaves]
