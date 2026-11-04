@@ -27,7 +27,7 @@ AI が使う順（典型）/ typical agent flow: `list_topics` → `draft_projec
 | `stale_items(days)` | 確認日が古い・未確認の項目（スタック比較の services も含む）/ items older than `days`, unchecked or unverified |
 | `ui_ux_checklist(phase?, lifecycle?)` | はい・いいえで答える UI/UX 確認表（phase: requirements / design / qa）。段階ゲート `gates` も返し、lifecycle（idea / launch / operate / scale / exit）で絞れる / yes-no checklist plus phase gates per lifecycle stage |
 | `lifecycle_stages(stage?, include_items?)` | 5 段階（idea / launch / operate / scale / exit）と細かい段、known_surprises / revisit_triggers / stages with known surprises and revisit triggers |
-| `propose_learning(text, category, kind?)` | 学びを提案箱に追加（固有名詞・個人名なし）。kind: rule（既定）/ component_map_update / append a proposal to the inbox |
+| `propose_learning(category, principle?, claims?, context?, text?, kind?)` | 学びを 4 層で提案箱に追加：①原則（principle / anti_pattern / why / check）②確かめる事実（claims。出典 URL・確認日つき。ここでは常に verified:false）③文脈（stage・スタック種別・製品種別・費用。固有名詞なし）④件数（1 から。ハブが提出者をまたいで数える）。`text` だけの旧形式も受け付け、人が分ける。メール・電話・鍵らしき文字列は拒否 / four-layer proposal: principle, claims to verify, context without names, occurrence. kind: rule（既定）/ component_map_update |
 
 テスト / Tests（`npm test`）: `smoke`（全ツール）、`coverage`（カタログの全ファイルが読める・全選択肢の id が引ける・tech の選択に比較がある）、`dryrun`（見本プロジェクトを最初から最後まで通す。`BP_DRYRUN_OUT=path` で記録を書き出す）。
 
@@ -76,7 +76,7 @@ macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
 ## 学びの扱い / Learnings
 
-`propose_learning` は提案を箱に入れるだけです。本体（catalog / reference）への反映は、人が確認してから行います。
+`propose_learning` は提案を箱に入れるだけです。本体（catalog / reference）への反映は、人が確認してから行います。各段階のゲート（地図が次の段に進む前）で「計画になかったのに起きたことは？」「先に知っていれば助かったことは？」を聞いて、その場で送る（まとめての振り返りは待たない）。記録の形は `blueprint.learning/v2`（`docs/hub/DESIGN.md` §6）。
 Proposals are reviewed by a person before being merged into the master.
 
 © CREATIVITY IS EVERYWHERE, LLC

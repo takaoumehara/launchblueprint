@@ -11,10 +11,10 @@
 | 守ること（原則・避ける形・なぜ・確認） | `catalog/<domain>.yaml` の `lessons[]` | id, principle, anti_pattern, why, check, see_also, verified |
 | 決めること（選択肢とおすすめ） | `elements/tactics.yaml` の `tactics[]` ＋ `elements/stack_comparisons.yaml` | topic, options, ai_pick, ai_reason_ja, pick_when, stage。技術なら R-030 の比較を必ず添える |
 | 絶対・既定のルール | `catalog/rules.yaml` | id, type, text, strength, status, review_due |
-| AI からの提案（下書き） | `mcp/inbox/learnings.jsonl`（MCP `propose_learning`） | ts, category, text, status=proposed |
+| AI からの提案（下書き） | `mcp/inbox/learnings.jsonl`（MCP `propose_learning`） | `blueprint.learning/v2`：4 層＝layers.principle（principle / anti_pattern / why / check）・layers.claims（確かめる事実。常に verified:false で入る）・layers.context（stage・stack_type・product_type・severity・cost。固有名詞なし）・layers.occurrence（count=1 から、fingerprint で束ねる）。`text` だけの旧形式は needs_structuring:true |
 
 ## 2. 流れ（1 件につき）
-1. **記録する（当日）**：テンプレートをコピーし、§1〜§3（事実・前提・いつ確かめれば防げたか）を埋める。固有名詞を外す。推計は estimate と書く。AI セッションで見つけたものは `propose_learning` で inbox に入れ、人が po-input に起こす。
+1. **記録する（その場で）**：各段階のゲート（地図が次の段へ進む前）に AI が「計画になかったのに起きたことは？」「先に知っていれば助かったことは？」と聞き、答えを 4 層（原則・確かめる事実・文脈・件数）で `propose_learning` に送る。まとめての振り返りは待たない。人が書くときはテンプレートをコピーし、層 1〜3 を埋める。固有名詞を外す。数字は層 2（claims）に置き、推計は cost_is_estimate: true。
 2. **置き場を決める（§4）**：macro stage と fine stage、element と topic、近い既存 id を書く。近い lesson があるなら**新規ではなく既存に足す／直す**。
 3. **提案を書く（§5）**：lesson 案は principle・anti_pattern・why・check の 4 つを空欄なしで。check は はい／いいえ で答えられる問いにする。lifecycle に足すなら known_surprises か revisit_triggers のどちらかを 1 行。
 4. **昇格の判定（オーナー）**：次を全部満たす時だけ本体へ。
