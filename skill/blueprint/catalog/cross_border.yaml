@@ -1,7 +1,7 @@
 # Blueprint Catalog — cross_border（海外展開モジュール）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 手数料は 2026-10-26 に公式ページで確認（verified:true）。それ以外は verified:false
 domain: cross_border
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 30   # 料金・規制は30日（freshness.yaml の rules/APIs）
 load: lazy             # 海外展開する案件だけ読む（core には入れない）
 axes:
@@ -152,3 +152,29 @@ phase_gate_checks:
   phase: 要件（海外の利用者を受け入れる前）／ローンチ前
   check: 'EU・UK（・トルコ・該当するアジア市場）の人が登録・購入できる場合、代理人を指定し、その連絡先をプライバシーポリシーに書いたか（または例外に当たる理由を記録したか）— はい／いいえ'
   why: '拠点がなくても法律がかかり、指定漏れだけで罰金対象になるうえ、後から指定すると過去分の説明に困るため'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: a target-country list dropped the EU and UK once the representative duty was confirmed; check it before choosing countries, not after.'
+  claims:
+  - id: gate.privacy_rep.c1
+    claim: 'GDPR Art. 27 and UK GDPR Art. 27: a controller not established there must designate a representative in writing, unless processing is occasional, not large-scale special-category data and unlikely to result in a risk.'
+    source:
+      url: https://gdpr-info.eu/art-27-gdpr/
+      checked: '2026-11-04'
+      verified: true
+    note: 'UK text: https://www.legislation.gov.uk/eur/2016/679/article/27'
+  - id: gate.privacy_rep.c2
+    claim: 'Thailand PDPA s.37(5): an overseas controller must designate in writing a representative in Thailand.'
+    source:
+      url: https://mdes.go.th/uploads/tinymce/source/%E0%B8%AA%E0%B8%84%E0%B8%AA/Personal%20Data%20Protection%20Act%202019.pdf
+      checked: '2026-11-04'
+      verified: true
+    note: English translation published by the ministry, marked unofficial
+  - id: gate.privacy_rep.c3
+    claim: 'Korea PIPA domestic agent: required at KRW 1 trillion total sales or an average of 1 million domestic data subjects per day, or on designation by the regulator.'
+    source:
+      url: https://elaw.klri.re.kr/kor_service/lawViewMultiContent.do?hseq=66066
+      checked: '2026-11-04'
+      verified: false
+    note: A submission also listed a KRW 10 billion ICT-revenue test; the 2024-03-12 decree has none (corrected). A 2025-10-02 amendment was not read, so this stays unverified.

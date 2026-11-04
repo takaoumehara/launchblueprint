@@ -2,7 +2,7 @@
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 受託・制作・運用代行など、外部のクライアントと一緒に進めるすべての案件で使う。
 # 固有の会社名・店名・人名・製品名は書かない。道具は「社内チャット」「メッセージアプリ」「予約システム」「地図・検索の店舗情報（ローカル掲載）」のように役割で呼ぶ。
 domain: client_collaboration
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 365   # 料金を持たない（進め方の原則だけ）
 load: lazy              # クライアント案件のときだけ読む
 reference: reference/client-collaboration.md
@@ -36,7 +36,7 @@ lessons:
   anti_pattern: "Fixing the one wrong value someone happened to notice, and leaving the other copies untouched."
   why: "Search engines and AI assistants trust consistent details; one stale copy spreads wrong hours and lost calls."
   check: "Is there one table of name/address/phone/hours across every place they appear, with every mismatch marked and assigned?"
-  see_also: [collab.structured-data-matches, collab.fix-list-where-no-access]
+  see_also: [collab.structured-data-matches, collab.fix-list-where-no-access, collab.multi-location-names]
   verified: false
   date: '2026-11-03'
 - id: collab.structured-data-matches
@@ -162,6 +162,10 @@ lessons:
   see_also: [collab.pilot-summary-is-the-agreement]
   verified: false
   date: '2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: decide per data item whether it is shown as is, rounded, or not shown, and record the owner''s consent per item before writing the case study; call content, recordings and end-customer data are never shown.'
 - id: collab.no-data-leaves
   stage: idea
   principle: "State in the pilot agreement that the client's customer data stays in the client's own systems, is used only for this engagement, is not used to train or sell anything, and is deleted or returned at the end."
@@ -182,6 +186,10 @@ lessons:
   see_also: [collab.stable-client-link]
   verified: false
   date: '2026-11-03'
+  occurrences: 1
+  learned: '2026-11-04'
+  field_notes:
+  - '2026-11-04: a preview was deployed with its password switched off for internal checks; before sending it to a client, open it in a private window and confirm it asks for the password.'
 - id: collab.stable-client-link
   stage: operate
   principle: "Give the client one stable link (a fixed alias or domain) that always points at the latest approved preview, instead of a new per-deploy URL each time."
@@ -192,6 +200,46 @@ lessons:
   verified: false
   date: '2026-11-03'
 
+- id: collab.multi-location-names
+  principle: 'For a client with several locations, use each location''s real-world name as the key: group differently named locations explicitly, tie them with a shared mark rather than renaming listings, and put the location name on every booking button and at the top of every booking screen.'
+  anti_pattern: Assuming the brand name finds every location, renaming map listings first for uniformity, or one shared 'book now' button.
+  why: Differently named locations were missed in a check, listing names must match real signage, and customers booked the wrong location.
+  check: Are differently named locations grouped as one client, do listing names match signage, and does every booking screen show the location name and address first?
+  stage: launch
+  see_also:
+  - collab.consistency-audit
+  - collab.structured-data-matches
+  context:
+    stack: map listings, booking widgets
+    product: multi-location local businesses
+    cost: missed locations, wrong bookings
+  claims:
+  - id: collab.multi-location-names.c1
+    claim: 'Map-listing guidelines: the business name must reflect the real-world name used consistently on the storefront, website and stationery.'
+    source:
+      url: https://support.google.com/business/answer/3038177
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 3
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (3 submissions), generalized
+- id: collab.content-complete-before-launch
+  principle: Before launch, get from the client the specs and where-to-buy data for every listed product, so each item leads to a next action.
+  anti_pattern: A product list that ends in 'being confirmed' or 'not sold online'.
+  why: The world of the brand came across, but nothing led to a purchase.
+  check: Does every listed product show its specs and where it can be bought?
+  stage: launch
+  see_also:
+  - collab.single-agreement-page
+  context:
+    stack: static product site
+    product: consumer goods brand
+    cost: a site that does not sell
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
 # phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階。rules はそのゲートがまとめる lessons の id。
 phase_gate_checks:
 - id: gate.collab_kickoff
@@ -199,7 +247,7 @@ phase_gate_checks:
   phase: 開始時（キックオフ。最初の変更を加える前）
   check: "Before the first change: is there a dated baseline (listing views/actions/reviews, site visits, booking settings, each with source and window) and a name/address/phone/hours/structured-data audit table with every mismatch assigned? — yes/no"
   why: "Before-numbers cannot be recovered later, and fixing details piecemeal leaves stale copies."
-  rules: [collab.baseline-at-kickoff, collab.baseline-same-definitions, collab.consistency-audit, collab.structured-data-matches, collab.fix-list-where-no-access]
+  rules: [collab.baseline-at-kickoff, collab.baseline-same-definitions, collab.consistency-audit, collab.structured-data-matches, collab.fix-list-where-no-access, collab.multi-location-names]
 - id: gate.collab_pilot_agreement
   lifecycle: idea
   phase: 開始時（パイロットの作業を始める前）
@@ -211,7 +259,7 @@ phase_gate_checks:
   phase: クライアントに合意ページを初めて送る前
   check: "Does every item have a deep link, OK/Ack/Discuss, value picks where there are options and its own thread, and does the page open with 'new' and 'unanswered' lists? — yes/no"
   why: "The first visit decides whether the client treats the page as the place where things are decided."
-  rules: [collab.single-agreement-page, collab.item-deep-links, collab.tri-state-response, collab.value-picks, collab.threaded-item-comments, collab.new-and-unanswered-on-entry]
+  rules: [collab.single-agreement-page, collab.item-deep-links, collab.tri-state-response, collab.value-picks, collab.threaded-item-comments, collab.new-and-unanswered-on-entry, collab.content-complete-before-launch]
 - id: gate.collab_preview_shared
   lifecycle: launch
   phase: プレビューをクライアントに共有する前

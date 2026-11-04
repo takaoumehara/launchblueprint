@@ -1,7 +1,7 @@
 # Blueprint Catalog — legal_terms（規約・プライバシーポリシー・表記の作り方）
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は 2026-11-02 に公式ページで確認。法律助言ではない。公開前に弁護士確認
 domain: legal_terms
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -145,3 +145,220 @@ lessons:
   check: "Is AI involvement disclosed where it happens, and is the list of topics the AI must not decide written down?"
   see_also: [dp.prompt-injection-untrusted-input]
   verified: false
+- id: lt.personal-name-sweep
+  principle: List every place a person's name can appear (copy, structured data, images, alt text, credits, URLs, duplicate files) and search for it before launch; remove names from images cleanly, not with blur or bars.
+  anti_pattern: A founder field filled with the owner's personal name by default.
+  why: A no-personal-name rule was broken in copy and data and found only in an audit, costing an extra PR and approval round.
+  check: Does a search for the person's name return only intended hits, including image text and alt text?
+  stage: launch
+  see_also:
+  - fs.L08
+  context:
+    stack: static site with content data files
+    product: company site
+    cost: one extra PR
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: lt.subject-consent-recorded
+  principle: Take publication and recording consent from the person themself, on their own device, in one screen with clear choices and a withdraw link; record time, choice and item, follow the strictest consent rule among your markets, and keep content unpublished (and audio not stored) until consent exists.
+  anti_pattern: The staff member ticks the box on their own device, long terms, or skipping the consent UI because one state allows one-party consent.
+  why: Without proof of consent, publication and AI transcription carry legal risk; suits are being filed in all-party-consent states.
+  check: Is consent logged with time, choice and item id, and is publishing (or recording) impossible before it?
+  stage: launch
+  see_also:
+  - lt.policy-matches-practice
+  - collab.case-study-rights
+  context:
+    stack: mobile web, AI transcription
+    product: photos at the venue, AI notes from conversations
+    cost: preventive
+  claims:
+  - id: lt.subject-consent-recorded.c1
+    claim: Several suits over AI transcription of conversations have been filed in an all-party-consent state; New York is one-party consent.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: '[要約のみ]; not legal advice'
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: lt.patent-before-public
+  principle: File a provisional patent application for any new mechanism before it is shown anywhere (demo, post, public repo, store, exhibition, external offer documents), and file again before releasing major additions.
+  anti_pattern: Publishing first and thinking about patents later, or treating the US one-year grace as worldwide.
+  why: Europe has no general grace period and Japan's needs a procedure; the priority date only covers what the filing describes.
+  check: Is every new mechanism in the features to be published described in a filed application, and are internal-only offer lines marked?
+  stage: idea
+  see_also:
+  - lt.patent-claims-technical
+  - lt.ip-deadline-reminders
+  context:
+    stack: any
+    product: products with novel mechanisms
+    cost: loss of patent rights abroad
+  claims:
+  - id: lt.patent-before-public.c1
+    claim: '35 U.S.C. 102(b)(1)(A): an inventor''s own disclosure 1 year or less before filing is not prior art; 119(e): the non-provisional must be filed within 12 months of the provisional and may claim several provisionals.'
+    source:
+      url: https://www.law.cornell.edu/uscode/text/35/102
+      checked: '2026-11-04'
+      verified: true
+    note: 119(e) from https://www.law.cornell.edu/uscode/text/35/119; MPEP 211
+  - id: lt.patent-before-public.c2
+    claim: 'Japan Patent Act Art. 30: file within 1 year of the disclosure and submit the proof document within 30 days of filing.'
+    source:
+      url: https://laws.e-gov.go.jp/api/1/articles;lawId=334AC0000000121;article=30
+      checked: '2026-11-04'
+      verified: true
+  - id: lt.patent-before-public.c3
+    claim: 'EPC Art. 55: only disclosures from evident abuse or display at an officially recognised exhibition, no earlier than 6 months before filing, are ignored; there is no general grace period.'
+    source:
+      url: https://www.epo.org/en/legal/epc/2020/a55.html
+      checked: '2026-11-04'
+      verified: true
+  - id: lt.patent-before-public.c4
+    claim: 'USPTO fees (schedule revised 2026-11-01): provisional application $65 micro entity ($130 small, $325 standard); trademark base application $350 per class; free-form text surcharge $200; insufficient-information surcharge $100; statement of use $150 per class; extension of time $125.'
+    source:
+      url: https://www.uspto.gov/learning-and-resources/fees-and-payment/uspto-fee-schedule
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: lt.patent-claims-technical
+  principle: Write software inventions as concrete technical improvements (traffic, latency, computation, fraud prevention) and how they are implemented, not as the idea or rule itself.
+  anti_pattern: Claims that describe a business rule or abstract idea.
+  why: Claims judged abstract are rejected as not patent-eligible.
+  check: Does every claim include a measurable technical effect and the means that achieves it?
+  stage: idea
+  see_also:
+  - lt.patent-before-public
+  context:
+    stack: any
+    product: software inventions
+    cost: rejection
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: lt.ip-deadline-reminders
+  principle: On filing day set reminders at three months, one month and two weeks before every non-extendable deadline (12 months after a provisional; national phase usually 30 months after priority).
+  anti_pattern: Relying on memory for a 12-month deadline.
+  why: The deadline cannot be extended; missing it loses the priority date.
+  check: Were three reminders created on the filing day?
+  stage: operate
+  see_also:
+  - lt.patent-before-public
+  context:
+    stack: any
+    product: patents
+    cost: loss of priority
+  claims:
+  - id: lt.ip-deadline-reminders.c1
+    claim: '35 U.S.C. 102(b)(1)(A): an inventor''s own disclosure 1 year or less before filing is not prior art; 119(e): the non-provisional must be filed within 12 months of the provisional and may claim several provisionals.'
+    source:
+      url: https://www.law.cornell.edu/uscode/text/35/102
+      checked: '2026-11-04'
+      verified: true
+    note: 119(e) from https://www.law.cornell.edu/uscode/text/35/119; MPEP 211
+  - id: lt.ip-deadline-reminders.c2
+    claim: PCT national phase entry is generally due at 30 months from the priority date for most offices.
+    source:
+      url: https://www.wipo.int/pct/en/faqs/faqs.html
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: lt.sign-in-person
+  principle: The signer types their own electronic signature and submits and pays themselves; agents and automation never fill the signature field.
+  anti_pattern: An assistant or script entering /name/ for the owner.
+  why: A signature not entered by the signer can invalidate the filing.
+  check: Did the signer personally enter the signature?
+  stage: launch
+  see_also:
+  - fs.L16
+  context:
+    stack: online government filings
+    product: patents, trademarks
+    cost: invalid filing
+  claims:
+  - id: lt.sign-in-person.c1
+    claim: '37 CFR 1.4(d)(2) and 2.193(a)(2): the signer must personally insert their own electronic (S-)signature.'
+    source:
+      url: https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-1/subpart-A/subject-group-ECFR3b5ba9e4b1b8bb7/section-1.4
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: lt.trademark-search-before-name
+  principle: Search trademark registers for identical and similar names (spelling and sound) in your classes and nearby ones before buying the domain or designing the logo.
+  anti_pattern: Choosing the name, domain and logo first.
+  why: Renaming later redoes the brand and the domain.
+  check: Was the name searched in your classes and neighbouring ones in each target country?
+  stage: idea
+  see_also:
+  - fs.L02
+  - lt.trademark-applicant-is-owner
+  context:
+    stack: any
+    product: all
+    cost: a rebrand
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: lt.trademark-applicant-is-owner
+  principle: File the trademark in the name of whoever owns the mark on the filing date, and align that name with the terms-of-service operator, payment account and domain before filing.
+  anti_pattern: Filing in a founder's name while the company runs the product.
+  why: An application by a non-owner is void, cannot be corrected, and the fee is lost.
+  check: Do the applicant, terms operator, payment account and domain registrant match?
+  stage: launch
+  see_also:
+  - ho.company-owned-accounts
+  - dd.ip
+  context:
+    stack: any
+    product: all
+    cost: lost filing fee
+  claims:
+  - id: lt.trademark-applicant-is-owner.c1
+    claim: 'TMEP 1201.02(b): if the applicant does not own the mark on the filing date the application is void, and this cannot be cured by amendment or assignment.'
+    source:
+      url: https://tmep.uspto.gov/RDMS/TMEP/current
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: lt.trademark-ids-and-classes
+  principle: Pick goods and services from the official ID list and only in classes you really plan to use.
+  anti_pattern: Free-text descriptions and extra classes 'just in case'.
+  why: Free text costs a surcharge, every class costs a fee, and descriptions you never use weaken the registration.
+  check: Is every description from the ID list, with a note of intended use per class?
+  stage: launch
+  see_also:
+  - lt.trademark-applicant-is-owner
+  context:
+    stack: any
+    product: all
+    cost: $350 per class plus surcharges
+  claims:
+  - id: lt.trademark-ids-and-classes.c1
+    claim: 'USPTO fees (schedule revised 2026-11-01): provisional application $65 micro entity ($130 small, $325 standard); trademark base application $350 per class; free-form text surcharge $200; insufficient-information surcharge $100; statement of use $150 per class; extension of time $125.'
+    source:
+      url: https://www.uspto.gov/learning-and-resources/fees-and-payment/uspto-fee-schedule
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized

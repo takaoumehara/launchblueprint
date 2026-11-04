@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — security
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: security
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -66,3 +66,149 @@ entries:
     url: https://vercel.com/docs/environment-variables
     checked: '2026-11-02'
     verified: true
+lessons:
+- id: sec.dev-routes-excluded
+  principle: Development routes (for example a page that throws a 500 on purpose) are excluded from preview and production builds or require sign-in.
+  anti_pattern: A build-time flag that leaves the dev route live on previews.
+  why: Anyone could trigger production alerts without signing in.
+  check: Does the dev route return 404 on the preview URL?
+  stage: launch
+  see_also:
+  - preview-state-switcher
+  context:
+    stack: framework builds with dev routes
+    product: all
+    cost: alert noise, abuse
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: sec.csp-enforced
+  principle: Before launch, set the date to move CSP from Report-Only to enforced with nonces, and move every inline script to nonces in one change.
+  anti_pattern: Counting a Report-Only policy with 'unsafe-inline' as 'CSP done', or nonce-ing only some scripts.
+  why: Report-Only blocks nothing; a partial nonce rollout blocks the remaining scripts and breaks pages.
+  check: Is the production CSP header enforced, free of 'unsafe-inline', and are violation reports at zero?
+  stage: launch
+  see_also:
+  - sec.secrets
+  context:
+    stack: web apps
+    product: all
+    cost: XSS exposure
+  claims:
+  - id: sec.csp-enforced.c1
+    claim: Content-Security-Policy-Report-Only monitors violations without enforcing the policy.
+    source:
+      url: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy-Report-Only
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: sec.domain-ownership-reverified
+  principle: Re-verify customer custom domains (TXT record) on a schedule and detach them when ownership lapses, using three answers (valid, invalid, unknown) and the Public Suffix List with its private section to find the registrable domain.
+  anti_pattern: Verifying once, or treating a DNS failure as lapsed.
+  why: A domain released and re-registered by someone else lets them take over the subdomain.
+  check: Is there a re-verification job that tells DNS failure apart from lapse?
+  stage: operate
+  see_also:
+  - be.unknown-is-not-absent
+  - dp.custom-domains-covered
+  context:
+    stack: custom domains on a multi-tenant site builder
+    product: site builders
+    cost: subdomain takeover
+  claims:
+  - id: sec.domain-ownership-reverified.c1
+    claim: tldts uses the Public Suffix List private section only when allowPrivateDomains is true (default false); the PSL has ICANN and PRIVATE sections.
+    source:
+      url: https://github.com/remusao/tldts
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: sec.inspect-ai-config-before-open
+  principle: After cloning an outside repository, read its AI-tool and editor config files before opening it with an AI tool; keep MCP auto-approval off and install extensions only from verified publishers.
+  anti_pattern: Cloning and opening a repository in an AI tool right away with MCP auto-approval on.
+  why: Opening the folder or starting a session can run code and steal local credentials.
+  check: Were the AI-tool, editor-task and MCP config files of the outside repository read before opening it?
+  stage: idea
+  see_also:
+  - dp.agent-least-privilege-keys
+  context:
+    stack: AI coding tools and editors
+    product: all
+    cost: credential theft
+  claims:
+  - id: sec.inspect-ai-config-before-open.c1
+    claim: Researchers found 42 hijacked public repositories with run-on-open hooks in .claude/settings.json, .gemini/settings.json, .cursor/mcp.json, .cursor/rules/setup.mdc and .vscode/tasks.json.
+    source:
+      url: https://research.jfrog.com/post/beyond-testmetest-42-hijacked-github-repos/
+      checked: '2026-11-04'
+      verified: true
+  - id: sec.inspect-ai-config-before-open.c2
+    claim: On 2026-10-29 an editor marketplace carried, for about 11 hours, an extension impersonating an AI coding tool (not published by its vendor) that tried to install an SSH backdoor; the advice was to check for the key, isolate the host and rotate credentials.
+    source:
+      url: https://cursor.com/blog/claude-code-extension-security-notice
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: sec.supported-runtime-major
+  principle: Pin every project to a supported major version of its runtime.
+  anti_pattern: Staying on an end-of-life major and counting on the host's automatic patches.
+  why: Hosts only patch supported majors; an end-of-life project stays exposed.
+  check: Does every project use a runtime major that is still supported?
+  stage: operate
+  see_also: []
+  context:
+    stack: Node.js on managed hosting
+    product: all
+    cost: unpatched remote code execution
+  claims:
+  - id: sec.supported-runtime-major.c1
+    claim: 'Hosting bulletin on an October 2026 Node.js advisory (fix released 2026-10-21): 22.x and 24.x projects are patched by the host; Node 20 is end-of-life and gets no fix; fixed versions 22.23.4, 24.22.1, 26.12.1.'
+    source:
+      url: https://vercel.com/kb/bulletin/node-js-security-advisory
+      checked: '2026-11-04'
+      verified: true
+    note: the page prints the CVE as CVE-2026-111497; the id format is unusual, check before quoting it
+  - id: sec.supported-runtime-major.c2
+    claim: Node.js 20 is end-of-life; supported LTS lines are 22, 24 and 26 (November 2026).
+    source:
+      url: https://nodejs.org/en/about/previous-releases
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: sec.prod-data-writes-audited
+  principle: Change production data through an admin path with an audit log, and read the value back after writing.
+  anti_pattern: Running direct remote SQL against production with a local token.
+  why: A direct UPDATE printed nothing, its success was unknown and no audit entry existed; a notification kept pointing at an old preview for half a day.
+  check: After a production data change, did you read it back and is it in the audit log?
+  stage: operate
+  see_also:
+  - ci.credential-health-check
+  context:
+    stack: edge SQLite-family database with CLI access
+    product: all
+    cost: half a day on hold
+  claims:
+  - id: sec.prod-data-writes-audited.c1
+    claim: A cloud API token answered one D1 query and then returned permission errors (7403 / 10000) while Worker access kept working; a D1 UPDATE run from the CLI printed nothing, so success was unknown.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: observed in two projects; no official page defines these codes
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — ci_cd
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: ci_cd
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -58,3 +58,229 @@ lessons:
   why: "Risk of corrupting production data."
   check: "Does the preview use a non-production DB, or are migration PRs excluded from preview?"
   verified: false
+- id: ci.preview-access-planned
+  principle: 'At kickoff decide how each audience opens previews: a bypass token or a local build for review bots, test accounts and preview secrets for QA, a password for clients.'
+  anti_pattern: Relying on protected preview URLs for screenshot gates, or switching protection off to let a bot in.
+  why: Visual and signed-in QA stalled on a login wall in five projects; each PR lost a review cycle.
+  check: Can an unauthenticated headless browser (with the bypass token) load the preview, and can a test account sign in there?
+  stage: launch
+  see_also:
+  - ci.preview-per-pr-first
+  - collab.preview-access-by-audience
+  - preview-state-switcher
+  context:
+    stack: hosted previews with deployment protection; static sites and app frameworks
+    product: all
+    cost: half a day to one review cycle per PR
+  field_notes:
+  - If signed-in screens cannot be checked on the preview, merge only with the feature flag off and check the signed-in screens on a device before turning it on.
+  claims:
+  - id: ci.preview-access-planned.c1
+    claim: Vercel Standard Protection (Vercel Authentication) protects every deployment except production domains and is available on all plans. The docs do not say it is on by default; since 2026-09-09 a team default can switch it on for every new project. Automation can pass with the Protection Bypass for Automation secret (header or query x-vercel-protection-bypass).
+    source:
+      url: https://vercel.com/docs/deployment-protection
+      checked: '2026-11-04'
+      verified: true
+    note: Two submissions said 'on by default for previews'; the official pages do not say that (corrected).
+  occurrences: 5
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (5 submissions), generalized
+- id: ci.prod-source-verified
+  principle: Before saying 'shipped' or deploying, read which repository, branch and commit production (and the preview under review) is actually built from.
+  anti_pattern: Assuming a merge to main reached production, resuming a month-old task in a retired repository, or asking for review right after a push.
+  why: Production was a month behind on a stale branch, an old repository nearly overwrote production, and a gate reviewed an old build.
+  check: Does the production (or preview) deployment's commit SHA match the commit you mean to ship?
+  stage: launch
+  see_also:
+  - fs.L11
+  - xs.redirect-and-archive
+  context:
+    stack: static hosting with a production-branch setting; container service behind a hosting rewrite; hosting preview channels
+    product: all
+    cost: three fixes not shipped; two to three extra review rounds
+  field_notes:
+  - Archive a retired repository (read-only) so nobody deploys from it.
+  claims:
+  - id: ci.prod-source-verified.c1
+    claim: The production branch is set under Project Settings, Environments, Production, Branch Tracking (default main, then master, then the repository default); `vercel promote` makes an existing deployment the current production deployment.
+    source:
+      url: https://vercel.com/docs/cli/promote
+      checked: '2026-11-04'
+      verified: true
+  - id: ci.prod-source-verified.c2
+    claim: Firebase Hosting preview channels are deployed with `firebase hosting:channel:deploy`; an optional GitHub Action creates and updates a preview URL per pull request.
+    source:
+      url: https://firebase.google.com/docs/hosting/test-preview-deploy
+      checked: '2026-11-04'
+      verified: true
+    note: that a push without the Action leaves the channel on the old build is inferred from this, observed in one project
+  - id: ci.prod-source-verified.c3
+    claim: Archiving a GitHub repository makes it read-only until it is unarchived.
+    source:
+      url: https://docs.github.com/en/repositories/archiving-a-github-repository/archiving-repositories
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: ci.diff-scope-before-ship
+  principle: 'One PR, one purpose: before merging or deploying, list the diff against main and confirm every commit and file belongs to it.'
+  anti_pattern: Deploying a branch stacked on another work branch, or opening a PR from a long-lived branch.
+  why: About 58 unplanned files reached production in one case and a small IA fix carried payments, SMS and a DB migration in another.
+  check: Does `git diff --stat origin/main...HEAD` (and `git log main..HEAD`) show only this PR's purpose?
+  stage: launch
+  see_also:
+  - fs.L15
+  - ci.prod-source-verified
+  context:
+    stack: manual edge-worker deploys without a CI gate; payments + SMS stack
+    product: all
+    cost: one day of merge re-planning; an after-the-fact explanation
+  field_notes:
+  - Write down the rollback version id before every manual deploy.
+  occurrences: 2
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (2 submissions), generalized
+- id: ci.deploy-config-in-git
+  principle: Keep every non-secret deploy setting (database ids, routes, config files) in git and secrets in the secret store, so a fresh clone can deploy.
+  anti_pattern: A production deploy config that exists only as a local file copied between worktrees.
+  why: Each new worktree or person stalled the deploy, with a risk of shipping an old copy.
+  check: Does a fresh clone deploy with the committed config and nothing copied by hand?
+  stage: launch
+  see_also:
+  - ho.host-env-vars
+  context:
+    stack: edge workers with a local deploy config; several agent worktrees
+    product: all
+    cost: tens of minutes each time
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: ci.credential-health-check
+  principle: 'Check deploy credentials at the start of every deploy and daily: CLI logins, token permissions per resource (not just ''token works''). CI uses a non-interactive identity, never a person''s login.'
+  anti_pattern: Running the cloud CLI for the first time after merging, or assuming a token that deploys workers can also write the database.
+  why: Expired CLI logins and tokens that silently lost a permission blocked deploys in four projects, once for a month.
+  check: Before merging, do the CLI auth commands succeed and does a read on each resource (database, storage, workers) pass with the deploy token?
+  stage: operate
+  see_also:
+  - fs.L04
+  - dp.agent-least-privilege-keys
+  - sec.prod-data-writes-audited
+  context:
+    stack: cloud CLIs with user tokens; edge database tokens; shared machines
+    product: all
+    cost: deploys blocked from a day to a month
+  claims:
+  - id: ci.credential-health-check.c1
+    claim: Google Cloud Workload Identity Federation lets external CI (GitHub, GitLab) authenticate without service-account keys or a person's login.
+    source:
+      url: https://cloud.google.com/iam/docs/workload-identity-federation
+      checked: '2026-11-04'
+      verified: true
+  - id: ci.credential-health-check.c2
+    claim: A cloud API token answered one D1 query and then returned permission errors (7403 / 10000) while Worker access kept working; a D1 UPDATE run from the CLI printed nothing, so success was unknown.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: observed in two projects; no official page defines these codes
+  occurrences: 4
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (4 submissions), generalized
+- id: ci.delete-references-together
+  principle: When you delete a template, seed or id, remove every reference to it in tests and fixtures in the same change.
+  anti_pattern: Deleting from the catalog and leaving the old id in tests.
+  why: Integration tests failed 144 times on one deleted id while type checks stayed green.
+  check: Does a repo-wide search for each deleted id return zero hits?
+  stage: launch
+  see_also: []
+  context:
+    stack: document database emulator integration tests
+    product: all
+    cost: half a day before merge
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: ci.tests-call-production-entrypoint
+  principle: Database tests call the same function production calls (the whole batch), on a seeded database.
+  anti_pattern: Running one component query and calling it 'tested against a real DB'.
+  why: 44 tests passed while every production path returned 500 because one statement in the batch was invalid.
+  check: Do the tests call the production entry point with seeded data?
+  stage: launch
+  see_also:
+  - db.backfill-reviewed-separately
+  context:
+    stack: SQLite-family edge database
+    product: all
+    cost: caught in review
+  field_notes:
+  - 'Do not assert in a test that the next-numbered migration file must not exist: it breaks main after the next merge.'
+  claims:
+  - id: ci.tests-call-production-entrypoint.c1
+    claim: SQLite json(X) throws if X is not well-formed JSON (json('ok') fails); json_quote(X) turns an SQL value into its JSON representation.
+    source:
+      url: https://www.sqlite.org/json1.html
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: ci.new-failures-vs-main
+  principle: 'With known failing tests, judge a PR by new failures: run the same suite on main and compare the sets.'
+  anti_pattern: Arguing every PR over the total failure count.
+  why: 23 pre-existing failures stopped every review discussion.
+  check: Is the set of failures on this branch minus the set on main empty?
+  stage: operate
+  see_also: []
+  context:
+    stack: any CI
+    product: all
+    cost: review time on every PR
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: ci.lockfile-same-commit
+  principle: When adding a dependency, commit the updated lock file in the same commit.
+  anti_pattern: Committing package.json without the lock file.
+  why: Clean CI installs fail on the mismatch, so the PR is blocked on its first run.
+  check: Does a clean `npm ci` pass on the branch?
+  stage: launch
+  see_also: []
+  context:
+    stack: Node projects
+    product: all
+    cost: one blocked review
+  claims:
+  - id: ci.lockfile-same-commit.c1
+    claim: npm ci exits with an error when package.json and the lock file do not match, instead of updating the lock file.
+    source:
+      url: https://docs.npmjs.com/cli/v10/commands/npm-ci
+      checked: '2026-11-04'
+      verified: true
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: true
+  source: field learnings 2026-11-04 (1 submission), generalized
+- id: ci.read-whole-function-before-severity
+  principle: Before raising a high-severity review finding, read the whole function and confirm the value is not written later.
+  anti_pattern: Flagging 'not saved' after reading the first half of a function.
+  why: A high finding was withdrawn because the value was saved about 345 lines later, costing trust in the reviews.
+  check: Did you confirm no later line rewrites or saves the value you flagged?
+  stage: launch
+  see_also: []
+  context:
+    stack: any
+    product: all
+    cost: a withdrawn finding
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized

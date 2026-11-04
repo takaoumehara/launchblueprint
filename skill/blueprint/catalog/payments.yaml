@@ -1,5 +1,5 @@
 domain: payments
-updated: '2026-11-03'
+updated: '2026-11-04'
 stale_after_days: 90
 entries:
 - id: pay.stripe-checkout
@@ -324,3 +324,28 @@ payment_roles:
     - {url: 'https://developer.paypal.com/braintree/docs/guides/venmo/overview', what: '米国の事業者のみ・WebView 禁止', checked: '2026-10-27', verified: true}
     - {url: 'https://venmo.com/resources/our-fees', what: 'ビジネス手数料', checked: '2026-10-27', verified: true}
     - {url: 'https://www.paypal.com/us/business/paypal-business-fees', what: 'Pay with Venmo 手数料', checked: '2026-10-27', verified: true}
+lessons:
+- id: pay.agentic-checkout-later
+  principle: For AI-agent shopping, first make products easy for agents to find (structured data); keep agent checkout integrations at prototype until protocols leave beta and support your country and account type.
+  anti_pattern: Building a custom agent payment flow or one-off AI partnerships first.
+  why: Most agent-checkout protocols were beta, limited or US-only, and one large assistant reportedly withdrew direct purchase.
+  check: Did you confirm on official pages the target countries and connected-account support before building?
+  stage: scale
+  see_also:
+  - la.seo-basics
+  context:
+    stack: connected-account payments
+    product: creator storefronts
+    cost: wasted integration
+  claims:
+  - id: pay.agentic-checkout-later.c1
+    claim: Most agent-checkout protocols were in beta, limited preview or US-only, and support for connected-account payments outside the US was unclear.
+    source:
+      url: null
+      checked: '2026-11-04'
+      verified: false
+    note: '[要約のみ] summary-level research, checked 2026-10-27'
+  occurrences: 1
+  learned: '2026-11-04'
+  verified: false
+  source: field learnings 2026-11-04 (1 submission), generalized
