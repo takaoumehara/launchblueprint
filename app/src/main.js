@@ -11,6 +11,8 @@ const E = Object.fromEntries(D.elements.map(e => [e.id, e]));
 const LANES = D.lanes;
 const STAGES = D.stages;
 const CATALOG = D.catalog;
+// カテゴリーの台帳（elements/categories.yaml）：カタログ画面はこの順に並べ、各分野にカテゴリー名を出す
+const CATS = Object.fromEntries(D.categories.map((c, i) => [c.id, { ...c, order: i }]));
 // Real-AI recommendation is off unless the build sets VITE_BP_AI_PICK=on and the host runs api/ai-pick.js with a server-side key.
 const AI_ON = import.meta.env.VITE_BP_AI_PICK === 'on';
 
@@ -20,6 +22,7 @@ const tr = (k, ...a) => { const v = M[LANG][k] ?? M.ja[k] ?? k; return typeof v 
 const lbl = t => LANG === 'en' && t.label_en ? t.label_en : t.label_ja;
 const qst = t => LANG === 'en' && t.question_en ? t.question_en : t.question_ja;
 const laneName = l => LANG === 'en' ? (l.en || l.label) : l.ja;
+const catName = c => LANG === 'en' ? c.name : c.name_ja;
 const stageName = s => LANG === 'en' ? s.label[0] + s.label.slice(1).toLowerCase() : s.ja;
 const stageSub = s => LANG === 'en' ? '' : s.ja; // the mono LABEL already reads as English
 const stageWhat = s => LANG === 'en' ? (s.what_en || '') : s.what_ja;
@@ -401,21 +404,22 @@ function viewTopic(topic) {
 // ---------- 画面4：カタログ（全分野） ----------
 const usedBy = id => D.tactics.filter(t => t.options.includes(id));
 function viewCatalog(domain) {
-  const doms = Object.values(CATALOG);
+  const catOrder = c => CATS[c.category]?.order ?? D.categories.length;
+  const doms = Object.values(CATALOG).sort((a, b) => catOrder(a) - catOrder(b) || a.domain.localeCompare(b.domain));
   if (domain && !CATALOG[domain]) { location.hash = '#/catalog'; return; }
   if (!domain) {
     const touched = doms.filter(c => c.ids.some(id => usedBy(id).length)).length;
     app.innerHTML = `<section class="page"><div class="mono m2">04 — CATALOG ・ ${doms.length} AREAS · ${Object.keys(D.items).length} ITEMS</div>
       <h1>${tr('cat.h1')}</h1><p class="lead">${tr('cat.lead', touched)}</p>
       <div class="cat">${doms.map((c, i) => { const n = c.ids.filter(id => usedBy(id).length).length; const topics = [...new Set(c.ids.flatMap(id => usedBy(id).map(t => t.topic)))];
-        return `<a class="crow" href="#/catalog/${c.domain}"><span class="mono m3">${String(i + 1).padStart(2, '0')}</span><span><b>${esc(c.domain)}</b><small>${esc(c.title)}</small></span>
+        return `<a class="crow" href="#/catalog/${c.domain}"><span class="mono m3">${CATS[c.category]?.no ?? '—'}</span><span><b>${esc(c.domain)}</b><small>${esc(c.title)}${CATS[c.category] ? ' · ' + esc(catName(CATS[c.category])) : ''}</small></span>
           <span class="sqs">${c.ids.slice(0, 40).map(id => `<i class="sq ${usedBy(id).length ? 'done' : ''}"></i>`).join('')}${c.ids.length > 40 ? `<i class="mono m3">+${c.ids.length - 40}</i>` : ''}</span>
           <span class="mono m2">${tr('cat.count', c.ids.length)}${n ? ` · ${tr('cat.onmap', n)}` : ''}${topics.length ? `<br><span class="m3">${topics.map(x => esc(lbl(T[x]))).join('・')}</span>` : ''}</span></a>`; }).join('')}</div></section>`;
     return;
   }
   const c = CATALOG[domain]; const used = new Set();
   app.innerHTML = `<section class="page"><div class="mono m2"><a href="#/catalog" style="text-decoration:none">04 — CATALOG</a> ・ ${esc(domain)}</div>
-    <h1>${esc(c.title)}</h1><p class="lead mono m2" style="text-transform:none">${esc(domain)} · ${tr('cat.count', c.ids.length)}${c.updated ? ' · ' + tr('cat.updated') + ' ' + esc(c.updated) : ''} · AI: get_catalog("${esc(domain)}")</p>
+    <h1>${esc(c.title)}</h1><p class="lead mono m2" style="text-transform:none">${esc(domain)}${CATS[c.category] ? ' · ' + esc(CATS[c.category].no + ' ' + catName(CATS[c.category])) : ''} · ${tr('cat.count', c.ids.length)}${c.updated ? ' · ' + tr('cat.updated') + ' ' + esc(c.updated) : ''} · AI: get_catalog("${esc(domain)}")</p>
     <div class="opts">${c.ids.map(id => { const it = D.items[id]; if (!it) return ''; const ts = usedBy(id);
       return `<div class="opt static"><span class="sq ${ts.length ? 'done' : ''}" style="margin-top:5px"></span><div>
         <div class="nm2"><span>${esc(it.name)}</span>${!it.priced && !it.url ? '' : it.verified === true || it.verified === 'True' ? `<span class="tagv ok">${tr('verified')}${it.checked ? ' ' + esc(it.checked) : ''}</span>` : `<span class="tagv">${tr('unverified')}</span>`}</div>

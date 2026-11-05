@@ -1,6 +1,6 @@
 ---
 name: blueprint
-description: Whole-project blueprint from idea to launch, operation, scale, and exit — BEFORE building any new product, app, SaaS, tool, paid feature, or big change, and at every review point. Covers 12 categories (idea/market, brand as a vertical axis, spec, AI context engineering, architecture, AI-driven build, QA/security/legal, infra/CI/CD, GTM/launch, ops/maintenance, growth, sunset) plus cross-border, app-store distribution, scale readiness, and exit/due-diligence metrics. Gives side-by-side options with one recommendation in free/$5/$10/$100 budget bands, build-vs-buy on total cost, a rules ledger, and a machine-readable project YAML where every change lists its ripple effects. Use when someone says "let's build", "new idea", "kickoff", "pick a stack/host", "add payments/login", "go global", "ship the app", "go live", "prepare to sell", or is about to change direction, stack, host, or scope.
+description: Whole-project blueprint from idea to launch, operation, scale, and exit — BEFORE building any new product, app, SaaS, tool, paid feature, or big change, and at every review point. Covers every category in elements/categories.yaml (idea/market, brand as a vertical axis, spec, AI context engineering, architecture, AI-driven build, QA/security/legal, infra/CI/CD, GTM/launch, ops/maintenance, growth, sunset, ethics, revenue model) plus cross-border, app-store distribution, scale readiness, and exit/due-diligence metrics. Gives side-by-side options with one recommendation in free/$5/$10/$100 budget bands, build-vs-buy on total cost, a rules ledger, and a machine-readable project YAML where every change lists its ripple effects. Use when someone says "let's build", "new idea", "kickoff", "pick a stack/host", "add payments/login", "go global", "ship the app", "go live", "prepare to sell", or is about to change direction, stack, host, or scope.
 ---
 
 # Blueprint
@@ -29,14 +29,14 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 - 技術を1つ選ぶ時は必ずスタック比較（R-030、`elements/stack_comparisons.yaml`）を付ける：似たサービスと無料枠、1社 vs 組み合わせのリスク、有料に切り替える境目、おすすめと選ばなかった理由。壁打ちの途中で、効く結果だけ短く差し込む。
 - 調べ終わるまで決定を待たせない。未確認のまま進めるなら、その項目に `verified: false` を残す。
 
-### 3. 12カテゴリーで埋める
-詳細は `reference/12-categories.md`。各カテゴリーで「決めたこと・候補・保留・リスク・AI特有の注意」を書く。
+### 3. カテゴリーごとに埋める
+カテゴリーの一覧は `elements/categories.yaml`（これが正。件数もここから数える）、中身は `reference/categories.md`。各カテゴリーで「決めたこと・候補・保留・リスク・AI特有の注意」を書く。
 01 構想・市場検証 / 02 ブランド（縦の軸：01から AI ルールファイルまで貫く。`templates/brand-context.md`） / 03 要件・仕様 / 04 AI開発基盤・コンテキスト設計 / 05 設計・アーキテクチャ / 06 AI駆動実装 / 07 品質・セキュリティ・法務 / 08 インフラ・CI/CD / 09 GTM・打ち上げ（販促素材は開発スプリント内で作る） / 10 運用・保守 / 11 グロース / 12 サンセット。
 
 ### 4. 横断モジュール（該当するときだけ）
 | モジュール | 開くファイル | いつ |
 |---|---|---|
-| 海外展開・多言語 | `catalog/cross_border.yaml`, `catalog/i18n.yaml`, `reference/12-categories.md`（海外展開） | 2か国以上 or 多言語 |
+| 海外展開・多言語 | `catalog/cross_border.yaml`, `catalog/i18n.yaml`, `reference/categories.md`（海外展開） | 2か国以上 or 多言語 |
 | GTM・運用 | `reference/gtm-ops.md`, `catalog/gtm_channels.yaml`, `catalog/support.yaml` | 公開プロダクト |
 | アプリ配信 | `catalog/app_distribution.yaml`, `reference/exit-appdist.md` | ストアに出す |
 | 規模への備え | `catalog/scale_readiness.yaml` | 公開プロダクト（今の段と次の引き金だけ示す） |
@@ -79,7 +79,8 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 驚き（計画になかったのに起きたこと）は `po-input/TEMPLATE-surprise.md` の形で 1 件 1 枚に記録し、`reference/feedback-loop.md` の手順で lessons・lifecycle（known_surprises / revisit_triggers）・tactics に戻す。
 
 ## ファイル
-- `reference/12-categories.md`：12カテゴリーの中身、フェーズ別チェック、AI特有の注意、海外展開（6軸・入り方3案）
+- `elements/categories.yaml`：カテゴリーの台帳（id・番号・名前・属する catalog ドメイン）
+- `reference/categories.md`：各カテゴリーの中身、フェーズ別チェック、AI特有の注意、海外展開（6軸・入り方3案）
 - `reference/gtm-ops.md`：GTM・運用・保守
 - `reference/exit-appdist.md`：売却準備とアプリ配信
 - `reference/design-resources.md`：デザインの参考サイト・素材・部品集の使い分け

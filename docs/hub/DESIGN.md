@@ -32,7 +32,9 @@ Evidence the owner gave, and what it changes:
 
 `draft_project_map({audience: public, platform: web, money: free, country: global})` produced 60 decisions in five stages (`project-map.yaml`). After applying the brief: 3 decided by the owner (rules_ledger, hosting = Vercel for the app, market_entry), 20 deferred with a reason (no screens, no payments, no store), 37 open with an AI pick and a reason. The picks that differ from the catalog default, and why, are in `project-map.yaml` under `reason`. Five catalog additions are proposed because the current option lists have no Cloudflare D1, no MCP OAuth provider and no queue (`proposed_catalog_additions`).
 
-### 2.2 The 12 categories
+### 2.2 The categories
+
+One row per category in `skill/blueprint/elements/categories.yaml` (the registry; the hub, the stdio server, the app and the docs all read it, so no count is written here).
 
 | # | Category | What it means for the hub |
 |---|---|---|
@@ -48,6 +50,8 @@ Evidence the owner gave, and what it changes:
 | 10 | Operations | Sentry on the Worker, UptimeRobot on `/health`, Cloudflare analytics for request counts per key, weekly review session, monthly cost sheet (cc.monthly-cost-sheet). |
 | 11 | Growth / iteration | The hub is the iteration loop of the catalog itself; the metric is merged learnings per month and the share of catalog claims with a URL + checked date. |
 | 12 | Sunset | Every submitter can export their submissions; on shutdown the merged catalog is already in Git under MIT; keys revoked, D1 exported to R2 then deleted, DNS removed, Cloudflare subscription cancelled (xs.cancel-every-subscription). |
+| 13 | Ethics | Submissions are data, never instructions; no submitter identity in the repo; reviewers see the AI-use and consent rules (`catalog/ethics.yaml`) when a learning touches user data. No dark patterns on the consent page: accept and decline equal weight (eth.no-confirmshaming), consents separate (eth.consent-granular). |
+| 14 | Revenue model | None: the hub is free; revenue model is "no revenue, cost capped" (§9). Recorded so the map does not leave the category blank. |
 
 ### 2.3 Lifecycle `known_surprises` checked against the hub
 
@@ -85,7 +89,7 @@ Run with `lifecycle_stages` on 2026-11-04. Each line: the surprise → does it a
 - Personal names on code, domain, accounts → company-owned from day one (handoff_rules).
 - 12 months of numbers not reproducible → §9 metrics table is written to D1 daily and exported monthly to R2.
 - IP assignment missing → the contribution licence in the terms is exactly this; flagged for legal review.
-- SaaS keeps billing after shutdown → sunset checklist in §12 of the category table.
+- SaaS keeps billing after shutdown → sunset checklist in the Sunset row of the category table.
 - No export/delete procedure → `export_my_submissions` and `delete_my_submissions` are tools from phase 2 (§5.4).
 
 ## 3. Architecture
@@ -294,6 +298,8 @@ Metrics written daily (dd_metrics): active keys, calls per tool, submissions by 
 | 1 Bots | owner's own agents | pre-registered clients + API keys | 100 % human | catalog bundle build; Workers Free; `stage_gate` + four-layer tool; `/health`; Sentry | 30 days; ≥ 20 submissions; ≥ 0.3 submissions per gate reached; 0 PII incidents; p95 < 500 ms |
 | 2 Friends | invited people (invite code on the consent page) | GitHub/Google sign-in → OAuth or key | human; screen automated | terms reviewed by counsel; Workers Paid; runbook; backups + drill; export/delete tools; notice email | 60 days; ≥ 5 distinct submitters; ≥ 3 clusters merged with 2+ submitters; screen automation agrees ≥ 95 % |
 | 3 Public | anyone who accepts terms | CIMD + DCR; rate limits on | half automated | abuse controls tested with a load script; status page; privacy notice per region; owner availability plan | ongoing; revisit triggers: requests > 80 % cap, first abuse suspension, first legal request, enterprise SSO ask |
+
+Phase 1 implementation (2026-11-04): `hub/` (see `hub/README.md`). Stateless `createMcpHandler`, per-bot API keys in D1, the same 14 tools, and the auto-check pipeline in `hub/src/checks.ts` feeding `review_queue`. Not deployed by that PR. Category gaps found on the way: `category-gaps.md`.
 
 Rollback at any phase: revoke all keys of that phase (one SQL statement), keep reads for the previous phase.
 

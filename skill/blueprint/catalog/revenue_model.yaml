@@ -1,0 +1,184 @@
+# Blueprint Catalog — revenue_model（収益モデル：お金がどこから・何に対して入るか）
+# 提供：CREATIVITY IS EVERYWHERE, LLC ／ 型（entries）と教訓（lessons）。料金を持たない（値付けの形は pricing、決済の道具は payments）。法律・税の助言ではない。
+# 固有の会社名・製品名・人名は書かない。カテゴリー台帳：elements/categories.yaml の revenue-model。
+domain: revenue_model
+updated: '2026-11-04'
+stale_after_days: 365   # 料金を持たない（型と原則だけ）
+
+# entries: 1件 = 収益の型。what（何にお金が払われるか）/ best_for / avoid_when / unit_economics（1件あたりの儲けの見方）/
+# cost_drivers（利用と一緒に増える原価）/ liability_compliance（責任・規約上の注意）/ pairs_well_with（pricing・payments の id）。
+entries:
+- id: rev.subscription
+  name: サブスクリプション（定額の継続課金）
+  what: 使い続ける権利に対して、毎月または毎年決まった額が入る
+  best_for: 毎週使われる道具・継続して価値が増えるもの（データがたまる・連携が増える）
+  avoid_when: 年に数回しか使わない用途（解約と再加入をくり返され、請求の不満が増える）
+  unit_economics: 月の継続収入（MRR）、解約率、1人あたりの生涯収入 ÷ 獲得費用
+  cost_drivers: 使われ方に比例する原価（AI・SMS・転送量）。定額のまま重い利用者が増えると赤字になる
+  lock_in: 低（型の変更は可能。ただし既存契約の移行は告知が要る）
+  liability_compliance: 自動更新の事前通知・登録と同じ手数での解約・返金方針
+  pairs_well_with: [pm.free-trial, pm.seats, pr.cancel-as-easy-as-signup, pr.annual-upfront]
+- id: rev.usage
+  name: 従量課金（使った分だけ）
+  what: API 呼び出し・処理量・送信数など、測れる利用量に対して入る
+  best_for: 原価が利用量に比例するもの・利用者ごとの量の差が大きいもの
+  avoid_when: 利用者が量を予測できず、請求額の不安で使うのをためらうもの（上限と通知が無い場合）
+  unit_economics: 1単位の売値 − 1単位の原価、利用者あたりの月の量の分布
+  cost_drivers: 量そのもの。上流の単価が変わると利益率が直接動く
+  lock_in: 低
+  liability_compliance: 単位と計測方法の公開、上限・予算通知、請求の内訳
+  pairs_well_with: [pm.usage, pr.unit-cost-before-price]
+- id: rev.freemium
+  name: フリーミアム（無料の利用者を有料の利用者が支える）
+  what: 多数の無料利用者が広がりを作り、一部の有料プランが全体の原価を払う
+  best_for: 使う人が増えるほど価値が増える・無料利用者の原価がほぼゼロ・紹介で伸びる
+  avoid_when: 無料利用者1人の原価がはっきり残るもの（AI・保存容量・サポート）
+  unit_economics: 無料→有料の転換率、無料利用者1人あたりの原価、有料1人が支える無料の人数
+  cost_drivers: 無料枠の原価とサポート。上限が無いと無料利用者だけで赤字になる
+  lock_in: 中（無料枠を後から狭めると反発が大きい）
+  liability_compliance: 無料枠の範囲と変更の告知
+  pairs_well_with: [pm.freemium, pr.free-tier-cap]
+- id: rev.one-time
+  name: 買い切り（1回の購入）
+  what: 1回の支払いで、その版または永続の利用権が入る
+  best_for: 原価がほぼ増えない成果物（テンプレート・素材・オフラインで動く道具）
+  avoid_when: 毎月のサーバー・AI 原価がかかるもの（売上は1回、原価は続く）
+  unit_economics: 1件の利益 × 販売数。更新版の有料化や追加購入で継続収入を作るか決める
+  cost_drivers: 更新とサポートの手間。古い版の利用者のサポートが積み上がる
+  lock_in: 低
+  liability_compliance: 「永続」の意味（サービス終了時の扱い）と返金条件を書く
+  pairs_well_with: [pm.one-time, pr.refund-policy-written]
+- id: rev.take-rate
+  name: マーケットプレイスの手数料（取引の一部）
+  what: 売り手と買い手をつなぎ、成立した取引額の一定割合が入る
+  best_for: 両側が多数いて、場が無いと出会えない・信頼できない取引
+  avoid_when: 片側が少数で、場を外して直接取引されやすいもの（中抜き）
+  unit_economics: 取引総額（GMV）× 手数料率 − 決済手数料・返金・紛争対応
+  cost_drivers: 決済手数料、不正・紛争、本人確認、売り手への支払いの事務
+  lock_in: 高（決済の方式や売り手のアカウント構成は後から変えにくい）
+  liability_compliance: 誰が売り手か（記録上の販売者）、税の徴収、売り手への支払いと本人確認、禁止商品
+  pairs_well_with: [rev.trust-before-take-rate]
+- id: rev.transaction-fee
+  name: 取引・決済ごとの手数料
+  what: 送金・予約・決済の1件ごとに、定額または定率が入る
+  best_for: 1件ごとの価値がはっきりしていて、件数が多いもの
+  avoid_when: 1件の額が小さく、決済原価が手数料を上回るもの
+  unit_economics: 1件の手数料 − 1件の決済原価、件数の伸び
+  cost_drivers: 上流の決済手数料、返金とチャージバック
+  lock_in: 中
+  liability_compliance: 手数料の事前表示、資金を預かる場合の規制（国ごとに確認）
+  pairs_well_with: [pr.store-fee-in-price]
+- id: rev.ads
+  name: 広告
+  what: 利用者の注目に対して、広告主からお金が入る
+  best_for: 利用者が非常に多く、1人あたりの課金が現実的でないもの
+  avoid_when: 利用者が少ない段階・業務用途・利用者データを広告に使いたくない利用者層
+  unit_economics: 表示数 × 単価（または成果数 × 単価）− 原価。利用者数がかなり多くないと成り立たない
+  cost_drivers: 配信の原価、広告の審査、同意の管理
+  lock_in: 中（広告ネットワークの規約と同意の仕組みに縛られる）
+  liability_compliance: 広告であることの表示、追跡の同意、子ども向けの制限
+  pairs_well_with: [eth.consent-granular, eth.purpose-limited]
+- id: rev.services
+  name: サービス・受託（人の時間）
+  what: 導入支援・制作・運用代行など、人の作業に対して入る
+  best_for: 初期の売上と学びを同時に得たい時、製品だけでは導入できない顧客
+  avoid_when: 製品化を目指しているのに、受託が時間を全部使ってしまう時
+  unit_economics: 時間単価 × 稼働時間、粗利、製品に戻せた学びの数
+  cost_drivers: 人の時間。売上は人数に比例してしか伸びない
+  lock_in: 低
+  liability_compliance: 契約の範囲・成果物の権利・責任の上限（client_collaboration も見る）
+  pairs_well_with: [rev.services-cap]
+- id: rev.licensing
+  name: ライセンス・ホワイトラベル
+  what: 他社が自社の名前で使う・組み込む権利に対して入る
+  best_for: 技術やデータに独自性があり、他社の販路の方が届く時
+  avoid_when: 自社ブランドで直接届けたい段階（ブランドと利用者との関係を失う）
+  unit_economics: 契約額 × 契約数 − 個別対応の手間
+  cost_drivers: 契約ごとのカスタマイズとサポート
+  lock_in: 高（長期契約と個別仕様）
+  liability_compliance: 利用範囲・地域・期間・責任の上限・終了時の扱い
+- id: rev.sponsorship
+  name: 寄付・スポンサー
+  what: 公開の成果物（オープンソース・情報）を支える人や会社から入る
+  best_for: 無料で公開することに意味があり、支える動機を持つ人が多いもの
+  avoid_when: 原価が利用者数と一緒に増えるもの（寄付は利用量に比例しない）
+  unit_economics: 支援者数 × 平均額、継続率
+  cost_drivers: 公開物の保守。支援が減っても利用者は残る
+  lock_in: 低
+  liability_compliance: 支援の見返り（あれば売上として扱う）と、寄付扱いの可否（国ごとに確認）
+- id: rev.affiliate
+  name: 紹介料（アフィリエイト）
+  what: 利用者を他社の商品に紹介し、成約に応じて入る
+  best_for: 比較・推薦が主な価値で、紹介先が利用者に本当に合う時
+  avoid_when: 推薦の中立性が製品の価値そのものの時（利害が利用者に見えない）
+  unit_economics: 紹介数 × 成約率 × 単価
+  cost_drivers: 集客の原価、紹介先の条件変更
+  lock_in: 中
+  liability_compliance: 紹介料を受け取っていることの表示（多くの国で必要）
+  pairs_well_with: [eth.ai-disclosed]
+
+lessons:
+- id: rev.model-before-price
+  principle: "Decide what the customer pays for (access, usage, outcome, attention, time) before choosing a price or a payment provider."
+  anti_pattern: "Picking a payment tool and a monthly price first, and discovering the cost grows per use while revenue does not."
+  why: "The revenue model fixes the unit economics; the price and the provider only tune them."
+  check: "Is the revenue model written as 'customers pay X for Y', with the unit that grows the cost named?"
+  see_also: [pr.unit-cost-before-price, rev.cost-grows-with-revenue]
+  verified: false
+  date: '2026-11-04'
+- id: rev.cost-grows-with-revenue
+  principle: "Pick a revenue unit that grows when your cost grows (per use, per seat, per transaction), or cap the cost inside a flat plan."
+  anti_pattern: "A flat price for a feature whose cost scales with every call."
+  why: "When revenue and cost scale on different units, growth in the wrong segment makes the business lose more."
+  check: "For the top 10% of users by usage, is the margin still positive under the current model?"
+  see_also: [rev.usage, rev.subscription, pr.free-tier-cap]
+  verified: false
+  date: '2026-11-04'
+- id: rev.one-primary-model
+  principle: "Launch with one primary revenue model, and add a second only when the first is measured and understood."
+  anti_pattern: "Subscription, ads, take rate and services all at once in the first version."
+  why: "Several models at once hide which one works and pull the product in different directions."
+  check: "Is there one primary model with its own metric, and a written condition for adding the next?"
+  see_also: [rev.model-before-price]
+  verified: false
+  date: '2026-11-04'
+- id: rev.trust-before-take-rate
+  principle: "In a marketplace, earn the take rate with something the two sides cannot get by meeting directly: trust, payment protection, scheduling, or demand."
+  anti_pattern: "Charging a percentage for an introduction that the two sides can complete outside the platform after the first contact."
+  why: "If the platform adds nothing after the first match, repeat transactions leave and the take rate goes to zero."
+  check: "Is there a reason, written from the seller's side, to keep the second transaction on the platform?"
+  see_also: [rev.take-rate]
+  verified: false
+  date: '2026-11-04'
+- id: rev.ads-need-scale
+  principle: "Treat advertising as viable only once the audience is large enough that ad revenue per month covers the cost of serving it, and plan the consent flow first."
+  anti_pattern: "Adding ads to a small product to 'make something', and harming the experience for little revenue."
+  why: "Ad revenue per user is small; below a large audience it rarely pays for the trust and speed it costs."
+  check: "Is the audience size at which ads cover their cost written down, with today's number next to it?"
+  see_also: [rev.ads, eth.consent-granular]
+  verified: false
+  date: '2026-11-04'
+- id: rev.services-cap
+  principle: "When selling services next to a product, cap the share of time they take and write which learnings go back into the product."
+  anti_pattern: "Custom work slowly using all available time, so the product stops moving."
+  why: "Services pay now and scale only with people; without a cap they crowd out the product they were meant to fund."
+  check: "Is there a written cap (e.g. hours per week) on services, and is it tracked?"
+  see_also: [rev.services]
+  verified: false
+  date: '2026-11-04'
+- id: rev.price-follows-value
+  principle: "Tie the price to a value metric the customer can see and predict (seats, projects, volume), and publish how it changes."
+  anti_pattern: "A price that changes on criteria the customer cannot see or predict."
+  why: "A visible value metric makes upgrades feel fair and lets customers budget; hidden criteria cause disputes."
+  check: "Can a customer calculate their next bill from the public price page?"
+  see_also: [eth.no-personalised-price-exploit, pr.price-change-notice]
+  verified: false
+  date: '2026-11-04'
+- id: rev.refund-and-chargeback-in-margin
+  principle: "Count refunds, chargebacks and payment fees in the margin of every revenue model from the first month."
+  anti_pattern: "Measuring revenue before refunds and fees, and finding the real margin at year end."
+  why: "Refunds and disputes scale with sales and vary a lot by model; leaving them out makes the wrong model look best."
+  check: "Is monthly revenue reported net of refunds, chargebacks and payment fees?"
+  see_also: [rev.transaction-fee, pr.refund-policy-written]
+  verified: false
+  date: '2026-11-04'

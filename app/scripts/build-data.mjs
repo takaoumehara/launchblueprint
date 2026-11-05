@@ -9,6 +9,10 @@ const glossary = load('elements/glossary.yaml').terms;
 const lanes = load('elements/tactics.yaml').lanes;
 const stages = load('elements/tactics.yaml').stages;
 const template = fs.readFileSync(path.join(root, 'elements/project-map.template.yaml'), 'utf8');
+// カテゴリーの台帳（1ファイルが正）。catalog ドメイン → カテゴリー id
+const registry = load('elements/categories.yaml');
+const categories = registry.categories;
+const categoryOf = Object.fromEntries(categories.flatMap(c => c.domains.map(d => [d, c.id])));
 // catalog id → 項目
 const items = {};
 const catalog = {};   // 分野ごとの題名と id 一覧（カタログ画面）
@@ -16,7 +20,7 @@ const titleOf = (f, d) => { const first = fs.readFileSync(path.join(root, 'catal
   return first ? first.replace(/^#\s*/, '').replace(/\s*[—–-]\s*CREATIVITY IS EVERYWHERE, LLC.*$/, '').trim() : (d?.title || d?.name_ja || f.slice(0, -5)); };
 for (const f of fs.readdirSync(path.join(root, 'catalog')).filter(f => f.endsWith('.yaml'))) {
   const dom = f.slice(0, -5); let d; try { d = load('catalog/' + f); } catch { continue; }
-  catalog[dom] = { domain: dom, title: titleOf(f, d), updated: d?.updated || null, ids: [] };
+  catalog[dom] = { domain: dom, title: titleOf(f, d), updated: d?.updated || null, category: categoryOf[dom] || null, ids: [] };
   const lists = []; for (const v of Object.values(d || {})) if (Array.isArray(v)) lists.push(v);
   if (d?.auth?.providers) lists.push(d.auth.providers);
   for (const l of lists) for (const it of l) if (it && it.id) {
@@ -38,17 +42,18 @@ for (const f of fs.readdirSync(path.join(root, 'catalog')).filter(f => f.endsWit
       priced };
   }
 }
-const cats = {};
-for (const m of fs.readFileSync(path.join(root, 'reference/12-categories.md'), 'utf8').matchAll(/^## (\d\d) (.+)$/gm)) cats[m[1]] = m[2];
+const unassigned = Object.keys(catalog).filter(d => !categoryOf[d] && !(registry.cross_cutting || []).includes(d));
+if (unassigned.length) console.warn('categories.yaml に無い catalog ドメイン:', unassigned.join(', '));
 const missing = tactics.flatMap(t => t.options.filter(o => !items[o]).map(o => `${t.topic}:${o}`));
 if (missing.length) console.warn('見つからない catalog id:', missing.join(', '));
-const data = { generated: new Date().toISOString().slice(0, 10), elements, lanes, stages, glossary, comparisons, tactics, categories: cats, catalog, items, template };
+const data = { generated: new Date().toISOString().slice(0, 10), elements, lanes, stages, glossary, comparisons, tactics, categories, cross_cutting: registry.cross_cutting || [], catalog, items, template };
 fs.mkdirSync(path.resolve(import.meta.dirname, '../public'), { recursive: true });
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/data.json'), JSON.stringify(data, null, 1));
-const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わりにくい原則）→ 選択肢（tactics）→ プロジェクトの地図。`, '',
+const llms = [`# Blueprint`, `> 作り方の作り方。要素（変わりにくい原則）→ 選択肢（tactics）→ プロジェクトの地図。カテゴリーの台帳は elements/categories.yaml。`, '',
   `- データ全体（JSON）: /data.json`, `- 地図の書式: project-map.template.yaml（下に全文）`, `- アプリで「YAMLで書き出す」を押すと、この書式のプロジェクト地図が出る`, '',
   '## 段（stage）。決めることはどれか1つの段に属する（5 段：idea → launch → operate → scale → exit）', ...stages.map(s => `- ${s.id} ${s.ja} / ${s.what_en || ''}: ${s.what_ja}（${tactics.filter(t => t.stage === s.id).length} 件）`), '',
   '## 要素', ...elements.map(e => `- ${e.id} ${e.name_ja}: ${e.principle_ja}（カテゴリー ${e.categories.join(',')}）`), '',
+  '## カテゴリー（elements/categories.yaml）。propose_learning の category にも使える', ...categories.map(c => `- ${c.no} ${c.id} ${c.name_ja} / ${c.name}: ${c.domains.length ? 'catalog=' + c.domains.join(',') : '（catalog ドメインなし）'}`), '',
   '## 決めること（topic）。depends_on が先に決めるもの', ...tactics.map(t => `- ${t.topic}（${t.element}, stage=${t.stage}, lane=${t.lane}, ${t.kind}）${t.label_ja}${t.label_en ? ' / ' + t.label_en : ''}: options=${t.options.join(',')}${t.ai_pick ? ' pick=' + t.ai_pick : ''} depends_on=[${t.depends_on.join(',')}]`), '',
   '## スタック比較（R-030）。技術の選択ごと', ...Object.values(comparisons).map(c => `- ${c.topic}: pick=${c.recommendation.pick} 切り替え=${c.switch_points.map(w => w.when + '→' + w.upgrade_to).join(' / ')}`), '',
   '## カタログの分野（domain）。MCP の get_catalog(domain) / get_item(id) で読める', ...Object.values(catalog).map(c => `- ${c.domain}: ${c.title}（${c.ids.length} 件）`), '',
@@ -56,4 +61,4 @@ const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わ�
   '## ことば（専門用語の言い換え）', ...glossary.map(g => `- ${g.term} → ${g.plain}：${g.one_line}`), '',
   '## project-map.template.yaml', '```yaml', template.trim(), '```', ''].join('\n');
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/llms.txt'), llms);
-console.log('data.json:', tactics.length, 'topics,', Object.keys(items).length, 'items,', Object.keys(catalog).length, 'domains');
+console.log('data.json:', tactics.length, 'topics,', Object.keys(items).length, 'items,', Object.keys(catalog).length, 'domains,', categories.length, 'categories');

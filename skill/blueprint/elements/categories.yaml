@@ -1,0 +1,116 @@
+# Blueprint Categories — カテゴリーの台帳（この1ファイルが正）。提供：CREATIVITY IS EVERYWHERE, LLC
+# MCP（mcp/・hub/）、アプリ（app/scripts/build-data.mjs）、文書はここを読む。件数を文書やコードに直書きしない。
+# 足す時：categories[] に1件足し、属する catalog ドメインを domains に書く。どの catalog/*.yaml も、
+# どこか1つのカテゴリーか cross_cutting に必ず1回だけ出る（mcp/test/categories.test.mjs が確かめる）。
+domain: categories
+updated: '2026-11-04'
+schema: blueprint.categories/v1
+how_to_read: >-
+  id は変わらない英語キー（propose_learning の category にも使える）。no は lifecycle.yaml の items[].category
+  が指す2桁の番号。macro は主に効く段（idea/launch/operate/scale/exit）。domains はこのカテゴリーに属する
+  catalog/*.yaml。reference は人向けの本文（reference/categories.md の節）。
+cross_cutting: [lifecycle, rules]   # 全カテゴリーにまたがる台帳（工程の網羅表・ルール台帳）
+categories:
+  - id: idea-validation
+    no: '01'
+    name_ja: 構想・市場検証
+    name: Idea / validation
+    what: "Confirm the problem, the user and the alternative before building."
+    macro: idea
+    domains: [validation, foresight]
+  - id: brand
+    no: '02'
+    name_ja: ブランディング・クリエイティブ
+    name: Brand / creative
+    what: "One voice and visual system, carried from the intent down to AI instruction files and promo assets."
+    macro: idea
+    vertical: true   # 縦の軸：01 から 04・06・09・11 まで効く
+    domains: []
+  - id: requirements
+    no: '03'
+    name_ja: 要件定義・プロダクト仕様
+    name: Requirements / product spec
+    what: "Flows, screens, states, non-functional requirements, and how work is agreed with a client."
+    macro: idea
+    domains: [ui_ux, editor_ui, canvas, client_collaboration]
+  - id: ai-context
+    no: '04'
+    name_ja: AI開発基盤・コンテキスト設計
+    name: AI development base / context design
+    what: "Rule files, context limits and which AI tool does which job; AI features inside the product."
+    macro: idea
+    domains: [ai_llm]
+  - id: architecture
+    no: '05'
+    name_ja: システム設計・アーキテクチャ
+    name: Architecture
+    what: "Stack choices with a stack comparison (R-030), data model, build vs buy."
+    macro: launch
+    domains: [frontend, backend, database, auth, storage_media, search, realtime, cms, ui_libraries, email_notifications, i18n, build_vs_buy]
+  - id: ai-build
+    no: '06'
+    name_ja: AI駆動実装・プロトタイピング
+    name: AI-driven build / prototyping
+    what: "Tests first, mock → logic → API/DB, and watching for code that runs but is broken."
+    macro: launch
+    domains: []
+  - id: qa-security-legal
+    no: '07'
+    name_ja: 品質保証・セキュリティ・法務
+    name: QA / security / legal
+    what: "Security baseline, personal data, terms, company setup and cross-border rules."
+    macro: launch
+    domains: [security, data_protection, legal_terms, business_setup, cross_border]
+  - id: infra-deploy
+    no: '08'
+    name_ja: インフラ・CI/CD・デプロイ
+    name: Infra / CI / deploy
+    what: "Hosting, pipelines, store distribution."
+    macro: launch
+    domains: [hosting, ci_cd, app_distribution]
+  - id: gtm
+    no: '09'
+    name_ja: GTM・プロモーション（打ち上げ）
+    name: Go-to-market / launch
+    what: "Where the defined user already is, and how the launch reaches them."
+    macro: launch
+    domains: [gtm_channels]
+  - id: operations
+    no: '10'
+    name_ja: 運用・オブザーバビリティ・保守
+    name: Operations / observability
+    what: "Monitoring, support, backups, cost control, freshness of facts, handoff."
+    macro: operate
+    domains: [monitoring, support, backup_dr, cost_control, freshness, ops_handoff]
+  - id: growth
+    no: '11'
+    name_ja: グロース・マーケティング・反復
+    name: Growth / iteration
+    what: "Measurement, scale readiness and the loop that feeds learnings back."
+    macro: scale
+    domains: [analytics, scale_readiness]
+  - id: exit
+    no: '12'
+    name_ja: エグジット・サンセット（売却準備・終了）
+    name: Exit / sunset
+    what: "Due-diligence numbers, transfer, and shutting down cleanly."
+    macro: exit
+    domains: [exit_dd, exit_tools, dd_dashboard]
+  - id: ethics
+    no: '13'
+    name_ja: 倫理（AIの使い方・利用者データ・アクセシビリティ・ダークパターン・同意）
+    name: Ethics
+    what: "AI use that is disclosed and reviewable, user data used only as agreed, accessible by default, no dark patterns, consent that can be withdrawn."
+    macro: idea
+    also_macro: [launch, operate]
+    domains: [ethics]
+    added: '2026-11-04'
+  - id: revenue-model
+    no: '14'
+    name_ja: 収益モデル（お金の入り方）
+    name: Revenue model
+    what: "How money comes in (subscription, usage, freemium, one-time, take rate, ads, services, licensing ...), decided before the price and the payment provider."
+    macro: idea
+    also_macro: [launch, scale]
+    domains: [revenue_model, pricing, payments]
+    added: '2026-11-04'

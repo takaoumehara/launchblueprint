@@ -57,3 +57,11 @@ test('glossary terms are unique and every catalog item has an id, name and domai
   const seen = new Set(); for (const g of D.glossary) { assert.ok(!seen.has(g.term), 'dup ' + g.term); seen.add(g.term); assert.ok(g.plain && g.one_line, g.term); }
   for (const it of Object.values(D.items)) assert.ok(it.id && it.name && it.domain, it.id);
 });
+
+test('categories come from the registry: every catalog area has a category (or is cross-cutting), and ethics and revenue-model exist', () => {
+  assert.ok(Array.isArray(D.categories) && D.categories.length, 'categories from elements/categories.yaml');
+  const ids = new Set(D.categories.map(c => c.id));
+  for (const id of ['ethics', 'revenue-model']) assert.ok(ids.has(id), id);
+  for (const c of Object.values(D.catalog)) assert.ok(ids.has(c.category) || D.cross_cutting.includes(c.domain), `${c.domain}: no category`);
+  for (const c of D.categories) assert.ok(c.no && c.name && c.name_ja, c.id);
+});

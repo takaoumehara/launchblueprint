@@ -8,7 +8,8 @@ Blueprint は「作り方の作り方」です。プロダクトを作る時に�
 
 | 層 | ファイル | 中身 |
 |---|---|---|
-| 要素 | `skill/blueprint/elements/elements.yaml` | 変わりにくい原則7つ（体験・プロダクト・ビジネス・マーケ・ブランド・保守・セキュリティ） |
+| 要素 | `skill/blueprint/elements/elements.yaml` | 変わりにくい原則（体験・プロダクト・ビジネス・マーケ・ブランド・保守・セキュリティ） |
+| カテゴリー | `skill/blueprint/elements/categories.yaml` | 作る工程の区分の台帳（id・番号・名前・属する catalog ファイル）。ツール・アプリ・文書はここを読む |
 | 選択肢 | `skill/blueprint/elements/tactics.yaml` | 決めること60件。段・列・日英のラベル・選択肢（カタログの id）・決まりからのおすすめ・先に決めること |
 | プロジェクトの地図 | アプリの書き出し、または `draft_project_map` | あなたのプロジェクト：決めることごとの状態・選んだもの・理由・選ばなかったもの |
 

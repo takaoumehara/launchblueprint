@@ -8,7 +8,8 @@ Three layers:
 
 | Layer | File | What it holds |
 |---|---|---|
-| Elements | `skill/blueprint/elements/elements.yaml` | 7 principles that rarely change (experience, product, business, marketing, brand, maintenance, security) |
+| Elements | `skill/blueprint/elements/elements.yaml` | Principles that rarely change (experience, product, business, marketing, brand, maintenance, security) |
+| Categories | `skill/blueprint/elements/categories.yaml` | The one registry of project categories (id, number, name, which catalog files belong to each). Tools, the app and docs read it |
 | Tactics | `skill/blueprint/elements/tactics.yaml` | 60 decisions. Each has a stage, a lane, Japanese and English labels, options (catalog ids), a rule-based pick, and `depends_on` |
 | Project map | exported by the app or `draft_project_map` | your project: status per decision, pick, reason, rejected options |
 

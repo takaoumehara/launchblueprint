@@ -187,7 +187,7 @@ server.tool("get_item", "Return one catalog entry by id (e.g. db.supabase, pay.s
         return err(`Unknown id "${id}". Use search(query) or get_catalog(domain, format='items').`);
     return json({ ...it, raw: rawItem(id) });
 });
-server.tool("get_reference", "Return a reference markdown document (12-categories, gtm-ops, exit-appdist, ui-ux, design-resources, dry-run-sample, walkthrough-non-engineer ...).", { name: z.string() }, async ({ name }) => {
+server.tool("get_reference", "Return a reference markdown document (categories, gtm-ops, exit-appdist, ui-ux, design-resources, dry-run-sample, walkthrough-non-engineer ...).", { name: z.string() }, async ({ name }) => {
     const n = safe(name).replace(/\.md$/, "");
     if (!references().includes(n))
         return err(`Unknown reference "${name}". Available: ${references().join(", ")}`);
@@ -200,7 +200,7 @@ server.tool("get_template", "Return a template to copy: project.axes.yaml (proje
         return err(`Unknown template "${name}". Available: ${templates().join(", ")}`);
     return text(fs.readFileSync(p, "utf8"));
 });
-server.tool("get_skill", "Return the Blueprint SKILL.md (the procedure an AI follows: intake questions, research, 12 categories, compare, write the project file, review).", {}, async () => text(fs.readFileSync(path.join(ROOT, "SKILL.md"), "utf8")));
+server.tool("get_skill", "Return the Blueprint SKILL.md (the procedure an AI follows: intake questions, research, every category in elements/categories.yaml, compare, write the project file, review).", {}, async () => text(fs.readFileSync(path.join(ROOT, "SKILL.md"), "utf8")));
 server.tool("list_topics", "List the decisions (tactics): topic, stage (idea/launch/operate/scale/exit), lane, kind (choose one / checklist), options, ai_pick, depends_on, whether a stack comparison exists. Optional stage filter.", { stage: z.enum(LIFECYCLE).optional() }, async ({ stage }) => {
     const { tactics, stages, lanes } = tacticsDoc();
     const cmp = new Set(comparisons().map(c => c.topic));
@@ -375,7 +375,7 @@ const fingerprint = (s) => { let h = 0x811c9dc5; for (const ch of s.toLowerCase(
     h ^= ch.codePointAt(0);
     h = Math.imul(h, 0x01000193) >>> 0;
 } return h.toString(16).padStart(8, "0"); };
-server.tool("propose_learning", "Propose a learning in four layers. Appends to the inbox only; the master is never edited. Layer 1 `principle` {principle, anti_pattern, why, check(yes/no)}; layer 2 `claims` [{claim, source_url?, checked?}] = concrete facts kept as claims to verify (never asserted as verified here); layer 3 `context` {stage, fine_stage?, stack_type?, product_type?, severity?, cost_days?, cost_money_usd?} with no product, project or personal names; layer 4 occurrence starts at 1 and is counted across submitters by fingerprint. `text` alone is accepted for older agents and stored unstructured. Submissions containing an email, phone number or secret are rejected. kind: rule (default) | component_map_update.", { category: z.string().min(1).max(64),
+server.tool("propose_learning", "Propose a learning in four layers. Appends to the inbox only; the master is never edited. Layer 1 `principle` {principle, anti_pattern, why, check(yes/no)}; layer 2 `claims` [{claim, source_url?, checked?}] = concrete facts kept as claims to verify (never asserted as verified here); layer 3 `context` {stage, fine_stage?, stack_type?, product_type?, severity?, cost_days?, cost_money_usd?} with no product, project or personal names; layer 4 occurrence starts at 1 and is counted across submitters by fingerprint. `text` alone is accepted for older agents and stored unstructured. Submissions containing an email, phone number or secret are rejected. category: a category id from elements/categories.yaml (get_catalog('categories')) or a catalog domain. kind: rule (default) | component_map_update.", { category: z.string().min(1).max(64),
     kind: z.enum(["rule", "component_map_update"]).optional(),
     text: z.string().min(5).max(2000).optional(),
     principle: principleSchema.optional(),

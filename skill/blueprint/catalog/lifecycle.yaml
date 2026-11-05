@@ -2,7 +2,7 @@ schema: blueprint.lifecycle/v3
 updated: '2026-11-02'
 publisher: CREATIVITY IS EVERYWHERE, LLC
 how_to_read: 'status: covered=合格条件まで書いてある / thin=言及はあるが判断・合格条件・予算帯がない / missing=該当なし。evidence
-  はリポジトリ内のファイルと節。priority P1=公開前に必須 / category=12カテゴリー（オーナー案 2026-10-26）。ai_caution=true
+  はリポジトリ内のファイルと節。priority P1=公開前に必須 / category=elements/categories.yaml の no（オーナー案 2026-10-26）。ai_caution=true
   はAIコーディング特有の注意点。acceptance はAIが機械的に確かめられる条件'
 # macro_stages：idea → launch → operate → scale → exit の5段。fine stages（下の stages[]）をまとめる単位。
 # known_surprises：この段で「計画になかったのに毎回起きること」。revisit_triggers：これが起きたら Blueprint を再実行する合図。
@@ -227,24 +227,24 @@ items:
   category: '01'
   source: blueprint-v2/v3（既存）
 - id: lc.n01
-  stage: 12cat
+  stage: by_category
   domain: validation
   item: 最もリスクの高い仮説（価値・成長）と検証KPI
   status: thin
   evidence: v3 §2.1 調査レンズ（仮説と事実の区別のみ）
-  proposed_addition: 12cat §01
+  proposed_addition: categories §01
   priority: P1
   category: '01'
   acceptance: 'hypotheses.yaml の各行に {type: value|growth, kpi, threshold, result}'
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n02
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: 仕様を入出力・前提条件のレベルまで具体化（AIは隙間を推測で埋める）
   status: covered
   evidence: catalog/validation.yaml val.spec-edge-cases／tactics validation_rules
-  proposed_addition: 12cat §01
+  proposed_addition: categories §01
   priority: P1
   category: '01'
   acceptance: 各機能に input / output / preconditions が空欄なしで書かれている
@@ -323,7 +323,7 @@ items:
   category: '02'
   source: blueprint-v2/v3（既存）
 - id: lc.n03
-  stage: 12cat
+  stage: by_category
   domain: brand
   item: ミッション・ビジョン・CI/VI
   status: covered
@@ -335,7 +335,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n04
-  stage: 12cat
+  stage: by_category
   domain: design_system
   item: デザイントークンの数値化（色・コントラスト比・字体・余白・角丸）
   status: covered
@@ -347,7 +347,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n05
-  stage: 12cat
+  stage: by_category
   domain: context
   item: ブランドコンテキストファイル（brand.yaml → CLAUDE.md/.cursorrules の生成節）
   status: missing
@@ -359,7 +359,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n06
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: AIデフォルト臭の排除（ライブラリ既定の配色・字体を使わない）
   status: thin
@@ -371,7 +371,7 @@ items:
   ai_caution: true
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n07
-  stage: 12cat
+  stage: by_category
   domain: ai_persona
   item: AIペルソナ（チャット機能の性格・口調・禁止事項）
   status: missing
@@ -383,7 +383,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n48
-  stage: 12cat
+  stage: by_category
   domain: cross_border
   item: カルチャライズ（翻訳ではなく再創作・社会的証明の出し方）
   status: thin
@@ -435,36 +435,36 @@ items:
   category: '03'
   source: blueprint-v2/v3（既存）
 - id: lc.n08
-  stage: 12cat
+  stage: by_category
   domain: prd
   item: MVPスコープ（Must／Nice-to-have）とPRD
   status: thin
   evidence: v3 D3 Not-to-build／§11 feature.yaml
-  proposed_addition: 12cat §03 prd.md
+  proposed_addition: categories §03 prd.md
   priority: P1
   category: '03'
   acceptance: prd.md の全機能に must|nice と、ユーザーストーリーがある
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n09
-  stage: 12cat
+  stage: by_category
   domain: nfr
   item: 非機能要件（同時接続・レイテンシ・対応端末・可用性）
   status: thin
   evidence: v3 L25（同時接続のみ）
-  proposed_addition: 12cat §03
+  proposed_addition: categories §03
   priority: P1
   category: '03'
   acceptance: nfr.yaml に concurrency, p95_latency_ms, browsers, availability の数値
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n10
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: エッジケースと例外状態をPRDに明記（AIは正常系を優先する）
   status: thin
   evidence: v3 §13 画面×状態（UIのみ。APIタイムアウト・検証エラーなし）
-  proposed_addition: 12cat §03
+  proposed_addition: categories §03
   priority: P1
   category: '03'
   acceptance: 全APIに timeout / validation_error / empty の挙動が書かれている
@@ -481,48 +481,48 @@ items:
   category: '04'
   source: blueprint-v2/v3（既存）
 - id: lc.n11
-  stage: 12cat
+  stage: by_category
   domain: tooling
   item: AIツールの選定と役割分担（エディタ型／ターミナル型／API）
   status: thin
   evidence: v3 L17/L30
-  proposed_addition: 12cat §04
+  proposed_addition: categories §04
   priority: P2
   category: '04'
   acceptance: ai-tools.md にツール×役割×クレジット
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n12
-  stage: 12cat
+  stage: by_category
   domain: rules
   item: ルールファイル（CLAUDE.md/.cursorrules/AGENTS.md）の配備
   status: missing
   evidence: 該当なし（Blueprint 自身は SKILL.md）
-  proposed_addition: 12cat §04
+  proposed_addition: categories §04
   priority: P1
   category: '04'
   acceptance: ルールファイルに規約・構成・禁止ライブラリ・命名・コミット規約の5節
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n13
-  stage: 12cat
+  stage: by_category
   domain: context
   item: 不要ファイルの除外（.cursorignore 等）とモジュール分割
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §04
+  proposed_addition: categories §04
   priority: P2
   category: '04'
   acceptance: ignore ファイルに build成果物・ログ・lockfile 以外の巨大ファイル
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n14
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: ルールの過積載を防ぐ（短く・例つき・参照型）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §04
+  proposed_addition: categories §04
   priority: P1
   category: '04'
   acceptance: ルールファイル本体が200行以下、詳細は参照リンク
@@ -569,19 +569,19 @@ items:
   category: '05'
   source: blueprint-v2/v3（既存）
 - id: lc.n15
-  stage: 12cat
+  stage: by_category
   domain: api
   item: DBスキーマ・マイグレーション・API設計の規約
   status: thin
   evidence: catalog/database.yaml・backend.yaml（選定のみ）
-  proposed_addition: 12cat §05
+  proposed_addition: categories §05
   priority: P2
   category: '05'
   acceptance: schema と migrations フォルダがあり、API 型を共有する方法が書いてある
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n16
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: AIがよく知る型付きの普及スタックを選ぶ
   status: missing
@@ -593,19 +593,19 @@ items:
   ai_caution: true
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n17
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: 疎結合・小さな責務（AIが修正箇所を見失わない）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §05
+  proposed_addition: categories §05
   priority: P3
   category: '05'
   acceptance: 1ファイル400行以下（例外は理由つき）
   ai_caution: true
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n45
-  stage: 12cat
+  stage: by_category
   domain: cross_border
   item: i18n キー管理・Intl・UTC保存・可変幅UI
   status: thin
@@ -617,7 +617,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n50
-  stage: 12cat
+  stage: by_category
   domain: cross_border
   item: レイテンシ（エッジ配信・DBリージョン）
   status: thin
@@ -629,48 +629,48 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n18
-  stage: 12cat
+  stage: by_category
   domain: impl
   item: テスト先行（AIにまずテストを書かせる）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §06
+  proposed_addition: categories §06
   priority: P2
   category: '06'
   acceptance: 新機能のPRにテストが同時に含まれる
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n19
-  stage: 12cat
+  stage: by_category
   domain: impl
   item: モック → ロジック → API/DB の段階実装
   status: thin
   evidence: v3 D4 雑でも動く試作
-  proposed_addition: 12cat §06
+  proposed_addition: categories §06
   priority: P3
   category: '06'
   acceptance: —
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n20
-  stage: 12cat
+  stage: by_category
   domain: impl
   item: 定期リファクタリング（スプリント単位）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §06
+  proposed_addition: categories §06
   priority: P2
   category: '06'
   acceptance: スプリントごとに重複・any の件数を記録
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n21
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: 「動くが破綻したコード」の監視（any・グローバル状態・メモリリーク・再描画）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §06
+  proposed_addition: categories §06
   priority: P1
   category: '06'
   acceptance: 'CI で `as any`/`: any` の件数が前回以下。lint の no-explicit-any が error'
@@ -767,7 +767,7 @@ items:
   category: '07'
   source: blueprint-v2/v3（既存）
 - id: lc.n22
-  stage: 12cat
+  stage: by_category
   domain: qa
   item: 単体・結合・E2E とカバレッジ
   status: thin
@@ -779,7 +779,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n23
-  stage: 12cat
+  stage: by_category
   domain: security
   item: SQLi/XSS/CSRF・依存の脆弱性チェック
   status: thin
@@ -791,43 +791,43 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n24
-  stage: 12cat
+  stage: by_category
   domain: security
   item: 秘密情報がGit履歴・プロンプト・外部ログに出ていない
   status: covered
   evidence: catalog/ops_handoff.yaml（ho.host-env-vars）・backup_dr.yaml bk.no-live-secrets-in-backups・security.yaml sec.secrets／tactics secrets_sharing
-  proposed_addition: 12cat §07
+  proposed_addition: categories §07
   priority: P1
   category: '07'
   acceptance: gitleaks 等で履歴スキャン 0 件
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n25
-  stage: 12cat
+  stage: by_category
   domain: legal
   item: OSSライセンス（GPL 混入）確認
   status: covered
   evidence: catalog/exit_tools.yaml xt.syft・xt.fossa／tactics sbom_tool
-  proposed_addition: 12cat §07
+  proposed_addition: categories §07
   priority: P2
   category: '07'
   acceptance: license-checker で禁止ライセンス 0
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n26
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: 実在しないパッケージ（パッケージ幻覚）とサプライチェーン攻撃
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §07
+  proposed_addition: categories §07
   priority: P1
   category: '07'
   acceptance: 新規依存はすべて公式レジストリで存在・公開日・DL数を確認した記録がある
   ai_caution: true
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n46
-  stage: 12cat
+  stage: by_category
   domain: cross_border
   item: 国別のデータ主権・同意（GDPR リージョン・CCPA オプトアウト・年齢ゲート）
   status: thin
@@ -839,31 +839,31 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n27
-  stage: 12cat
+  stage: by_category
   domain: infra
   item: CI：Lint→型→テスト→ビルド→プレビュー
   status: thin
   evidence: catalog/ci_cd.yaml／v3 L29
-  proposed_addition: 12cat §08
+  proposed_addition: categories §08
   priority: P2
   category: 08
   acceptance: CI 設定に5段がある
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n28
-  stage: 12cat
+  stage: by_category
   domain: infra
   item: ステージングで永続化・認証・Webhook を確認
   status: thin
   evidence: v3 L3/L4
-  proposed_addition: 12cat §08
+  proposed_addition: categories §08
   priority: P1
   category: 08
   acceptance: staging でWebhook受信のログがある
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n29
-  stage: 12cat
+  stage: by_category
   domain: infra
   item: ドメイン・DNS・SSL
   status: covered
@@ -875,12 +875,12 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n30
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: IaC・CI設定の版を公式ドキュメントで照合（AIは古いAPIを書く）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §08
+  proposed_addition: categories §08
   priority: P2
   category: 08
   acceptance: Action/イメージの版が固定（@vX.Y、digest）され、確認日がある
@@ -1007,7 +1007,7 @@ items:
   category: 09
   source: blueprint-v2/v3（既存）
 - id: lc.n31
-  stage: 12cat
+  stage: by_category
   domain: launch
   item: LP公開と Core Web Vitals
   status: thin
@@ -1019,7 +1019,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n32
-  stage: 12cat
+  stage: by_category
   domain: assets
   item: プロモーション素材（デモ動画・OGP・プレスキット・告知文）
   status: thin
@@ -1031,19 +1031,19 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n33
-  stage: 12cat
+  stage: by_category
   domain: assets
   item: 販促素材をスプリント内で生成（コードと仕様から同期）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §09 『スプリント内の販促素材』
+  proposed_addition: categories §09 『スプリント内の販促素材』
   priority: P1
   category: 09
   acceptance: 各スプリントの完了条件に『変更機能の説明文・FAQ・メタタグ更新』があり、L27 の機能状態と一致
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n47
-  stage: 12cat
+  stage: by_category
   domain: cross_border
   item: 国別の決済手段と税（MoR か Stripe Tax か）
   status: thin
@@ -1055,7 +1055,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n49
-  stage: 12cat
+  stage: by_category
   domain: cross_border
   item: 国別ローンチチャネル（US：PH/HN/Reddit/X、JP：X/Zenn/Qiita/note/PR TIMES）
   status: missing
@@ -1168,7 +1168,7 @@ items:
   category: '10'
   source: blueprint-v2/v3（既存）
 - id: lc.n34
-  stage: 12cat
+  stage: by_category
   domain: ops
   item: エラー追跡・アップタイム監視・通知
   status: thin
@@ -1180,7 +1180,7 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n35
-  stage: 12cat
+  stage: by_category
   domain: ops
   item: バックアップの定期スナップショットと復元テスト
   status: covered
@@ -1192,12 +1192,12 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n36
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: LLM API の無限再試行・トークン浪費（サーキットブレーカー＋上限額）
   status: covered
   evidence: catalog/cost_control.yaml cc.retry-with-breaker・cc.ai-gateway-budget／tactics cost_rules
-  proposed_addition: 12cat §10
+  proposed_addition: categories §10
   priority: P1
   category: '10'
   acceptance: 再試行に最大回数と指数バックオフ、プロバイダ側の月額上限が設定済み
@@ -1314,7 +1314,7 @@ items:
   category: '11'
   source: blueprint-v2/v3（既存）
 - id: lc.n37
-  stage: 12cat
+  stage: by_category
   domain: feedback
   item: フィードバックウィジェット・ユーザーインタビュー
   status: missing
@@ -1326,24 +1326,24 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n38
-  stage: 12cat
+  stage: by_category
   domain: ai_workflow
   item: 学びを CLAUDE.md・プロンプトに戻す（AIワークフローの振り返り）
   status: thin
   evidence: v3 §15.2（Blueprint 本体への戻しのみ）
-  proposed_addition: 12cat §11
+  proposed_addition: categories §11
   priority: P2
   category: '11'
   acceptance: 月1回 rules ファイルの更新履歴がある
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n39
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: AI負債の監査スプリント（デッドコード・共通化）
   status: missing
   evidence: 該当なし
-  proposed_addition: 12cat §11
+  proposed_addition: categories §11
   priority: P2
   category: '11'
   acceptance: 四半期に1回、未使用export・重複コンポーネントの件数を記録
@@ -1360,7 +1360,7 @@ items:
   category: '12'
   source: blueprint-v2/v3（既存）
 - id: lc.n40
-  stage: 12cat
+  stage: by_category
   domain: sunset
   item: 終了告知（1〜3か月前）・新規課金停止・返金方針
   status: covered
@@ -1372,43 +1372,43 @@ items:
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n41
-  stage: 12cat
+  stage: by_category
   domain: sunset
   item: データのエクスポートと確実な削除
   status: covered
   evidence: catalog/exit_tools.yaml xs.export-then-delete／tactics sunset_rules
-  proposed_addition: 12cat §12
+  proposed_addition: categories §12
   priority: P2
   category: '12'
   acceptance: エクスポート機能と削除ログ
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n42
-  stage: 12cat
+  stage: by_category
   domain: sunset
   item: 外部SaaS・APIキー・DNS の完全解約
   status: covered
   evidence: catalog/exit_tools.yaml xs.cancel-every-subscription／tactics sunset_rules
-  proposed_addition: 12cat §12
+  proposed_addition: categories §12
   priority: P2
   category: '12'
   acceptance: L9 認証情報チェックリストの全行が『解約済み』
   ai_caution: false
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n43
-  stage: 12cat
+  stage: by_category
   domain: ai_caution
   item: シャドーコスト（実験用ベクトルDB・ストレージ・微調整モデル）の残存
   status: covered
   evidence: catalog/exit_tools.yaml xs.cancel-every-subscription・cost_control.yaml cc.monthly-cost-sheet／tactics sunset_rules
-  proposed_addition: 12cat §12
+  proposed_addition: categories §12
   priority: P2
   category: '12'
   acceptance: 課金明細で未使用リソース 0
   ai_caution: true
   source: owner-input 2026-10-26（12カテゴリー案）
 - id: lc.n44
-  stage: 12cat
+  stage: by_category
   domain: archive
   item: リポジトリのアーカイブとプロンプト・パターンの資産化
   status: covered
@@ -1532,16 +1532,4 @@ items:
     が全件 owner_decided か open と明記
   ai_caution: false
   source: project PO input 2026-10-26（一般化）
-categories:
-  '01': 構想・市場検証
-  '02': ブランディング・クリエイティブ
-  '03': 要件定義・プロダクト仕様
-  '04': AI開発基盤・コンテキスト設計
-  '05': システム設計・アーキテクチャ
-  '06': AI駆動実装・プロトタイピング
-  '07': 品質保証・セキュリティ・法務
-  08: インフラ・CI/CD・デプロイ
-  09: GTM・プロモーション（打ち上げ）
-  '10': 運用・オブザーバビリティ・保守
-  '11': グロース・マーケティング・反復
-  '12': エグジット・サンセット（売却準備・終了）
+# categories: elements/categories.yaml に移した（カテゴリーの台帳は1ファイル。件数もそこから数える）

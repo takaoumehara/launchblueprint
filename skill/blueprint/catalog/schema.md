@@ -1,6 +1,6 @@
 # Tech Catalog の書式（schema）
 
-1ドメイン1ファイル（`frontend.yaml` など15個）。人は `catalog-concept.html` で見て、AIはこのYAMLを読む。
+1ドメイン1ファイル（`frontend.yaml` など。どのカテゴリーに属するかは `elements/categories.yaml` の `domains`）。人は `catalog-concept.html` で見て、AIはこのYAMLを読む。
 
 ## ファイルの先頭
 | キー | 意味 |
@@ -38,7 +38,7 @@
 
 ## lifecycle.yaml の段階（2026-11-02 追加、schema `blueprint.lifecycle/v3`）
 - `macro_stages[]`：`{id, name_ja, stages[], known_surprises[], revisit_triggers[]}`。id は idea / launch / operate / scale / exit の 5 つ（この順）。`stages` は下の fine stage の id。
-- `stages[]`：`{id, macro, name_ja, known_surprises[], revisit_triggers[]}`。14 の fine stage（discover … exit）。`items[].stage` はこの id を指す（`12cat` の項目は `category` で段に割り当てる）。
+- `stages[]`：`{id, macro, name_ja, known_surprises[], revisit_triggers[]}`。14 の fine stage（discover … exit）。`items[].stage` はこの id を指す（`by_category` の項目は `category` で段に割り当てる）。
 - `known_surprises`：その段で「計画になかったのに毎回起きること」。1 行ずつ、固有名詞なし。`revisit_triggers`：Blueprint を再実行する合図。**数字で判定できるものだけ**（例：請求が前月の 2 倍、復元テスト 30 日超）。
 - 新しい驚きは `po-input/TEMPLATE-surprise.md` に記録し、`reference/feedback-loop.md` の手順で lessons / lifecycle / tactics に昇格させる。
 - MCP：`lifecycle_stages`（stage で macro か fine を絞る。`include_items: true` で当該段の items も返す）。`get_catalog(lifecycle, format: items)` でも stage 行が `stage`・`known_surprises`・`revisit_triggers` 付きで出る。
@@ -61,7 +61,7 @@
 - `ui_ux.yaml`：UI/UX の原則。`rules[]`（id, category, phase[], principle, anti_pattern, why, check, see_also?, source?, date）。4つ（原則・避ける形・理由・確認）は必須。`check` は はい／いいえ で判定でき、要件・設計・品質の確認で使う。`category` は emphasis / copy / guidance / lists / saving / forms / states / accessibility / mobile / theming / motion / visual / performance / flows / feedback / payments / onboarding / privacy / engineering / i18n、`phase` は requirements / design / qa（MCP `ui_ux_checklist` の絞り込み）。固有名詞・プロダクト名は入れない。（2026-11-02 追加）`phase_gate_checks[]`＝id, lifecycle（idea / launch / operate / scale / exit。5段階すべてに1つ以上）, phase（場面の説明）, check（はい／いいえ）, why, rules[]（束ねる rule の id）。`reference/ui-ux.md` は rules と同じ id で全件を載せる（`mcp/test/ui_ux.test.mjs` が照合）。
 
 ## Elements 層（2026-10-28 追加、`elements/`）
-- `elements.yaml`：`elements[]`＝id, name, principle, categories（12カテゴリー番号）, tactics_file
+- `elements.yaml`：`elements[]`＝id, name, principle, categories（`elements/categories.yaml` の `no`）, tactics_file
 - `tactics.yaml`：`lanes[]`（地図の列 BRAND/UX/UI/TECH/BIZ・LEGAL/RULES）、`stages[]`（ライフサイクルの5段 idea / launch / operate / scale / exit＝id, label, ja, what_ja。`catalog/lifecycle.yaml` の macro_stages と同じ id。2026-11-02 追加）と `tactics[]`＝element, topic, **stage**（どの段の決定か。地図の進み具合はこれで数える。5 段すべてに choose と checklist が 1 つ以上あること：`reference/coverage.md`）, lane, label_ja, question_ja, kind（choose / checklist）, options（catalog の id）, ai_pick, ai_reason_ja, pick_when[{if, pick, reason_ja}], depends_on（先に決める topic。地図の線はこれだけ）, last_checked, check_cadence（daily_new_options / deep_when_used）。`lane: tech` の choose は必ず `stack_comparisons.yaml` に同じ topic を持つ（MCP の coverage テストで検査）
 - `project-map.template.yaml`：`choices[]`＝element, topic, status, options, ai_pick, reason, rejected[{option, why}], decided_by, pick, last_checked。先頭に name, goal, profile。理由のない ai_pick・rejected は書かない
 - `elements.yaml` には name_ja / principle_ja もある。Web アプリは `app/`（`npm run build` で `/data.json` と `/llms.txt` を出す）
