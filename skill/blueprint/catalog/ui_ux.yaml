@@ -1065,6 +1065,51 @@ rules:
     date: '2026-10-28'
 # phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階（idea → launch → operate → scale → exit）、phase はその中のどの場面か。
 # MCP の ui_ux_checklist（lifecycle 引数）と reference/ui-ux.md の "Phase gates" に出る。全段階に少なくとも1つ置く。
+  - id: one-primary-mic
+    category: input
+    phase: [design, qa]
+    principle: "Show one mic action per input that dictates into the text field; keep raw audio silently if possible, otherwise offer 'send audio as-is' as a quiet text link under a one-line helper."
+    anti_pattern: "A 'dictate' button and a 'record' button side by side as equals."
+    why: "Users can't tell dictating from recording (both are 'talk into the phone'), so two equal buttons make them stall."
+    check: "Is there exactly one prominent mic control per input, with a helper line saying where the words will appear?"
+    source: 'PO field lesson 2026-11-04'
+    date: '2026-11-05'
+  - id: save-style-answer-copy
+    category: copy
+    phase: [design, qa]
+    principle: "In answer forms use low-commitment, reversible copy: 'Does this look about right?', 'OK, next' or 'Save' with 'You can change this later', confirmed by 'Saved'. Use 'Send' only when a person actually receives it."
+    anti_pattern: "'Is this accurate?' and 'Send' on answers to a living document."
+    why: "Words that signal finality or evaluation make people hesitate and over-check."
+    check: "Does every answer button read as reversible, and is 'send' used only where a human receives it?"
+    source: 'PO field lesson 2026-11-04'
+    date: '2026-11-05'
+  - id: single-stateful-forward-button
+    category: emphasis
+    phase: [design, qa]
+    principle: "In a card-by-card flow with a fixed bottom bar, the bar's main button is the only forward control; it reads 'Skip for now' (quiet) when empty and 'OK, next' (primary) once something is chosen, and saves before advancing."
+    anti_pattern: "An in-card submit button plus a separate 'Next' in the bottom bar."
+    why: "Two forward buttons make users wonder which one saves and whether the other loses their answer."
+    check: "On every card, is there exactly one primary forward button, and does its label say whether it saves or skips?"
+    source: 'PO field lesson 2026-11-04'
+    date: '2026-11-05'
+  - id: typed-name-agreement
+    category: forms
+    phase: [requirements, design]
+    principle: "For lightweight agreements, each signer types their name and taps 'Agree and start'; drawing is optional and collapsed. Show per-signer status, allow partial saves, and store name, timestamp, content version and a snapshot of what was agreed."
+    anti_pattern: "A required hand-drawn signature on a phone."
+    why: "Drawn signatures are the biggest drop-off point, while a typed name plus clear intent text plus a stored snapshot is what makes the record meaningful."
+    check: "Can each signer finish with a name and one tap, and can you reproduce exactly what they agreed to from the stored record?"
+    source: 'PO field lesson 2026-11-04'
+    date: '2026-11-05'
+  - id: long-question-flow-outcomes
+    category: guidance
+    phase: [design, qa]
+    principle: "In long question flows show 'N left, about 10 sec each', bundle near-certain fixes into one 'OK all' card, title each card by the outcome the owner wants, and put the recommended option first, marked."
+    anti_pattern: "An endless-looking flow of cards titled by technical objects, one tap per obvious item."
+    why: "People abandon when they can't see the end or must decode jargon; obvious items cost taps without adding information."
+    check: "Does every card title read as a result the owner wants, with no internal or technical term?"
+    source: 'PO field lesson 2026-11-04'
+    date: '2026-11-05'
 phase_gate_checks:
   - id: gate.i18n_keys
     lifecycle: idea
