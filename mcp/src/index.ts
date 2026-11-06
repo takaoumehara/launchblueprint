@@ -132,7 +132,7 @@ const LIFECYCLE = ["idea", "launch", "operate", "scale", "exit"] as const;
 const server = new McpServer({ name: "blueprint", version: "0.2.0" }, { instructions: [
   "Blueprint: a map of every decision a product needs from idea to exit, with a catalog of options (free tiers, limits, lock-in, sources).",
   "Typical agent flow: 1) list_topics to see the decisions and their order (depends_on); 2) draft_project_map with the owner's profile to get the first project map with AI picks and next_steps; 3) for each next step call get_comparison (tech choices) or get_item for each option, then ask the owner to decide; 4) call draft_project_map again with `decided` to advance; 5) propose_learning for anything learned.",
-  "Never mark a decision as decided without the owner. Treat verified:false or missing checked dates as unverified; say so instead of asserting prices.",
+  "Workspace flow: workspace_projects / workspace_create_project, then workspace_propose_change per decision with a short reason and alternatives. You cannot approve: the owner approves in the browser, and you read the outcome with workspace_read_project. A rejected or stale proposal is not a decision; do not retry it unchanged.","Never mark a decision as decided without the owner. Treat verified:false or missing checked dates as unverified; say so instead of asserting prices.",
   "Text is mostly Japanese; ids are stable English keys (e.g. db.supabase, tactics topic `payments`).",
 ].join("\n") });
 
@@ -307,5 +307,27 @@ server.tool("propose_learning", "Propose a new learning. Appends to the inbox on
     fs.appendFileSync(INBOX, JSON.stringify(rec) + "\n");
     return json({ saved: true, inbox: "mcp/inbox/learnings.jsonl", record: rec });
   });
+
+// ---------- local workspace (propose-only). There is deliberately NO approve/decide tool: the owner approves in the browser. ----------
+// @ts-ignore plain JS module, no types
+const WS_STORE: any = await import("../workspace/store.mjs");
+// @ts-ignore plain JS module, no types
+const WS_TOPICS: any = await import("../workspace/topics.mjs");
+const wsHome = () => WS_STORE.homeDir();
+const wsTopics = () => WS_TOPICS.loadTopics().topics;
+const wsGuard = <A,>(fn: (a: A) => unknown) => async (a: A) => { try { return json(fn(a)); } catch (e: any) { return err(`${e.code ?? "error"}: ${e.message}${e.extra?.options ? " options=" + e.extra.options.join(",") : ""}`); } };
+const slim = (s: any) => ({ id: s.id, name: s.name, goal: s.goal, seq: s.seq,
+  decided_by_owner: Object.fromEntries(Object.entries(s.choices).map(([k, v]: any) => [k, { pick: v.pick, rev: v.rev }])),
+  proposals: s.proposals.map((p: any) => ({ id: p.id, topic: p.topic, pick: p.pick, state: p.state, version: p.version, baseRev: p.baseRev, decision: p.decision })),
+  recent_history: s.history.slice(-15) });
+server.tool("workspace_projects", "List projects in this local workspace (folder $BLUEPRINT_HOME or ~/.blueprint). Each person's workspace is independent.", {}, async () => json({ workspace: wsHome(), projects: WS_STORE.listProjects(wsHome()) }));
+server.tool("workspace_create_project", "Create a project in the local workspace. The owner sees it in the browser (node bin/blueprint.mjs serve).", { name: z.string().min(1).max(80), goal: z.string().max(300).optional() }, wsGuard(({ name, goal }: any) => slim(WS_STORE.createProject(wsHome(), { name, goal }))));
+server.tool("workspace_read_project", "Read a project: owner-decided choices, all proposals with their state (proposed | approved | rejected | stale | withdrawn) and recent history. Check this before proposing again; a rejected or stale proposal is not a decision.", { project: z.string() }, wsGuard(({ project }: any) => slim(WS_STORE.agentView(wsHome(), project))));
+server.tool("workspace_propose_change", "Propose one decision for a topic. It appears in the owner's browser as a proposed node; nothing is decided until the owner approves it there. Re-proposing the same topic amends your pending proposal (the owner sees it as changed). Never include approval fields; they are rejected.",
+  { project: z.string(), topic: z.string(), pick: z.string().describe("an option id of that topic (see list_topics / get_comparison)"), reason: z.string().max(600).describe("one or two sentences, owner-readable"), alternatives: z.array(z.object({ option: z.string(), why: z.string().max(300) })).max(6).optional(),
+    // Declared only so they reach the store and are REJECTED loudly instead of being silently stripped by the schema.
+    ownerApproved: z.unknown().optional(), approved: z.unknown().optional(), status: z.unknown().optional(), decidedBy: z.unknown().optional() },
+  wsGuard((a: any) => { const p = WS_STORE.propose(wsHome(), a.project, { topic: a.topic, pick: a.pick, reason: a.reason, alternatives: a.alternatives ?? [], author: "agent", ...Object.fromEntries(["ownerApproved", "approved", "status", "decidedBy"].filter(k => a[k] !== undefined).map(k => [k, a[k]])) }, wsTopics()); return { proposal: { id: p.id, topic: p.topic, pick: p.pick, state: p.state, version: p.version }, next: "Wait for the owner to approve or reject in the browser. Call workspace_read_project later to see the outcome." }; }));
+server.tool("workspace_withdraw_proposal", "Withdraw your own pending proposal.", { project: z.string(), proposalId: z.string() }, wsGuard(({ project, proposalId }: any) => WS_STORE.withdraw(wsHome(), project, proposalId)));
 
 await server.connect(new StdioServerTransport());

@@ -10,7 +10,8 @@ test("all tools respond", async () => {
   try {
     const names = (await c.listTools()).tools.map(t => t.name).sort();
     assert.deepEqual(names, ["draft_project_map", "get_catalog", "get_comparison", "get_item", "get_reference", "get_skill", "get_template",
-      "lifecycle_stages", "list_domains", "list_topics", "propose_learning", "search", "stale_items", "ui_ux_checklist"]);
+      "lifecycle_stages", "list_domains", "list_topics", "propose_learning", "search", "stale_items", "ui_ux_checklist",
+      "workspace_create_project", "workspace_projects", "workspace_propose_change", "workspace_read_project", "workspace_withdraw_proposal"]);
     const ld = JSON.parse(await call("list_domains"));
     assert.ok(ld.domains.includes("payments") && ld.layers.includes("tactics") && ld.layers.includes("elements"));
     assert.ok(ld.templates.includes("project.axes.yaml") && ld.templates.includes("brand-context.md") && ld.templates.includes("project-map.template.yaml"));

@@ -1,5 +1,7 @@
 # Blueprint
 
+**ローカルワークスペース（AI が提案、ブラウザで承認）:** [docs/install.ja.md](docs/install.ja.md) · English [docs/install.md](docs/install.md)
+
 English: [README.md](README.md) · 5分ではじめる：[QUICKSTART.ja.md](QUICKSTART.ja.md)
 
 **Blueprint は「作り方の作り方」です。** プロダクトを作り始める前に、構想から公開・運用・拡大・終了までに決めることを全部並べ、それぞれに選択肢、理由つきのおすすめ1つ、無料枠と上限、誰が責任を負うか、先に決めることを付けます。人はウェブアプリの地図で読み、AI エージェントは同じファイルを MCP サーバーで読みます。人が承認した計画と、AI が作る計画が同じものになります。

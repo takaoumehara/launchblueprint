@@ -1,0 +1,1 @@
+{ "mcpServers": { "blueprint": { "command": "node", "args": ["${workspaceFolder}/bin/blueprint.mjs", "mcp"] } } }
