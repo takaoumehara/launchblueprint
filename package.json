@@ -1,0 +1,12 @@
+{
+  "name": "launchblueprint",
+  "private": true,
+  "description": "Blueprint: local-first map of product decisions. No dependencies at the root; mcp/ and app/ have their own.",
+  "scripts": {
+    "bootstrap": "node bin/blueprint.mjs bootstrap",
+    "serve": "node bin/blueprint.mjs serve",
+    "doctor": "node bin/blueprint.mjs doctor",
+    "test": "node bin/blueprint.mjs bootstrap && npm --prefix mcp test"
+  },
+  "engines": { "node": ">=20" }
+}

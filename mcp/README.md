@@ -1,5 +1,7 @@
 # Blueprint MCP
 
+> 新しい手順 / Preferred setup: [../docs/install.md](../docs/install.md) — `node bin/blueprint.mjs mcp` builds `dist/` itself if it is missing. 下の絶対パス方式は手動用。
+
 Blueprint のカタログ（技術・サービスの一覧）と参考資料を、どの AI からでも読めるようにする MCP サーバーです。
 A small MCP server that lets any AI session read Blueprint's catalog and reference files.
 

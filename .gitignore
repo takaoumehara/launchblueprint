@@ -9,3 +9,4 @@ backups/
 inspiration/
 *.png
 !ui/**/*.png
+mcp/dist/

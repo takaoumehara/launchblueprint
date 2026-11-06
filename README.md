@@ -1,5 +1,7 @@
 # Blueprint
 
+**Local workspace (AI proposes, you approve in the browser):** [docs/install.md](docs/install.md) · 日本語 [docs/install.ja.md](docs/install.ja.md)
+
 日本語：[README.ja.md](README.ja.md) · 5-minute start: [QUICKSTART.md](QUICKSTART.md)
 
 **Blueprint is a "how to build how-to-build".** Before a product is built, it lays out every decision the product will need, from idea to launch, operation, scale and exit, and attaches to each one the options, one recommendation with a reason, the free tiers and limits, who carries the liability, and what it depends on. People use it as a web app with a map. AI agents use the same files through an MCP server, so the plan a person approves is the plan the agent builds from.
