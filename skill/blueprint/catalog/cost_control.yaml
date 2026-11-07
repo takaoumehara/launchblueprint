@@ -136,3 +136,11 @@ lessons:
   check: "Do all metered API calls have a max-retry, a breaker and a daily ceiling?"
   see_also: [lc.n36, dp.ai-usage-caps]
   verified: false
+
+- id: cc.no-polling-without-producers
+  principle: "Before creating a polling or scheduled watch routine, confirm that someone or something other than you can change the watched target; if not, check only when you start work."
+  anti_pattern: "Running a frequent PR or status poll when only you create the changes."
+  why: "Zero-change checks ran dozens of times a day and burned usage quota until stopped."
+  check: "Can anyone or any system other than your own actions change what this routine watches?"
+  see_also: [cc.alert-50-80, cc.retry-with-breaker]
+  verified: false
