@@ -1063,6 +1063,15 @@ rules:
     check: "After upgrading, is the badge gone with no extra action?"
     source: 'product iteration 2026-10'
     date: '2026-10-28'
+  - id: case-media-fits-viewport
+    category: content
+    phase: [design, qa]
+    principle: "Before publishing case or detail pages, check every media item at desktop and phone widths for max display height and crop; keep main media within about one viewport and do not cover-crop so that content becomes unreadable."
+    anti_pattern: "Stretching assets to fill a frame, placing portrait video at unbounded height, or force-fitting landscape UI into a tall cover box."
+    why: "Post-publish visual audits found videos about two viewports tall and screens cropped so copy and controls were unreadable."
+    check: "On real desktop and phone screens, do the main media fit in about one viewport with no missing content?"
+    source: 'PO field lesson 2026-11-06'
+    date: '2026-11-06'
 # phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階（idea → launch → operate → scale → exit）、phase はその中のどの場面か。
 # MCP の ui_ux_checklist（lifecycle 引数）と reference/ui-ux.md の "Phase gates" に出る。全段階に少なくとも1つ置く。
 phase_gate_checks:
