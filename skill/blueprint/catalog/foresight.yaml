@@ -156,6 +156,128 @@ lessons:
   see_also: [fs.F, ho.bus-factor-two]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+
+- id: fs.sequential-gesture-seam-test
+  principle: 複数のジェスチャー（動作）を続けて使う操作は、前の動作の終わりから次の動作に移る「つなぎ目」を含む連続シナリオで試験し、実機で一度通してから直ったと言う。
+  anti_pattern: 各ジェスチャーを理想的な合成入力で単独に試験し、全部通ったので直ったと報告する。
+  why: 単独では通る動作が、直前の動作の状態が終わらないために実機では一度も発火しないことがある。合成テストの全件通過は、つなぎ目の不具合を見逃す。
+  check: 前の動作から次の動作へ移る連続シナリオのテストがあり、実機で一度通したか？
+  trigger: ジェスチャー・カメラ・センサー入力の機能を「直った」と報告する前
+  stage: launch
+  see_also: [gestures-have-visible-alternative]
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.soften-feedback-keep-floor
+  principle: 「弱めて」「控えめに」という見た目の指摘を実装に渡すときは、残す最低ライン（数値か参照画像）を一緒に書く。
+  anti_pattern: 「彩度を下げて」「線を細く」だけを渡し、実装側が安全側に倒して色や要素そのものを消す。
+  why: 抑える指示は「消す」に振れやすく、オーナーが実機で気づくまで1往復ぶん失う。
+  check: 抑える指示に、残すべき下限（例：色が見える範囲の割合、参照スクショ）が書いてあるか？
+  trigger: デザインの微調整を実装担当（人・AI）に渡す時
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.agent-file-handoff-shared-path
+  principle: エージェント間でファイルを渡すときは、受け手が開ける共有ファイルシステム上のパスを本文に書き、届いたことを確かめてから次へ進む。
+  anti_pattern: メッセージの添付機能に頼り、届いたかを確かめないまま次の作業に進む。
+  why: 添付のパスが途中で書き換えられて存在しない参照になることがあり、気づかないと同じ失敗を繰り返して時間を失う。
+  check: 渡したファイルは、受け手が開ける共有パスとして本文に書いてあり、受け手が開けたと確認できたか？
+  trigger: 複数のエージェントで画像・資料をやり取りする時
+  stage: operate
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.reused-spec-values-crosscheck
+  principle: 過去のデザイン資料の値（色コードなど）を流用する前に、名前・見本・値の3つが一致しているか照合する。
+  anti_pattern: 資料に書かれた数値をそのまま新しい提案や実装にコピーする。
+  why: 色名と見本は鮮やかな色なのに値は暗いグレー、という不一致が古い資料にはあり、そのまま使うと誤った値が広がる。
+  check: 流用する各値について、名前・見本・値の一致を目で確かめたか？
+  trigger: 旧ブランド資料・旧デザインファイルから値を引き継ぐ時
+  stage: idea
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.status-report-check-branch
+  principle: 他者に作業状態（未対応・対応済み）を伝える前に、対象ブランチの現物を検索または差分で確かめる。
+  anti_pattern: 前回のメモや記憶から「まだ直っていない」と報告し、あとで訂正を出す。
+  why: 既に直っていた修正を未対応と伝えると、相手の判断材料を誤らせて訂正の往復が発生する。
+  check: 状態報告の直前に、対象ブランチを文字列検索または差分で確認したか？
+  trigger: 進捗・状態をオーナーや他のエージェントに報告する時
+  stage: operate
+  see_also: [fs.stalled-pr-before-new-proposal]
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.handoff-promise-dispatch-now
+  principle: 重い作業を外部の実行役（別のAI・クラウドエージェント）に回すと言ったら、その場で発注（ブランチ名・成果物・完了条件つき）まで済ませるか、日時つきの予約を残す。
+  anti_pattern: 「次は外部に渡します」と宣言だけして、誰も起動せず、追跡もないまま期間をまたぐ。
+  why: 宣言だけのタスクは誰も起動しない。外部の利用枠は使わなければリセットで消えることがあり、余っていた枠を使い損ねる。
+  check: 「渡します」と言ったタスクごとに、発注済みのPR／セッションURLか、予約済みのリマインドがあるか？
+  trigger: 利用枠の節約などで作業を外部に回すと決めた時
+  stage: operate
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.legacy-host-cleanup-same-week
+  principle: ホスティングを移したら、旧ホストのドメイン割り当て・課金・通知先を同じ週に整理する。
+  anti_pattern: 本番を新ホストへ移したあと、旧ホストにドメインとカード課金を残したまま放置する。
+  why: 旧ホストは DNS が別を向いても警告や支払い失敗の通知を出し続けることがあり、本番障害かどうかの判断に手間と不安が生じる。少額の支払い失敗でもアカウント制限につながりうる。
+  check: 移行完了後、旧ホストに本番ドメインと有効な課金が残っていないか確認したか？
+  trigger: ホスティング・DB・ドメインの移行が終わった時
+  stage: operate
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.stalled-pr-before-new-proposal
+  principle: 新しい施策を提案する前に、同じ目的の未マージPR・決定済みの方針が残っていないか検索し、あればまずそれを完了させる。
+  anti_pattern: 会話の要約やメモリだけを頼りに、途中で止まった既存PRと同じ内容を新しい提案として出す。
+  why: 長い会話は要約で圧縮され、数日前の決定が落ちることがある。ドラフトPRは監視を止めると誰にも見られなくなり、進捗が止まる。
+  check: 提案の前に、オープン／ドラフトPRとその目的の決定記録を検索したか？
+  trigger: 新しい施策・改善案を出す前、定期監視を止める時
+  stage: operate
+  see_also: [fs.status-report-check-branch]
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.prepaid-balance-watch
+  principle: コンプライアンス登録や日常運用を止めうる前払いの外部サービスは、残高と自動補充を監視し、ゼロになる前に知らせる。残高不足による停止が原因の認証エラーは、鍵の誤りとは分けて扱う。
+  anti_pattern: 自動補充がある前提で残高を見ない。監視ジョブが認証エラーを返しても鍵の問題として扱い、口座停止に気づかない。
+  why: 自動補充が失敗して口座が停止すると、その上で動く監視も同じ認証エラーで黙って止まり、何日も気づかれない。
+  check: 前払いの外部サービスに、ゼロ前の残高通知があるか？停止が原因の認証エラーを鍵の誤りと分けて扱っているか？
+  trigger: 前払い・従量の外部サービス（メッセージ配信・API）を本番運用に入れる時
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.client-page-mobile-webkit-overflow
+  principle: クライアント向けのウェブページは、共有する前にモバイル幅で WebKit／iOS 相当の表示を試し、横方向のはみ出し（文書幅が画面幅を超えないこと）を機械的に確認する。
+  anti_pattern: デスクトップ幅や Chromium だけの見た目確認で「問題なし」として共有する。
+  why: デスクトップと Chromium で通ったページが、実機のモバイルで横にずれ、相手の画面写真で初めて見つかることがある。
+  check: 共有前に、モバイル幅（例：375/390/430px と 320px）の WebKit 表示で scrollWidth が clientWidth を超えていないと確認したか？
+  trigger: 提案ページ・プレビューURLをクライアントに送る前
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.backup-upload-path-limit
+  principle: 増えうるバックアップの送り方は、保存先の上限ではなく、使うアップロード道具の1オブジェクトあたりの上限に合わせ、分割送信できる経路を使う。全件が遠隔の中身と一致したときだけ成功と記録し、復元まで試す。
+  anti_pattern: 保存先の上限だけを見て送り、同じ失敗を繰り返す。コマンドの終了コードだけで成功とし、一部失敗でも成功の印を付ける。復元は試さない。
+  why: 育ったアーカイブが道具の上限を超えて連日送れず、一部失敗の日も成功と記録されていた。
+  check: 最大のバックアップは、使うアップロード経路の1オブジェクト上限に対して余裕があるか？部分失敗は成功と記録されていないか？復元を試して中身が一致したか？
+  trigger: バックアップを設計する時、バックアップ対象が大きくなった時
+  stage: operate
+  see_also: [dp.backup-verify-alert, dp.restore-test-monthly]
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.client-copy-plain-and-tappable
+  principle: クライアント向けの文案は、相手の視点の平易な言葉で書く。専門用語は先に平易な説明を置き、略語は展開してから括弧で添える。役割の見出しは「お店／あなた／私たち」ではなく依頼側と提供側の名前を入れる。詳細は開閉の奥に置き、その操作は背景と同色にせず押せる見た目にする。
+  anti_pattern: 社内用語や未展開の略語をそのまま出し、役割を代名詞で呼び、詳細の開閉が背景と同じ色で押せることに気づきにくい。
+  why: 分かりにくい文言は、平易な言い換えの往復を何度も生む。
+  check: 各見出しと本文は専門用語なしで読めるか？略語は展開されているか？役割は名前で分かるか？詳細の開閉は押せる見た目か？
+  trigger: 提案書・見積もり・進捗ページなどクライアントが読む画面を作る時
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
+- id: fs.consequential-choice-explicit-next
+  principle: 提案や契約の内容に影響する複数選択の流れでは、選んだだけでは次へ進まず、明示の「次へ」で進む。「戻る」と「次へ」は画面下部に並べて置く。
+  anti_pattern: 選んだ瞬間に次の画面へ進み、「戻る」が画面の端など「次へ」から離れた場所にだけある。
+  why: 選んだ内容を見直す前に進んでしまい、選び直しと確認がしづらい。
+  check: 結果に影響する複数選択で、選んだだけでは進まず、下部に「戻る」と「次へ」が並んでいるか？
+  trigger: 質問形式の見積もり・申込み・設定フローを作る時
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-13, generalized'
 procedures:
 - id: fs.A
   name_ja: 決定の先読み
