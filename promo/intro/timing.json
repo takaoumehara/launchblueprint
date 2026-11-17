@@ -1,0 +1,220 @@
+{
+  "video": {
+    "file": "intro-silent.mp4",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 86,
+    "audio": "none (narration to be muxed)"
+  },
+  "narration_words": 181,
+  "beats": [
+    {
+      "n": 1,
+      "id": "pain",
+      "title": "Pain",
+      "start": 0,
+      "end": 16,
+      "voice_start": 0.6,
+      "voice_end": 15.6,
+      "text": "AI can build a screen in minutes. Then, six weeks in, a store rule says your checkout must change. Money, rules, what depends on what: none of it was visible. I wish I'd known. Now you start over.",
+      "lines": [
+        {
+          "start": 0.6,
+          "end": 3.2,
+          "text": "AI can build a screen in minutes.",
+          "words": 7,
+          "shot": "A prompt is typed; a subscribe screen assembles itself."
+        },
+        {
+          "start": 3.4,
+          "end": 7.5,
+          "text": "Then, six weeks in, a store rule says your checkout must change.",
+          "words": 12,
+          "shot": "A week timeline runs to week 6; a store-review notice strikes the Subscribe button."
+        },
+        {
+          "start": 7.7,
+          "end": 11.9,
+          "text": "Money, rules, what depends on what: none of it was visible.",
+          "words": 11,
+          "shot": "Hidden categories fade in around the screen: brand, money, rules, tech, ethics, launch."
+        },
+        {
+          "start": 12.2,
+          "end": 13.5,
+          "text": "I wish I'd known.",
+          "words": 4,
+          "shot": "Hold. Slow push in."
+        },
+        {
+          "start": 13.8,
+          "end": 15.6,
+          "text": "Now you start over.",
+          "words": 4,
+          "shot": "The timeline rewinds to week 1; the screen un-builds."
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "id": "what",
+      "title": "What Blueprint is",
+      "start": 16,
+      "end": 29,
+      "voice_start": 16.4,
+      "voice_end": 28.6,
+      "text": "Blueprint is a map of your whole project, before you build. Every decision sits in its column: brand, screens, tech, money, rules, launch. One look, and you see it all.",
+      "lines": [
+        {
+          "start": 16.4,
+          "end": 20.6,
+          "text": "Blueprint is a map of your whole project, before you build.",
+          "words": 11,
+          "shot": "The screen collapses into one node; the hidden categories become columns; the whole map appears."
+        },
+        {
+          "start": 20.8,
+          "end": 25.4,
+          "text": "Every decision sits in its column: brand, screens, tech, money, rules, launch.",
+          "words": 12,
+          "shot": "Dependency lines draw in; each named column lights up as it is said."
+        },
+        {
+          "start": 25.7,
+          "end": 28.6,
+          "text": "One look, and you see it all.",
+          "words": 7,
+          "shot": "The full map, calm drift."
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "id": "how",
+      "title": "How it works",
+      "start": 29,
+      "end": 45,
+      "voice_start": 29.2,
+      "voice_end": 43.4,
+      "text": "Tap a decision. You get the options, one recommended pick, and the reason why. Compare it with the alternative we set aside. See what else changes if you switch. When it looks right, you approve it.",
+      "lines": [
+        {
+          "start": 29.2,
+          "end": 34,
+          "text": "Tap a decision. You get the options, one recommended pick, and the reason why.",
+          "words": 14,
+          "shot": "Zoom to Money. Tap \"Taking money\"; the decision panel opens with options, pick and reason."
+        },
+        {
+          "start": 34.3,
+          "end": 37.3,
+          "text": "Compare it with the alternative we set aside.",
+          "words": 8,
+          "shot": "Tap Compare; the set-aside option slides in beside the pick."
+        },
+        {
+          "start": 37.6,
+          "end": 40.4,
+          "text": "See what else changes if you switch.",
+          "words": 7,
+          "shot": "Dependent decisions light up on the map and in the panel."
+        },
+        {
+          "start": 40.7,
+          "end": 43.4,
+          "text": "When it looks right, you approve it.",
+          "words": 7,
+          "shot": "Tap Approve; the node turns orange: decided by you."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "id": "features",
+      "title": "Features",
+      "start": 45,
+      "end": 72,
+      "voice_start": 45.4,
+      "voice_end": 71.4,
+      "text": "Add categories as your project grows. Lines show real dependencies, so you see what breaks before it breaks. Lessons from real projects return as foresight: surprises others already hit. AI proposes. Nothing is final until a person says yes. And AI coding tools like Claude Code, Cursor and Codex read the same map, through a local MCP server or a YAML export.",
+      "lines": [
+        {
+          "start": 45.4,
+          "end": 48.3,
+          "text": "Add categories as your project grows.",
+          "words": 6,
+          "shot": "A new Accessibility column slides in and connects."
+        },
+        {
+          "start": 48.6,
+          "end": 53.1,
+          "text": "Lines show real dependencies, so you see what breaks before it breaks.",
+          "words": 12,
+          "shot": "Hover \"Where data lives\"; the ripple of dependent decisions traces in orange."
+        },
+        {
+          "start": 53.4,
+          "end": 58.4,
+          "text": "Lessons from real projects return as foresight: surprises others already hit.",
+          "words": 11,
+          "shot": "A foresight note attaches to App-store rules and links back to Taking money."
+        },
+        {
+          "start": 58.7,
+          "end": 62.7,
+          "text": "AI proposes. Nothing is final until a person says yes.",
+          "words": 10,
+          "shot": "Operations nodes fill as AI picks (white); one is approved (orange). Legend shown."
+        },
+        {
+          "start": 62.9,
+          "end": 67.6,
+          "text": "And AI coding tools like Claude Code, Cursor and Codex read the same map,",
+          "words": 14,
+          "shot": "Three tools connect to the local Blueprint MCP server; tool calls appear."
+        },
+        {
+          "start": 67.8,
+          "end": 71.4,
+          "text": "through a local MCP server or a YAML export.",
+          "words": 9,
+          "shot": "The pane switches to the exported project-map.yaml with the decision."
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "id": "close",
+      "title": "Close",
+      "start": 72,
+      "end": 86,
+      "voice_start": 72.6,
+      "voice_end": 81.8,
+      "text": "See the whole project before you build. Join the early prototype. Creativity Is Everywhere, LLC.",
+      "lines": [
+        {
+          "start": 72.6,
+          "end": 75.6,
+          "text": "See the whole project before you build.",
+          "words": 7,
+          "shot": "The map settles back, dimmed; the Blueprint mark appears."
+        },
+        {
+          "start": 76.2,
+          "end": 78.4,
+          "text": "Join the early prototype.",
+          "words": 4,
+          "shot": "A \"Join the early prototype\" button appears."
+        },
+        {
+          "start": 79,
+          "end": 81.8,
+          "text": "Creativity Is Everywhere, LLC.",
+          "words": 4,
+          "shot": "Company name in small mono type. Hold, then fade."
+        }
+      ]
+    }
+  ]
+}
