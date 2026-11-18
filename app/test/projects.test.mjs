@@ -37,7 +37,9 @@ test('committed project maps ship as /projects/<slug>.json and keep the status r
       assert.ok(core.STATUSES.includes(c.status), `${p.slug}/${c.topic}: ${c.status}`);
       if (c.status === 'decided') assert.equal(c.owner_confirmed, true, `${p.slug}/${c.topic}`);
       if (c.status === 'observed') assert.ok(c.evidence?.length, `${p.slug}/${c.topic}: evidence`);
-      if (c.status === 'ai_selected' && c.kind === 'choose') { assert.ok(c.considered.length >= 2 && c.ai_pick && !c.pick, `${p.slug}/${c.topic}`); assert.equal(c.profile, m.preference_profile); }
+      if (c.status === 'ai_selected' && c.kind === 'choose') { assert.ok(c.ai_pick && !c.pick, `${p.slug}/${c.topic}`); assert.equal(c.profile, m.preference_profile); }
+      // compact on disk: the scored field is derived at read time, never stored
+      for (const k of core.DERIVED_KEYS) assert.equal(c[k], undefined, `${p.slug}/${c.topic}: ${k} stored on disk`);
     }
     const a = core.deriveArchitecture(n, idx);
     for (const e of a.edges) if (e.state === 'implemented') assert.ok(e.evidence?.length, `${p.slug}: ${e.from}→${e.to} implemented without evidence`);
@@ -60,4 +62,38 @@ test('switching the profile in the browser re-scores AI picks and keeps owner de
 
 test('every screen string exists in JA and EN', () => {
   assert.deepEqual(Object.keys(M.ja).sort(), Object.keys(M.en).sort());
+});
+
+test('every record shows its full scored field — observed and deferred included — without changing status or pick', () => {
+  const m = core.normalizeMap(JSON.parse(fs.readFileSync(new URL('../public/projects/blueprint.json', import.meta.url), 'utf8')), idx);
+  const prof = D.profiles.find(p => p.id === m.preference_profile);
+  const before = JSON.stringify(m);
+  const seen = new Set();
+  for (const c of m.choices.filter(c => c.kind === 'choose')) {
+    const x = core.expandChoice(m, c.topic, idx, prof);
+    seen.add(c.status);
+    assert.equal(x.status, c.status, c.topic); assert.equal(x.pick, c.pick, c.topic); assert.equal(x.owner_confirmed, c.owner_confirmed, c.topic);
+    assert.ok(x.considered.length >= 2, `${c.topic}: field`);
+    for (const r of x.considered) for (const k of core.CRITERIA) assert.ok(r.scores[k].evidence && r.scores[k].basis, `${c.topic}/${r.option}/${k}`);
+    assert.ok(x.reason, `${c.topic}: why`);
+    assert.equal(x.scored_under, prof.id);
+    const anchor = c.pick || (c.status === 'deferred' ? x.scored_pick : c.ai_pick);
+    const others = x.considered.map(r => r.option).filter(o => o !== anchor);
+    assert.deepEqual(x.rejected.map(r => r.option).sort(), (c.status === 'observed' && !c.pick ? x.considered.map(r => r.option) : others).sort(), `${c.topic}: a reason for every alternative`);
+    for (const r of x.rejected) assert.ok(r.why.length > 5, `${c.topic}/${r.option}`);
+  }
+  for (const s of ['observed', 'deferred', 'ai_selected']) assert.ok(seen.has(s), `fixture covers ${s}`);
+  assert.equal(JSON.stringify(m), before, 'expanding never mutates the map');
+  // hosting is observed (Vercel) and auth is deferred: both still show the whole field
+  const host = core.expandChoice(m, 'hosting', idx, prof); assert.equal(host.status, 'observed'); assert.equal(host.pick, 'host.vercel'); assert.ok(host.considered.length >= 3);
+  assert.ok(host.linkages.length > 0, 'observed pick has linkages');
+  const auth = core.expandChoice(m, 'auth', idx, prof); assert.equal(auth.status, 'deferred'); assert.equal(auth.pick, ''); assert.ok(auth.considered.length >= 10 && auth.scored_pick);
+});
+
+test('architecture has six columns and keeps deferred parts visible', () => {
+  assert.deepEqual(Object.keys(core.ARCH_ROLES), ['frontend', 'backend', 'data', 'auth', 'payments', 'third_party']);
+  const m = core.normalizeMap(JSON.parse(fs.readFileSync(new URL('../public/projects/blueprint.json', import.meta.url), 'utf8')), idx);
+  const a = core.deriveArchitecture(m, idx);
+  for (const r of ['auth', 'payments']) { const n = a.nodes.filter(x => x.role === r); assert.equal(n.length, 1, r); assert.equal(n[0].state, 'deferred'); }
+  assert.ok(!a.edges.some(e => ['auth', 'payments'].includes(e.from) || ['auth', 'payments'].includes(e.to)), 'no link drawn to a deferred part');
 });

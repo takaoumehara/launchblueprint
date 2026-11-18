@@ -43,7 +43,7 @@ async function loadMap(slug) {
   if (!cache.has(slug)) { const r = await fetch(`/projects/${slug}.json`); if (!r.ok) return null; cache.set(slug, await r.json()); }
   return { map: core.normalizeMap(structuredClone(cache.get(slug)), IDX), where: 'bundled' };
 }
-function saveLocal(slug, map) { const all = readLocal(); all[slug] = map; writeLocal(all); }
+function saveLocal(slug, map) { const all = readLocal(); all[slug] = core.compactMap(map); writeLocal(all); }
 function dropLocal(slug) { const all = readLocal(); delete all[slug]; writeLocal(all); }
 const counts = m => Object.fromEntries(core.STATUSES.map(s => [s, m.choices.filter(c => c.status === s).length]));
 
@@ -155,10 +155,15 @@ function viewMap(slug, got, sel) {
 // ---------- node detail ----------
 const fmt = n => typeof n === 'number' ? n.toFixed(2) : '—';
 function detailHtml(slug, got, topic, closable) {
-  const m = got.map; const c = m.choices.find(x => x.topic === topic); const t = T(topic); const cat = homeCat(topic);
-  const prof = profileOf(c.profile || m.preference_profile);
-  const chosen = core.chosenOf(c) || c.ai_pick;
-  const f = IDX.F[chosen];
+  const m = got.map; const t = T(topic); const cat = homeCat(topic);
+  // every record, whatever its status, is shown with its scored field under the map's active profile (display only:
+  // status, pick and owner fields come from the stored record and are never changed here)
+  const prof = profileOf(m.preference_profile);
+  const c = core.expandChoice(m, topic, IDX, prof);
+  const recorded = c.profile && c.profile !== prof.id ? profileOf(c.profile) : null;
+  const chosen = c.status === 'observed' || c.status === 'decided' ? c.pick : c.status === 'deferred' || c.status === 'open' ? '' : (core.chosenOf(c) || c.ai_pick);
+  const mark2 = chosen || c.scored_pick;
+  const f = IDX.F[mark2];
   const head = {
     observed: tr('p.chosen.observed'), decided: tr('p.chosen.decided', c.decided_by || 'owner', c.confirmed_at || c.date || ''), ai_selected: tr('p.chosen.ai', profLabel(prof)),
     gap: tr('p.chosen.gap'), deferred: tr('p.chosen.deferred'), open: tr('p.chosen.open'),
@@ -167,9 +172,12 @@ function detailHtml(slug, got, topic, closable) {
   const considered = (c.considered || []).filter(x => x.scores);
   const crit = core.CRITERIA;
   const critName = k => esc((ctx.D.criteria.find(x => x.id === k) || {})[en() ? 'label_en' : 'label_ja'] || k);
-  const table = considered.length ? `<div class="mono m3 dh">${tr('p.alts', considered.length, profLabel(prof))}</div>
-    <div class="tscroll"><table class="alt"><thead><tr><th>#</th><th>${tr('p.option')}</th><th>${tr('p.total')}</th>${crit.map(k => `<th title="${critName(k)}">${esc(k.replace('_', '-'))}<br><span class="m3">×${prof.weights[k]}</span></th>`).join('')}<th>${tr('p.source')}</th></tr></thead><tbody>
-    ${considered.map(x => `<tr class="${x.option === chosen ? 'win' : ''}"><td class="mono">${x.rank}</td><td><b>${esc(short(x.name))}</b>${x.in_catalog === false ? ` <span class="m3">${tr('p.notincat')}</span>` : ''}</td><td class="mono">${fmt(x.total)}</td>
+  const stack = `<ol class="alt-stack">${considered.map(x => `<li class="${x.option === mark2 ? 'win' : ''}"><div class="ash"><span class="mono m3">${x.rank}</span><b>${esc(short(x.name))}</b>${x.in_catalog === false ? ` <span class="m3">${tr('p.notincat')}</span>` : ''}<span class="mono tot">${fmt(x.total)}</span></div>
+      <div class="asc">${crit.map(k => { const s = x.scores[k]; const g = s.basis === 'gap'; return `<span class="cr ${g ? 'isgap' : ''}" title="${esc(s.evidence)}"><i>${esc(k.replace('_', '-'))} <span class="m3">×${prof.weights[k]}</span></i><em>${g ? tr('p.gap.cell') : fmt(s.score)}${s.unverified ? '<sup>?</sup>' : ''}</em><s style="--v:${g ? 0 : s.score}"></s></span>`; }).join('')}</div>
+      <div class="mono m3 asv">${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${x.verified ? tr('p.verified') : tr('p.unverified')}</a>` : tr('p.unverified')}${x.checked ? ' · ' + esc(x.checked) : ''}</div></li>`).join('')}</ol>`;
+  const table = considered.length ? `<div class="mono m3 dh">${tr('p.alts', considered.length, profLabel(prof))}</div>${stack}
+    <div class="tscroll alt-table"><table class="alt"><thead><tr><th>#</th><th>${tr('p.option')}</th><th>${tr('p.total')}</th>${crit.map(k => `<th title="${critName(k)}">${esc(k.replace('_', '-'))}<br><span class="m3">×${prof.weights[k]}</span></th>`).join('')}<th>${tr('p.source')}</th></tr></thead><tbody>
+    ${considered.map(x => `<tr class="${x.option === mark2 ? 'win' : ''}"><td class="mono">${x.rank}</td><td><b>${esc(short(x.name))}</b>${x.in_catalog === false ? ` <span class="m3">${tr('p.notincat')}</span>` : ''}</td><td class="mono">${fmt(x.total)}</td>
       ${crit.map(k => { const s = x.scores[k]; return `<td class="mono ${s.basis === 'gap' ? 'isgap' : ''}" title="${esc(s.evidence)}">${s.basis === 'gap' ? tr('p.gap.cell') : fmt(s.score)}${s.unverified ? '<sup>?</sup>' : ''}</td>`; }).join('')}
       <td class="mono m2">${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${x.verified ? tr('p.verified') : tr('p.unverified')}</a>` : tr('p.unverified')}${x.checked ? ' ' + esc(x.checked) : ''}</td></tr>`).join('')}</tbody></table></div>
     <details class="ev"><summary class="mono m2">${tr('p.evidence.each')}</summary>${considered.map(x => `<div class="evo"><b>${esc(x.name)}</b><dl>${crit.map(k => `<dt>${critName(k)}</dt><dd class="${x.scores[k].basis === 'gap' ? 'm3' : ''}">${fmt(x.scores[k].score)} · ${esc(x.scores[k].basis)} — ${esc(x.scores[k].evidence)}</dd>`).join('')}${(x.bonus || []).map(b => `<dt>+${b.add}</dt><dd>${esc(b.why)}</dd>`).join('')}</dl></div>`).join('')}</details>` : '';
@@ -183,14 +191,16 @@ function detailHtml(slug, got, topic, closable) {
     <div class="dstat">${mark(c.status)} <span>${esc(ST()[c.status])}</span></div>
     <div class="dchosen"><div class="mono m3">${head}</div>
       <div class="nm">${esc(c.observed_as || (t.kind === 'checklist' ? tr('p.items', t.options.length) : optName(chosen)) || '—')}</div>
+      ${!chosen && c.scored_pick && t.kind === 'choose' ? `<div class="m2">${tr('p.would', esc(short(optName(c.scored_pick))))}</div>` : ''}
       ${reason ? `<div class="m1">${esc(reason)}</div>` : ''}${c.agent_reason ? `<div class="m2">${tr('p.agent.reason')}${esc(c.agent_reason)}</div>` : ''}</div>
     <dl class="meta">
-      <dt>${tr('p.profile')}</dt><dd>${esc(profLabel(prof))} <span class="m3 mono">${esc(prof.id)}</span></dd>
+      <dt>${tr('p.profile')}</dt><dd>${esc(profLabel(prof))} <span class="m3 mono">${esc(prof.id)}</span>${recorded ? `<br><span class="m2">${tr('p.recorded.profile', esc(profLabel(recorded)))}</span>` : ''}${t.kind === 'choose' && !['ai_selected', 'gap'].includes(c.status) ? `<br><span class="m3">${tr('p.scored.under')}</span>` : ''}</dd>
       ${f ? `<dt>${tr('p.source')}</dt><dd>${f.verified ? tr('p.verified') : `<b class="warn">${tr('p.unverified')}</b>`}${f.checked ? ' · ' + esc(f.checked) : ''}${f.url ? ` · <a href="${esc(f.url)}" target="_blank" rel="noopener">${tr('official.page')} ↗</a>` : ''}</dd>` : ''}
       ${c.date ? `<dt>${tr('p.date')}</dt><dd class="mono">${esc(c.date)}</dd>` : ''}
       <dt>${tr('p.by')}</dt><dd>${esc(c.status === 'observed' ? (c.source || 'repo') : c.decided_by || '—')}</dd>
     </dl>
     ${c.gap_note ? `<div class="gapbox"><span class="flag">${tr('p.gap.tag')}</span> ${esc(c.gap_note)}</div>` : ''}
+    ${c.rescore_note ? `<div class="gapbox"><span class="flag drift">≠</span> ${tr('p.rescore.note', esc(short(optName(c.scored_pick))))}</div>` : ''}
     ${c.profile_drift ? `<div class="gapbox"><span class="flag drift">≠</span> ${tr('p.drift.one', esc(short(optName(c.profile_drift.would_pick))))}</div>` : ''}
     ${(c.evidence || []).length ? `<div class="mono m3 dh">${tr('p.evidence')}</div><ul class="evl">${c.evidence.map(e => `<li><span class="mono m2">${esc(e.kind)}</span> <code>${esc(e.path || e.url || '')}${e.line ? ':' + e.line : ''}</code> — ${esc(e.note)}</li>`).join('')}</ul>` : ''}
     ${(c.linkages || []).length ? `<div class="mono m3 dh">${tr('p.links')}</div><ul class="evl">${c.linkages.map(l => `<li><span class="mono m2">${esc(l.kind.replace(/_/g, ' '))}</span> ${esc(l.why)}${l.verified === false ? ` <span class="m3">(${tr('p.unverified')})</span>` : ''}</li>`).join('')}</ul>` : ''}
@@ -200,7 +210,7 @@ function detailHtml(slug, got, topic, closable) {
     ${hist.length ? `<details class="ev"><summary class="mono m2">${tr('p.history', hist.length)}</summary><ul class="evl">${hist.map(h => `<li class="mono m2" style="text-transform:none">${esc(h.date)} · ${esc(h.by || '')} · ${esc(h.change)}${h.to?.status ? ' → ' + esc(h.to.status) : ''}${h.note ? ' — ' + esc(h.note) : ''}</li>`).join('')}</ul></details>` : ''}
     ${editable ? `<div class="dacts">
       ${t.kind === 'choose' && c.status !== 'decided' && chosen && c.status !== 'observed' ? `<button class="btn acc" data-act="approve">${tr('p.approve', short(optName(chosen)))}</button>` : ''}
-      ${t.kind === 'choose' && considered.length > 1 && c.status !== 'observed' ? `<label class="mono m3" for="other-${topic}">${tr('p.other')}</label><select id="other-${topic}" data-act="other"><option value="">—</option>${considered.filter(x => x.option !== chosen && x.in_catalog !== false).map(x => `<option value="${esc(x.option)}">${esc(short(x.name))} (${fmt(x.total)})</option>`).join('')}</select>` : ''}
+      ${t.kind === 'choose' && considered.length > 0 && c.status !== 'observed' ? `<label class="mono m3" for="other-${topic}">${tr('p.other')}</label><select id="other-${topic}" data-act="other"><option value="">—</option>${considered.filter(x => x.option !== chosen && x.in_catalog !== false).map(x => `<option value="${esc(x.option)}">${esc(short(x.name))} (${fmt(x.total)})</option>`).join('')}</select>` : ''}
       ${t.kind === 'checklist' && c.status !== 'decided' ? `<button class="btn line" data-act="approve-all">${tr('p.approve.all')}</button>` : ''}
       ${c.status === 'decided' ? `<button class="btn line" data-act="undo">${tr('p.undo')}</button>` : ''}
       ${c.status !== 'deferred' && c.status !== 'observed' && c.status !== 'decided' ? `<button class="btn line" data-act="defer">${tr('p.defer')}</button>` : ''}
@@ -250,22 +260,23 @@ function viewArch(slug, got) {
   const render = () => {
     const a = core.deriveArchitecture(got.map, IDX);
     const roles = a.roles;
-    const col = r => a.nodes.filter(n => n.role === r && n.state !== 'deferred');
-    const deferred = a.nodes.filter(n => n.state === 'deferred');
-    const nodeHtml = n => `<a class="ab ab-${n.state}" data-id="${esc(n.id)}" ${n.topic ? `href="#/p/${slug}/n/${n.topic}"` : ''} title="${esc(tr('p.arch.st.' + n.state))}">
-      <span class="mono m3">${esc(n.topic ? ctx.lbl(T(n.topic)) : n.id)}</span><b>${esc(short(n.name) || tr('p.arch.none'))}</b><small class="mono">${esc(tr('p.arch.st.' + n.state))}${n.evidence.length ? ' · ' + tr('p.arch.ev', n.evidence.length) : ''}</small></a>`;
+    // six columns; deferred parts stay visible (muted) so the owner sees what was left out on purpose
+    const col = r => a.nodes.filter(n => n.role === r);
+    const conn = n => a.edges.filter(e => e.from === n.id || e.to === n.id);
+    const nodeHtml = n => `<div class="anode"><a class="ab ab-${n.state}" data-id="${esc(n.id)}" ${n.topic ? `href="#/p/${slug}/n/${n.topic}"` : ''} title="${esc(tr('p.arch.st.' + n.state))}">
+      <span class="mono m3">${esc(n.topic ? ctx.lbl(T(n.topic)) : n.id)}</span><b>${esc(short(n.name) || (n.state === 'deferred' ? tr('p.arch.st.deferred') : tr('p.arch.none')))}</b><small class="mono">${esc(tr('p.arch.st.' + n.state))}${n.evidence.length ? ' · ' + tr('p.arch.ev', n.evidence.length) : ''}</small></a>
+      <ul class="aconn">${conn(n).map(e => { const other = e.from === n.id ? e.to : e.from; return `<li><i class="lk lk-${e.state}"></i><span>${e.from === n.id ? '→' : '←'} ${esc(nm(a, other))}<small>${esc(e.label)} · ${esc(tr('p.arch.st.' + e.state))}</small></span></li>`; }).join('') || `<li class="m3 none">${tr('p.arch.noconn')}</li>`}</ul></div>`;
     const impl = a.edges.filter(e => e.state === 'implemented').length;
     ctx.app.innerHTML = `<section class="page wide">${header(slug, got, 'arch')}
       <p class="m1 alead">${tr('p.arch.lead')}</p>
-      <div class="plg mono m2"><span><i class="lk lk-implemented"></i> ${tr('p.arch.st.implemented')}</span><span><i class="lk lk-proposed"></i> ${tr('p.arch.st.proposed')}</span><span><i class="abx ab-gap"></i> ${tr('p.arch.st.gap')}</span><span><i class="abx ab-open"></i> ${tr('p.arch.st.open')}</span><span>${tr('p.arch.count', impl, a.edges.length - impl)}</span></div>
+      <div class="plg mono m2"><span><i class="lk lk-implemented"></i> ${tr('p.arch.st.implemented')}</span><span><i class="lk lk-proposed"></i> ${tr('p.arch.st.proposed')}</span><span><i class="abx ab-gap"></i> ${tr('p.arch.st.gap')}</span><span><i class="abx ab-open"></i> ${tr('p.arch.st.open')}</span><span><i class="abx ab-deferred"></i> ${tr('p.arch.st.deferred')}</span><span>${tr('p.arch.count', impl, a.edges.length - impl)}</span></div>
       <div class="arch" id="arch"><svg id="alinks" aria-hidden="true"></svg>
         ${roles.map(r => `<div class="acol"><div class="mono lh">${tr('p.role.' + r)}</div>${col(r).map(nodeHtml).join('') || `<div class="m3 small">—</div>`}</div>`).join('')}
       </div>
-      ${deferred.length ? `<p class="m2 small">${tr('p.arch.deferred')}${deferred.map(n => `<a href="#/p/${slug}/n/${n.topic}">${esc(ctx.lbl(T(n.topic)))}</a>`).join('、')}</p>` : ''}
       <div class="mono m3 dh">${tr('p.arch.links')}</div>
       <div class="tscroll"><table class="alt links"><thead><tr><th>${tr('p.arch.from')}</th><th>${tr('p.arch.to')}</th><th>${tr('p.arch.what')}</th><th>${tr('p.arch.state')}</th><th>${tr('p.arch.basis')}</th></tr></thead><tbody>
-      ${a.edges.map(e => `<tr><td>${esc(nm(a, e.from))}</td><td>${esc(nm(a, e.to))}</td><td>${esc(e.label)}</td><td class="mono"><i class="lk lk-${e.state}"></i> ${esc(tr('p.arch.st.' + e.state))}</td>
-        <td class="m2">${e.basis === 'evidence' ? (e.evidence || []).map(x => `<code>${esc(x.path || x.url || '')}</code> ${esc(x.note)}`).join('<br>') : tr('p.arch.pattern')}${e.note ? `<br><span class="m3">${esc(e.note)}</span>` : ''}</td></tr>`).join('')}</tbody></table></div>
+      ${a.edges.map(e => `<tr><td data-l="${tr('p.arch.from')}">${esc(nm(a, e.from))}</td><td data-l="${tr('p.arch.to')}">${esc(nm(a, e.to))}</td><td data-l="${tr('p.arch.what')}">${esc(e.label)}</td><td class="mono st" data-l="${tr('p.arch.state')}"><i class="lk lk-${e.state}"></i> ${esc(tr('p.arch.st.' + e.state))}</td>
+        <td class="m2" data-l="${tr('p.arch.basis')}">${e.basis === 'evidence' ? (e.evidence || []).map(x => `<code>${esc(x.path || x.url || '')}</code> ${esc(x.note)}`).join('<br>') : tr('p.arch.pattern')}${e.note ? `<br><span class="m3">${esc(e.note)}</span>` : ''}</td></tr>`).join('')}</tbody></table></div>
     </section>`;
     bindHeader(slug, got, render);
     drawLinks(a);

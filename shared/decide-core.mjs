@@ -312,7 +312,8 @@ export function decide({ topic, idx, profile, intake = {}, chosen = [], evidence
   for (const r of ranked) if (r.gaps.length) gap_notes.push(`${r.option}: no evidence for ${r.gaps.join(', ')}`);
   if (pick && !pick.verified) gap_notes.push(`${pick.option}: price/limit source verified:false`);
   const why = pick ? whyWon(pick, ranked, profile) : { en: '', ja: '' };
-  return { ...base, status: ranked.length < 2 || known < 2 ? 'gap' : 'ai_selected',
+  const thin = ranked.length < 2 || known < 2;
+  return { ...base, status: thin ? 'gap' : 'ai_selected', ...(thin ? { gap_note: gap_notes[0], gap_auto: true } : {}),
     ai_pick: pick?.option ?? '', pick: '', reason: why.en, reason_ja: why.ja,
     considered: ranked.map(r => ({ option: r.option, name: r.name, rank: r.rank, total: r.total, from: r.from, in_catalog: r.in_catalog, verified: r.verified, checked: r.checked, url: r.url,
       scores: Object.fromEntries(CRITERIA.map(c => [c, { score: r3(r.scores[c].score), basis: r.scores[c].basis, evidence: r.scores[c].evidence, ...(r.scores[c].unverified ? { unverified: true } : {}) }])),
@@ -324,6 +325,70 @@ export function decide({ topic, idx, profile, intake = {}, chosen = [], evidence
     verified: !!pick?.verified, checked: pick?.checked ?? null,
     gaps: pick ? pick.gaps : [], gap_notes };
 }
+
+// ---------- any record, any status: the scored field for display ----------
+// Keys that are always re-derived from the catalog + the map + the profile, so they are not stored on disk.
+export const DERIVED_KEYS = ['considered', 'field_size', 'gaps', 'gap_notes', 'to_check'];
+export function compactChoice(c) {
+  const o = { ...c };
+  for (const k of DERIVED_KEYS) delete o[k];
+  for (const k of Object.keys(o)) if (o[k] === undefined) delete o[k];
+  return o;
+}
+export const compactMap = m => ({ ...m, choices: (m.choices || []).map(compactChoice) });
+const KEPT = { observed: 'observed in the repository', decided: 'the owner decided it' };
+// Score one topic for one record of a map, whatever its status. Never changes status, pick or owner fields:
+// the result says which option the record stands on (anchor), the field ranked under `profile`, why the anchor
+// stands, a short reason for every other option, linkages of the anchor and the gaps.
+export function scoreRecord(c, map, idx, profile, { date } = {}) {
+  const t = idx.T[c.topic]; if (!t) throw new Error(`unknown topic ${c.topic}`);
+  const chosen = partsOf(map).filter(p => p.topic !== c.topic);
+  const rec = decide({ topic: c.topic, idx, profile, intake: map.profile || {}, chosen, evidence: c.overrides || [], extra_options: c.extra_options || [], date });
+  if (t.kind !== 'choose') return { ...rec, anchor: '', scored_pick: '', scored_under: profile.id };
+  const winner = rec.considered[0];
+  const anchorId = (c.status === 'observed' || c.status === 'decided') ? (c.pick || '') : (c.ai_pick || rec.ai_pick);
+  const anchor = rec.considered.find(r => r.option === anchorId) || null;
+  const full = scoreTopic({ topic: c.topic, idx, profile, intake: map.profile || {}, chosen, evidence: c.overrides || [], extra_options: c.extra_options || [] }).ranked;
+  const row = id => full.find(r => r.option === id);
+  const kept = KEPT[c.status];
+  let reason = rec.reason, reason_ja = rec.reason_ja;
+  if (kept && !anchor) { reason = `Kept as ${kept}${c.observed_as ? `: ${c.observed_as}` : ''} — not a catalog option. Scored winner under ${profile.id}: ${winner?.name ?? '—'} (${winner?.total.toFixed(2)}).`; reason_ja = `${c.status === 'observed' ? 'リポジトリで確認した事実' : 'オーナーの決定'}として残す（カタログ外）。${profile.id} での最高点は ${winner?.name ?? '—'}（${winner?.total.toFixed(2)}）。`; }
+  else if (kept && anchor && anchor.option !== winner.option) { reason = `Kept because it is ${kept}. Under ${profile.id} it scores ${anchor.total.toFixed(2)}; ${winner.name} scores higher (${winner.total.toFixed(2)}) — worth a review.`; reason_ja = `${c.status === 'observed' ? 'リポジトリで確認した事実' : 'オーナーの決定'}なので残す。${profile.id} では ${anchor.total.toFixed(2)}、${winner.name} が ${winner.total.toFixed(2)} で上（見直し候補）。`; }
+  else if (kept && anchor) { reason = `${kept[0].toUpperCase() + kept.slice(1)}, and also the top score under ${profile.id}. ` + rec.reason; reason_ja = `${c.status === 'observed' ? 'リポジトリで確認した事実' : 'オーナーの決定'}で、${profile.id} でも最高点。` + rec.reason_ja; }
+  else if (c.status === 'deferred') { reason = `Deferred${c.reason ? ` (${c.reason})` : ''}. If it is picked later, the top score under ${profile.id} is ${winner?.name ?? '—'} (${winner?.total.toFixed(2)}).`; reason_ja = `見送り${c.reason ? `（${c.reason}）` : ''}。あとで選ぶなら ${profile.id} での最高点は ${winner?.name ?? '—'}（${winner?.total.toFixed(2)}）。`; }
+  const A = anchor ? row(anchor.option) : null;
+  const rejected = rec.considered.filter(r => anchor ? r.option !== anchor.option : kept ? true : r.option !== winner?.option).map(r => {
+    const R = row(r.option);
+    if (!A && kept) return { option: r.option, why: `catalog alternative (${r.total.toFixed(2)} under ${profile.id}); the repo uses ${c.observed_as || 'something else'}` };
+    const base = A || row(winner.option);
+    if (Math.abs(R.total - base.total) < 0.005) return { option: r.option, why: `ties at ${base.total.toFixed(2)} under ${profile.id}; not taken because it is ${kept || 'not the recorded pick'}` };
+    if (R.total > base.total) return { option: r.option, why: `scores higher (${R.total.toFixed(2)} vs ${base.total.toFixed(2)}) under ${profile.id}; not taken because it is ${kept || 'not the recorded pick'}` };
+    return { option: r.option, why: whyRejected(R, base, profile) };
+  });
+  const links = A ? A.links : (kept ? [] : row(winner.option)?.links || []);
+  const drift = kept && anchorId && winner && winner.option !== anchorId ? { profile: profile.id, would_pick: winner.option, note: 'kept: owner decision or observed fact; review' } : null;
+  const g = (anchor || winner)?.gaps || [];
+  const f = idx.F[anchorId] || null;
+  return { ...rec, anchor: anchor?.option || '', scored_pick: winner?.option || '', scored_under: profile.id, reason, reason_ja, rejected, linkages: links,
+    gaps: g, verified: f ? f.verified : rec.verified, checked: f ? f.checked : rec.checked, profile_drift: drift };
+}
+// One record with its full field attached, for display or an API answer. Stored fields win where they mean
+// something the score cannot know (status, pick, owner fields, an agent's own reason and rejected list for ai_selected).
+export function expandChoice(map, topic, idx, profile, opts = {}) {
+  const c = (map.choices || []).find(x => x.topic === topic); if (!c) return null;
+  const s = scoreRecord(c, map, idx, profile, opts);
+  const own = c.status === 'ai_selected' || (c.status === 'gap' && !c.gap_note);
+  const out = { ...c, considered: s.considered, field_size: s.field_size, gaps: s.gaps, gap_notes: s.gap_notes, scored_pick: s.scored_pick, scored_under: s.scored_under,
+    reason: own && c.reason ? c.reason : s.reason, reason_ja: own && c.reason_ja ? c.reason_ja : s.reason_ja,
+    rejected: own && (c.rejected || []).length ? c.rejected : s.rejected, linkages: (c.linkages || []).length ? c.linkages : s.linkages,
+    verified: c.verified ?? s.verified, checked: c.checked && !Array.isArray(c.checked) ? c.checked : s.checked };
+  if (c.kind === 'checklist' || idx.T[topic].kind === 'checklist') { out.to_check = idx.T[topic].options; out.checked = Array.isArray(c.checked) ? c.checked : []; }
+  if (s.profile_drift && !c.profile_drift) out.profile_drift = s.profile_drift;
+  if (c.status === 'ai_selected' && c.ai_pick && s.scored_pick && c.ai_pick !== s.scored_pick) out.rescore_note = `with every other part of the map in place, ${s.scored_pick} now scores highest; re-run decide to update`;
+  if (!out.profile) out.profile = profile.id;
+  return out;
+}
+export const expandMap = (map, idx, profile, opts) => ({ ...map, choices: (map.choices || []).map(c => expandChoice(map, c.topic, idx, profile, opts)) });
 
 // ---------- project maps ----------
 const depthOf = (topic, idx, seen = new Set()) => { const t = idx.T[topic]; if (!t || seen.has(topic)) return 0; seen.add(topic); return t.depends_on.length ? 1 + Math.max(...t.depends_on.map(d => depthOf(d, idx, seen))) : 0; };
@@ -349,26 +414,29 @@ export function rescoreMap(map, idx, profile, { date, only } = {}) {
   const order = m.choices.map((c, i) => [c, i]).sort((a, b) => depthOf(a[0].topic, idx) - depthOf(b[0].topic, idx) || a[1] - b[1]).map(x => x[0]);
   const chosen = [...fixed]; const changes = [];
   for (const c of order) {
-    if (c.status === 'deferred') continue;
     if (only && !only.includes(c.topic)) { const o = chosenOf(c); if (o && !fixed.some(f => f.topic === c.topic) && HAS_PART.has(c.status)) chosen.push({ topic: c.topic, option: o }); continue; }
-    const rec = decide({ topic: c.topic, idx, profile, intake: m.profile || {}, chosen, date });
-    if (c.status === 'observed' || c.status === 'decided') {
-      if (c.kind === 'choose' && rec.ai_pick && c.pick && rec.ai_pick !== c.pick) c.profile_drift = { profile: profile.id, would_pick: rec.ai_pick, note: 'kept: owner decision or observed fact; review' };
-      else delete c.profile_drift;
-      continue;
-    }
+    if (c.status === 'observed' || c.status === 'decided' || c.status === 'deferred') continue;   // verdicts attached below
+    const rec = decide({ topic: c.topic, idx, profile, intake: m.profile || {}, chosen, evidence: c.overrides || [], extra_options: c.extra_options || [], date });
     const before = c.ai_pick;
     // an agent's own evidence and gap notes on this record are kept; the scoring is replaced
     // a gap someone flagged by hand (gap_note: "not found in the repo") stays a gap; the scored pick is kept as a suggestion
-    const flagged = c.status === 'gap' && c.gap_note;
-    Object.assign(c, rec, { gap_note: c.gap_note, evidence: c.evidence }, flagged ? { status: 'gap' } : {});
-    if (c.gap_note === undefined) delete c.gap_note;
+    const flagged = c.status === 'gap' && c.gap_note && !c.gap_auto;
+    const keep = flagged ? { gap_note: c.gap_note } : {};
+    for (const k of ['gap_note', 'gap_auto']) delete c[k];
+    Object.assign(c, compactChoice(rec), keep, { evidence: c.evidence }, flagged ? { status: 'gap' } : {});
     if (c.evidence === undefined) delete c.evidence;
     if (c.kind === 'choose' && before !== c.ai_pick) changes.push({ topic: c.topic, from: before || null, to: c.ai_pick });
     if (c.kind === 'choose' && c.ai_pick && c.status === 'ai_selected') chosen.push({ topic: c.topic, option: c.ai_pick });
   }
+  // observed / decided / deferred keep status and pick; once every AI pick is in place, store the scored field's
+  // verdict with them (winner, rejected reasons, drift). considered[] itself is derived when the map is read.
+  for (const c of m.choices) if (['observed', 'decided', 'deferred'].includes(c.status) && c.kind === 'choose') {
+    const s = scoreRecord(c, m, idx, profile, { date });
+    Object.assign(c, { scored_pick: s.scored_pick, scored_under: profile.id, rejected: s.rejected });
+    if (s.profile_drift) c.profile_drift = s.profile_drift; else delete c.profile_drift;
+  }
   m.preference_profile = profile.id;
-  return { map: m, changes };
+  return { map: compactMap(m), changes };
 }
 export function progressOf(map, idx) {
   const by = Object.fromEntries((map.choices || []).map(c => [c.topic, c]));
@@ -381,9 +449,11 @@ export function progressOf(map, idx) {
 
 // ---------- architecture: frontend ↔ backend ↔ data ↔ auth ↔ payments ↔ third-party ----------
 export const ARCH_ROLES = {
-  client: ['frontend', 'app_distribution'], server: ['backend', 'hosting'], data: ['database', 'storage', 'search', 'realtime', 'cms'],
-  identity_money: ['auth', 'payments'], third_party: ['email', 'ai', 'analytics', 'monitoring', 'uptime', 'protection', 'support', 'ci'],
+  frontend: ['frontend', 'app_distribution'], backend: ['backend', 'hosting'], data: ['database', 'storage', 'search', 'realtime', 'cms'],
+  auth: ['auth'], payments: ['payments'], third_party: ['email', 'ai', 'analytics', 'monitoring', 'uptime', 'protection', 'support', 'ci'],
 };
+// role names used by maps written before the six-column layout
+export const ROLE_ALIAS = { client: 'frontend', server: 'backend', identity_money: 'auth' };
 const ROLE_OF = Object.fromEntries(Object.entries(ARCH_ROLES).flatMap(([r, ts]) => ts.map(t => [t, r])));
 const PATTERN_EDGES = [
   ['frontend', 'backend', 'API calls'], ['backend', 'database', 'queries'], ['frontend', 'auth', 'sign-in'], ['auth', 'database', 'user records'],
@@ -402,7 +472,7 @@ export function deriveArchitecture(map, idx) {
       evidence: c.evidence || [], basis: c.status === 'observed' ? 'evidence' : 'map' });
   }
   for (const x of map.architecture?.components || []) {
-    const n = { id: x.id, topic: x.topic ?? null, role: x.role || 'third_party', option: x.option ?? '', name: x.name ?? x.id, status: x.state === 'implemented' ? 'observed' : 'ai_selected',
+    const n = { id: x.id, topic: x.topic ?? null, role: ROLE_ALIAS[x.role] || x.role || 'third_party', option: x.option ?? '', name: x.name ?? x.id, status: x.state === 'implemented' ? 'observed' : 'ai_selected',
       state: x.state === 'implemented' && (x.evidence || []).length ? 'implemented' : 'proposed', evidence: x.evidence || [], basis: (x.evidence || []).length ? 'evidence' : 'map' };
     const i = nodes.findIndex(y => y.id === n.id); i >= 0 ? nodes[i] = { ...nodes[i], ...n } : nodes.push(n);
   }

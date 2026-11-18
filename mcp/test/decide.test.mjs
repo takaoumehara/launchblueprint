@@ -173,3 +173,37 @@ test("committed project maps load and keep every rule", async () => {
     }
   } finally { await c.close(); }
 });
+
+test("observed, decided and deferred records keep status and pick, and still return the full scored field", async () => {
+  const dir = tmp();
+  const { c, call } = await connect({ BLUEPRINT_PROJECTS: dir });
+  try {
+    await call("update_project_map", { slug: "field-check", name: "Field check", intake: { platform: "web" }, decide_topics: ["all"] });
+    await call("update_project_map", { slug: "field-check", records: [
+      { topic: "hosting", status: "observed", pick: "host.vercel", evidence: [{ kind: "config", path: "vercel.json", note: "host config" }] },
+      { topic: "auth", status: "deferred", reason: "no accounts yet" },
+      { topic: "payments", status: "decided", pick: "pay.paddle", owner_confirmed: true, decided_by: "owner" }] });
+    const raw = yaml.load(fs.readFileSync(path.join(dir, "field-check.yaml"), "utf8"));
+    for (const ch of raw.choices) for (const k of ["considered", "field_size", "gaps", "gap_notes"]) assert.equal(ch[k], undefined, `${ch.topic}: ${k} is derived, not stored`);
+    for (const t of ["hosting", "auth", "payments"]) {
+      const st = raw.choices.find(x => x.topic === t);
+      assert.ok(st.rejected.length >= 1 && st.scored_pick && st.scored_under === "lean-fast-full", `${t}: verdict stored`);
+    }
+    const expect = { hosting: ["observed", "host.vercel"], auth: ["deferred", ""], payments: ["decided", "pay.paddle"] };
+    for (const [t, [status, pick]] of Object.entries(expect)) {
+      const { record: r } = JSON.parse(await call("get_project_map", { slug: "field-check", topic: t }));
+      assert.equal(r.status, status, t); assert.equal(r.pick, pick, t);
+      assert.ok(r.considered.length >= 3, `${t}: full field`);
+      for (const x of r.considered) for (const k of CRIT) assert.ok(x.scores[k].evidence, `${t}/${x.option}/${k}`);
+      const anchor = pick || r.scored_pick;
+      assert.deepEqual(r.rejected.map(x => x.option).sort(), r.considered.map(x => x.option).filter(o => o !== anchor).sort(), `${t}: every alternative has a reason`);
+      assert.ok(r.reason && r.scored_under === "lean-fast-full", t);
+    }
+    // a profile change keeps them and refreshes the verdict
+    await call("update_project_map", { slug: "field-check", preference_profile: "all-in" });
+    const after = yaml.load(fs.readFileSync(path.join(dir, "field-check.yaml"), "utf8"));
+    for (const [t, [status, pick]] of Object.entries(expect)) { const st = after.choices.find(x => x.topic === t); assert.equal(st.status, status); assert.equal(st.pick, pick); assert.equal(st.scored_under, "all-in"); }
+    const full = JSON.parse(await call("get_project_map", { slug: "field-check", expand: true }));
+    assert.ok(full.map.choices.filter(x => x.kind === "choose").every(x => x.considered.length >= 2));
+  } finally { await c.close(); }
+});

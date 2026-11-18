@@ -2,6 +2,13 @@
 export const CRITERIA: string[];
 export const STATUSES: string[];
 export const ARCH_ROLES: Record<string, string[]>;
+export const ROLE_ALIAS: Record<string, string>;
+export const DERIVED_KEYS: string[];
+export function compactChoice(c: any): any;
+export function compactMap(m: any): any;
+export function scoreRecord(c: any, map: any, idx: any, profile: any, opts?: { date?: string }): any;
+export function expandChoice(map: any, topic: string, idx: any, profile: any, opts?: { date?: string }): any;
+export function expandMap(map: any, idx: any, profile: any, opts?: { date?: string }): any;
 export function slugify(s: string): string;
 export function isSlug(s: unknown): boolean;
 export function factsFromRaw(id: string, raw: any, domain: string): any;

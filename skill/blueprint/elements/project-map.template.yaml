@@ -18,7 +18,13 @@ choices:
     topic: payments
     status: open            # open / observed / ai_selected / decided / gap / deferred
     options: []             # tactics.yaml の options から
-    considered: []          # decide の結果：{option, rank, total, scores{cost,speed,breadth,lock_in,scale,compliance,ecosystem: {score, basis, evidence}}, gaps, verified, checked, url, from}
+    # considered / field_size / gaps / gap_notes は保存しない（読む時に catalog・地図・好みから作る：MCP get_project_map(topic)、アプリの詳細）
+    # 形：{option, rank, total, scores{cost,speed,breadth,lock_in,scale,compliance,ecosystem: {score, basis, evidence}}, gaps, verified, checked, url, from}
+    overrides: []           # AI が自分で足した採点 {option, criterion, score, note, url?}（未確認のまま保存）
+    extra_options: []       # カタログにない候補 {id, name, url?, note?}
+    scored_pick: ""         # observed / decided / deferred：今の好みでの最高点（pick は変えない）
+    scored_under: ""        # その採点に使った好み
+    profile_drift: null     # observed / decided の pick と scored_pick が違う時 {profile, would_pick, note}
     ai_pick: ""
     reason: ""              # 勝った理由（profile の重みでどの基準が効いたか）
     rejected:

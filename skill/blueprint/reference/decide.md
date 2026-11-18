@@ -47,6 +47,9 @@ Scores come only from evidence: catalog fields (free band, lock_in, liability_co
 ```
 
 ## 決定の記録 / Decision record (one `choices[]` entry)
+保存はコンパクト：`considered`・`field_size`・`gaps`・`gap_notes` はファイルに書かず、読む時に作る（MCP `get_project_map(slug, topic)`、アプリの詳細）。observed・decided・deferred でも、比べた選択肢全部と落とした理由が出る。status・pick は変えない。
+Stored compact: the scored field is rebuilt on read for every status (observed, decided and deferred included) without touching status or pick. Stored per record: pick, ai_pick, rejected, linkages, `overrides` (agent scores), `extra_options`, and for observed/decided/deferred `scored_pick`, `scored_under`, `profile_drift`.
+
 `topic, element, stage, lane, kind, status, options, considered[{option, rank, total, scores{criterion:{score, basis, evidence}}, gaps, verified, checked, url, from}], ai_pick, pick, reason, reason_ja, rejected[{option, why}], linkages[{kind, with_topic, with_option, why, verified?}], profile, source, verified, checked, date, gaps, gap_notes, gap_note?, evidence?, observed_as?, owner_confirmed?, decided_by, confirmed_at?, profile_drift?`
 `linkages.kind`: `same_vendor`, `shared_free_tier`（無料枠が共有か別々かは要確認・verified:false）, `pairs_well_with`, `named_in_best_for`, `conflict`.
 

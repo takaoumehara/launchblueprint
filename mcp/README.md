@@ -28,7 +28,7 @@ AI が自分で選ぶ時の順 / agent flow when choosing on its own: `list_prof
 | `stale_items(days, refresh_plan?, used_only?, domain?, limit?)` | 確認日が古い・未確認の項目（スタック比較の services も含む）。`refresh_plan` で公式 URL・今の料金/上限の文・使っている決めごとを付ける / items older than `days`, unchecked or unverified; `refresh_plan` adds the official URL, current price/limit text and the decisions using it |
 | `list_profiles` | 判断の好み（lean-fast-full 既定・all-in・組織の好み）と 7 基準 / preference profiles and the 7 criteria |
 | `decide(topic, project?, profile?, intake?, chosen?, evidence?, extra_options?, also_under?)` | 選択肢を全部並べ、好みの重みで根拠つき採点 → 選んだもの・勝った理由・落とした理由・つながり・穴。status は `ai_selected` か `gap`（決定はしない）/ scores the whole field with evidence; never decides |
-| `list_project_maps` / `get_project_map(slug)` | 地図の一覧（共有・下書き）／1 枚を 64 件そろえて、段・12 カテゴリーの進み具合、アーキテクチャ（実装済み・提案）、穴、好みとのずれと一緒に / maps; one map normalized with progress, architecture, gaps, drift |
+| `list_project_maps` / `get_project_map(slug, topic?, expand?)` | 地図の一覧（共有・下書き）／1 枚を 64 件そろえて、段・12 カテゴリーの進み具合、アーキテクチャ（実装済み・提案）、穴、好みとのずれと一緒に。地図はコンパクトに保存し、`topic` でその 1 件を、`expand` で全件を、比べた選択肢全部（点と根拠・理由・つながり）つきで返す（status と pick は変えない）/ maps are stored compact; `topic` / `expand` return the full scored field for any status |
 | `update_project_map(slug, …)` | 地図を作る・更新する（下書きに書く）。好みの変更で採点し直し、`observed` は evidence、`gap` は gap_note、`decided` は `owner_confirmed: true` が必須。`#/p/<slug>` を返す / create or update a map, returns the review link |
 | `rescore_project_map(slug, profile)` | 好みを変えたら何が変わるかの下見（書かない）/ preview a profile change |
 | `propose_catalog_refresh(id, url?, checked, verified, changes, note?)` | 公式ページで読んだ料金・上限を、今のカタログとの差分つきで提案箱へ / propose a price/limit update with a diff (inbox only) |

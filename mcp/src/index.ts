@@ -391,6 +391,8 @@ server.tool("decide", "Score the realistic field of options for one decision und
     const prof = profileById(pid); if (!prof) return unknownProfile(String(pid));
     const parts = [...(map ? core.partsOf(map) : []), ...Object.entries(chosen ?? {}).map(([t, o]) => ({ topic: t, option: o, status: "given" }))];
     for (const e of evidence) if (!idx.F[e.option] && !extra_options.some(x => x.id === e.option)) return err(`evidence.option ${e.option} is neither in the catalog nor in extra_options`);
+    const stored = map?.choices.find((c: any) => c.topic === topic);
+    if (stored) { evidence = [...(stored.overrides ?? []), ...evidence]; extra_options = [...(stored.extra_options ?? []).filter((x: any) => !extra_options.some(y => y.id === x.id)), ...extra_options]; }
     const rec = core.decide({ topic, idx, profile: prof, intake: intake ?? map?.profile ?? {}, chosen: parts, evidence, extra_options, date: today() });
     const others = also_under.map(id => { const p = profileById(id); if (!p) return { profile: id, error: "unknown profile" };
       const r = core.decide({ topic, idx, profile: p, intake: intake ?? map?.profile ?? {}, chosen: parts, evidence, extra_options, date: today() }); return { profile: id, ai_pick: r.ai_pick, status: r.status }; });
@@ -403,13 +405,15 @@ server.tool("list_project_maps", "Project maps: reviewed ones committed under sk
   {}, async () => json({ maps: allMaps().map(({ slug, where, doc }) => ({ slug, where, name: doc.name ?? "", preference_profile: doc.preference_profile ?? null, updated: doc.updated ?? null, counts: counts(doc), ...linkOf(slug) })),
     drafts_dir: path.relative(path.resolve(ROOT, "../.."), DRAFTS) }));
 
-server.tool("get_project_map", "One project map by slug, normalized to every decision (all tactics, six lanes), with progress per stage and per 12-category, the derived architecture (frontend ↔ backend ↔ data ↔ auth ↔ payments ↔ third-party; implemented vs proposed) and the review link. format yaml returns the file as stored.",
-  { slug: z.string().min(1), format: z.enum(["json", "yaml"]).optional() }, async ({ slug, format = "json" }) => {
+server.tool("get_project_map", "One project map by slug, normalized to every decision (all tactics, six lanes), with progress per stage and per 12-category, the derived architecture (frontend ↔ backend ↔ data ↔ auth ↔ payments ↔ third-party; implemented vs proposed) and the review link. Maps are stored compact; topic=<topic> returns that record with its full scored field (every alternative, per-criterion scores and evidence, why the pick stands, rejected reasons, linkages, gaps) under the map's profile, whatever its status — status and pick are never changed. expand=true does that for every record. format yaml returns the file as stored.",
+  { slug: z.string().min(1), format: z.enum(["json", "yaml"]).optional(), topic: z.string().optional(), expand: z.boolean().optional() }, async ({ slug, format = "json", topic, expand = false }) => {
     const f = findMap(safe(slug)); if (!f) return err(`No project map "${slug}". Available: ${allMaps().map(m => m.slug).join(", ") || "none"}`);
     if (format === "yaml") return text(fs.readFileSync(f.file, "utf8"));
     const idx = index(); const m = core.normalizeMap(f.map, idx);
-    return json({ where: f.where, ...linkOf(safe(slug)), map: m, counts: counts(m), progress: core.progressOf(m, idx), architecture: core.deriveArchitecture(m, idx),
-      gaps: m.choices.filter((c: any) => c.status === "gap" || (c.gap_notes ?? []).length || c.gap_note).map((c: any) => ({ topic: c.topic, status: c.status, gap_note: c.gap_note ?? null, gap_notes: c.gap_notes ?? [] })),
+    const prof = profileById(m.preference_profile) ?? defaultProfile();
+    if (topic) { if (!idx.T[topic]) return err(`Unknown topic "${topic}".`); return json({ where: f.where, ...linkOf(safe(slug)), node: `#/p/${safe(slug)}/n/${topic}`, preference_profile: prof.id, record: core.expandChoice(m, topic, idx, prof, { date: today() }) }); }
+    return json({ where: f.where, ...linkOf(safe(slug)), map: expand ? core.expandMap(m, idx, prof, { date: today() }) : m, counts: counts(m), progress: core.progressOf(m, idx), architecture: core.deriveArchitecture(m, idx),
+      gaps: m.choices.filter((c: any) => c.status === "gap" || c.gap_note).map((c: any) => ({ topic: c.topic, status: c.status, gap_note: c.gap_note ?? null })),
       drift: m.choices.filter((c: any) => c.profile_drift).map((c: any) => ({ topic: c.topic, pick: c.pick, ...c.profile_drift })) });
   });
 
@@ -430,8 +434,10 @@ const recordSchema = z.object({
   gap_note: z.string().max(600).optional(), decided_by: z.string().max(40).optional(), owner_confirmed: z.boolean().optional(), note: z.string().max(400).optional(),
   verified: z.boolean().optional(), source: z.string().max(80).optional(),
   observed_as: z.string().max(160).optional(),   // what the repo actually uses when it is not a catalog option
+  overrides: evidenceSchema.optional(),          // the agent's own scored facts (kept on disk, unverified)
+  extra_options: extraSchema.optional(),         // options the catalog lacks
 });
-const componentSchema = z.object({ id: z.string().regex(/^[a-z0-9_-]{1,40}$/), role: z.enum(Object.keys(core.ARCH_ROLES) as [string, ...string[]]), name: z.string().max(80), topic: z.string().optional(), option: z.string().optional(),
+const componentSchema = z.object({ id: z.string().regex(/^[a-z0-9_-]{1,40}$/), role: z.enum([...Object.keys(core.ARCH_ROLES), ...Object.keys(core.ROLE_ALIAS)] as [string, ...string[]]).transform(r => core.ROLE_ALIAS[r] ?? r), name: z.string().max(80), topic: z.string().optional(), option: z.string().optional(),
   state: z.enum(["implemented", "proposed"]), evidence: recordSchema.shape.evidence });
 const linkSchema = z.object({ from: z.string(), to: z.string(), label: z.string().max(80).optional(), state: z.enum(["implemented", "proposed"]), evidence: recordSchema.shape.evidence, note: z.string().max(200).optional() });
 server.tool("update_project_map", "Create or update a project map and get a shareable review link (#/p/<slug>). Writes only the draft file mcp/inbox/project-maps/<slug>.yaml (a person reviews it and moves it to skill/blueprint/project-maps/ to publish); committed maps are copied to a draft first. Use it to: set the preference profile (re-scores every ai_selected record); record decide() results (status ai_selected; omit pick and the record is scored for you); record facts seen in a real repo (status observed + evidence); flag missing evidence (status gap + gap_note); defer (deferred + reason); or record a big owner decision (status decided + owner_confirmed:true + decided_by). decide_topics runs decide for open/gap/ai_selected topics ('all' for every one). Every change is appended to history.",
@@ -467,18 +473,27 @@ server.tool("update_project_map", "Create or update a project map and get a shar
     for (const r of records) {
       const c = at(r.topic); const before = { status: c.status, pick: c.pick, ai_pick: c.ai_pick };
       const { owner_confirmed, note: rnote, ...rest } = r;
+      const others = core.partsOf(m).filter(p => p.topic !== r.topic);
+      const ev = { evidence: r.overrides ?? c.overrides ?? [], extra_options: r.extra_options ?? c.extra_options ?? [] };
       if (r.status === "ai_selected" && idx.T[r.topic].kind === "choose" && !r.pick) {
-        const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: core.partsOf(m), date: today() });
-        Object.assign(c, rec, { ...(r.reason ? { agent_reason: r.reason } : {}), ...(r.evidence ? { evidence: r.evidence } : {}), ...(r.gap_note ? { gap_note: r.gap_note } : {}) });
+        const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: others, ...ev, date: today() });
+        Object.assign(c, core.compactChoice(rec), { ...(r.reason ? { agent_reason: r.reason } : {}), ...(r.evidence ? { evidence: r.evidence } : {}), ...(r.gap_note ? { gap_note: r.gap_note } : {}),
+          ...(r.overrides ? { overrides: r.overrides } : {}), ...(r.extra_options ? { extra_options: r.extra_options } : {}) });
       } else if (r.status === "ai_selected" && r.pick) {
         // an agent's own pick: keep its reason and rejected list, but score the field so alternatives are on record
-        const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: core.partsOf(m), date: today() });
-        Object.assign(c, rec, rest, { ai_pick: r.pick, pick: "", decided_by: "ai", ...(rec.ai_pick !== r.pick ? { scored_pick: rec.ai_pick } : {}) });
+        const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: others, ...ev, date: today() });
+        Object.assign(c, core.compactChoice(rec), rest, { ai_pick: r.pick, pick: "", decided_by: "ai", scored_pick: rec.ai_pick });
       } else {
         Object.assign(c, rest, { date: today() });
         if (r.status === "decided") Object.assign(c, { owner_confirmed: true, confirmed_at: today(), profile: prof.id });
         if (r.status === "observed") Object.assign(c, { decided_by: "", source: r.source ?? "repo" });
-        if (r.status === "observed" || r.status === "decided") delete c.profile_drift;
+        // observed / decided / deferred keep their status and pick; the scored field's verdict is stored with them
+        // (rejected reasons, the scored winner, drift). The full considered[] is derived when the map is read.
+        if (["observed", "decided", "deferred"].includes(c.status) && idx.T[r.topic].kind === "choose") {
+          const sr = core.scoreRecord(c, m, idx, prof, { date: today() });
+          Object.assign(c, { scored_pick: sr.scored_pick, scored_under: prof.id, ...(r.rejected ? {} : { rejected: sr.rejected }) });
+          if (sr.profile_drift) c.profile_drift = sr.profile_drift; else delete c.profile_drift;
+        }
       }
       log({ change: "record", topic: r.topic, from: before, to: { status: c.status, pick: c.pick, ai_pick: c.ai_pick }, ...(rnote ? { note: rnote } : {}) });
     }
@@ -504,7 +519,7 @@ server.tool("update_project_map", "Create or update a project map and get a shar
     if (architecture) { m.architecture = { components: architecture.components ?? m.architecture?.components ?? [], links: architecture.links ?? m.architecture?.links ?? [] }; log({ change: "architecture" }); }
     m.updated = today(); m.review = linkOf(slug); m.history = history.slice(-200);
     const ordered = { domain: "project_map", schema: m.schema, slug, name: m.name ?? "", goal: m.goal ?? "", profile: m.profile ?? {}, preference_profile: m.preference_profile, updated: m.updated, review: m.review,
-      elements: m.elements, architecture: m.architecture ?? { components: [], links: [] }, choices: m.choices, history: m.history };
+      elements: m.elements, architecture: m.architecture ?? { components: [], links: [] }, choices: core.compactMap(m).choices, history: m.history };
     fs.mkdirSync(DRAFTS, { recursive: true });
     const file = path.join(DRAFTS, slug + ".yaml");
     fs.writeFileSync(file, `# Blueprint project map — draft written by update_project_map (MCP). Review, then move to skill/blueprint/project-maps/ to publish.\n# Statuses: open / observed (seen in the repo, with evidence) / ai_selected (agent pick, owner reviews later) / decided (owner said yes) / gap (evidence missing) / deferred.\n` + yaml.dump(ordered, { lineWidth: 140, noRefs: true }));
