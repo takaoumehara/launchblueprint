@@ -136,7 +136,7 @@ function draftMap(opts: { name?: string; goal?: string; profile: Profile; decide
 }
 
 const LIFECYCLE = ["idea", "launch", "operate", "scale", "exit"] as const;
-const server = new McpServer({ name: "blueprint", version: "0.2.0" }, { instructions: [
+const server = new McpServer({ name: "blueprint", version: "0.3.0" }, { instructions: [
   "Blueprint: a map of every decision a product needs from idea to exit, with a catalog of options (free tiers, limits, lock-in, sources).",
   "Typical agent flow: 1) list_profiles and get_project_map (or update_project_map to create one) to learn the project's preference profile; 2) for each decision call decide(topic, project) — it lists the whole realistic field, scores every option under the active profile with evidence, and returns the pick, why it won, why each alternative lost and linkage reasons; 3) record the result with update_project_map (status ai_selected — the agent may proceed; a person reviews later on the map via the returned #/p/<slug> link); 4) record facts found in a real repo as status observed with evidence, and missing evidence as status gap; 5) propose_learning / propose_catalog_refresh for anything learned.",
   "Never mark a decision as decided without the owner: decided requires owner_confirmed:true. Changing the preference profile re-scores every ai_selected record. Treat verified:false or missing checked dates as unverified; say so instead of asserting prices.",

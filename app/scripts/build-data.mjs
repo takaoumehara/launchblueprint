@@ -76,7 +76,11 @@ const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わ�
   '## 決めること（topic）。depends_on が先に決めるもの', ...tactics.map(t => `- ${t.topic}（${t.element}, stage=${t.stage}, lane=${t.lane}, ${t.kind}）${t.label_ja}${t.label_en ? ' / ' + t.label_en : ''}: options=${t.options.join(',')}${t.ai_pick ? ' pick=' + t.ai_pick : ''} depends_on=[${t.depends_on.join(',')}]`), '',
   '## スタック比較（R-030）。技術の選択ごと', ...Object.values(comparisons).map(c => `- ${c.topic}: pick=${c.recommendation.pick} 切り替え=${c.switch_points.map(w => w.when + '→' + w.upgrade_to).join(' / ')}`), '',
   '## カタログの分野（domain）。MCP の get_catalog(domain) / get_item(id) で読める', ...Object.values(catalog).map(c => `- ${c.domain}: ${c.title}（${c.ids.length} 件）`), '',
-  '## AI から使う：MCP サーバー', '- リポジトリの mcp/ を build して `node mcp/dist/index.js` を MCP サーバーとして登録。list_topics → draft_project_map(profile) → get_comparison / get_item → draft_project_map(decided) の順', '',
+  '## AI から使う：MCP サーバー', '- リポジトリの mcp/ を build して `node mcp/dist/index.js` を MCP サーバーとして登録。list_topics → draft_project_map(profile) → get_comparison / get_item → draft_project_map(decided) の順',
+  '- AI が自分で選ぶ時：list_profiles → decide(topic, project) → update_project_map（status: ai_selected。見直しリンク #/p/<slug> が返る）。decided はオーナーだけ（owner_confirmed: true）', '',
+  '## 判断の好み（preference profiles）', ...profiles.map(p => `- ${p.id}${p.default ? '（既定）' : ''}: ${p.summary_ja} weights=${JSON.stringify(p.weights)}`), '',
+  '## 12 カテゴリー（見直しの順）', ...categories.map(c => `- ${c.id} ${c.label_ja}: ${c.topics.join(', ') || '（決めごとなし：' + (c.gap_note_ja || '') + '）'}`), '',
+  '## 共有するプロジェクトの地図', ...projects.map(p => `- #/p/${p.slug}（/projects/${p.slug}.json）${p.name}: preference=${p.preference_profile}`), '',
   '## ことば（専門用語の言い換え）', ...glossary.map(g => `- ${g.term} → ${g.plain}：${g.one_line}`), '',
   '## project-map.template.yaml', '```yaml', template.trim(), '```', ''].join('\n');
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/llms.txt'), llms);

@@ -23,22 +23,38 @@ English: [README.md](README.md) · 5分ではじめる：[QUICKSTART.ja.md](QUIC
 
 上の帯は段ごとに、細い大きな数字（決めた数）と全部の数、決めること1件ずつの四角（枠＝未決、白＝AI のおすすめ待ち、オレンジ＝決定）。下は6列の点。線は `depends_on` だけ。決めた点と線はオレンジ、右下の数字は決めたステップの数。カタログ画面に全分野・全項目。詳しくは [QUICKSTART.ja.md §C](QUICKSTART.ja.md)。
 
+## 判断の好み・あとで見直す・AI が `decide` を呼ぶ手順
+
+オーナーが全部の決めごとを細かく承認しなくても、AI が自分でよく選べるようにします。ただし選ぶ前に、選択肢を全部見ることが条件です。
+
+- **判断の好み**（`skill/blueprint/preferences/`）：7 つの基準（費用・無料枠の広さ、作る速さ、試せる機能の幅、乗り換えやすさ、伸びしろ、認証・法令、選んだ部品との相性）の重み。`lean-fast-full`（既定：お金はできるだけ使わず、とても速く、でも全部作って試す）と `all-in`（速さ・質・伸びしろにお金を使う）。組織の好みも足せます（`scope: org`、`extends:`）。プロジェクトごとに 1 つ選びます。
+- **`decide(topic, project)`**（MCP）：現実的な選択肢を全部並べ（tactics の選択肢・スタック比較のサービス・ログインはカタログの全プロバイダ）、基準ごとに**根拠つき**で採点し、選んだもの・勝った理由・落とした理由（短く）・つながりの理由（データベースと同じ提供元、無料枠の共有は要確認、相性、衝突）を返します。根拠がなければ「穴（gap）」として見える形で残し、推測しません。料金は作らず、未確認は `verified:false` のままです。
+- **状態**：`ai_selected`（AI が選んだ。先へ進んでよく、オーナーはあとで見直す）、`observed`（実在のリポジトリで確かめた事実。根拠のファイルつき）、`decided`（`owner_confirmed: true` の時だけ）、`gap`（根拠がない。旗が立つ）、`deferred`、`open`。AI からの `decided` は MCP が拒否します。
+- **`update_project_map`** で記録し、共有用の見直しリンク `#/p/<slug>` が返ります。好みを変えると `ai_selected` を全部採点し直し、オーナーの決定と確かめた事実は残して「新しい好みなら別」と印を付けます。
+- **あとで見直す**（アプリ）：`#/p/<slug>` で 64 の決めごとを 6 列で全部、`#/p/<slug>/c/01`〜`/c/12` で 12 カテゴリーを 1 つずつ。点をクリックすると選んだもの・比べた選択肢と点数・理由・つながり・好み・確認日・穴。`#/p/<slug>/arch` でフロント ↔ バック ↔ データ ↔ ログイン ↔ 決済 ↔ 外部サービスのつながりを、実装済み（根拠あり）と提案に分けて表示。
+- **カタログの定期確認**：`stale_items(refresh_plan: true)` と `propose_catalog_refresh` で、料金・上限を人が確認する提案箱経由で新しく保ちます。
+
+手順：[skill/blueprint/reference/decide.md](skill/blueprint/reference/decide.md)・定期確認：[catalog-refresh.md](skill/blueprint/reference/catalog-refresh.md)・好み：[preferences/README.md](skill/blueprint/preferences/README.md)
+
 ## リポジトリ
 
 ```
 QUICKSTART.md, QUICKSTART.ja.md   まずここ
 skill/blueprint/                  スキル本体：SKILL.md, catalog/*.yaml, elements/, reference/, templates/
   catalog/schema.md               全ファイルの書式
+  preferences/                    判断の好み（lean-fast-full, all-in, 組織）
+  project-maps/                   共有するプロジェクトの地図（アプリの #/p/<slug>）
   reference/dry-run-sample.md     見本プロジェクトを MCP だけで構想→終了まで通した記録と、見つかった穴
   reference/walkthrough-non-engineer.md   画面ごとの歩き方（エンジニアでない人向け）
 app/                              ウェブアプリ（Vite）：npm ci && npm run build → dist/（data.json, llms.txt も）
 mcp/                              MCP サーバー：npm ci && npm run build && npm test
+shared/decide-core.mjs            採点と決定の記録（MCP とアプリが同じものを使う）
 legacy/, skills/, drafts/, ui/    以前の版（v0.2 の説明は legacy/launch-blueprint/README-v0.2.md）、下書き、試作
 ```
 
 ## 守ること
 
-- 決めるのはオーナー。Blueprint は選択肢・おすすめ・影響を出すだけで、`open` を勝手に `decided` にしない。
+- 決めるのはオーナー。Blueprint は選択肢・おすすめ・影響を出すだけで、`open` を勝手に `decided` にしない。AI が書けるのは `ai_selected` まで。`decided` はオーナーだけ（`owner_confirmed: true`）。
 - 料金・規約・ストアの決まりを記憶で断定しない。すべて `source.checked` と `verified` を持ち、`stale_items` で古いものが分かる。
 - 一般化したものだけ。カタログ・教訓・提案に、利用者のプロダクト名や個人名を入れない。比較の中のサービス名は可。
 - ルール・教訓は必ず「原則・避けること・なぜ・はい/いいえの確認」を持つ。

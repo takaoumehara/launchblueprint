@@ -1,18 +1,38 @@
 # 層3：プロジェクトの地図。最初に全要素を一度に並べ（status: open）、ゴールに合わせて埋める
+# v2（2026-11-18）：slug・preference_profile・architecture・history と、決定の記録（considered / linkages / gaps …）を追加。v1 の形はそのまま読める。
 domain: project_map
+schema: blueprint.project-map/v2
+slug: ""                 # [a-z0-9-]。アプリの URL は #/p/<slug>
 name: ""
 goal: ""
-profile: {audience: "", platform: "", money: "", country: ""}   # 始める画面の答え
+profile: {audience: "", platform: "", money: "", country: ""}   # 始める画面の答え（intake。pick_when に効く）
+preference_profile: lean-fast-full   # 判断の好み（preferences/*.yaml の id）。変えると ai_selected を全部採点し直す
+updated: ""
+review: {link: "#/p/<slug>", arch: "#/p/<slug>/arch"}
 elements: [el.experience, el.product, el.business, el.marketing, el.brand, el.maintenance, el.security]
+architecture:            # 任意。tactics から出る部品に足す・根拠をつける
+  components: []         # {id, role: client|server|data|identity_money|third_party, name, state: implemented|proposed, evidence[]}
+  links: []              # {from, to, label, state: implemented|proposed, evidence[]}。implemented は evidence 必須
 choices:
   - element: el.business
     topic: payments
-    status: open            # open / decided / deferred
+    status: open            # open / observed / ai_selected / decided / gap / deferred
     options: []             # tactics.yaml の options から
+    considered: []          # decide の結果：{option, rank, total, scores{cost,speed,breadth,lock_in,scale,compliance,ecosystem: {score, basis, evidence}}, gaps, verified, checked, url, from}
     ai_pick: ""
-    reason: ""
+    reason: ""              # 勝った理由（profile の重みでどの基準が効いたか）
     rejected:
       - {option: "", why: ""}
-    decided_by: ""          # human / ai
-    pick: ""                # 決まった option（checklist なら checked: [...]）
+    linkages: []            # {kind: same_vendor|shared_free_tier|pairs_well_with|named_in_best_for|conflict, with_topic, with_option, why}
+    profile: ""             # 採点した preference_profile
+    source: ""              # catalog / catalog+agent / repo
+    verified: false         # 選んだものの料金・上限の出典が公式で確認済みか
+    date: ""
+    gaps: []                # 選んだものの、根拠のない基準
+    gap_notes: []
+    gap_note: ""            # status: gap の時は必須（何の根拠がないか）
+    evidence: []            # status: observed の時は必須 {kind: file|url|config|dependency|note, path|url, line?, note}
+    decided_by: ""          # ai / owner（decided は owner だけ。owner_confirmed: true が必須）
+    pick: ""                # 決まった option（observed / decided の時。checklist なら checked: [...]）
     last_checked: ""        # tactics.yaml から
+history: []               # {date, by, change, topic?, from, to, note?}
