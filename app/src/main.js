@@ -1,6 +1,7 @@
 import './style.css';
 import yaml from 'js-yaml';
 import { M } from './messages.js';
+import { initProjects, viewProjects } from './projects.js';
 
 const D = await (await fetch('/data.json')).json();
 const $ = (s, r = document) => r.querySelector(s);
@@ -427,12 +428,19 @@ function viewCatalog(domain) {
 }
 
 // ---------- ルーター ----------
+// Per-project screens (#/p/<slug>...) live in projects.js and share these helpers.
+initProjects({ D, app, $, esc, tr: (...a) => tr(...a), lang: () => LANG, lbl, qst, toast, download, yaml, localMap: () => projectMap(), localName: () => P.name });
+let lastHash = '';
 function route() {
-  const h = location.hash.slice(1) || '/'; const [, r, arg] = h.split('/');
-  const name = r === 'map' ? 'map' : r === 't' ? 'topic' : r === 'catalog' ? 'catalog' : 'start';
+  const h = location.hash.slice(1) || '/'; const [, r, arg, ...rest] = h.split('/');
+  const name = r === 'map' ? 'map' : r === 't' ? 'topic' : r === 'catalog' ? 'catalog' : r === 'p' ? 'projects' : 'start';
   document.querySelectorAll('.steps [data-r]').forEach(a => a.classList.toggle('on', a.dataset.r === name));
-  scrollTo(0, 0);
-  name === 'map' ? viewMap() : name === 'topic' ? viewTopic(arg) : name === 'catalog' ? viewCatalog(arg) : viewStart();
+  // moving between nodes of the same project map keeps the scroll position; everything else starts at the top
+  const mapKey = x => (x.match(/^\/p\/([^/]+)(\/n\/[^/]+)?$/) || [])[1] || null;
+  const sameMap = !!mapKey(h) && mapKey(h) === mapKey(lastHash);
+  lastHash = h;
+  if (!sameMap) scrollTo(0, 0);
+  name === 'map' ? viewMap() : name === 'topic' ? viewTopic(arg) : name === 'catalog' ? viewCatalog(arg) : name === 'projects' ? viewProjects([arg, ...rest].filter(x => x !== undefined && x !== '')) : viewStart();
 }
 addEventListener('hashchange', route);
 $('#theme').onclick = () => { const d = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = d; try { localStorage.setItem('bp.theme', d); } catch {} };

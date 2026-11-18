@@ -1,5 +1,6 @@
 // catalog/*.yaml と elements/ を読み、public/data.json と public/llms.txt を作る
 import fs from 'node:fs'; import path from 'node:path'; import yaml from 'js-yaml';
+import * as core from '../../shared/decide-core.mjs';
 const root = path.resolve(import.meta.dirname, '../../skill/blueprint');
 const load = f => yaml.load(fs.readFileSync(path.join(root, f), 'utf8'));
 const elements = load('elements/elements.yaml').elements;
@@ -42,8 +43,31 @@ const cats = {};
 for (const m of fs.readFileSync(path.join(root, 'reference/12-categories.md'), 'utf8').matchAll(/^## (\d\d) (.+)$/gm)) cats[m[1]] = m[2];
 const missing = tactics.flatMap(t => t.options.filter(o => !items[o]).map(o => `${t.topic}:${o}`));
 if (missing.length) console.warn('見つからない catalog id:', missing.join(', '));
-const data = { generated: new Date().toISOString().slice(0, 10), elements, lanes, stages, glossary, comparisons, tactics, categories: cats, catalog, items, template };
-fs.mkdirSync(path.resolve(import.meta.dirname, '../public'), { recursive: true });
+// decide layer: option facts for client-side re-scoring, preference profiles, the 12-category index, committed project maps
+const catalogDocs = {}; for (const f of fs.readdirSync(path.join(root, 'catalog')).filter(f => f.endsWith('.yaml'))) { try { catalogDocs[f.slice(0, -5)] = load('catalog/' + f); } catch {} }
+const allFacts = core.collectFacts(catalogDocs);
+// only the options that appear in some decision's realistic field are needed to re-score in the browser
+const fieldIdx = core.makeIndex({ tactics, comparisons: Object.values(comparisons), facts: allFacts });
+const facts = Object.fromEntries([...new Set(Object.values(fieldIdx.fields).flat().map(x => x.id))].filter(id => allFacts[id]).map(id => [id, allFacts[id]]));
+const prefDir = path.join(root, 'preferences');
+const profiles = core.resolveProfiles(fs.readdirSync(prefDir).filter(f => f.endsWith('.yaml')).map(f => load('preferences/' + f)).filter(d => d?.schema === 'blueprint.preference-profile/v1'));
+for (const p of profiles) { const e = core.validateProfile(p); if (e.length) throw new Error(`profile ${p.id}: ${e.join(', ')}`); }
+const criteria = load('preferences/criteria.yaml').criteria;
+const categories = load('elements/categories.yaml').categories;
+const out = path.resolve(import.meta.dirname, '../public');
+fs.mkdirSync(path.join(out, 'projects'), { recursive: true });
+const mapsDir = path.join(root, 'project-maps');
+const projects = [];
+for (const f of fs.existsSync(mapsDir) ? fs.readdirSync(mapsDir).filter(f => f.endsWith('.yaml')).sort() : []) {
+  const m = load('project-maps/' + f); const slug = f.slice(0, -5);
+  if (!core.isSlug(slug)) { console.warn('skip project map with a bad slug:', f); continue; }
+  fs.writeFileSync(path.join(out, 'projects', slug + '.json'), JSON.stringify(m));
+  projects.push({ slug, name: m.name || slug, goal: m.goal || '', preference_profile: m.preference_profile || null, updated: m.updated || null,
+    counts: Object.fromEntries(core.STATUSES.map(s => [s, (m.choices || []).filter(c => (c.status || 'open') === s).length])) });
+}
+const data = { generated: new Date().toISOString().slice(0, 10), elements, lanes, stages, glossary, comparisons, tactics, categories: cats, catalog, items, template,
+  facts, profiles, criteria, categories12: categories, projects };
+fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/data.json'), JSON.stringify(data, null, 1));
 const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わりにくい原則）→ 選択肢（tactics）→ プロジェクトの地図。`, '',
   `- データ全体（JSON）: /data.json`, `- 地図の書式: project-map.template.yaml（下に全文）`, `- アプリで「YAMLで書き出す」を押すと、この書式のプロジェクト地図が出る`, '',
@@ -56,4 +80,4 @@ const llms = [`# Blueprint`, `> 作り方の作り方。7つの要素（変わ�
   '## ことば（専門用語の言い換え）', ...glossary.map(g => `- ${g.term} → ${g.plain}：${g.one_line}`), '',
   '## project-map.template.yaml', '```yaml', template.trim(), '```', ''].join('\n');
 fs.writeFileSync(path.resolve(import.meta.dirname, '../public/llms.txt'), llms);
-console.log('data.json:', tactics.length, 'topics,', Object.keys(items).length, 'items,', Object.keys(catalog).length, 'domains');
+console.log('data.json:', tactics.length, 'topics,', Object.keys(items).length, 'items,', Object.keys(catalog).length, 'domains,', profiles.length, 'profiles,', projects.length, 'project maps');
