@@ -1,0 +1,49 @@
+# Blueprint preference criteria — CREATIVITY IS EVERYWHERE, LLC
+# The seven things a preference profile weighs. Every score is 0..1 (higher = better for the project).
+# Scores come only from evidence: catalog fields, the project's chosen parts, or evidence an agent passes to `decide`.
+# When there is no evidence, the criterion is a visible gap (scored 0.5 so it neither helps nor hurts) — never a guess.
+schema: blueprint.preference-criteria/v1
+updated: '2026-11-18'
+criteria:
+- id: cost
+  label_en: Cost and free-tier generosity
+  label_ja: 費用・無料枠の広さ
+  higher_means_en: You can start and keep going for little or no money.
+  higher_means_ja: ほとんどお金をかけずに始めて続けられる
+  derived_from: "pricing_bands.free (or cost) text in the catalog entry; flags verified:false; non-commercial-only free plans score lower; no public price scores lowest"
+- id: speed
+  label_en: Build speed
+  label_ja: 作る速さ
+  higher_means_en: Fewer steps from zero to working, less to run yourself.
+  higher_means_ja: ゼロから動くまでの手順が少なく、自分で運用するものが少ない
+  derived_from: "words in best_for / what (quick, no-code, all-in-one) and avoid_when (you must run it yourself, custom quote); quoted as evidence"
+- id: breadth
+  label_en: Breadth of features to try
+  label_ja: 試せる機能の幅
+  higher_means_en: The same vendor also covers other decisions on the map, so more can be tried with one account.
+  higher_means_ja: 同じ提供元が地図の他の決めごとも持っていて、1つのアカウントで多く試せる
+  derived_from: "number of map topics whose realistic field contains an option from the same vendor (vendor = official site host of the source URL)"
+- id: lock_in
+  label_en: Low lock-in
+  label_ja: 乗り換えやすさ
+  higher_means_en: Easy to leave later.
+  higher_means_ja: あとで離れやすい
+  derived_from: "lock_in field (低/中/高/変更不可, low/medium/high)"
+- id: scale
+  label_en: Room to scale
+  label_ja: 伸びしろ
+  higher_means_en: Fits large volume or enterprise needs without a rewrite.
+  higher_means_ja: 量が増えても、企業向けの要件が来ても作り直さずに済む
+  derived_from: "words in best_for / avoid_when / limits (large volume, enterprise, audit logs vs. non-commercial, auto-pause, small scale)"
+- id: compliance
+  label_en: Compliance coverage
+  label_ja: 認証・法令への備え
+  higher_means_en: Certifications or legal roles (SOC 2, ISO 27001, GDPR/DPA, HIPAA, PCI, merchant of record) are documented.
+  higher_means_ja: SOC 2・ISO 27001・GDPR/DPA・HIPAA・PCI・販売代行（MoR）などが書かれている
+  derived_from: "liability_compliance field keywords"
+- id: ecosystem
+  label_en: Fit with parts already chosen
+  label_ja: すでに選んだ部品との相性
+  higher_means_en: Same vendor or a listed pairing with a part this project already uses.
+  higher_means_ja: すでに使う部品と同じ提供元、またはカタログで相性よしとされている
+  derived_from: "project choices (observed / ai_selected / decided) × pairs_well_with and vendor; avoid_when that names a chosen part scores 0"

@@ -1,0 +1,21 @@
+# Preference profile: lean-fast-full — CREATIVITY IS EVERYWHERE, LLC
+# Spend as little as possible, build extremely fast, but still try building everything.
+schema: blueprint.preference-profile/v1
+id: lean-fast-full
+scope: default
+default: true
+label_en: Lean, fast, full
+label_ja: 安く・速く・全部試す
+summary_en: Spend as little as possible and build extremely fast, but still try every part of the product (payments, email, analytics, AI) instead of skipping it.
+summary_ja: お金はできるだけ使わず、とにかく速く作る。それでも決済・メール・計測・AI まで全部実際に作って試す。
+weights:          # 0 = ignore, 5 = matters most
+  cost: 5
+  speed: 5
+  breadth: 4
+  ecosystem: 4
+  lock_in: 2
+  compliance: 1
+  scale: 1
+tie_break: [cost, speed, ecosystem]
+paid_is_ok_when_en: A paid plan removes a hard blocker (a commercial-use ban, an auto-pause that breaks the demo) and no free option clears it.
+paid_is_ok_when_ja: 無料のままでは止まる時（商用不可・自動停止でデモが壊れる等）で、無料の選択肢では解決しない時だけ有料にする

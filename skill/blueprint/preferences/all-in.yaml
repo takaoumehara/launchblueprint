@@ -1,0 +1,20 @@
+# Preference profile: all-in — CREATIVITY IS EVERYWHERE, LLC
+# Spend for speed, quality and scale.
+schema: blueprint.preference-profile/v1
+id: all-in
+scope: default
+label_en: All-in
+label_ja: お金をかけて質と伸びしろ
+summary_en: Spend money where it buys speed, quality and room to scale; prefer documented compliance and vendors that will not need replacing at volume.
+summary_ja: 速さ・質・伸びしろが買えるならお金を使う。認証が書かれていて、量が増えても入れ替えずに済む提供元を選ぶ。
+weights:
+  scale: 5
+  compliance: 5
+  speed: 4
+  breadth: 3
+  ecosystem: 3
+  lock_in: 2
+  cost: 1
+tie_break: [scale, compliance, speed]
+paid_is_ok_when_en: Whenever it buys speed, quality or headroom.
+paid_is_ok_when_ja: 速さ・質・余裕が買えるならいつでも
