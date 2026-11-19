@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blueprint Intro</title>
+<link rel="stylesheet" href="intro.css">
+</head>
+<body>
+<!-- 1920x1080 stage. In the browser it scales to fit; in capture mode (?capture=1) it is drawn 1:1. -->
+<div id="frame">
+  <div id="stage" aria-label="Blueprint intro animation" role="img">
+    <div id="world">
+      <svg id="strands" width="2300" height="1200" aria-hidden="true"></svg>
+      <div id="heads"></div>
+      <div id="nodes"></div>
+    </div>
+    <div id="pain" aria-hidden="true"></div>
+    <div id="chrome" aria-hidden="true"></div>
+    <svg id="overlay-lines" width="1920" height="1080" aria-hidden="true"></svg>
+    <div id="panel" aria-hidden="true"></div>
+    <div id="foresight" aria-hidden="true"></div>
+    <div id="legend" aria-hidden="true"></div>
+    <div id="tools" aria-hidden="true"></div>
+    <div id="endcard" aria-hidden="true"></div>
+    <div id="cursor" aria-hidden="true"></div>
+    <div id="grain" aria-hidden="true"></div>
+  </div>
+</div>
+<!-- player controls (hidden in capture mode) -->
+<div id="player">
+  <button id="pp" type="button">Pause</button>
+  <input id="scrub" type="range" min="0" max="86" step="0.0333" value="0" aria-label="Time">
+  <span id="clock" class="mono">00.0</span>
+  <button id="cc" type="button" aria-pressed="false">Captions</button>
+  <span id="rm" class="mono"></span>
+</div>
+<div id="caption" aria-live="off"></div>
+<script src="timeline.js"></script>
+<script src="intro.js"></script>
+</body>
+</html>
