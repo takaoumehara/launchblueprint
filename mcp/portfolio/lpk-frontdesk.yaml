@@ -1,0 +1,125 @@
+# Part B input — evidence for the lpk-frontdesk project map (repo: lpk-frontdesk). Separate from the store monorepo.
+# Only facts from the Part B evidence brief. Paths are "<repo>/<path>"; they were not re-read in this session.
+slug: lpk-frontdesk
+name: Front Desk (booking — not in production)
+goal: A booking front desk for local service businesses that replaces Vagaro. Not deployed.
+intake: {platform: web}
+production:
+  state: not_in_production
+  note: "README: not deployed. LINE, Twilio, Stripe and Vagaro are fakes by default and stay off the network. wrangler has workers_dev=true only."
+  verified: false
+  evidence:
+    - {kind: file, path: lpk-frontdesk/README.md, note: "not deployed; integrations faked by default"}
+note: "Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected = recommendation only). Not in production."
+records:
+  - topic: frontend
+    status: observed
+    observed_as: Plain ES modules, no bundler (staff + guest UI)
+    evidence:
+      - {kind: file, path: lpk-frontdesk/README.md, note: "staff/guest UI as plain ES modules, no bundler"}
+      - {kind: dependency, path: lpk-frontdesk/package.json, note: "no bundler dependency (per the brief)"}
+  - topic: backend
+    status: observed
+    pick: be.cloudflare-workers
+    observed_as: Cloudflare Workers (module) + Hono 4.13 + TypeScript
+    evidence:
+      - {kind: dependency, path: lpk-frontdesk/package.json, note: "hono 4.13, typescript"}
+  - topic: hosting
+    status: observed
+    pick: host.cloudflare-pages
+    observed_as: Cloudflare Workers (lpk-frontdesk, workers_dev=true)
+    gap_note: "Configured but not deployed (README). No custom domain or production environment is evidenced."
+    evidence:
+      - {kind: config, path: lpk-frontdesk/wrangler config, note: "name lpk-frontdesk, workers_dev=true (file name not given in the brief)"}
+      - {kind: file, path: lpk-frontdesk/README.md, note: "not deployed"}
+  - topic: database
+    status: observed
+    observed_as: Cloudflare D1 (own database lpk-frontdesk-dev)
+    gap_note: "Hyperdrive / Postgres sync (PG_TO_D1) is mentioned but the Hyperdrive id is still a placeholder. Owner sessions are designed to come from the lpk-ops D1 of Local Pro Kit."
+    evidence:
+      - {kind: note, note: "Part B brief: own D1 lpk-frontdesk-dev; PG_TO_D1 mentioned; Hyperdrive id placeholder"}
+  - topic: auth
+    status: observed
+    observed_as: "Bearer roles STAFF / RECEPTIONIST / OWNER / SYSTEM; owners via the lpk-ops session; guests via guestKey"
+    evidence:
+      - {kind: note, note: "Part B brief: bearer roles; owners via lpk-ops session; public booking uses guestKey (file not named)"}
+  - topic: payments
+    status: observed
+    observed_as: Deposit flow behind a PaymentGateway interface (fake Stripe by default)
+    verified: false
+    gap_note: "No live payment provider is wired: Stripe is a fake by default and stays off the network (README). No deposit amounts or fees are evidenced."
+    evidence:
+      - {kind: file, path: lpk-frontdesk/README.md, note: "Stripe fake by default"}
+  - topic: email
+    status: gap
+    gap_note: "No live email provider evidenced; unknown."
+  - topic: analytics
+    status: gap
+    gap_note: "Unknown: no analytics evidenced in the repo audit."
+  - topic: ai
+    status: gap
+    gap_note: "No AI API in package.json."
+    evidence:
+      - {kind: dependency, path: lpk-frontdesk/package.json, note: "no AI SDK (per the brief)"}
+architecture:
+  components:
+    - id: twilio-sms
+      role: third_party
+      name: Twilio SMS (code exists; CHAT_SMS_MODE=live off by default)
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: Twilio code exists; CHAT_SMS_MODE=live optional, off by default"}
+    - id: line-whatsapp
+      role: third_party
+      name: LINE / WhatsApp (deferred)
+      state: proposed
+    - id: vagaro-fake
+      role: third_party
+      name: Vagaro (faked; the product replaces it)
+      state: proposed
+    - id: lpk-ops-sessions
+      role: auth
+      name: lpk-ops D1 sessions (shared with Local Pro Kit)
+      state: proposed
+    - id: hyperdrive-pg
+      role: data
+      name: Hyperdrive → Postgres sync PG_TO_D1 (id placeholder)
+      state: proposed
+    - id: guest-key
+      role: auth
+      name: guestKey for public booking
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: public booking uses guestKey"}
+  links:
+    - from: frontend
+      to: backend
+      label: staff + guest UI → Hono API
+      state: proposed
+      note: "same worker per the README; route file not named"
+    - from: backend
+      to: database
+      label: bookings in D1 lpk-frontdesk-dev
+      state: proposed
+      note: "D1 binding named in the brief; query file not named"
+    - from: auth
+      to: lpk-ops-sessions
+      label: owners sign in with the Local Pro Kit session
+      state: proposed
+    - from: backend
+      to: payments
+      label: deposit via PaymentGateway (fake)
+      state: proposed
+    - from: backend
+      to: twilio-sms
+      label: SMS when CHAT_SMS_MODE=live
+      state: proposed
+      note: "off by default"
+    - from: hyperdrive-pg
+      to: database
+      label: PG_TO_D1 sync
+      state: proposed
+    - from: guest-key
+      to: backend
+      label: public booking
+      state: proposed

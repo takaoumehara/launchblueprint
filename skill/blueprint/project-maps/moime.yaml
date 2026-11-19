@@ -1,0 +1,2428 @@
+# Blueprint project map — draft written by update_project_map (MCP). Review, then move to skill/blueprint/project-maps/ to publish.
+# Statuses: open / observed (seen in the repo, with evidence) / ai_selected (agent pick, owner reviews later) / decided (owner said yes) / gap (evidence missing) / deferred.
+domain: project_map
+schema: blueprint.project-map/v2
+slug: moime
+name: moime (mobile-first site builder)
+goal: Let people build and publish a small website from their phone.
+profile:
+  platform: web
+  money: paid
+preference_profile: lean-fast-full
+updated: '2026-11-19'
+review:
+  link: '#/p/moime'
+  url: null
+  arch: '#/p/moime/arch'
+production:
+  state: live
+  note: >-
+    docs/deployment.md lists the public address https://moime.app (alias moime-1600f.web.app). Not opened in this session. No live checkout
+    payment has been made.
+  url: https://moime.app
+  verified: false
+  evidence:
+    - kind: file
+      path: third-moime/docs/deployment.md
+      note: public URL and Firebase Hosting alias
+elements:
+  - el.experience
+  - el.product
+  - el.business
+  - el.marketing
+  - el.brand
+  - el.maintenance
+  - el.security
+architecture:
+  components:
+    - id: sms-phone-auth
+      role: auth
+      name: SMS via Firebase phone auth (not Twilio)
+      state: implemented
+      evidence:
+        - kind: file
+          path: third-moime/README.md
+          note: phone/SMS sign-in through Firebase Auth
+    - id: secret-manager
+      role: backend
+      name: Google Secret Manager
+      state: implemented
+      evidence:
+        - kind: note
+          note: 'Part B brief: Secret Manager (file not named)'
+    - id: cloud-scheduler
+      role: backend
+      name: Cloud Scheduler maintenance jobs
+      state: implemented
+      evidence:
+        - kind: note
+          note: 'Part B brief: Cloud Scheduler maintenance (file not named)'
+    - id: ffmpeg
+      role: backend
+      name: ffmpeg in the container image
+      state: implemented
+      evidence:
+        - kind: file
+          path: third-moime/Dockerfile
+          note: ffmpeg installed in the image (per the brief)
+    - id: insights
+      role: data
+      name: Built-in insights (first-party)
+      state: implemented
+      evidence:
+        - kind: note
+          note: 'Part B brief: built-in insights also exist (file not named)'
+    - id: stripe-webhook
+      role: payments
+      name: Stripe webhook (signing secret not configured)
+      state: proposed
+  links:
+    - from: hosting
+      to: backend
+      label: rewrite all requests to Cloud Run
+      state: implemented
+      evidence:
+        - kind: config
+          path: third-moime/firebase.json
+          note: rewrite → Cloud Run service moime, us-east1
+    - from: backend
+      to: email
+      label: transactional mail
+      state: implemented
+      evidence:
+        - kind: file
+          path: third-moime/src/lib/transactional-email.ts
+          note: Resend
+    - from: backend
+      to: ai
+      label: flyer parse / metadata (Gemini → OpenAI/OpenRouter)
+      state: implemented
+      evidence:
+        - kind: file
+          path: third-moime/src/lib/moime-api.ts
+          note: model chain; production keys unknown
+    - from: backend
+      to: payments
+      label: Checkout + customer portal
+      state: implemented
+      evidence:
+        - kind: note
+          note: 'Part B brief: Stripe Checkout + portal; not yet able to start without the webhook secret'
+    - from: stripe-webhook
+      to: backend
+      label: payment events (blocked until the secret is set)
+      state: proposed
+    - from: auth
+      to: sms-phone-auth
+      label: phone sign-in (JP, US first)
+      state: implemented
+      evidence:
+        - kind: file
+          path: third-moime/docs/deployment.md
+          note: SMS regions; delivery not yet verified
+    - from: ci
+      to: hosting
+      label: preview + production deploys
+      state: implemented
+      evidence:
+        - kind: config
+          path: third-moime/.github/workflows/deploy-production.yml
+          note: production deploy workflow
+    - from: cloud-scheduler
+      to: backend
+      label: scheduled maintenance
+      state: implemented
+      evidence:
+        - kind: note
+          note: per the brief
+    - from: secret-manager
+      to: backend
+      label: secrets at runtime
+      state: implemented
+      evidence:
+        - kind: note
+          note: per the brief
+choices:
+  - element: el.product
+    topic: database
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - db.supabase
+      - db.firestore
+      - db.neon
+    ai_pick: ''
+    pick: db.firestore
+    reason: ''
+    rejected:
+      - option: db.supabase
+        why: scores higher (0.94 vs 0.76) under lean-fast-full; not taken because it is observed in the repository
+      - option: db.neon
+        why: '0.60 vs 0.76: weaker on speed 0.00 vs 0.50, breadth 0.55 vs 1.00 — avoid when: ログインやファイル置き場まで1か所でそろえたい時（別に用意が要る）'
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: note
+        note: 'Part B brief: Cloud Firestore, native, us-east1 (file not named in the brief)'
+    observed_as: Cloud Firestore (native mode, us-east1)
+    date: '2026-11-19'
+    source: repo
+    scored_pick: db.supabase
+    scored_under: lean-fast-full
+    profile_drift:
+      profile: lean-fast-full
+      would_pick: db.supabase
+      note: 'kept: owner decision or observed fact; review'
+  - element: el.product
+    topic: analytics
+    stage: launch
+    lane: ux
+    kind: choose
+    status: observed
+    options:
+      - an.posthog
+      - an.vercel-analytics
+    ai_pick: ''
+    pick: ''
+    reason: ''
+    rejected:
+      - option: an.vercel-analytics
+        why: catalog alternative (0.66 under lean-fast-full); the repo uses Microsoft Clarity (runtime-gated) + built-in insights
+      - option: an.posthog
+        why: catalog alternative (0.58 under lean-fast-full); the repo uses Microsoft Clarity (runtime-gated) + built-in insights
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: note
+        note: 'Part B brief: Microsoft Clarity, runtime-gated; built-in insights also exist (file not named)'
+    observed_as: Microsoft Clarity (runtime-gated) + built-in insights
+    date: '2026-11-19'
+    source: repo
+    scored_pick: an.vercel-analytics
+    scored_under: lean-fast-full
+  - element: el.experience
+    topic: ui_patterns
+    stage: idea
+    lane: ui
+    kind: checklist
+    status: ai_selected
+    options:
+      - ui_ux.primary-action-color
+      - ui_ux.selected-state-tint
+      - ui_ux.hints-on-demand
+      - ui_ux.short-scannable-copy
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: business_setup
+    stage: launch
+    lane: biz
+    kind: checklist
+    status: ai_selected
+    options:
+      - biz.public-support-address
+      - biz.processor-account-per-brand
+      - biz.llc-full-formation-cost
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: payments
+    stage: launch
+    lane: biz
+    kind: choose
+    status: observed
+    options:
+      - pay.stripe-checkout
+      - pay.stripe-connect
+      - pay.paddle
+      - pay.ryft
+    ai_pick: ''
+    pick: pay.stripe-checkout
+    reason: ''
+    rejected:
+      - option: pay.paddle
+        why: '0.59 vs 0.77: weaker on fit 0.30 vs 0.80, speed 0.75 vs 1.00 — avoid when: 物販・マーケットプレイス。料率を下げたい場合'
+      - option: pay.square
+        why: '0.46 vs 0.77: weaker on speed 0.50 vs 1.00 (no evidence), fit 0.30 vs 0.80 — avoid when: マーケットプレイスの分配・複雑な課金'
+      - option: pay.stripe-connect
+        why: '0.36 vs 0.77: weaker on speed 0.25 vs 1.00, fit 0.30 vs 0.80 — avoid when: 自分だけが売る普通のお店（仕組みが大きすぎ、手間が増える）'
+      - option: pay.ryft
+        why: >-
+          0.28 vs 0.77: weaker on cost 0.10 vs 0.85, speed 0.25 vs 1.00 — avoid when: 米国中心の販売、日本向け、公開料金で即日始めたい小規模、Stripe
+          並みの周辺機能（Billing/Tax/Radar 等）を一式で使いたい場合
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: note
+        note: 'Part B brief: Stripe Checkout + customer portal; webhook signing secret not configured; no live payment made'
+    gap_note: >-
+      Checkout will not start until the Stripe webhook signing secret is configured, and no live checkout payment has been made (per the
+      repo docs). Treat payments as not yet working in production.
+    verified: false
+    observed_as: Stripe Checkout + customer portal
+    date: '2026-11-19'
+    source: repo
+    scored_pick: pay.stripe-checkout
+    scored_under: lean-fast-full
+  - element: el.marketing
+    topic: launch_channels
+    stage: launch
+    lane: brand
+    kind: choose
+    status: ai_selected
+    options:
+      - gtm.producthunt
+      - gtm.hn
+      - gtm.x
+      - gtm.seo
+    ai_pick: gtm.x
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.66 vs 0.62 for SEO（検索流入）): cost 1.00, speed 1.00, breadth 0.30; catalog default.'
+    rejected:
+      - option: gtm.seo
+        why: '0.62 vs 0.66: weaker on speed 0.50 vs 1.00 (no evidence) — avoid when: 検索需要がない新カテゴリ'
+      - option: gtm.hn
+        why: '0.57 vs 0.66: weaker on speed 0.50 vs 1.00 (no evidence) — avoid when: マーケ色の強い文面'
+      - option: gtm.producthunt
+        why: '0.53 vs 0.66: weaker on speed 0.50 vs 1.00 (no evidence), cost 0.85 vs 1.00 — avoid when: 一般消費者向け・地域限定サービス'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.66、次点 SEO（検索流入） 0.62）：費用 1.00、速さ 1.00、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: false
+    checked: '2026-11-03'
+  - element: el.brand
+    topic: cross_border
+    stage: launch
+    lane: biz
+    kind: checklist
+    status: ai_selected
+    options:
+      - axis.i18n
+      - axis.legal
+      - axis.payments_tax
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: hosting
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - host.vercel
+      - host.cloudflare-pages
+      - host.firebase-hosting
+    ai_pick: ''
+    pick: host.firebase-hosting
+    reason: ''
+    rejected:
+      - option: host.cloudflare-pages
+        why: '0.62 vs 0.67: weaker on fit 0.00 vs 1.00 — avoid when: Next.js の機能をそのまま全部使いたい時（一部が動かないことがある）'
+      - option: host.vercel
+        why: '0.49 vs 0.67: weaker on fit 0.00 vs 1.00, speed 0.25 vs 0.50 — avoid when: 商用なのに無料プランのまま使う時、アプリのデータ置き場を Firebase でそろえたい時'
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: config
+        path: third-moime/firebase.json
+        note: hosting site moime-1600f rewrites to Cloud Run service moime, us-east1
+      - kind: file
+        path: third-moime/docs/deployment.md
+        note: public https://moime.app; alias https://moime-1600f.web.app
+    observed_as: Firebase Hosting (site moime-1600f) rewriting to Cloud Run
+    date: '2026-11-19'
+    source: repo
+    scored_pick: host.firebase-hosting
+    scored_under: lean-fast-full
+  - element: el.maintenance
+    topic: monitoring
+    stage: operate
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - mon.sentry
+      - mon.vercel-observability
+      - mon.crashlytics
+    ai_pick: mon.crashlytics
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.80 vs 0.68 for Sentry): cost 1.00, breadth 1.00, fit 1.00.'
+    rejected:
+      - option: mon.sentry
+        why: '0.68 vs 0.80: weaker on breadth 0.30 vs 1.00, fit 0.80 vs 1.00 — avoid when: スマホアプリだけで、無料のクラッシュ集計で足りる時'
+      - option: mon.vercel-observability
+        why: '0.54 vs 0.80: weaker on fit 0.30 vs 1.00, cost 0.50 vs 1.00 — avoid when: Vercel 以外に置いている時、画面側のエラーも集めたい時'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.80、次点 Sentry 0.68）：費用 1.00、幅 1.00、相性 1.00。
+    linkages:
+      - kind: same_vendor
+        with_topic: database
+        with_option: db.firestore
+        why: 'same vendor as database (Cloud Firestore, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: shared_free_tier
+        with_topic: database
+        with_option: db.firestore
+        verified: false
+        why: both start on firebase.google.com's free plan — check whether free-tier limits are per project or shared across the account
+      - kind: same_vendor
+        with_topic: hosting
+        with_option: host.firebase-hosting
+        why: 'same vendor as hosting (Firebase Hosting / App Hosting, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: same_vendor
+        with_topic: auth
+        with_option: auth.firebase
+        why: 'same vendor as auth (Firebase Authentication, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: shared_free_tier
+        with_topic: auth
+        with_option: auth.firebase
+        verified: false
+        why: both start on firebase.google.com's free plan — check whether free-tier limits are per project or shared across the account
+      - kind: same_vendor
+        with_topic: realtime
+        with_option: rt.firebase-rtdb
+        why: 'same vendor as realtime (Firebase Realtime Database, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: same_vendor
+        with_topic: backup_dr
+        with_option: bk.firestore-pitr
+        why: 'same vendor as backup_dr (Firestore の時点復元（PITR）と定期バックアップ, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: shared_free_tier
+        with_topic: backup_dr
+        with_option: bk.firestore-pitr
+        verified: false
+        why: both start on firebase.google.com's free plan — check whether free-tier limits are per project or shared across the account
+    source: catalog
+    verified: true
+    checked: '2026-11-03'
+  - element: el.maintenance
+    topic: email
+    stage: launch
+    lane: ux
+    kind: choose
+    status: observed
+    options:
+      - mail.resend
+      - push.fcm
+    ai_pick: ''
+    pick: mail.resend
+    reason: ''
+    rejected:
+      - option: push.fcm
+        why: '0.78 vs 0.81: weaker on speed 0.50 vs 1.00 (no evidence), lock-in 0.50 vs 0.90 — avoid when: 登録確認などのメールを送りたい時（メールは送れない）'
+      - option: mail.ses
+        why: '0.59 vs 0.81: weaker on speed 0.50 vs 1.00 (no evidence), fit 0.30 vs 0.80'
+      - option: mail.postmark
+        why: '0.43 vs 0.81: weaker on cost 0.50 vs 1.00, speed 0.50 vs 1.00 (no evidence)'
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: file
+        path: third-moime/src/lib/transactional-email.ts
+        note: Resend client for transactional mail
+      - kind: config
+        path: third-moime/.env.example
+        note: Resend settings listed
+    date: '2026-11-19'
+    source: repo
+    scored_pick: mail.resend
+    scored_under: lean-fast-full
+  - element: el.maintenance
+    topic: support
+    stage: operate
+    lane: ux
+    kind: choose
+    status: observed
+    options:
+      - sup.email
+      - sup.crisp
+      - sup.docs
+      - sup.status
+    ai_pick: ''
+    pick: sup.crisp
+    reason: ''
+    rejected:
+      - option: sup.status
+        why: scores higher (0.62 vs 0.53) under lean-fast-full; not taken because it is observed in the repository
+      - option: sup.email
+        why: scores higher (0.59 vs 0.53) under lean-fast-full; not taken because it is observed in the repository
+      - option: sup.docs
+        why: scores higher (0.58 vs 0.53) under lean-fast-full; not taken because it is observed in the repository
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: note
+        note: 'Part B brief: Crisp, runtime-gated (file not named)'
+    observed_as: Crisp chat (runtime-gated)
+    date: '2026-11-19'
+    source: repo
+    scored_pick: sup.status
+    scored_under: lean-fast-full
+    profile_drift:
+      profile: lean-fast-full
+      would_pick: sup.status
+      note: 'kept: owner decision or observed fact; review'
+  - element: el.security
+    topic: auth
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - auth.supabase
+      - auth.firebase
+      - auth.clerk
+      - auth.auth0
+      - auth.better-auth
+      - auth.authjs
+      - auth.stytch
+      - auth.passkeys
+      - auth.magic
+    ai_pick: ''
+    pick: auth.firebase
+    reason: ''
+    rejected:
+      - option: auth.supabase
+        why: '0.68 vs 0.82: weaker on fit 0.00 vs 1.00, speed 0.50 vs 0.75 (no evidence) — avoid when: データの置き場所が Firebase の時（2か所に分かれる）'
+      - option: auth.authjs
+        why: >-
+          0.68 vs 0.82: weaker on breadth 0.30 vs 1.00, speed 0.50 vs 0.75 (no evidence) — avoid when: パスワード・二段階認証・管理画面まで要る時。公式が「Better Auth
+          の一部になった」と案内しているため、新規なら Better Auth も並べて比べる
+      - option: auth.better-auth
+        why: '0.62 vs 0.82: weaker on breadth 0.30 vs 1.00, speed 0.25 vs 0.75 — avoid when: セキュリティ運用を自分で持てない時'
+      - option: auth.passkeys
+        why: '0.59 vs 0.82: weaker on breadth 0.30 vs 1.00, fit 0.30 vs 1.00 — avoid when: 端末をなくした時の復旧手段がない'
+      - option: auth.cognito
+        why: '0.55 vs 0.82: weaker on fit 0.30 vs 1.00, breadth 0.55 vs 1.00'
+      - option: auth.auth0
+        why: '0.54 vs 0.82: weaker on breadth 0.30 vs 1.00, fit 0.30 vs 1.00 — avoid when: 無料枠を超えて伸びる B2C（MAU 段階で急に高くなる）'
+      - option: auth.magic
+        why: '0.54 vs 0.82: weaker on breadth 0.30 vs 1.00, fit 0.30 vs 1.00 — avoid when: 普通のウェブのログイン（今は財布向けの料金体系）'
+      - option: auth.stytch
+        why: '0.54 vs 0.82: weaker on breadth 0.30 vs 1.00, fit 0.30 vs 1.00'
+      - option: auth.clerk
+        why: '0.52 vs 0.82: weaker on fit 0.00 vs 1.00, breadth 0.30 vs 1.00 — avoid when: 無料・低単価で大量ユーザーの B2C（公式FAQも Supabase/Firebase を勧める）'
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: file
+        path: third-moime/README.md
+        note: 'Firebase Auth: Google, email/password, phone/SMS'
+      - kind: file
+        path: third-moime/docs/deployment.md
+        note: SMS regions JP and US; delivery not yet verified
+    gap_note: SMS sign-in regions are initially JP and US; physical SMS delivery still needs verification (docs/deployment.md).
+    observed_as: Firebase Auth — Google, email/password, phone (SMS)
+    date: '2026-11-19'
+    source: repo
+    scored_pick: auth.firebase
+    scored_under: lean-fast-full
+  - element: el.security
+    topic: protection
+    stage: launch
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - sec.turnstile
+      - sec.vercel-firewall
+      - sec.secrets
+    ai_pick: sec.turnstile
+    pick: ''
+    reason: >-
+      Top score under lean-fast-full (0.71 vs 0.67 for 秘密情報の置き場（ホストの環境変数／Secret Manager）): cost 1.00, breadth 1.00, lock-in 0.90; catalog
+      default.
+    rejected:
+      - option: sec.secrets
+        why: '0.67 vs 0.71: weaker on cost 0.50 vs 1.00 — avoid when: 「選ぶ」ものではなく必ずやること。鍵をコードに書かない'
+      - option: sec.vercel-firewall
+        why: '0.57 vs 0.71: weaker on cost 0.50 vs 1.00, lock-in 0.50 vs 0.90 — avoid when: Vercel 以外に置いている時'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.71、次点 秘密情報の置き場（ホストの環境変数／Secret Manager） 0.67）：費用 1.00、幅 1.00、乗り換え 0.90。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.security
+    topic: data_protection
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - dp.backup-3-2-1
+      - dp.backup-bucket-lock
+      - dp.backup-verify-alert
+      - dp.restore-test-monthly
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.brand
+    topic: brand_basics
+    stage: idea
+    lane: brand
+    kind: checklist
+    status: ai_selected
+    options:
+      - lc.brand.11
+      - lc.brand.12
+      - lc.brand.13
+      - lc.brand.14
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.marketing
+    topic: growth_channels
+    stage: scale
+    lane: brand
+    kind: choose
+    status: ai_selected
+    options:
+      - gtm.content
+      - gtm.referral
+      - gtm.community
+      - gtm.seo
+      - gtm.ads.meta
+    ai_pick: gtm.content
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.70 vs 0.64 for コミュニティ（Discord 等）): cost 1.00, fit 0.80, breadth 0.55.'
+    rejected:
+      - option: gtm.community
+        why: '0.64 vs 0.70: weaker on breadth 0.30 vs 0.55, lock-in 0.50 vs 0.90 — avoid when: 運営の時間が取れない'
+      - option: gtm.seo
+        why: '0.62 vs 0.70: weaker on fit 0.30 vs 0.80 — avoid when: 検索需要がない新カテゴリ'
+      - option: gtm.referral
+        why: '0.53 vs 0.70: weaker on fit 0.30 vs 0.80, breadth 0.30 vs 0.55 — avoid when: 特典目当ての不正が起きやすい商品'
+      - option: gtm.ads.meta
+        why: '0.44 vs 0.70: weaker on cost 0.45 vs 1.00, fit 0.30 vs 0.80 — avoid when: B2B の高単価'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.70、次点 コミュニティ（Discord 等） 0.64）：費用 1.00、相性 0.80、幅 0.55。
+    linkages:
+      - kind: pairs_well_with
+        with_topic: launch_channels
+        with_option: gtm.x
+        why: catalog lists it as pairing well with X（旧Twitter） (launch_channels)
+    source: catalog
+    verified: false
+    checked: '2026-11-03'
+  - element: el.experience
+    topic: app_distribution
+    stage: launch
+    lane: ux
+    kind: choose
+    status: ai_selected
+    options:
+      - dist.pwa
+      - dist.capacitor
+      - dist.expo
+      - dist.native
+      - dist.twa
+    ai_pick: dist.expo
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.62 vs 0.62 for PWA（ホーム画面に追加）): cost 1.00, breadth 0.75, fit 0.30.'
+    rejected:
+      - option: dist.pwa
+        why: '0.62 vs 0.62: weaker on breadth 0.30 vs 0.75 — avoid when: ストアでの発見・ネイティブ機能（iOSのバックグラウンド等）が必須'
+      - option: dist.native
+        why: >-
+          0.46 vs 0.62: weaker on cost 0.50 vs 1.00 (no evidence), breadth 0.50 vs 0.75 (no evidence) — avoid when: 小さく早く確かめたい時（iPhone 用と
+          Android 用を2回作ることになる）
+      - option: dist.twa
+        why: '0.43 vs 0.62: weaker on cost 0.50 vs 1.00 (no evidence), breadth 0.30 vs 0.75 — avoid when: iPhone にも出したい時（Android だけ）'
+      - option: dist.capacitor
+        why: '0.42 vs 0.62: weaker on cost 0.45 vs 1.00, breadth 0.30 vs 0.75 — avoid when: ウェブのコードがまだない時（最初から Expo の方が早い）'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.62、次点 PWA（ホーム画面に追加） 0.62）：費用 1.00、幅 0.75、相性 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.experience
+    topic: ui_copy
+    stage: idea
+    lane: ui
+    kind: checklist
+    status: ai_selected
+    options:
+      - ui_ux.short-scannable-copy
+      - ui_ux.plain-localized-terms
+      - ui_ux.plain-screen-labels
+      - ui_ux.no-ellipsis-truncation
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.product
+    topic: frontend
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - fe.nextjs
+      - fe.astro
+      - fe.expo
+    ai_pick: ''
+    pick: fe.nextjs
+    reason: ''
+    rejected:
+      - option: fe.expo
+        why: scores higher (0.74 vs 0.69) under lean-fast-full; not taken because it is observed in the repository
+      - option: fe.astro
+        why: '0.57 vs 0.69: weaker on fit 0.30 vs 0.80, breadth 0.30 vs 0.55 — avoid when: ログイン後のアプリ本体'
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: dependency
+        path: third-moime/package.json
+        note: next 16.3.5, react 19, tailwindcss 4
+    observed_as: Next.js 16.3.5 + React 19 + Tailwind 4
+    date: '2026-11-19'
+    source: repo
+    scored_pick: fe.expo
+    scored_under: lean-fast-full
+    profile_drift:
+      profile: lean-fast-full
+      would_pick: fe.expo
+      note: 'kept: owner decision or observed fact; review'
+  - element: el.product
+    topic: storage
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - st.supabase-storage
+      - st.vercel-blob
+      - st.mux
+    ai_pick: ''
+    pick: ''
+    reason: ''
+    rejected:
+      - option: st.r2
+        why: catalog alternative (0.80 under lean-fast-full); the repo uses Firebase Storage
+      - option: st.supabase-storage
+        why: catalog alternative (0.72 under lean-fast-full); the repo uses Firebase Storage
+      - option: st.vercel-blob
+        why: catalog alternative (0.67 under lean-fast-full); the repo uses Firebase Storage
+      - option: st.mux
+        why: catalog alternative (0.63 under lean-fast-full); the repo uses Firebase Storage
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: note
+        note: 'Part B brief: Firebase Storage (file not named in the brief)'
+    observed_as: Firebase Storage
+    date: '2026-11-19'
+    source: repo
+    scored_pick: st.r2
+    scored_under: lean-fast-full
+  - element: el.product
+    topic: search
+    stage: launch
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - se.postgres-fts
+      - se.algolia
+    ai_pick: se.postgres-fts
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.60 vs 0.54 for Algolia): cost 1.00, lock-in 0.90, breadth 0.30; catalog default.'
+    rejected:
+      - option: se.algolia
+        why: '0.54 vs 0.60: weaker on lock-in 0.10 vs 0.90, speed 0.25 vs 0.50 — avoid when: 件数が少ない時（月額が無駄になる）、データの置き場所で足りる時'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.60、次点 Algolia 0.54）：費用 1.00、乗り換え 0.90、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-03'
+  - element: el.product
+    topic: realtime
+    stage: launch
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - rt.supabase-realtime
+      - rt.firebase-rtdb
+    ai_pick: rt.firebase-rtdb
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.70 vs 0.67 for Supabase Realtime): breadth 1.00, fit 1.00, speed 0.75.'
+    rejected:
+      - option: rt.supabase-realtime
+        why: '0.67 vs 0.70: weaker on fit 0.00 vs 1.00, speed 0.50 vs 0.75 (no evidence) — avoid when: データの置き場所が Firebase の時'
+      - option: rt.ably
+        why: '0.43 vs 0.70: weaker on breadth 0.30 vs 1.00, fit 0.30 vs 1.00'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.70、次点 Supabase Realtime 0.67）：幅 1.00、相性 1.00、速さ 0.75。
+    linkages:
+      - kind: same_vendor
+        with_topic: database
+        with_option: db.firestore
+        why: 'same vendor as database (Cloud Firestore, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: same_vendor
+        with_topic: hosting
+        with_option: host.firebase-hosting
+        why: 'same vendor as hosting (Firebase Hosting / App Hosting, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: same_vendor
+        with_topic: auth
+        with_option: auth.firebase
+        why: 'same vendor as auth (Firebase Authentication, firebase.google.com): one account, one bill, fewer integrations'
+    source: catalog
+    verified: true
+    checked: '2026-11-03'
+  - element: el.product
+    topic: ai
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - ai.gateway
+      - ai.firebase-ai-logic
+    ai_pick: ''
+    pick: ai.direct
+    reason: ''
+    rejected:
+      - option: ai.firebase-ai-logic
+        why: scores higher (0.78 vs 0.54) under lean-fast-full; not taken because it is observed in the repository
+      - option: ai.gateway
+        why: scores higher (0.71 vs 0.54) under lean-fast-full; not taken because it is observed in the repository
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: file
+        path: third-moime/src/lib/moime-api.ts
+        note: Gemini → OpenAI/OpenRouter chain for flyer parse/metadata
+    gap_note: API keys are not in .env.example; whether any model key is set in production is unknown.
+    observed_as: Gemini first, then OpenAI / OpenRouter fallback (flyer parse + metadata)
+    date: '2026-11-19'
+    source: repo
+    scored_pick: ai.firebase-ai-logic
+    scored_under: lean-fast-full
+    profile_drift:
+      profile: lean-fast-full
+      would_pick: ai.firebase-ai-logic
+      note: 'kept: owner decision or observed fact; review'
+  - element: el.maintenance
+    topic: ci
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - ci.vercel-git
+      - ci.github-actions
+    ai_pick: ''
+    pick: ci.github-actions
+    reason: ''
+    rejected:
+      - option: ci.eas-workflows
+        why: scores higher (0.64 vs 0.57) under lean-fast-full; not taken because it is observed in the repository
+      - option: ci.vercel-git
+        why: '0.51 vs 0.57: weaker on cost 0.50 vs 1.00, lock-in 0.50 vs 0.90 — avoid when: テストを細かく自動で回したい時（GitHub Actions と組み合わせる）'
+    decided_by: ''
+    last_checked: '2026-10-28'
+    evidence:
+      - kind: config
+        path: third-moime/.github/workflows/ci.yml
+        note: CI
+      - kind: config
+        path: third-moime/.github/workflows/deploy-preview.yml
+        note: preview deploy
+      - kind: config
+        path: third-moime/.github/workflows/deploy-production.yml
+        note: production deploy
+    date: '2026-11-19'
+    source: repo
+    scored_pick: ci.eas-workflows
+    scored_under: lean-fast-full
+    profile_drift:
+      profile: lean-fast-full
+      would_pick: ci.eas-workflows
+      note: 'kept: owner decision or observed fact; review'
+  - element: el.business
+    topic: build_vs_buy
+    stage: idea
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - bvb.platform
+      - bvb.api
+      - bvb.build
+    ai_pick: bvb.platform
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.54 vs 0.35 for bvb.api): speed 0.75, fit 0.30; catalog default.'
+    rejected:
+      - option: bvb.api
+        why: '0.35 vs 0.54: weaker on speed 0.00 vs 0.75 — avoid when: つなぎのコードも保守したくない'
+      - option: bvb.build
+        why: '0.35 vs 0.54: weaker on speed 0.00 vs 0.75 — avoid when: 検証前、保守できる人がいない、規制対応を自分で持てない'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.54、次点 bvb.api 0.35）：速さ 0.75、相性 0.30。
+    linkages: []
+    source: catalog
+    verified: false
+    checked: null
+  - element: el.business
+    topic: market_entry
+    stage: idea
+    lane: biz
+    kind: choose
+    status: ai_selected
+    options:
+      - es.us_first
+      - es.jp_en
+      - es.mor_first
+    ai_pick: es.jp_en
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.58 vs 0.53 for USファースト（英語のみで始め、反応があれば日本語化）): cost 1.00, fit 0.30.'
+    rejected:
+      - option: es.us_first
+        why: '0.53 vs 0.58: weaker on cost 0.70 vs 1.00 — avoid when: 日本の既存ネットワーク・強みを使えない / 後からの日本語化で文言の作り直し'
+      - option: es.mor_first
+        why: '0.51 vs 0.58: weaker on cost 0.70 vs 1.00 — avoid when: 手数料が高い（5%+50¢。$10の商品なら約10%） / 決済画面・請求書の名義が MoR / 審査あり（対象はデジタル商品のみ）'
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.58、次点 USファースト（英語のみで始め、反応があれば日本語化） 0.53）：費用 1.00、相性 0.30。
+    linkages: []
+    source: catalog
+    verified: false
+    checked: '2026-11-03'
+  - element: el.business
+    topic: exit_dd
+    stage: exit
+    lane: biz
+    kind: checklist
+    status: ai_selected
+    options:
+      - dd.ip
+      - dd.oss
+      - dd.contracts
+      - dd.privacy
+      - dd.code
+      - dd.infra
+      - dd.metrics
+      - dd.billing_sources
+      - dd.sunset
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.security
+    topic: ai_defense
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - dp.rate-limit-auth-forms
+      - dp.bot-challenge-server-verified
+      - dp.admin-phishing-resistant-mfa
+      - dp.prompt-injection-untrusted-input
+      - dp.ai-usage-caps
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: preview_rules
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - ci.preview-per-pr-first
+      - ci.preview-db-isolation
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: store_rules
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - policy.apple.3_1_1
+      - policy.apple.3_1_1a
+      - policy.google.payments
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: scale_plan
+    stage: scale
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - scale.t0
+      - scale.t1
+      - scale.t2
+      - scale.t3
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-10-28'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.product
+    topic: cms
+    stage: launch
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - cms.microcms
+      - cms.sanity
+      - cms.storyblok
+      - cms.tina
+      - cms.sheets
+      - cms.notion
+    ai_pick: cms.sheets
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.58 vs 0.58 for TinaCMS): cost 1.00, lock-in 0.90, breadth 0.30.'
+    rejected:
+      - option: cms.tina
+        why: '0.58 vs 0.58: weaker on lower total — avoid when: DBの動的データ'
+      - option: cms.notion
+        why: '0.55 vs 0.58: weaker on lock-in 0.50 vs 0.90 — avoid when: 表示を速くしたい（画像URLが期限切れになる・回数制限あり）'
+      - option: cms.storyblok
+        why: '0.54 vs 0.58: weaker on lock-in 0.50 vs 0.90 — avoid when: スマホでの編集、無料で2人超'
+      - option: cms.microcms
+        why: '0.54 vs 0.58: weaker on lock-in 0.50 vs 0.90, scale 0.00 vs 0.50 — avoid when: 見たまま編集したい時'
+      - option: cms.sanity
+        why: '0.48 vs 0.58: weaker on speed 0.25 vs 0.50, lock-in 0.50 vs 0.90 — avoid when: 設定をコードで書ける人がいない時'
+    decided_by: ai
+    last_checked: '2026-10-29'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.58、次点 TinaCMS 0.58）：費用 1.00、乗り換え 0.90、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.experience
+    topic: editor_ui
+    stage: launch
+    lane: ui
+    kind: choose
+    status: ai_selected
+    options:
+      - edit.vaul
+      - edit.dnd-kit
+      - edit.puck
+      - edit.tiptap
+      - edit.blocknote
+    ai_pick: edit.vaul
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.60 vs 0.58 for dnd-kit): cost 1.00, lock-in 0.90, breadth 0.30; catalog default.'
+    rejected:
+      - option: edit.dnd-kit
+        why: '0.58 vs 0.60: weaker on lower total — avoid when: 上下ボタンで足りる時（その方が誤操作が少ない）'
+      - option: edit.blocknote
+        why: '0.54 vs 0.60: weaker on lock-in 0.50 vs 0.90 — avoid when: 細かく見た目を決めたい'
+      - option: edit.puck
+        why: '0.54 vs 0.60: weaker on lock-in 0.50 vs 0.90 — avoid when: 画面の動きを全部自分で決めたい'
+      - option: edit.tiptap
+        why: '0.54 vs 0.60: weaker on lock-in 0.50 vs 0.90 — avoid when: 共同編集や履歴まで要る時は有料'
+    decided_by: ai
+    last_checked: '2026-10-29'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.60、次点 dnd-kit 0.58）：費用 1.00、乗り換え 0.90、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.experience
+    topic: ui_library
+    stage: launch
+    lane: ui
+    kind: choose
+    status: ai_selected
+    options:
+      - ui.shadcn
+      - ui.base-ui
+      - ui.react-aria
+      - ui.heroui
+      - ui.untitled
+      - ui.coss
+      - ui.daisyui
+      - ui.tremor
+      - ui.magicui
+      - ui.aceternity
+      - ui.smoothui
+      - ui.transitions
+      - ui.reactbits
+      - ui.21st
+      - ui.kibo
+    ai_pick: ui.untitled
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.60 vs 0.60 for shadcn/ui): cost 1.00, speed 0.75, breadth 0.30.'
+    rejected:
+      - option: ui.shadcn
+        why: '0.60 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: —'
+      - option: ui.aceternity
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: アプリの作業画面（重い・動きすぎ）'
+      - option: ui.base-ui
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: —'
+      - option: ui.coss
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: —'
+      - option: ui.daisyui
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: 細かい動き'
+      - option: ui.kibo
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: —'
+      - option: ui.magicui
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: アプリの作業画面で多用'
+      - option: ui.react-aria
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: —'
+      - option: ui.reactbits
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: アプリ画面'
+      - option: ui.smoothui
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: アプリ画面'
+      - option: ui.transitions
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: そのまま全部コピー'
+      - option: ui.tremor
+        why: '0.58 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: —'
+      - option: ui.21st
+        why: '0.57 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence), scale 0.25 vs 0.50 — avoid when: 品質と作者ごとのライセンスを確かめずに使う'
+      - option: ui.heroui
+        why: '0.54 vs 0.60: weaker on speed 0.50 vs 0.75 (no evidence) — avoid when: 独自ブランドを強く出したい'
+    decided_by: ai
+    last_checked: '2026-10-29'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.60、次点 shadcn/ui 0.60）：費用 1.00、速さ 0.75、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-03'
+  - element: el.product
+    topic: i18n
+    stage: idea
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - i18n.next-intl
+      - i18n.i18next
+      - i18n.formatjs
+      - i18n.lingui
+      - i18n.paraglide
+    ai_pick: i18n.i18next
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.67 vs 0.58 for FormatJS / react-intl): cost 1.00, fit 0.80, lock-in 0.90.'
+    rejected:
+      - option: i18n.formatjs
+        why: '0.58 vs 0.67: weaker on fit 0.30 vs 0.80 — avoid when: 小さく始めたい（書き方が冗長）'
+      - option: i18n.lint-formatjs
+        why: '0.58 vs 0.67: weaker on fit 0.30 vs 0.80'
+      - option: i18n.lint-i18next
+        why: '0.58 vs 0.67: weaker on fit 0.30 vs 0.80'
+      - option: i18n.tms-crowdin
+        why: '0.58 vs 0.67: weaker on fit 0.30 vs 0.80'
+      - option: i18n.tms-lokalise
+        why: '0.55 vs 0.67: weaker on fit 0.30 vs 0.80, lock-in 0.50 vs 0.90'
+      - option: i18n.lingui
+        why: '0.54 vs 0.67: weaker on fit 0.30 vs 0.80, lock-in 0.50 vs 0.90 — avoid when: キーを手で設計したい'
+      - option: i18n.paraglide
+        why: '0.54 vs 0.67: weaker on fit 0.30 vs 0.80, lock-in 0.50 vs 0.90 — avoid when: 実績や情報量を重視（比較的新しい）'
+      - option: i18n.tms-tolgee
+        why: '0.52 vs 0.67: weaker on fit 0.30 vs 0.80, speed 0.25 vs 0.50'
+      - option: i18n.next-intl
+        why: '0.51 vs 0.67: weaker on fit 0.00 vs 0.80, lock-in 0.50 vs 0.90 — avoid when: Next.js 以外'
+    decided_by: ai
+    last_checked: '2026-10-30'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.67、次点 FormatJS / react-intl 0.58）：費用 1.00、相性 0.80、乗り換え 0.90。
+    linkages:
+      - kind: named_in_best_for
+        with_topic: app_distribution
+        with_option: dist.expo
+        why: best_for names Expo / React Native 書き直し（EAS Update でOT… (app_distribution)
+    source: catalog
+    verified: true
+    checked: '2026-10-30'
+  - element: el.product
+    topic: idea_validation
+    stage: idea
+    lane: ux
+    kind: choose
+    status: ai_selected
+    options:
+      - val.tally
+      - val.lp-own
+      - val.carrd
+      - val.framer
+      - val.typeform
+      - val.google-forms
+    ai_pick: val.carrd
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.68 vs 0.59 for Tally): cost 1.00, speed 1.00, lock-in 0.90.'
+    rejected:
+      - option: val.tally
+        why: '0.59 vs 0.68: weaker on speed 0.50 vs 1.00 (no evidence) — avoid when: 回答のロジック分岐や分析を有料ツール並みに使いたい時'
+      - option: val.typeform
+        why: '0.58 vs 0.68: weaker on speed 0.50 vs 1.00 (no evidence) — avoid when: 無料で回答数を集めたい時（無料の回答数は少ない。料金ページに数値なし）'
+      - option: val.google-forms
+        why: '0.57 vs 0.68: weaker on speed 0.50 vs 1.00 (no evidence), scale 0.25 vs 0.50 — avoid when: 見た目や埋め込みをブランドに合わせたい時'
+      - option: val.framer
+        why: '0.54 vs 0.68: weaker on speed 0.50 vs 1.00 (no evidence), lock-in 0.50 vs 0.90 — avoid when: 独自ドメインを無料で使いたい時（有料プランから）'
+      - option: val.lp-own
+        why: '0.48 vs 0.68: weaker on speed 0.00 vs 1.00, cost 0.60 vs 1.00 — avoid when: まだ何もホストしていない時（作る手間が検証より大きい）'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.68、次点 Tally 0.59）：費用 1.00、速さ 1.00、乗り換え 0.90。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-03'
+  - element: el.product
+    topic: validation_rules
+    stage: idea
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - val.alternatives-first
+      - val.strangers-not-friends
+      - val.pay-signal
+      - val.spec-edge-cases
+      - val.north-star-to-money
+      - val.pmf-40
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: pricing_model
+    stage: launch
+    lane: biz
+    kind: choose
+    status: observed
+    options:
+      - pm.free-trial
+      - pm.freemium
+      - pm.usage
+      - pm.one-time
+      - pm.seats
+    ai_pick: ''
+    pick: ''
+    reason: ''
+    rejected:
+      - option: pm.usage
+        why: >-
+          catalog alternative (0.70 under lean-fast-full); the repo uses Paid plans: monthly, 6-month and yearly, plus a launch coupon
+          (listed, unverified)
+      - option: pm.free-trial
+        why: >-
+          catalog alternative (0.65 under lean-fast-full); the repo uses Paid plans: monthly, 6-month and yearly, plus a launch coupon
+          (listed, unverified)
+      - option: pm.freemium
+        why: >-
+          catalog alternative (0.64 under lean-fast-full); the repo uses Paid plans: monthly, 6-month and yearly, plus a launch coupon
+          (listed, unverified)
+      - option: pm.seats
+        why: >-
+          catalog alternative (0.63 under lean-fast-full); the repo uses Paid plans: monthly, 6-month and yearly, plus a launch coupon
+          (listed, unverified)
+      - option: pm.one-time
+        why: >-
+          catalog alternative (0.50 under lean-fast-full); the repo uses Paid plans: monthly, 6-month and yearly, plus a launch coupon
+          (listed, unverified)
+    decided_by: ''
+    last_checked: '2026-11-02'
+    evidence:
+      - kind: note
+        note: 'Part B brief: listed $5/month, $25/6 months, $45/year plus a launch coupon — verified:false'
+    gap_note: >-
+      Listed prices are $5/month, $25/6 months, $45/year plus a launch coupon (repo docs, per the brief). No checkout has run, so none of
+      these prices is verified; a free tier is not mentioned.
+    verified: false
+    observed_as: 'Paid plans: monthly, 6-month and yearly, plus a launch coupon (listed, unverified)'
+    date: '2026-11-19'
+    source: repo
+    scored_pick: pm.usage
+    scored_under: lean-fast-full
+  - element: el.business
+    topic: pricing_rules
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - pr.unit-cost-before-price
+      - pr.cancel-as-easy-as-signup
+      - pr.free-tier-cap
+      - pr.refund-policy-written
+      - pr.price-change-notice
+      - pr.tax-handling-decided
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: legal_terms
+    stage: launch
+    lane: biz
+    kind: choose
+    status: ai_selected
+    options:
+      - lt.termly
+      - lt.iubenda
+      - lt.getterms
+      - lt.termageddon
+      - lt.lawyer
+    ai_pick: lt.termly
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.59 vs 0.57 for GetTerms): cost 1.00, lock-in 0.90, breadth 0.30; catalog default.'
+    rejected:
+      - option: lt.getterms
+        why: '0.57 vs 0.59: weaker on lower total — avoid when: Cookie 同意の管理まで要る時'
+      - option: lt.iubenda
+        why: '0.55 vs 0.59: weaker on lock-in 0.75 vs 0.90 — avoid when: 月 5,000 PV を超えるサイトを無料で済ませたい時（超えるとバナーがその月は止まる）'
+      - option: lt.lawyer
+        why: '0.49 vs 0.59: weaker on cost 0.50 vs 1.00 (no evidence) — avoid when: 試作や社内ツール（まだ外部の利用者がいない）'
+      - option: lt.termageddon
+        why: '0.44 vs 0.59: weaker on cost 0.45 vs 1.00 — avoid when: 無料で始めたい時（無料プランなし）'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.59、次点 GetTerms 0.57）：費用 1.00、乗り換え 0.90、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-03'
+  - element: el.business
+    topic: legal_rules
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - lt.policy-matches-practice
+      - lt.consent-before-tracking
+      - lt.required-disclosures-by-country
+      - lt.age-gate-decided
+      - lt.terms-versioned
+      - lt.ai-disclosure
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.marketing
+    topic: launch_rules
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - la.launch-plan-t14
+      - la.rollback-owner
+      - la.support-on-launch-day
+      - la.preview-noindex
+      - la.pr-disclosure
+      - la.seo-basics
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: backup_dr
+    stage: operate
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - bk.dump-to-r2
+      - bk.supabase-builtin
+      - bk.neon-restore
+      - bk.firestore-pitr
+      - bk.backblaze-b2
+    ai_pick: bk.firestore-pitr
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.80 vs 0.71 for 自前の夜間ダンプ → Cloudflare R2): cost 1.00, breadth 1.00, fit 1.00.'
+    rejected:
+      - option: bk.dump-to-r2
+        why: '0.71 vs 0.80: weaker on fit 0.30 vs 1.00, compliance 0.25 vs 0.50 — avoid when: ダンプが数 GB を超えて時間がかかる時（PITR を足す）'
+      - option: bk.supabase-builtin
+        why: '0.67 vs 0.80: weaker on fit 0.30 vs 1.00 — avoid when: Free のまま（バックアップなし）、または別事業者コピーを 1 つも持っていない時'
+      - option: bk.neon-restore
+        why: '0.59 vs 0.80: weaker on fit 0.30 vs 1.00, breadth 0.55 vs 1.00 — avoid when: 数日前に戻したい（Free は 6 時間・履歴 1GB まで）'
+      - option: bk.backblaze-b2
+        why: '0.51 vs 0.80: weaker on fit 0.00 vs 1.00, breadth 0.30 vs 1.00 — avoid when: 主クラウドと同じ会社に置いて済ませたい時（別事業者の意味がない）'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.80、次点 自前の夜間ダンプ → Cloudflare R2 0.71）：費用 1.00、幅 1.00、相性 1.00。
+    linkages:
+      - kind: same_vendor
+        with_topic: database
+        with_option: db.firestore
+        why: 'same vendor as database (Cloud Firestore, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: shared_free_tier
+        with_topic: database
+        with_option: db.firestore
+        verified: false
+        why: both start on firebase.google.com's free plan — check whether free-tier limits are per project or shared across the account
+      - kind: same_vendor
+        with_topic: hosting
+        with_option: host.firebase-hosting
+        why: 'same vendor as hosting (Firebase Hosting / App Hosting, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: same_vendor
+        with_topic: auth
+        with_option: auth.firebase
+        why: 'same vendor as auth (Firebase Authentication, firebase.google.com): one account, one bill, fewer integrations'
+      - kind: shared_free_tier
+        with_topic: auth
+        with_option: auth.firebase
+        verified: false
+        why: both start on firebase.google.com's free plan — check whether free-tier limits are per project or shared across the account
+      - kind: same_vendor
+        with_topic: realtime
+        with_option: rt.firebase-rtdb
+        why: 'same vendor as realtime (Firebase Realtime Database, firebase.google.com): one account, one bill, fewer integrations'
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.maintenance
+    topic: backup_rules
+    stage: operate
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - bk.rpo-rto-written
+      - bk.restore-drill-timed
+      - bk.no-live-secrets-in-backups
+      - dp.backup-verify-alert
+      - dp.backup-bucket-lock
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: cost_control
+    stage: operate
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - cc.vercel-spend
+      - cc.supabase-spend-cap
+      - cc.ai-gateway-budget
+      - cc.gcp-budget
+      - cc.github-actions-budget
+    ai_pick: cc.github-actions-budget
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.75 vs 0.70 for Supabase Spend Cap): cost 1.00, fit 1.00, breadth 0.55.'
+    rejected:
+      - option: cc.supabase-spend-cap
+        why: '0.70 vs 0.75: weaker on fit 0.30 vs 1.00 — avoid when: 止まるより払いたい本番（キャップを切る判断を書面で）。計算・ブランチ・独自ドメイン・PITR は対象外'
+      - option: cc.vercel-spend
+        why: '0.61 vs 0.75: weaker on fit 0.30 vs 1.00, cost 0.50 vs 1.00 — avoid when: Hobby（使えない）、または AI Gateway・保存の費用も止めたい時（これらは止まらない）'
+      - option: cc.ai-gateway-budget
+        why: '0.59 vs 0.75: weaker on fit 0.30 vs 1.00, cost 0.50 vs 1.00 — avoid when: 自分の鍵を持ち込む（BYOK）分は予算の対象外'
+      - option: cc.gcp-budget
+        why: '0.51 vs 0.75: weaker on fit 0.00 vs 1.00, speed 0.25 vs 0.50 — avoid when: 通知だけで安心する時'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.75、次点 Supabase Spend Cap 0.70）：費用 1.00、相性 1.00、幅 0.55。
+    linkages:
+      - kind: same_vendor
+        with_topic: ci
+        with_option: ci.github-actions
+        why: 'same vendor as ci (GitHub Actions, github.com): one account, one bill, fewer integrations'
+      - kind: shared_free_tier
+        with_topic: ci
+        with_option: ci.github-actions
+        verified: false
+        why: both start on github.com's free plan — check whether free-tier limits are per project or shared across the account
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.maintenance
+    topic: cost_rules
+    stage: operate
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - cc.alert-50-80
+      - cc.kill-switch-tested
+      - cc.commercial-terms-before-first-sale
+      - cc.monthly-cost-sheet
+      - cc.retry-with-breaker
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: uptime
+    stage: operate
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - mon.uptimerobot
+      - mon.betterstack
+      - sup.status
+    ai_pick: sup.status
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.62 vs 0.60 for UptimeRobot): cost 1.00, breadth 0.55, lock-in 0.90.'
+    rejected:
+      - option: mon.uptimerobot
+        why: '0.60 vs 0.62: weaker on breadth 0.30 vs 0.55 — avoid when: 30 秒間隔・オンコール（夜間の電話）まで要る時'
+      - option: mon.betterstack
+        why: '0.58 vs 0.62: weaker on breadth 0.30 vs 0.55 — avoid when: 無料で 10 サイト超を見張りたい時（UptimeRobot の方が多い）'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.62、次点 UptimeRobot 0.60）：費用 1.00、幅 0.55、乗り換え 0.90。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.security
+    topic: secrets_sharing
+    stage: operate
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - ho.bitwarden
+      - ho.1password
+      - ho.doppler
+      - ho.host-env-vars
+    ai_pick: ho.host-env-vars
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.59 vs 0.59 for Bitwarden): breadth 1.00, cost 0.50, lock-in 0.90.'
+    rejected:
+      - option: ho.bitwarden
+        why: '0.59 vs 0.59: weaker on breadth 0.30 vs 1.00, compliance 0.25 vs 0.50 — avoid when: —'
+      - option: ho.doppler
+        why: '0.58 vs 0.59: weaker on breadth 0.30 vs 1.00 — avoid when: ホスト 1 つで環境変数の画面で足りる時（ho.host-env-vars）'
+      - option: ho.1password
+        why: '0.45 vs 0.59: weaker on breadth 0.30 vs 1.00 — avoid when: 無料で始めたい時（無料プランなし）'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.59、次点 Bitwarden 0.59）：幅 1.00、費用 0.50、乗り換え 0.90。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.maintenance
+    topic: handoff_rules
+    stage: operate
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - ho.access-inventory
+      - ho.company-owned-accounts
+      - ho.runbook-top5
+      - ho.contractor-ip-assignment
+      - ho.bus-factor-two
+      - ho.offboarding-rotate
+      - ho.hire-trigger-written
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: exit_route
+    stage: exit
+    lane: biz
+    kind: choose
+    status: ai_selected
+    options:
+      - xt.direct-outreach
+      - xt.acquire
+      - xt.flippa
+    ai_pick: xt.direct-outreach
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.51 vs 0.45 for Acquire.com): cost 0.50, lock-in 0.90, fit 0.30; catalog default.'
+    rejected:
+      - option: xt.acquire
+        why: '0.45 vs 0.51: weaker on breadth 0.30 vs 0.50 — avoid when: 成約手数料（6〜8%）より直接打診の方が安い相手がいる時'
+      - option: xt.flippa
+        why: '0.45 vs 0.51: weaker on breadth 0.30 vs 0.50 — avoid when: 手数料の帯の対応が読めないまま出す時（出品前に見積もり画面で確認）'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.51、次点 Acquire.com 0.45）：費用 0.50、乗り換え 0.90、相性 0.30。
+    linkages: []
+    source: catalog
+    verified: false
+    checked: '2026-11-03'
+  - element: el.maintenance
+    topic: sbom_tool
+    stage: exit
+    lane: tech
+    kind: choose
+    status: ai_selected
+    options:
+      - xt.syft
+      - xt.fossa
+    ai_pick: xt.syft
+    pick: ''
+    reason: 'Top score under lean-fast-full (0.60 vs 0.59 for FOSSA): cost 1.00, lock-in 0.90, breadth 0.30; catalog default.'
+    rejected:
+      - option: xt.fossa
+        why: '0.59 vs 0.60: weaker on lower total — avoid when: 無料の SBOM で足りる時'
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    reason_ja: lean-fast-full で最高点（0.60、次点 FOSSA 0.59）：費用 1.00、乗り換え 0.90、幅 0.30。
+    linkages: []
+    source: catalog
+    verified: true
+    checked: '2026-11-02'
+  - element: el.maintenance
+    topic: sunset_rules
+    stage: exit
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - xs.notice-before-shutdown
+      - xs.export-then-delete
+      - xs.cancel-every-subscription
+      - xs.redirect-and-archive
+      - xs.numbers-regenerable
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.product
+    topic: problem_discovery
+    stage: idea
+    lane: ux
+    kind: checklist
+    status: ai_selected
+    options:
+      - lc.discover.01
+      - lc.discover.02
+      - lc.discover.04
+      - lc.strategy.06
+      - lc.strategy.08
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: rules_ledger
+    stage: idea
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - rules.R-004
+      - rules.R-012
+      - rules.R-016
+      - rules.R-022
+      - rules.R-030
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.product
+    topic: backend
+    stage: launch
+    lane: tech
+    kind: choose
+    status: observed
+    options:
+      - be.route-handlers
+      - be.cloud-run
+    ai_pick: ''
+    pick: be.cloud-run
+    reason: ''
+    rejected:
+      - option: be.cloudflare-workers
+        why: scores higher (0.80 vs 0.70) under lean-fast-full; not taken because it is observed in the repository
+      - option: be.supabase-edge
+        why: '0.67 vs 0.70: weaker on fit 0.30 vs 0.80, lock-in 0.50 vs 0.90 (no evidence)'
+      - option: be.route-handlers
+        why: '0.61 vs 0.70: weaker on cost 0.60 vs 1.00, lock-in 0.50 vs 0.90'
+    decided_by: ''
+    last_checked: '2026-11-02'
+    evidence:
+      - kind: file
+        path: third-moime/Dockerfile
+        note: container image (includes ffmpeg)
+      - kind: config
+        path: third-moime/cloudbuild.yaml
+        note: Cloud Build
+      - kind: config
+        path: third-moime/firebase.json
+        note: rewrite to Cloud Run service moime, us-east1
+    observed_as: Cloud Run service "moime" (us-east1), container image
+    date: '2026-11-19'
+    source: repo
+    scored_pick: be.cloudflare-workers
+    scored_under: lean-fast-full
+    profile_drift:
+      profile: lean-fast-full
+      would_pick: be.cloudflare-workers
+      note: 'kept: owner decision or observed fact; review'
+  - element: el.business
+    topic: dd_metrics
+    stage: operate
+    lane: biz
+    kind: checklist
+    status: ai_selected
+    options:
+      - dd.users
+      - dd.money
+      - dd.cohort
+      - dd.infra
+      - dd.safety
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: sunset_plan
+    stage: exit
+    lane: biz
+    kind: checklist
+    status: ai_selected
+    options:
+      - dd.sunset
+      - dd.code
+      - dd.infra
+      - dd.metrics
+      - dd.billing_sources
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: legal_basics
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - lc.legal.30
+      - lc.legal.31
+      - lc.legal.32
+      - lc.legal.33
+      - lc.pricing.35
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-02'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.business
+    topic: planning_pass
+    stage: idea
+    lane: biz
+    kind: checklist
+    status: ai_selected
+    options:
+      - fs.A
+      - fs.C
+      - fs.E
+      - fs.D
+      - fs.F
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-03'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.maintenance
+    topic: foresight_traps
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - fs.L01
+      - fs.L03
+      - fs.L04
+      - fs.L05
+      - fs.L14
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-03'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.brand
+    topic: visual_system
+    stage: idea
+    lane: ui
+    kind: checklist
+    status: ai_selected
+    options:
+      - ui_ux.theme-tokens-not-hardcoded
+      - ui_ux.dark-mode-checked-every-screen
+      - ui_ux.design-system-fonts-everywhere
+      - ui_ux.a11y-text-contrast
+      - ui_ux.real-media-thumbnails
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-18'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.experience
+    topic: interactions
+    stage: launch
+    lane: ux
+    kind: checklist
+    status: ai_selected
+    options:
+      - ui_ux.no-hover-only-interactions
+      - ui_ux.touch-targets-and-spacing
+      - ui_ux.undoable-delete
+      - ui_ux.perf-respond-within-100ms
+      - ui_ux.gestures-have-visible-alternative
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-18'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.experience
+    topic: motion
+    stage: launch
+    lane: ui
+    kind: checklist
+    status: ai_selected
+    options:
+      - ui_ux.motion-explains-change
+      - ui_ux.reduced-motion-is-global
+      - ui_ux.decorative-motion-once
+      - ui_ux.autoplay-is-muted-and-stoppable
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-18'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+  - element: el.security
+    topic: ethics
+    stage: launch
+    lane: rules
+    kind: checklist
+    status: ai_selected
+    options:
+      - lt.consent-before-tracking
+      - lt.ai-disclosure
+      - lt.age-gate-decided
+      - lt.policy-matches-practice
+      - ui_ux.irreversible-actions-name-consequence
+    ai_pick: ''
+    pick: ''
+    reason: Checklist adopted as the plan; each item still needs a yes/no answer from the build or the owner.
+    rejected: []
+    decided_by: ai
+    last_checked: '2026-11-18'
+    profile: lean-fast-full
+    date: '2026-11-19'
+    checked: []
+    reason_ja: 確認表を計画として採用。各項目はまだ「はい／いいえ」の確認が要る。
+    linkages: []
+    source: catalog
+    verified: false
+history:
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: created
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: intake
+    value:
+      platform: web
+      money: paid
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: frontend
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: fe.nextjs
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: hosting
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: host.firebase-hosting
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: backend
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: be.cloud-run
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: database
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: db.firestore
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: storage
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: ''
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: auth
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: auth.firebase
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: payments
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: pay.stripe-checkout
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: pricing_model
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: ''
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: email
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: mail.resend
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: analytics
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: ''
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: support
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: sup.crisp
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: ai
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: ai.direct
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: record
+    topic: ci
+    from:
+      status: open
+      pick: ''
+      ai_pick: ''
+    to:
+      status: observed
+      pick: ci.github-actions
+      ai_pick: ''
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: decide
+    topics: 64 topics
+    picks_changed:
+      - topic: market_entry
+        from: null
+        to: es.jp_en
+      - topic: idea_validation
+        from: null
+        to: val.carrd
+      - topic: build_vs_buy
+        from: null
+        to: bvb.platform
+      - topic: app_distribution
+        from: null
+        to: dist.expo
+      - topic: search
+        from: null
+        to: se.postgres-fts
+      - topic: realtime
+        from: null
+        to: rt.firebase-rtdb
+      - topic: cms
+        from: null
+        to: cms.sheets
+      - topic: ui_library
+        from: null
+        to: ui.untitled
+      - topic: i18n
+        from: null
+        to: i18n.i18next
+      - topic: backup_dr
+        from: null
+        to: bk.firestore-pitr
+      - topic: monitoring
+        from: null
+        to: mon.crashlytics
+      - topic: protection
+        from: null
+        to: sec.turnstile
+      - topic: editor_ui
+        from: null
+        to: edit.vaul
+      - topic: legal_terms
+        from: null
+        to: lt.termly
+      - topic: cost_control
+        from: null
+        to: cc.github-actions-budget
+      - topic: secrets_sharing
+        from: null
+        to: ho.host-env-vars
+      - topic: launch_channels
+        from: null
+        to: gtm.x
+      - topic: uptime
+        from: null
+        to: sup.status
+      - topic: sbom_tool
+        from: null
+        to: xt.syft
+      - topic: growth_channels
+        from: null
+        to: gtm.content
+      - topic: exit_route
+        from: null
+        to: xt.direct-outreach
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: production
+    value: live
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).
+  - date: '2026-11-19'
+    by: agent (Part B build)
+    change: architecture
+    note: >-
+      Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected =
+      recommendation only).

@@ -1,0 +1,190 @@
+# Part B input — evidence for the moime project map (repo: third-moime).
+# Only facts from the Part B evidence brief. Paths are "<repo>/<path>"; they were not re-read in this session.
+slug: moime
+name: moime (mobile-first site builder)
+goal: Let people build and publish a small website from their phone.
+intake: {platform: web, money: paid}
+production:
+  state: live
+  url: https://moime.app
+  note: "docs/deployment.md lists the public address https://moime.app (alias moime-1600f.web.app). Not opened in this session. No live checkout payment has been made."
+  verified: false
+  evidence:
+    - {kind: file, path: third-moime/docs/deployment.md, note: "public URL and Firebase Hosting alias"}
+note: "Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected = recommendation only)."
+records:
+  - topic: frontend
+    status: observed
+    pick: fe.nextjs
+    observed_as: Next.js 16.3.5 + React 19 + Tailwind 4
+    evidence:
+      - {kind: dependency, path: third-moime/package.json, note: "next 16.3.5, react 19, tailwindcss 4"}
+  - topic: hosting
+    status: observed
+    pick: host.firebase-hosting
+    observed_as: Firebase Hosting (site moime-1600f) rewriting to Cloud Run
+    evidence:
+      - {kind: config, path: third-moime/firebase.json, note: "hosting site moime-1600f rewrites to Cloud Run service moime, us-east1"}
+      - {kind: file, path: third-moime/docs/deployment.md, note: "public https://moime.app; alias https://moime-1600f.web.app"}
+  - topic: backend
+    status: observed
+    pick: be.cloud-run
+    observed_as: Cloud Run service "moime" (us-east1), container image
+    evidence:
+      - {kind: file, path: third-moime/Dockerfile, note: "container image (includes ffmpeg)"}
+      - {kind: config, path: third-moime/cloudbuild.yaml, note: "Cloud Build"}
+      - {kind: config, path: third-moime/firebase.json, note: "rewrite to Cloud Run service moime, us-east1"}
+  - topic: database
+    status: observed
+    pick: db.firestore
+    observed_as: Cloud Firestore (native mode, us-east1)
+    evidence:
+      - {kind: note, note: "Part B brief: Cloud Firestore, native, us-east1 (file not named in the brief)"}
+  - topic: storage
+    status: observed
+    observed_as: Firebase Storage
+    evidence:
+      - {kind: note, note: "Part B brief: Firebase Storage (file not named in the brief)"}
+  - topic: auth
+    status: observed
+    pick: auth.firebase
+    observed_as: Firebase Auth — Google, email/password, phone (SMS)
+    gap_note: "SMS sign-in regions are initially JP and US; physical SMS delivery still needs verification (docs/deployment.md)."
+    evidence:
+      - {kind: file, path: third-moime/README.md, note: "Firebase Auth: Google, email/password, phone/SMS"}
+      - {kind: file, path: third-moime/docs/deployment.md, note: "SMS regions JP and US; delivery not yet verified"}
+  - topic: payments
+    status: observed
+    pick: pay.stripe-checkout
+    observed_as: Stripe Checkout + customer portal
+    verified: false
+    gap_note: "Checkout will not start until the Stripe webhook signing secret is configured, and no live checkout payment has been made (per the repo docs). Treat payments as not yet working in production."
+    evidence:
+      - {kind: note, note: "Part B brief: Stripe Checkout + customer portal; webhook signing secret not configured; no live payment made"}
+  - topic: pricing_model
+    status: observed
+    observed_as: "Paid plans: monthly, 6-month and yearly, plus a launch coupon (listed, unverified)"
+    verified: false
+    gap_note: "Listed prices are $5/month, $25/6 months, $45/year plus a launch coupon (repo docs, per the brief). No checkout has run, so none of these prices is verified; a free tier is not mentioned."
+    evidence:
+      - {kind: note, note: "Part B brief: listed $5/month, $25/6 months, $45/year plus a launch coupon — verified:false"}
+  - topic: email
+    status: observed
+    pick: mail.resend
+    evidence:
+      - {kind: file, path: third-moime/src/lib/transactional-email.ts, note: "Resend client for transactional mail"}
+      - {kind: config, path: third-moime/.env.example, note: "Resend settings listed"}
+  - topic: analytics
+    status: observed
+    observed_as: Microsoft Clarity (runtime-gated) + built-in insights
+    evidence:
+      - {kind: note, note: "Part B brief: Microsoft Clarity, runtime-gated; built-in insights also exist (file not named)"}
+  - topic: support
+    status: observed
+    pick: sup.crisp
+    observed_as: Crisp chat (runtime-gated)
+    evidence:
+      - {kind: note, note: "Part B brief: Crisp, runtime-gated (file not named)"}
+  - topic: ai
+    status: observed
+    pick: ai.direct
+    observed_as: "Gemini first, then OpenAI / OpenRouter fallback (flyer parse + metadata)"
+    gap_note: "API keys are not in .env.example; whether any model key is set in production is unknown."
+    evidence:
+      - {kind: file, path: third-moime/src/lib/moime-api.ts, note: "Gemini → OpenAI/OpenRouter chain for flyer parse/metadata"}
+  - topic: ci
+    status: observed
+    pick: ci.github-actions
+    evidence:
+      - {kind: config, path: third-moime/.github/workflows/ci.yml, note: "CI"}
+      - {kind: config, path: third-moime/.github/workflows/deploy-preview.yml, note: "preview deploy"}
+      - {kind: config, path: third-moime/.github/workflows/deploy-production.yml, note: "production deploy"}
+architecture:
+  components:
+    - id: sms-phone-auth
+      role: auth
+      name: SMS via Firebase phone auth (not Twilio)
+      state: implemented
+      evidence:
+        - {kind: file, path: third-moime/README.md, note: "phone/SMS sign-in through Firebase Auth"}
+    - id: secret-manager
+      role: backend
+      name: Google Secret Manager
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: Secret Manager (file not named)"}
+    - id: cloud-scheduler
+      role: backend
+      name: Cloud Scheduler maintenance jobs
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: Cloud Scheduler maintenance (file not named)"}
+    - id: ffmpeg
+      role: backend
+      name: ffmpeg in the container image
+      state: implemented
+      evidence:
+        - {kind: file, path: third-moime/Dockerfile, note: "ffmpeg installed in the image (per the brief)"}
+    - id: insights
+      role: data
+      name: Built-in insights (first-party)
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: built-in insights also exist (file not named)"}
+    - id: stripe-webhook
+      role: payments
+      name: Stripe webhook (signing secret not configured)
+      state: proposed
+  links:
+    - from: hosting
+      to: backend
+      label: rewrite all requests to Cloud Run
+      state: implemented
+      evidence:
+        - {kind: config, path: third-moime/firebase.json, note: "rewrite → Cloud Run service moime, us-east1"}
+    - from: backend
+      to: email
+      label: transactional mail
+      state: implemented
+      evidence:
+        - {kind: file, path: third-moime/src/lib/transactional-email.ts, note: "Resend"}
+    - from: backend
+      to: ai
+      label: flyer parse / metadata (Gemini → OpenAI/OpenRouter)
+      state: implemented
+      evidence:
+        - {kind: file, path: third-moime/src/lib/moime-api.ts, note: "model chain; production keys unknown"}
+    - from: backend
+      to: payments
+      label: Checkout + customer portal
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: Stripe Checkout + portal; not yet able to start without the webhook secret"}
+    - from: stripe-webhook
+      to: backend
+      label: payment events (blocked until the secret is set)
+      state: proposed
+    - from: auth
+      to: sms-phone-auth
+      label: phone sign-in (JP, US first)
+      state: implemented
+      evidence:
+        - {kind: file, path: third-moime/docs/deployment.md, note: "SMS regions; delivery not yet verified"}
+    - from: ci
+      to: hosting
+      label: preview + production deploys
+      state: implemented
+      evidence:
+        - {kind: config, path: third-moime/.github/workflows/deploy-production.yml, note: "production deploy workflow"}
+    - from: cloud-scheduler
+      to: backend
+      label: scheduled maintenance
+      state: implemented
+      evidence:
+        - {kind: note, note: "per the brief"}
+    - from: secret-manager
+      to: backend
+      label: secrets at runtime
+      state: implemented
+      evidence:
+        - {kind: note, note: "per the brief"}

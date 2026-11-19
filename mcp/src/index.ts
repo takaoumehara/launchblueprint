@@ -440,13 +440,18 @@ const recordSchema = z.object({
 const componentSchema = z.object({ id: z.string().regex(/^[a-z0-9_-]{1,40}$/), role: z.enum([...Object.keys(core.ARCH_ROLES), ...Object.keys(core.ROLE_ALIAS)] as [string, ...string[]]).transform(r => core.ROLE_ALIAS[r] ?? r), name: z.string().max(80), topic: z.string().optional(), option: z.string().optional(),
   state: z.enum(["implemented", "proposed"]), evidence: recordSchema.shape.evidence });
 const linkSchema = z.object({ from: z.string(), to: z.string(), label: z.string().max(80).optional(), state: z.enum(["implemented", "proposed"]), evidence: recordSchema.shape.evidence, note: z.string().max(200).optional() });
+// Whether the product is live. "not_in_production" and "unknown" are shown as a banner on the map; a live URL taken from
+// the product's own docs stays verified:false until someone opens it.
+const productionSchema = z.object({ state: z.enum(["live", "not_in_production", "unknown"]), note: z.string().max(400), url: z.string().max(200).optional(),
+  verified: z.boolean().optional(), checked: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), evidence: recordSchema.shape.evidence });
 server.tool("update_project_map", "Create or update a project map and get a shareable review link (#/p/<slug>). Writes only the draft file mcp/inbox/project-maps/<slug>.yaml (a person reviews it and moves it to skill/blueprint/project-maps/ to publish); committed maps are copied to a draft first. Use it to: set the preference profile (re-scores every ai_selected record); record decide() results (status ai_selected; omit pick and the record is scored for you); record facts seen in a real repo (status observed + evidence); flag missing evidence (status gap + gap_note); defer (deferred + reason); or record a big owner decision (status decided + owner_confirmed:true + decided_by). decide_topics runs decide for open/gap/ai_selected topics ('all' for every one). Every change is appended to history.",
   { slug: z.string().regex(/^[a-z0-9][a-z0-9-]{0,47}$/), name: z.string().max(120).optional(), goal: z.string().max(400).optional(),
     intake: z.object({ audience: z.enum(["self", "public", "business"]).optional(), platform: z.enum(["web", "app", "both"]).optional(), money: z.enum(["free", "paid", "marketplace"]).optional(), country: z.enum(["us", "jp", "global"]).optional() }).optional(),
     preference_profile: z.string().optional(), records: z.array(recordSchema).max(100).optional(), decide_topics: z.array(z.string()).max(100).optional(),
     architecture: z.object({ components: z.array(componentSchema).max(40).optional(), links: z.array(linkSchema).max(80).optional() }).optional(),
+    production: productionSchema.optional(),
     by: z.string().max(40).optional(), note: z.string().max(400).optional() },
-  async ({ slug, name, goal, intake, preference_profile, records = [], decide_topics = [], architecture, by = "agent", note }) => {
+  async ({ slug, name, goal, intake, preference_profile, records = [], decide_topics = [], architecture, production, by = "agent", note }) => {
     const idx = index();
     const found = findMap(slug);
     if (!found && !name) return err(`No project map "${slug}" yet: pass name (and ideally goal, intake, preference_profile) to create it.`);
@@ -482,7 +487,15 @@ server.tool("update_project_map", "Create or update a project map and get a shar
       } else if (r.status === "ai_selected" && r.pick) {
         // an agent's own pick: keep its reason and rejected list, but score the field so alternatives are on record
         const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: others, ...ev, date: today() });
-        Object.assign(c, core.compactChoice(rec), rest, { ai_pick: r.pick, pick: "", decided_by: "ai", scored_pick: rec.ai_pick });
+        Object.assign(c, core.compactChoice(rec), rest, { ai_pick: r.pick, pick: "", decided_by: "ai", scored_pick: rec.ai_pick, scored_under: prof.id, status: "ai_selected" });
+        // the scored field seen from the recorded pick: why each alternative is not it, its own linkages and source date
+        const sr = core.scoreRecord(c, m, idx, prof, { date: today() });
+        if (!r.rejected) c.rejected = sr.rejected;
+        if (!r.linkages) c.linkages = sr.linkages;
+        if (r.verified === undefined) { c.verified = sr.verified; c.checked = sr.checked; }
+        if (r.reason) delete c.reason_ja;   // the winner's Japanese reason would describe a different option
+        const d = core.isSourced(c) ? core.sourcedDrift(c, rec.ai_pick, prof) : null;
+        if (d) c.profile_drift = d; else delete c.profile_drift;
       } else {
         Object.assign(c, rest, { date: today() });
         if (r.status === "decided") Object.assign(c, { owner_confirmed: true, confirmed_at: today(), profile: prof.id });
@@ -516,10 +529,11 @@ server.tool("update_project_map", "Create or update a project map and get a shar
       m = r.map; for (const t of targets) { const c = m.choices.find((x: any) => x.topic === t); decided_now.push({ topic: t, status: c.status, ai_pick: c.ai_pick || null }); }
       log({ change: "decide", topics: targets.length > 10 ? `${targets.length} topics` : targets, picks_changed: r.changes });
     }
+    if (production) { m.production = production; log({ change: "production", value: production.state }); }
     if (architecture) { m.architecture = { components: architecture.components ?? m.architecture?.components ?? [], links: architecture.links ?? m.architecture?.links ?? [] }; log({ change: "architecture" }); }
     m.updated = today(); m.review = linkOf(slug); m.history = history.slice(-200);
     const ordered = { domain: "project_map", schema: m.schema, slug, name: m.name ?? "", goal: m.goal ?? "", profile: m.profile ?? {}, preference_profile: m.preference_profile, updated: m.updated, review: m.review,
-      elements: m.elements, architecture: m.architecture ?? { components: [], links: [] }, choices: core.compactMap(m).choices, history: m.history };
+      ...(m.production ? { production: m.production } : {}), elements: m.elements, architecture: m.architecture ?? { components: [], links: [] }, choices: core.compactMap(m).choices, history: m.history };
     fs.mkdirSync(DRAFTS, { recursive: true });
     const file = path.join(DRAFTS, slug + ".yaml");
     fs.writeFileSync(file, `# Blueprint project map — draft written by update_project_map (MCP). Review, then move to skill/blueprint/project-maps/ to publish.\n# Statuses: open / observed (seen in the repo, with evidence) / ai_selected (agent pick, owner reviews later) / decided (owner said yes) / gap (evidence missing) / deferred.\n` + yaml.dump(ordered, { lineWidth: 140, noRefs: true }));

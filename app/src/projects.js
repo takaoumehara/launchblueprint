@@ -101,7 +101,32 @@ function header(slug, got, here) {
       <div class="pacts mono"><button type="button" id="pexy">${tr('p.export')}</button>${got.where === 'local-copy' ? ` · <button type="button" id="preset">${tr('p.reset')}</button>` : ''}</div>
     </div>
     <div class="pstat">${statusLine(counts(m))}</div>
+    ${prodBanner(m)}${here === 'map' ? previewPanel(slug, m) : ''}
     <div id="pbanner"></div></div>`;
+}
+// Whether the product is live (map.production). Anything but a verified live state is shown as a banner.
+function prodBanner(m) {
+  const p = m.production; if (!p || (p.state === 'live' && p.verified)) return '';
+  return `<div class="gapbox prod prod-${esc(p.state)}"><span class="flag">${tr('p.prod.' + p.state)}</span><span class="gtx">${esc(p.note || '')}${p.state === 'live' && !p.verified ? ` <span class="m3">(${tr('p.prod.unverified')})</span>` : ''}</span></div>`;
+}
+// What another profile would change, computed on read and never saved (the owner applies it with the profile buttons).
+const previewCache = new Map();
+function previewUnder(m, p) {
+  const key = m.slug + '|' + p.id + '|' + JSON.stringify(m.choices.map(c => [c.topic, c.status, c.pick, c.ai_pick]));
+  if (!previewCache.has(key)) { const r = core.rescoreMap(m, IDX, p, { date: new Date().toISOString().slice(0, 10) }); previewCache.set(key, { changes: r.changes, map: r.map }); }
+  return previewCache.get(key);
+}
+const otherProfiles = m => ctx.D.profiles.filter(x => x.id !== profileOf(m.preference_profile).id && (x.scope || 'builtin') !== 'org');
+function previewPanel(slug, m) {
+  return otherProfiles(m).map(p => {
+    const { changes, map } = previewUnder(m, p);
+    const kept = map.choices.filter(c => c.profile_drift && c.profile_drift.profile === p.id);
+    return `<details class="ev pview"><summary class="mono m2">${tr('p.preview', profLabel(p), changes.length, kept.length)}</summary>
+      <p class="m3 small">${tr('p.preview.note')}</p>
+      ${changes.length ? `<ul class="evl">${changes.map(x => `<li><a href="#/p/${slug}/n/${x.topic}">${esc(ctx.lbl(T(x.topic)))}</a>：${esc(short(optName(x.from)) || '—')} → <b>${esc(short(optName(x.to)))}</b></li>`).join('')}</ul>` : `<p class="m2">${tr('p.preview.none')}</p>`}
+      ${kept.length ? `<div class="mono m3 dh">${tr('p.preview.keep')}</div><ul class="evl">${kept.map(c => `<li><a href="#/p/${slug}/n/${c.topic}">${esc(ctx.lbl(T(c.topic)))}</a>：${esc(short(c.observed_as || optName(core.chosenOf(c))) || '—')} <span class="flag drift">≠</span> ${esc(short(optName(c.profile_drift.would_pick)))}</li>`).join('')}</ul>` : ''}
+    </details>`;
+  }).join('');
 }
 function bindHeader(slug, got, rerender) {
   ctx.app.querySelectorAll('[data-prof]').forEach(b => b.onclick = () => {
@@ -197,7 +222,9 @@ function detailHtml(slug, got, topic, closable) {
       <dt>${tr('p.profile')}</dt><dd>${esc(profLabel(prof))} <span class="m3 mono">${esc(prof.id)}</span>${recorded ? `<br><span class="m2">${tr('p.recorded.profile', esc(profLabel(recorded)))}</span>` : ''}${t.kind === 'choose' && !['ai_selected', 'gap'].includes(c.status) ? `<br><span class="m3">${tr('p.scored.under')}</span>` : ''}</dd>
       ${f ? `<dt>${tr('p.source')}</dt><dd>${f.verified ? tr('p.verified') : `<b class="warn">${tr('p.unverified')}</b>`}${f.checked ? ' · ' + esc(f.checked) : ''}${f.url ? ` · <a href="${esc(f.url)}" target="_blank" rel="noopener">${tr('official.page')} ↗</a>` : ''}</dd>` : ''}
       ${c.date ? `<dt>${tr('p.date')}</dt><dd class="mono">${esc(c.date)}</dd>` : ''}
-      <dt>${tr('p.by')}</dt><dd>${esc(c.status === 'observed' ? (c.source || 'repo') : c.decided_by || '—')}</dd>
+      <dt>${tr('p.by')}</dt><dd>${esc(c.status === 'observed' ? (c.source || 'repo') : c.decided_by || '—')}${core.isSourced(c) ? `<br><span class="m2">${tr('p.source.named', esc(c.source))}</span>` : ''}</dd>
+      ${t.kind === 'choose' ? otherProfiles(m).map(p => { const o = previewUnder(m, p).map.choices.find(x => x.topic === topic); const w = o ? (o.status === 'ai_selected' && !core.isSourced(o) ? o.ai_pick : o.profile_drift?.would_pick || o.scored_pick || o.ai_pick) : '';
+        const now = chosen || c.scored_pick || c.ai_pick; return w ? `<dt>${esc(profLabel(p))}</dt><dd>${w === now ? tr('p.under.same', esc(profLabel(p))) : tr('p.under', esc(profLabel(p)), esc(short(optName(w))))} <span class="m3">${tr('p.preview.note').split(/[。.]/)[0]}</span></dd>` : ''; }).join('') : ''}
     </dl>
     ${c.gap_note ? `<div class="gapbox"><span class="flag">${tr('p.gap.tag')}</span> ${esc(c.gap_note)}</div>` : ''}
     ${c.rescore_note ? `<div class="gapbox"><span class="flag drift">≠</span> ${tr('p.rescore.note', esc(short(optName(c.scored_pick))))}</div>` : ''}

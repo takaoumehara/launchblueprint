@@ -1,0 +1,198 @@
+# Part B input — evidence for the local-pro-kit project map (repo: growth.creativityiseverywhere.com; there is no repo named local-service-kit).
+# Only facts from the Part B evidence brief. Paths are "<repo>/<path>"; they were not re-read in this session.
+slug: local-pro-kit
+name: Local Pro Kit (store, generated sites, free check)
+goal: Sell and run ready-made websites and tools for local service businesses, with a free check as the entry point.
+intake: {platform: web, money: paid}
+production:
+  state: unknown
+  note: "Hosting is mid-migration from Vercel to Cloudflare Workers (docs/deploy-and-accounts.md, 2026-10-20). The store worker runs on workers.dev until the cutover; the planned host localprokit.com is not confirmed live. growth.creativityiseverywhere.com also serves this repo."
+  verified: false
+  evidence:
+    - {kind: file, path: growth.creativityiseverywhere.com/docs/deploy-and-accounts.md, note: "migration Vercel → Cloudflare Workers, dated 2026-10-20"}
+note: "Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected = recommendation only)."
+records:
+  - topic: frontend
+    status: observed
+    pick: fe.astro
+    observed_as: Astro 7 (generated customer sites + the store)
+    evidence:
+      - {kind: dependency, path: growth.creativityiseverywhere.com/platform/package.json, note: "astro 7"}
+  - topic: hosting
+    status: observed
+    pick: host.cloudflare-pages
+    observed_as: Cloudflare Workers (lpk-store, workers.dev until cutover); customer sites on Cloudflare Pages
+    gap_note: "Mid-migration from Vercel: the root vercel.json still exists and the custom-domain cutover is not done. Which host serves each public address today is not verified."
+    evidence:
+      - {kind: config, path: growth.creativityiseverywhere.com/platform/store-worker/wrangler.toml, note: "name lpk-store; workers.dev until cutover"}
+      - {kind: file, path: growth.creativityiseverywhere.com/docs/deploy-and-accounts.md, note: "Vercel → Cloudflare Workers migration (2026-10-20)"}
+      - {kind: config, path: growth.creativityiseverywhere.com/vercel.json, note: "still present"}
+  - topic: backend
+    status: observed
+    pick: be.cloudflare-workers
+    observed_as: Store + API on Cloudflare Workers (lpk-store)
+    evidence:
+      - {kind: config, path: growth.creativityiseverywhere.com/platform/store-worker/wrangler.toml, note: "worker lpk-store"}
+  - topic: database
+    status: observed
+    observed_as: Cloudflare D1 (lpk-store, lpk-ops) + KV cache
+    evidence:
+      - {kind: note, note: "Part B brief: D1 databases lpk-store and lpk-ops, KV cache (file not named)"}
+  - topic: storage
+    status: observed
+    pick: st.r2
+    observed_as: Cloudflare R2 (lpk-files)
+    evidence:
+      - {kind: note, note: "Part B brief: R2 bucket lpk-files (file not named)"}
+  - topic: auth
+    status: observed
+    observed_as: "Own email magic links, no passwords; HttpOnly cookie lpk_session"
+    evidence:
+      - {kind: file, path: growth.creativityiseverywhere.com/platform/ops/src/auth.mjs, note: "magic-link sign-in, lpk_session cookie, no passwords"}
+  - topic: protection
+    status: observed
+    pick: sec.turnstile
+    observed_as: Cloudflare Turnstile (optional)
+    gap_note: "Turnstile is optional; whether it is switched on in production is not stated."
+    evidence:
+      - {kind: note, path: growth.creativityiseverywhere.com/platform/ops/src/auth.mjs, note: "Part B brief lists optional Turnstile with the sign-in facts"}
+  - topic: payments
+    status: observed
+    pick: pay.stripe-checkout
+    verified: false
+    gap_note: "Live Stripe is refused unless STRIPE_LIVE_APPROVED is set; whether a live payment has ever run is unknown."
+    evidence:
+      - {kind: file, path: growth.creativityiseverywhere.com/platform/server/store/stripe.mjs, note: "Stripe Checkout"}
+      - {kind: config, path: growth.creativityiseverywhere.com/platform/store-worker/wrangler.toml, note: "production vars STORE_API_ENABLED=1, STORE_MOCK_CHECKOUT empty"}
+  - topic: email
+    status: observed
+    pick: mail.resend
+    gap_note: "Production vars set EMAIL_PROVIDER=resend and MESSAGING_LIVE=true, but whether RESEND_API_KEY is installed and mail actually sends is unknown; a mock outbox still exists."
+    evidence:
+      - {kind: config, path: growth.creativityiseverywhere.com/platform/store-worker/wrangler.toml, note: "EMAIL_PROVIDER=resend, EMAIL_FROM on localprokit.com, MESSAGING_LIVE=true"}
+  - topic: analytics
+    status: gap
+    gap_note: "No first-party analytics library (PostHog, GA) found in the store. Cloudflare observability is on; GA appears only in customer education content."
+  - topic: monitoring
+    status: observed
+    observed_as: Cloudflare Workers observability (on)
+    evidence:
+      - {kind: note, note: "Part B brief: Cloudflare observability on (file not named)"}
+  - topic: ai
+    status: observed
+    pick: ai.direct
+    observed_as: "Gemini (gemini-3.5-flash-lite) for the free check; Anthropic SDK dependency; Kie.ai for image/video"
+    evidence:
+      - {kind: note, note: "Part B brief: GEMINI_MODEL=gemini-3.5-flash-lite for the free check (file not named)"}
+      - {kind: dependency, path: growth.creativityiseverywhere.com/platform/package.json, note: "@anthropic-ai/sdk"}
+      - {kind: config, path: growth.creativityiseverywhere.com/.env.example, note: "Kie.ai keys (image/video)"}
+  - topic: ci
+    status: observed
+    pick: ci.github-actions
+    evidence:
+      - {kind: config, path: growth.creativityiseverywhere.com/.github/workflows/deploy-lpk-store.yml, note: "store deploy"}
+      - {kind: config, path: growth.creativityiseverywhere.com/.github/workflows/platform-foundation.yml, note: "platform checks"}
+architecture:
+  components:
+    - id: growth-showcase
+      role: frontend
+      name: growth-platform sales showcase (React 19 + Vite 8)
+      state: implemented
+      evidence:
+        - {kind: dependency, path: growth.creativityiseverywhere.com/growth-platform/package.json, note: "React 19 + Vite 8 (per the brief)"}
+    - id: customer-sites
+      role: frontend
+      name: Generated customer sites on Cloudflare Pages
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: customer sites on Cloudflare Pages (ops docs)"}
+    - id: ops-db
+      role: data
+      name: D1 lpk-ops (sessions, ops)
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: D1 lpk-ops"}
+    - id: kv-cache
+      role: data
+      name: Workers KV cache
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: KV cache"}
+    - id: twilio-sms
+      role: third_party
+      name: Twilio (SMS)
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: SMS via Twilio (file not named)"}
+    - id: google-places
+      role: third_party
+      name: Google Places (free check)
+      state: implemented
+      evidence:
+        - {kind: note, note: "Part B brief: Google Places for checks"}
+    - id: gbp-oauth
+      role: auth
+      name: Google OAuth for Business Profile audit (GBP_AUDIT_ENABLED off)
+      state: proposed
+    - id: kie-ai
+      role: third_party
+      name: Kie.ai image / video
+      state: implemented
+      evidence:
+        - {kind: config, path: growth.creativityiseverywhere.com/.env.example, note: "Kie.ai keys"}
+    - id: gohighlevel
+      role: third_party
+      name: GoHighLevel (demo keys only)
+      state: proposed
+    - id: namecom
+      role: third_party
+      name: Name.com domains (sandbox)
+      state: proposed
+  links:
+    - from: hosting
+      to: backend
+      label: runs the store worker lpk-store
+      state: implemented
+      evidence:
+        - {kind: config, path: growth.creativityiseverywhere.com/platform/store-worker/wrangler.toml, note: "worker config"}
+    - from: backend
+      to: payments
+      label: Checkout (live gated by STRIPE_LIVE_APPROVED)
+      state: implemented
+      evidence:
+        - {kind: file, path: growth.creativityiseverywhere.com/platform/server/store/stripe.mjs, note: "Stripe Checkout"}
+    - from: backend
+      to: email
+      label: transactional mail (live send unverified)
+      state: proposed
+      note: "provider configured; API key presence unknown"
+    - from: auth
+      to: ops-db
+      label: lpk_session sessions
+      state: proposed
+      note: "the brief names auth.mjs and lpk-ops but not where sessions are stored"
+    - from: backend
+      to: ai
+      label: free check (Gemini)
+      state: proposed
+      note: "Gemini is used for the free check per the brief; call site not named"
+    - from: backend
+      to: google-places
+      label: business lookup for the free check
+      state: proposed
+      note: "used for checks per the brief; call site not named"
+    - from: backend
+      to: twilio-sms
+      label: SMS
+      state: proposed
+      note: "call site not named"
+    - from: ci
+      to: hosting
+      label: deploy-lpk-store.yml
+      state: implemented
+      evidence:
+        - {kind: config, path: growth.creativityiseverywhere.com/.github/workflows/deploy-lpk-store.yml, note: "deploys the store worker"}
+    - from: protection
+      to: auth
+      label: bot check on sign-in (optional)
+      state: proposed

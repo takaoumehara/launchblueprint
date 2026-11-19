@@ -36,6 +36,20 @@ English: [README.md](README.md) · 5分ではじめる：[QUICKSTART.ja.md](QUIC
 
 手順：[skill/blueprint/reference/decide.md](skill/blueprint/reference/decide.md)・定期確認：[catalog-refresh.md](skill/blueprint/reference/catalog-refresh.md)・好み：[preferences/README.md](skill/blueprint/preferences/README.md)
 
+## 5 つのプロジェクトの地図（実在のプロダクト）
+
+5 つのプロダクトを、64 の決めることと 12 カテゴリーすべてで地図にし、それぞれに「つながり」の図を付けました。既定の好みは `lean-fast-full`。決定は 1 つもありません — 事実は `observed`（出典ファイルつき）、おすすめは `ai_selected`、分からないものは `gap`。Front Desk と Brand Journey Map は**まだ本番で動いていません**。
+
+| 地図 | つながり |
+|---|---|
+| `#/p/rakugaki-jam` — 落書きを壁に映す | `#/p/rakugaki-jam/arch` |
+| `#/p/moime` — スマホで作るサイトビルダー | `#/p/moime/arch` |
+| `#/p/local-pro-kit` — Local Pro Kit のストアとサイト | `#/p/local-pro-kit/arch` |
+| `#/p/lpk-frontdesk` — Front Desk 予約（本番前） | `#/p/lpk-frontdesk/arch` |
+| `#/p/brand-journey-map` — Brand Journey Map 構想（本番前） | `#/p/brand-journey-map/arch` |
+
+アプリ（`cd app && npm run dev`）を開いてハッシュを付けます。**点を見直すには**：点を押すと、選んだもの（穴ならおすすめ候補）・理由・好みと出典の日付（公式で確認／未確認）・根拠のファイル・つながり・ほかの選択肢と点数・`all-in` なら何を選ぶかが出ます。`#/p/<slug>/c/01` 〜 `/c/12` でカテゴリー順に歩けます。画面写真・all-in の下見・穴の一覧：[docs/portfolio.ja.md](docs/portfolio.ja.md)。
+
 ## リポジトリ
 
 ```
