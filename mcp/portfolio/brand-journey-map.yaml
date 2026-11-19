@@ -1,0 +1,127 @@
+# Part B input — the brand-journey-map project map (repo: brandjourneymap). Docs only: no package.json, no app, nothing hosted.
+# Rebuilt into the Part A schema from the facts in the Part B brief about the earlier pass (docs/03-blueprint/project-map.yaml,
+# 2026-11-13: 0 of 60 topics decided; intake business / web / paid / global) plus the PO update of 2026-11-18.
+# Nothing here is decided. PRD and PO directions are ai_selected (proposed) with their source; open items are gap.
+slug: brand-journey-map
+name: Brand Journey Map (concept — not in production)
+goal: Early concept for mapping a brand's journey in a studio workspace. Docs only; no app code exists and nothing is hosted.
+intake: {audience: business, platform: web, money: paid, country: global}
+production:
+  state: not_in_production
+  note: "Docs only: no package.json, no app, nothing publicly hosted. The planned domain brandjourneymap.com is not registered (README)."
+  verified: false
+  evidence:
+    - {kind: file, path: brandjourneymap/README.md, note: "planned domain not registered"}
+note: "Part B: rebuilt from the 2026-11-13 pass (intake carried over; its catalog ai_picks are not treated as decided). PRD §14 and BJM PO canvases 2026-11-18 recorded as proposals; open items O-01, O-11, O-12 flagged."
+records:
+  - topic: frontend
+    status: ai_selected
+    pick: fe.nextjs
+    source: PRD §14 (proposed, not built)
+    reason: "PRD §14 proposes Next.js on Vercel. Proposal only — no app code exists and the owner has not confirmed it."
+  - topic: hosting
+    status: ai_selected
+    pick: host.vercel
+    source: PRD §14 (proposed, not built)
+    reason: "PRD §14 proposes Vercel. Proposal only — nothing is hosted and the owner has not confirmed it."
+  - topic: backend
+    status: gap
+    gap_note: "PRD §14 proposes Vercel Workflow / Queues for background work. That option is not in the catalog, nothing is built, and it is not confirmed."
+  - topic: database
+    status: ai_selected
+    pick: db.neon
+    source: BJM PO canvases 2026-11-18
+    reason: "PO design direction (2026-11-18): data = Neon Postgres. Narrows open item O-12 (Neon or Supabase, PRD §14) but is not owner-confirmed; no schema or code exists."
+  - topic: storage
+    status: ai_selected
+    pick: st.r2
+    source: BJM PO canvases 2026-11-18
+    reason: "PO design direction (2026-11-18): files on Cloudflare R2 next to Neon Postgres. Not owner-confirmed; nothing built."
+  - topic: auth
+    status: gap
+    gap_note: "Open item O-11: Clerk Organizations vs Supabase Auth (PRD §14). The PO canvases of 2026-11-18 set the tenancy model (one studio = one organization, multi-tenant) but not the sign-in provider."
+  - topic: payments
+    status: ai_selected
+    pick: pay.stripe-checkout
+    source: BJM PO canvases 2026-11-18
+    reason: "PO design direction (2026-11-18): payments = Stripe. Resolves the earlier conflict (one catalog ai_pick was pay.paddle; a stored comparison picked pay.stripe-checkout) in favor of Stripe. Billing is 'later' (PRD §14) and commercial billing 'someday' (owner decisions); not owner-confirmed; nothing built."
+  - topic: pricing_model
+    status: gap
+    gap_note: "Owner decisions (D-01–D-10) say commercial billing someday, and they are not mapped to tactic option ids. No pricing model or price is set."
+  - topic: realtime
+    status: gap
+    gap_note: "Co-editing is later in PRD §14 (Liveblocks or tldraw sync). Not chosen, not built."
+  - topic: editor_ui
+    status: gap
+    gap_note: "PRD §14 proposes a tldraw canvas, which is not in the catalog. Its commercial license price is unverified (open item O-01)."
+  - topic: i18n
+    status: ai_selected
+    pick: i18n.next-intl
+    source: PRD §14 (proposed, not built)
+    reason: "PRD §14 proposes next-intl. Proposal only; not owner-confirmed."
+  - topic: ai
+    status: gap
+    gap_note: "PO direction (2026-11-18) for AI drafts: free models first, cite sources, and a person confirms each item. No provider is chosen and no production AI API is implemented."
+  - topic: email
+    status: gap
+    gap_note: "Not implemented; no provider proposed."
+  - topic: analytics
+    status: gap
+    gap_note: "Not implemented; no tool proposed."
+  - topic: build_vs_buy
+    status: gap
+    gap_note: "Owner decisions record 'Claude Code, not Base44' (a D-decision), which reads as building with code instead of a no-code platform. D-01–D-10 are not mapped to tactic option ids, so the mapping waits for the owner."
+  - topic: rules_ledger
+    status: gap
+    gap_note: "PO canvases 2026-11-18: modules usable standalone; the 'seal' that needs all 17 slots is being reconsidered (direction: drop the seal, use flexible scoring). This is a product rule in flux, not a decision."
+architecture:
+  components:
+    - id: studio-org
+      role: auth
+      name: One studio = one organization (multi-tenant)
+      state: proposed
+    - id: image-sensor
+      role: third_party
+      name: Image Sensor sources — Pinterest OAuth, Are.na, Unsplash (API terms unverified)
+      state: proposed
+    - id: tldraw-canvas
+      role: frontend
+      name: tldraw canvas (license price unverified, O-01)
+      state: proposed
+    - id: co-editing
+      role: data
+      name: Co-editing later — Liveblocks or tldraw sync
+      state: proposed
+    - id: workflow-queues
+      role: backend
+      name: Vercel Workflow / Queues (PRD §14)
+      state: proposed
+    - id: ai-drafts
+      role: third_party
+      name: AI drafts — free models first, cited, human-confirmed
+      state: proposed
+  links:
+    - from: frontend
+      to: tldraw-canvas
+      label: journey canvas
+      state: proposed
+    - from: auth
+      to: studio-org
+      label: org per studio
+      state: proposed
+    - from: backend
+      to: workflow-queues
+      label: background jobs
+      state: proposed
+    - from: backend
+      to: image-sensor
+      label: collect reference images
+      state: proposed
+    - from: backend
+      to: ai-drafts
+      label: draft items, a person confirms each
+      state: proposed
+    - from: tldraw-canvas
+      to: co-editing
+      label: later
+      state: proposed

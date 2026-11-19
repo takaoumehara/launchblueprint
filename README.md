@@ -36,6 +36,20 @@ An agent can choose on its own without the owner approving every node — but on
 
 Step by step: [skill/blueprint/reference/decide.md](skill/blueprint/reference/decide.md) · refresh: [catalog-refresh.md](skill/blueprint/reference/catalog-refresh.md) · profiles: [preferences/README.md](skill/blueprint/preferences/README.md)
 
+## Five project maps (real products)
+
+Five products are mapped on all 64 decisions and the 12 categories, with an architecture view each. Default profile `lean-fast-full`; nothing is decided — facts are `observed` (with the file), recommendations are `ai_selected`, unknowns are `gap`. Two of them are **not in production**: Front Desk and Brand Journey Map.
+
+| Map | Architecture |
+|---|---|
+| `#/p/rakugaki-jam` — live-wall doodle | `#/p/rakugaki-jam/arch` |
+| `#/p/moime` — mobile-first site builder | `#/p/moime/arch` |
+| `#/p/local-pro-kit` — Local Pro Kit store and sites | `#/p/local-pro-kit/arch` |
+| `#/p/lpk-frontdesk` — Front Desk booking (not in production) | `#/p/lpk-frontdesk/arch` |
+| `#/p/brand-journey-map` — Brand Journey Map concept (not in production) | `#/p/brand-journey-map/arch` |
+
+Open the app (`cd app && npm run dev`) and add the hash. **To review a node:** click it; the panel shows the pick or suggestion, why, the profile and source date (verified / unverified), evidence files, linkages, every alternative with its scores, and what `all-in` would pick. Walk the categories with `#/p/<slug>/c/01` … `/c/12`. Screenshots, the all-in preview and the full gap list: [docs/portfolio.md](docs/portfolio.md).
+
 ## Repository
 
 ```

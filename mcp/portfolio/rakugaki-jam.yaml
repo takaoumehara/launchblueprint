@@ -1,0 +1,129 @@
+# Part B input — evidence for the rakugaki-jam project map (repo: rakugaki-jam).
+# Only facts from the Part B evidence brief. Paths are "<repo>/<path>" in that repo; they were not re-read in this session.
+# build: cd mcp && npm run build && node scripts/build-portfolio.mjs rakugaki-jam
+slug: rakugaki-jam
+name: Rakugaki Jam (live-wall doodle)
+goal: A live doodle wall that people join from a QR code; drawings appear on a shared wall in real time.
+intake: {platform: web}
+production:
+  state: unknown
+  note: >-
+    Handoff docs (2026-07-20) record the jam at a Firebase Hosting address of the snap-pair-f2b1d project (/jam).
+    Not re-verified for this transplanted repo, which also has a vercel.json.
+  verified: false
+  evidence:
+    - {kind: note, note: "Part B brief: handoff docs dated 2026-07-20 record https://snap-pair-f2b1d.web.app/jam; not re-verified"}
+note: "Part B: facts from the repo audit brief (observed / gap); every other decision scored by decide under lean-fast-full (ai_selected = recommendation only)."
+records:
+  - topic: frontend
+    status: observed
+    observed_as: React 18 + Vite 7 + TypeScript single-page app
+    evidence:
+      - {kind: dependency, path: rakugaki-jam/demo/package.json, note: "react 18, vite 7, typescript (per the audit brief)"}
+  - topic: hosting
+    status: gap
+    gap_note: >-
+      Two host configs exist: vercel.json (SPA, serves demo/dist) and firebase.json hosting. Handoff docs (2026-07-20) record
+      Firebase Hosting (snap-pair-f2b1d), not re-verified for this repo. Which host serves production is unknown.
+    evidence:
+      - {kind: config, path: rakugaki-jam/vercel.json, note: "SPA rewrite, output demo/dist"}
+      - {kind: config, path: rakugaki-jam/firebase.json, note: "hosting block present"}
+  - topic: backend
+    status: gap
+    gap_note: "firebase.json points at a functions/ directory that is missing from the repo. No server code is evidenced; the jam talks to the Realtime Database directly."
+    evidence:
+      - {kind: config, path: rakugaki-jam/firebase.json, note: "functions source = functions/ (directory missing)"}
+  - topic: realtime
+    status: observed
+    pick: rt.firebase-rtdb
+    evidence:
+      - {kind: file, path: rakugaki-jam/demo/src/jam/workshopClient.ts, note: "workshop client uses Realtime Database, project snap-pair-f2b1d"}
+      - {kind: note, note: "E2E tests run against the Firebase emulator (per the audit brief)"}
+  - topic: database
+    status: observed
+    observed_as: Firebase Realtime Database (the same store as live updates)
+    evidence:
+      - {kind: file, path: rakugaki-jam/demo/src/jam/workshopClient.ts, note: "the only data store evidenced is the Realtime Database"}
+  - topic: auth
+    status: gap
+    gap_note: "No firebase/auth imports in demo/src/jam (Realtime Database only). The root README mentions Firebase Auth for the snap-pair foundation, but that is not evidenced in the jam code. Who may write to the wall is unknown."
+    evidence:
+      - {kind: note, path: rakugaki-jam/demo/src/jam, note: "no firebase/auth import found (per the audit brief)"}
+  - topic: payments
+    status: gap
+    gap_note: "No payment code found in the repo audit. Whether the product will charge at all is not stated."
+  - topic: email
+    status: gap
+    gap_note: "No email or SMS provider found in the repo audit."
+  - topic: analytics
+    status: gap
+    gap_note: "No analytics found in the repo audit."
+  - topic: ai
+    status: gap
+    gap_note: "No AI API found in the repo audit."
+  - topic: ci
+    status: gap
+    gap_note: "No .github/workflows in the repo; how builds and deploys run is not evidenced."
+  - topic: visual_system
+    status: ai_selected
+    evidence:
+      - {kind: file, path: rakugaki-jam/PRODUCT.md, note: "targets WCAG 2.2 AA (a target, not an audit result)"}
+  - topic: interactions
+    status: ai_selected
+    evidence:
+      - {kind: file, path: rakugaki-jam/PRODUCT.md, note: "targets WCAG 2.2 AA (a target, not an audit result)"}
+architecture:
+  components:
+    - id: canvas-audio
+      role: frontend
+      name: Canvas drawing + Web Audio (core of the product)
+      state: implemented
+      evidence:
+        - {kind: note, path: rakugaki-jam/demo/src/jam, note: "Part B brief: Canvas + Web Audio are core; no file named in the brief"}
+    - id: qr-join
+      role: frontend
+      name: QR join (phone → wall)
+      state: proposed
+    - id: rtdb-emulator
+      role: data
+      name: Firebase emulator (E2E only)
+      state: implemented
+      evidence:
+        - {kind: note, note: "E2E uses the emulator (per the audit brief)"}
+    - id: functions-dir
+      role: backend
+      name: Cloud Functions (functions/ referenced, missing)
+      state: proposed
+  links:
+    - from: frontend
+      to: realtime
+      label: read/write strokes (project snap-pair-f2b1d)
+      state: implemented
+      evidence:
+        - {kind: file, path: rakugaki-jam/demo/src/jam/workshopClient.ts, note: "Realtime Database client"}
+    - from: canvas-audio
+      to: frontend
+      label: drawing + sound inside the SPA
+      state: proposed
+      note: "no file evidence named"
+    - from: qr-join
+      to: realtime
+      label: join a wall session
+      state: proposed
+      note: "QR join is a product statement; the code path is not named in the brief"
+    - from: hosting
+      to: frontend
+      label: serves demo/dist
+      state: proposed
+      note: "vercel.json and firebase.json both exist; which one serves production is unknown"
+    - from: rtdb-emulator
+      to: realtime
+      label: E2E against the emulator
+      state: implemented
+      evidence:
+        - {kind: note, note: "per the audit brief"}
+    - from: functions-dir
+      to: hosting
+      label: firebase.json points at functions/
+      state: proposed
+      note: "directory missing"

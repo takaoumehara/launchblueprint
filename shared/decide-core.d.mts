@@ -22,6 +22,8 @@ export function signalsFor(optionId: string, topic: string, idx: any, chosen?: a
 export function scoreTopic(o: any): any;
 export function decide(o: any): any;
 export function chosenOf(c: any): string;
+export function isSourced(c: any): boolean;
+export function sourcedDrift(c: any, scoredPick: string, profile: any): any;
 export function partsOf(map: any): { topic: string; option: string; status: string }[];
 export function normalizeMap(map: any, idx: any): any;
 export function rescoreMap(map: any, idx: any, profile: any, opts?: { date?: string; only?: string[] }): { map: any; changes: any[] };

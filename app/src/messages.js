@@ -69,6 +69,10 @@ export const M = {
     'p.role.frontend': '画面（フロント）', 'p.role.backend': 'サーバー・置き場所', 'p.role.data': 'データ', 'p.role.auth': 'ログイン', 'p.role.payments': 'お金（決済）', 'p.role.third_party': '外部サービス',
     'p.arch.noconn': 'つながりなし', 'p.would': o => `あとで選ぶなら：${o}（今の好みで最高点）`, 'p.scored.under': '比べた選択肢はこの好みで表示用に採点（状態と選んだものは変えない）',
     'p.recorded.profile': p => `記録した時の好み：${p}`, 'p.rescore.note': o => `ほかの部品がそろった今の地図では「${o}」が最高点。decide をやり直すと更新されます`,
+    'p.prod.not_in_production': 'まだ本番で動いていません', 'p.prod.unknown': '本番で動いているか未確認', 'p.prod.live': '本番で公開（製品の文書による）', 'p.prod.unverified': '未確認',
+    'p.preview': (p, n, d) => `「${p}」ならどう変わるか（下見・まだ適用しない）：おすすめ ${n} 件が変わる、確認済み・提案 ${d} 件に見直し印`,
+    'p.preview.note': '下見だけです。地図は変えません。適用するには上の好みボタンを押します（このブラウザに保存）。', 'p.preview.none': '変わるおすすめはありません。',
+    'p.preview.keep': '残すもの（確認済みの事実・出典つきの提案）', 'p.under': (p, o) => `「${p}」なら：${o}`, 'p.under.same': p => `「${p}」でも同じ`, 'p.source.named': s => `提案の出典：${s}（オーナー未確認）`,
   },
   en: {
     'title': 'Blueprint — a map of how to build',
@@ -132,5 +136,9 @@ export const M = {
     'p.role.frontend': 'Frontend', 'p.role.backend': 'Backend and hosting', 'p.role.data': 'Data', 'p.role.auth': 'Sign-in (auth)', 'p.role.payments': 'Payments', 'p.role.third_party': 'Third-party services',
     'p.arch.noconn': 'no connections', 'p.would': o => `If picked later: ${o} (top score under the current profile)`, 'p.scored.under': 'Alternatives scored under this profile for display; status and pick unchanged',
     'p.recorded.profile': p => `Recorded under: ${p}`, 'p.rescore.note': o => `With every other part of the map in place, “${o}” now scores highest; re-run decide to update`,
+    'p.prod.not_in_production': 'Not in production', 'p.prod.unknown': 'Production status not verified', 'p.prod.live': 'Live (per the product’s own docs)', 'p.prod.unverified': 'unverified',
+    'p.preview': (p, n, d) => `What “${p}” would change (preview, not applied): ${n} picks change, ${d} observed facts or sourced proposals flagged for review`,
+    'p.preview.note': 'Preview only; the map is not changed. To apply it, press the profile button above (saved in this browser).', 'p.preview.none': 'No pick changes.',
+    'p.preview.keep': 'Kept (observed facts and sourced proposals)', 'p.under': (p, o) => `Under “${p}”: ${o}`, 'p.under.same': p => `Same under “${p}”`, 'p.source.named': s => `Proposal source: ${s} (not owner-confirmed)`,
   },
 };

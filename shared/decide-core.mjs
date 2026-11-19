@@ -379,20 +379,28 @@ export function expandChoice(map, topic, idx, profile, opts = {}) {
   const s = scoreRecord(c, map, idx, profile, opts);
   const own = c.status === 'ai_selected' || (c.status === 'gap' && !c.gap_note);
   const out = { ...c, considered: s.considered, field_size: s.field_size, gaps: s.gaps, gap_notes: s.gap_notes, scored_pick: s.scored_pick, scored_under: s.scored_under,
-    reason: own && c.reason ? c.reason : s.reason, reason_ja: own && c.reason_ja ? c.reason_ja : s.reason_ja,
+    reason: own && c.reason ? c.reason : s.reason, reason_ja: own && c.reason ? (c.reason_ja || c.reason) : s.reason_ja,
     rejected: own && (c.rejected || []).length ? c.rejected : s.rejected, linkages: (c.linkages || []).length ? c.linkages : s.linkages,
     verified: c.verified ?? s.verified, checked: c.checked && !Array.isArray(c.checked) ? c.checked : s.checked };
   if (c.kind === 'checklist' || idx.T[topic].kind === 'checklist') { out.to_check = idx.T[topic].options; out.checked = Array.isArray(c.checked) ? c.checked : []; }
   if (s.profile_drift && !c.profile_drift) out.profile_drift = s.profile_drift;
-  if (c.status === 'ai_selected' && c.ai_pick && s.scored_pick && c.ai_pick !== s.scored_pick) out.rescore_note = `with every other part of the map in place, ${s.scored_pick} now scores highest; re-run decide to update`;
+  if (isSourced(c)) { const d = sourcedDrift(c, s.scored_pick, profile); if (d) out.profile_drift = d; else delete out.profile_drift; }
+  else if (c.status === 'ai_selected' && c.ai_pick && s.scored_pick && c.ai_pick !== s.scored_pick) out.rescore_note = `with every other part of the map in place, ${s.scored_pick} now scores highest; re-run decide to update`;
   if (!out.profile) out.profile = profile.id;
   return out;
+}
+export function sourcedDrift(c, scoredPick, profile) {
+  return scoredPick && scoredPick !== c.ai_pick ? { profile: profile.id, would_pick: scoredPick, note: `kept: proposal from ${c.source}; not owner-confirmed; review` } : null;
 }
 export const expandMap = (map, idx, profile, opts) => ({ ...map, choices: (map.choices || []).map(c => expandChoice(map, c.topic, idx, profile, opts)) });
 
 // ---------- project maps ----------
 const depthOf = (topic, idx, seen = new Set()) => { const t = idx.T[topic]; if (!t || seen.has(topic)) return 0; seen.add(topic); return t.depends_on.length ? 1 + Math.max(...t.depends_on.map(d => depthOf(d, idx, seen))) : 0; };
 export const chosenOf = c => c.pick || (c.status === 'ai_selected' ? c.ai_pick : '') || '';
+// An ai_selected pick that came from a named outside source (a product doc, a PO's design notes) rather than the
+// catalog scoring: `source` is set and does not start with "catalog". It is still a recommendation, never decided,
+// but a profile change must not silently replace it; it is kept and flagged with profile_drift instead.
+export const isSourced = c => c?.status === 'ai_selected' && !!c.ai_pick && !!c.source && !/^catalog/.test(String(c.source));
 export function partsOf(map) {
   return (map.choices || []).filter(c => HAS_PART.has(c.status) && chosenOf(c)).map(c => ({ topic: c.topic, option: chosenOf(c), status: c.status }));
 }
@@ -410,12 +418,13 @@ export function normalizeMap(map, idx) {
 // observed and decided records keep their pick and get profile_drift when the new winner differs.
 export function rescoreMap(map, idx, profile, { date, only } = {}) {
   const m = normalizeMap(map, idx);
-  const fixed = m.choices.filter(c => (c.status === 'observed' || c.status === 'decided') && c.pick).map(c => ({ topic: c.topic, option: c.pick }));
+  const fixed = [...m.choices.filter(c => (c.status === 'observed' || c.status === 'decided') && c.pick).map(c => ({ topic: c.topic, option: c.pick })),
+    ...m.choices.filter(isSourced).map(c => ({ topic: c.topic, option: c.ai_pick }))];
   const order = m.choices.map((c, i) => [c, i]).sort((a, b) => depthOf(a[0].topic, idx) - depthOf(b[0].topic, idx) || a[1] - b[1]).map(x => x[0]);
   const chosen = [...fixed]; const changes = [];
   for (const c of order) {
     if (only && !only.includes(c.topic)) { const o = chosenOf(c); if (o && !fixed.some(f => f.topic === c.topic) && HAS_PART.has(c.status)) chosen.push({ topic: c.topic, option: o }); continue; }
-    if (c.status === 'observed' || c.status === 'decided' || c.status === 'deferred') continue;   // verdicts attached below
+    if (c.status === 'observed' || c.status === 'decided' || c.status === 'deferred' || isSourced(c)) continue;   // verdicts attached below
     const rec = decide({ topic: c.topic, idx, profile, intake: m.profile || {}, chosen, evidence: c.overrides || [], extra_options: c.extra_options || [], date });
     const before = c.ai_pick;
     // an agent's own evidence and gap notes on this record are kept; the scoring is replaced
@@ -434,6 +443,13 @@ export function rescoreMap(map, idx, profile, { date, only } = {}) {
     const s = scoreRecord(c, m, idx, profile, { date });
     Object.assign(c, { scored_pick: s.scored_pick, scored_under: profile.id, rejected: s.rejected });
     if (s.profile_drift) c.profile_drift = s.profile_drift; else delete c.profile_drift;
+  }
+  // sourced proposals keep their pick; the scored winner under the new profile is stored next to it
+  for (const c of m.choices) if (isSourced(c) && c.kind === 'choose') {
+    const s = scoreRecord(c, m, idx, profile, { date });
+    Object.assign(c, { scored_pick: s.scored_pick, scored_under: profile.id });
+    const d = sourcedDrift(c, s.scored_pick, profile);
+    if (d) c.profile_drift = d; else delete c.profile_drift;
   }
   m.preference_profile = profile.id;
   return { map: compactMap(m), changes };

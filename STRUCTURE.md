@@ -12,6 +12,8 @@
 - `legacy/launch-blueprint/` — 旧 launch-blueprint の保存版（README-v0.2.md 含む）/ archived previous skill.
 - `skills/` — 以前からある launch-blueprint v0.2（履歴保持のため残しています）/ earlier v0.2 kept for history.
 
-Screenshots (*.png) and archives (*.zip) are excluded via .gitignore.
+- `docs/portfolio.md` / `docs/portfolio.ja.md` — 5 つの実プロダクトの地図（`#/p/<slug>`）と穴の一覧。画面写真は `docs/screens/`、根拠の入力は `mcp/portfolio/`、作り直しは `mcp/scripts/build-portfolio.mjs` / Five real project maps, gap list, screenshots and their evidence inputs.
+
+Screenshots (*.png) and archives (*.zip) are excluded via .gitignore, except `docs/screens/*.png` and `ui/**/*.png`.
 
 © 2026 CREATIVITY IS EVERYWHERE, LLC

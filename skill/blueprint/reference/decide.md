@@ -44,7 +44,11 @@ Scores come only from evidence: catalog fields (free band, lock_in, liability_co
    「はい」をもらったら {status:"decided", pick, owner_confirmed:true, decided_by:"owner"}
 7. 好みを変える：rescore_project_map {slug, profile} で差分を見て、update_project_map {slug, preference_profile}
    で適用。ai_selected は全部採点し直し、decided / observed は残して profile_drift を付ける
+   例外：source が catalog 以外の ai_selected（PRD・PO のメモなど出典つきの提案。records に pick と source を付けて記録）も残して profile_drift を付ける
+8. 本番かどうか：update_project_map {slug, production:{state:"not_in_production"|"live"|"unknown", note, verified:false}} で地図の上に帯を出す
 ```
+
+Sourced proposals (EN): an `ai_selected` record whose `source` does not start with `catalog` (a PRD section, a PO's design notes) is a recommendation from that source. It is never `decided`, but a profile change keeps its `ai_pick` and marks `profile_drift` instead of replacing it. `production` (`live` / `not_in_production` / `unknown`, a note, `verified`) is shown as a banner on the map. Worked examples: the five maps in `docs/portfolio.md`, inputs in `mcp/portfolio/`.
 
 ## 決定の記録 / Decision record (one `choices[]` entry)
 保存はコンパクト：`considered`・`field_size`・`gaps`・`gap_notes` はファイルに書かず、読む時に作る（MCP `get_project_map(slug, topic)`、アプリの詳細）。observed・decided・deferred でも、比べた選択肢全部と落とした理由が出る。status・pick は変えない。
