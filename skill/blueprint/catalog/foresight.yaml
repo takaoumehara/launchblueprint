@@ -156,6 +156,27 @@ lessons:
   see_also: [fs.F, ho.bus-factor-two]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+
+- id: fs.client-editing-decide-early
+  principle: お客さんが後から自分で直すサイトは、作り始める前に「誰がどこまで触るか」と編集のやり方を決める。選択肢はヘッドレスCMS／見たまま編集／Gitベース／ノーコードビルダーへ移行／従来CMS／AIビルダーで本人が直す／表・ドキュメント流し込み／範囲を限った専用編集フォーム／自然言語の編集エージェント。判断軸は触る範囲・月額・壊されない仕組み（範囲制限・下書き・履歴・承認）・名義とデータの持ち出し。既定はフレームワーク＋ヘッドレスCMS、小規模ならGitベースか限定フォーム。
+  anti_pattern: AIで静的にサイトを作って納品し、あとで「自分で文字や写真を変えたい」と言われてから編集の仕組みを後付けする。
+  why: 編集方式はデータの置き場所と技術スタックを決めるので、後から変えると作り直しになる。お客さんが触れる範囲を決めないと、レイアウトを壊されるか、毎回こちらに修正依頼が来る。
+  check: 納品後に誰が何を直すか、その方式と月額、壊されない仕組みが、制作開始前に決まっているか？
+  trigger: お客さん向けサイトの見積もり・技術スタック選びの時、「自分で更新したい」と言われた時
+  stage: idea
+  see_also: [fs.client-edit-agent-human-approval]
+  verified: false
+  source: 'PO field lessons 2026-11-12, generalized'
+- id: fs.client-edit-agent-human-approval
+  principle: 自然言語（チャット・音声）でサイトを直す編集エージェントは、認証付きの画面から受けた指示でCMS／DBの下書きだけを書き換え、プレビューを見せて人が承認してから公開する。AIに直接公開・デプロイさせない。
+  anti_pattern: 「AIが指示どおりに書き換えてそのままデプロイする」構成を、提案どおりに採用する。
+  why: 聞き違い・誤解釈がそのまま本番に出る。下書き・履歴・承認の段がないと、誰がいつ何を変えたか追えず、元に戻せない。
+  check: 編集エージェントの書き込み先は下書きで、公開には人の承認が必須になっているか？
+  trigger: AIによる編集・更新機能を設計する時、外部AIの提案に「自動デプロイ」が含まれる時
+  stage: launch
+  see_also: [fs.client-editing-decide-early]
+  verified: false
+  source: 'PO field lessons 2026-11-12, generalized'
 procedures:
 - id: fs.A
   name_ja: 決定の先読み
