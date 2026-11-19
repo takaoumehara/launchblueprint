@@ -8,7 +8,7 @@ description: Whole-project blueprint from idea to launch, operation, scale, and 
 目的：作り始める前にプロジェクト全体を一度見渡し、あとから変えにくいことを先に決め、以後の変更すべてに「どこへ波及するか」を出す。提供：CREATIVITY IS EVERYWHERE, LLC。
 
 ## 守ること（いつでも）
-- 決めるのはオーナー。Blueprint は選択肢・推奨・影響を出すだけ。`open` の決定を勝手に `decided` にしない。
+- 決めるのはオーナー。Blueprint は選択肢・推奨・影響を出すだけ。`open` の決定を勝手に `decided` にしない。AI が自分で選んで先へ進むときは `ai_selected`（あとでオーナーが地図で見直す）。リポジトリで確かめた事実は `observed`（根拠のファイルつき）、根拠がないものは `gap` として見える形で残す。
 - 推奨は1つに絞り、理由と「選ばない場合のコスト」を添える。
 - 料金・規約・審査ルールは記憶で断定しない。`source.checked` が古い（`stale_after_days` 超え）なら調べ直すか「未確認」と書く。金額・工数の目安は `estimate` と明記。
 - 公開・本番反映・push・外部送信は、オーナーの明示 OK のあとだけ。プレビュー用URLを公開リンクにしない。
@@ -53,6 +53,7 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - 列：向き／不向き、予算帯ごとの費用、無料枠の上限と超えた時、ロックイン、責任・認証、最低限のセキュリティ設定。
 - 作る／APIを使う／全部入りを買う、は `catalog/build_vs_buy.yaml` の式で総コスト（作る時間・保守・乗り換え費）を比べる。
 - 最後に「推奨：X。理由。こうなったら Y に替える」を1行で。
+- AI だけで選ぶ時は MCP `decide(topic, project)`：現実的な選択肢を全部並べ、プロジェクトの「判断の好み」（`preferences/`、既定 `lean-fast-full`、ほかに `all-in`・組織の好み）で採点し、勝った理由・各案を落とした理由・つながりの理由（同じ提供元・無料枠の共有・相性）・根拠の穴を返す。`update_project_map` で `ai_selected` として記録し、返ってきた `#/p/<slug>` をオーナーに渡す。好みを変えると全部採点し直す。手順は `reference/decide.md`。
 
 ### 6. 書き出す（機械が読める形）
 `templates/project.axes.yaml` の形でプロジェクトファイルを作る。書式は `catalog/schema.md`。
@@ -90,4 +91,6 @@ DD ダッシュボード：ユーザー・お金・コホート・インフラ�
 - `catalog/schema.md`：全 YAML の書式
 - `templates/project.axes.yaml`, `templates/brand-context.md`
 - `reference/dry-run-sample.md`：見本プロジェクトを MCP だけで構想→終了まで通した記録と穴。`reference/walkthrough-non-engineer.md`：アプリの歩き方
-- MCP（`mcp/`）：`list_topics` → `draft_project_map(profile)` → `get_comparison` / `get_item` → オーナーの OK 後に `draft_project_map(decided)`。使い方は `QUICKSTART.md`
+- `preferences/`：判断の好み（7 基準の重み）。`elements/categories.yaml`：12 カテゴリーの見直し順（決めごとごとに本拠 1 つ）。`project-maps/`：共有するプロジェクトの地図（アプリの `#/p/<slug>`）
+- `reference/decide.md`：AI が自分で選ぶ手順（decide → ai_selected → あとで見直し）。`reference/catalog-refresh.md`：料金・上限を定期的に確かめ直す手順
+- MCP（`mcp/`）：`list_profiles` → `decide(topic, project)` → `update_project_map`（`#/p/<slug>` を返す）→ オーナーが地図で見直し。旧来の `list_topics` → `draft_project_map` も使える。使い方は `QUICKSTART.md`

@@ -1,0 +1,10 @@
+# Test fixture: an org-defined profile that extends all-in and cares only a little about cost.
+schema: blueprint.preference-profile/v1
+id: org-compliance-first
+scope: org
+extends: all-in
+label_en: Compliance first (test org)
+label_ja: 認証優先（テスト用の組織）
+weights:
+  compliance: 5
+  lock_in: 4

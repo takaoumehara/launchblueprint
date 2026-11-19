@@ -1007,12 +1007,65 @@ tactics:
   depends_on: [hosting]
   last_checked: '2026-11-03'
   check_cadence: deep_when_used
+# 2026-11-18 追加：ブランド・見た目・操作感・動き・倫理を、技術と同じ「決めること」として地図に置く（中身は既存の ui_ux / legal_terms の項目だけ）
+- element: el.brand
+  topic: visual_system
+  lane: ui
+  stage: idea
+  label_ja: 見た目の決まり
+  question_ja: 色・文字・明暗をトークンで決め、どの画面でも同じに見えるか
+  label_en: 'Visual system'
+  question_en: 'Are colour, type and light/dark set as tokens so every screen looks like one product?'
+  kind: checklist
+  options: [ui_ux.theme-tokens-not-hardcoded, ui_ux.dark-mode-checked-every-screen, ui_ux.design-system-fonts-everywhere, ui_ux.a11y-text-contrast, ui_ux.real-media-thumbnails]
+  depends_on: [brand_basics]
+  last_checked: '2026-11-18'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: interactions
+  lane: ux
+  stage: launch
+  label_ja: 操作の手ざわり
+  question_ja: 指でも、マウスでも、取り消しでも、すぐに応える操作か
+  label_en: 'Interactions'
+  question_en: 'Does every action respond fast, work by touch and keyboard, and allow undo?'
+  kind: checklist
+  options: [ui_ux.no-hover-only-interactions, ui_ux.touch-targets-and-spacing, ui_ux.undoable-delete, ui_ux.perf-respond-within-100ms, ui_ux.gestures-have-visible-alternative]
+  depends_on: [ui_patterns, frontend]
+  last_checked: '2026-11-18'
+  check_cadence: daily_new_options
+- element: el.experience
+  topic: motion
+  lane: ui
+  stage: launch
+  label_ja: 動き（アニメーション）
+  question_ja: 動きは変化を説明するためだけに使い、動きを減らす設定を守るか
+  label_en: 'Motion and animation'
+  question_en: 'Does motion only explain a change, and does reduced-motion turn it off everywhere?'
+  kind: checklist
+  options: [ui_ux.motion-explains-change, ui_ux.reduced-motion-is-global, ui_ux.decorative-motion-once, ui_ux.autoplay-is-muted-and-stoppable]
+  depends_on: [visual_system, interactions]
+  last_checked: '2026-11-18'
+  check_cadence: daily_new_options
+- element: el.security
+  topic: ethics
+  lane: rules
+  stage: launch
+  label_ja: 倫理・公正な扱い
+  question_ja: 同意・AI の明示・子ども・取り返しのつかない操作で、使う人を欺かないか
+  label_en: 'Ethics and fair treatment'
+  question_en: 'Consent, AI disclosure, minors and irreversible actions: is nobody misled?'
+  kind: checklist
+  options: [lt.consent-before-tracking, lt.ai-disclosure, lt.age-gate-decided, lt.policy-matches-practice, ui_ux.irreversible-actions-name-consequence]
+  depends_on: [rules_ledger, analytics]
+  last_checked: '2026-11-18'
+  check_cadence: deep_when_used
 lanes:
 - {id: brand, label: BRAND, ja: ブランド・発信, en: Brand and voice}
 - {id: ux, label: UX, ja: 体験・届け方, en: Experience and delivery}
 - {id: ui, label: UI, ja: 画面, en: Screens}
 - {id: tech, label: TECH, ja: しくみ, en: Systems}
-- {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律, en: Money, company, law}
+- {id: biz, label: BIZ / LEGAL, ja: お金・会社・法律, en: 'Money, company, law'}
 - {id: rules, label: RULES, ja: 守ること, en: Promises to keep}
 # stages：地図の上の段（5 段。catalog/lifecycle.yaml の macro_stages と同じ id）
 stages:

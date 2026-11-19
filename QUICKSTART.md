@@ -9,7 +9,7 @@ Three layers:
 | Layer | File | What it holds |
 |---|---|---|
 | Elements | `skill/blueprint/elements/elements.yaml` | 7 principles that rarely change (experience, product, business, marketing, brand, maintenance, security) |
-| Tactics | `skill/blueprint/elements/tactics.yaml` | 60 decisions. Each has a stage, a lane, Japanese and English labels, options (catalog ids), a rule-based pick, and `depends_on` |
+| Tactics | `skill/blueprint/elements/tactics.yaml` | 64 decisions (brand, visuals, interactions, motion, monetization and ethics included). Each has a stage, a lane, Japanese and English labels, options (catalog ids), a rule-based pick, and `depends_on` |
 | Project map | exported by the app or `draft_project_map` | your project: status per decision, pick, reason, rejected options |
 
 Five stages: idea → launch → operate → scale → exit. Six lanes: BRAND, UX, UI, TECH, BIZ/LEGAL, RULES.

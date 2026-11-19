@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Blueprint MCP server — (c) CREATIVITY IS EVERYWHERE, LLC
-// Read-only over ../skill/blueprint; the only write is mcp/inbox/learnings.jsonl.
+// Read-only over ../skill/blueprint. Writes only to the inbox: mcp/inbox/learnings.jsonl, mcp/inbox/catalog-refresh.jsonl
+// and mcp/inbox/project-maps/<slug>.yaml (agent drafts a person reviews before they move into skill/blueprint/project-maps/).
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -8,6 +9,7 @@ import yaml from "js-yaml";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import * as core from "../../shared/decide-core.mjs";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.BLUEPRINT_DIR ?? path.resolve(HERE, "../../skill/blueprint");
 const INBOX = process.env.BLUEPRINT_INBOX ?? path.resolve(HERE, "../inbox/learnings.jsonl");
@@ -15,6 +17,11 @@ const CAT = path.join(ROOT, "catalog");
 const REF = path.join(ROOT, "reference");
 const ELE = path.join(ROOT, "elements");
 const TPL = path.join(ROOT, "templates");
+const PREF = path.join(ROOT, "preferences");
+const MAPS = path.join(ROOT, "project-maps"); // reviewed, committed project maps (read-only here)
+const DRAFTS = process.env.BLUEPRINT_PROJECTS ?? path.resolve(HERE, "../inbox/project-maps"); // agent-written drafts
+const REFRESH = process.env.BLUEPRINT_REFRESH_INBOX ?? path.resolve(HERE, "../inbox/catalog-refresh.jsonl");
+const APP_URL = (process.env.BLUEPRINT_APP_URL ?? "").replace(/\/+$/, ""); // optional absolute base for review links
 const safe = (s) => s.replace(/[^a-zA-Z0-9_\-.]/g, "");
 const text = (t) => ({ content: [{ type: "text", text: t }] });
 const json = (o) => text(JSON.stringify(o, null, 2));
@@ -159,10 +166,10 @@ function draftMap(opts) {
     return { project_map, next_steps: next, blocked, progress, lanes, yaml: yaml.dump(project_map, { lineWidth: 120 }) };
 }
 const LIFECYCLE = ["idea", "launch", "operate", "scale", "exit"];
-const server = new McpServer({ name: "blueprint", version: "0.2.0" }, { instructions: [
+const server = new McpServer({ name: "blueprint", version: "0.3.0" }, { instructions: [
         "Blueprint: a map of every decision a product needs from idea to exit, with a catalog of options (free tiers, limits, lock-in, sources).",
-        "Typical agent flow: 1) list_topics to see the decisions and their order (depends_on); 2) draft_project_map with the owner's profile to get the first project map with AI picks and next_steps; 3) for each next step call get_comparison (tech choices) or get_item for each option, then ask the owner to decide; 4) call draft_project_map again with `decided` to advance; 5) propose_learning for anything learned.",
-        "Never mark a decision as decided without the owner. Treat verified:false or missing checked dates as unverified; say so instead of asserting prices.",
+        "Typical agent flow: 1) list_profiles and get_project_map (or update_project_map to create one) to learn the project's preference profile; 2) for each decision call decide(topic, project) — it lists the whole realistic field, scores every option under the active profile with evidence, and returns the pick, why it won, why each alternative lost and linkage reasons; 3) record the result with update_project_map (status ai_selected — the agent may proceed; a person reviews later on the map via the returned #/p/<slug> link); 4) record facts found in a real repo as status observed with evidence, and missing evidence as status gap; 5) propose_learning / propose_catalog_refresh for anything learned.",
+        "Never mark a decision as decided without the owner: decided requires owner_confirmed:true. Changing the preference profile re-scores every ai_selected record. Treat verified:false or missing checked dates as unverified; say so instead of asserting prices.",
         "Text is mostly Japanese; ids are stable English keys (e.g. db.supabase, tactics topic `payments`).",
     ].join("\n") });
 server.tool("list_domains", "List everything readable: catalog domains (with title and item count), elements-layer files, reference docs and templates.", {}, async () => json({
@@ -280,7 +287,17 @@ function walkEntries(node, domain, out) {
                 walkEntries(v, domain, out);
     }
 }
-server.tool("stale_items", "Catalog items (and stack-comparison services) whose checked date is older than `days`, missing, or verified:false. Use before quoting any price or limit.", { days: z.number().int().nonnegative() }, async ({ days }) => {
+// Price/limit fields an agent re-reads on the official page during a catalog refresh.
+const REFRESH_FIELDS = ["pricing_bands", "limits", "free_tier", "paid_entry", "cost", "fee", "price", "lock_in"];
+const usedBy = (id) => (tacticsDoc().tactics ?? []).filter((t) => t.options.includes(id)).map((t) => t.topic)
+    .concat(comparisons().filter(c => (c.services ?? []).some((s) => s.id === id)).map(c => `comparison:${c.topic}`));
+function currentText(id) {
+    const raw = rawItem(id) ?? comparisons().flatMap(c => c.services ?? []).find((s) => s.id === id);
+    if (!raw)
+        return {};
+    return Object.fromEntries(REFRESH_FIELDS.filter(k => raw[k] != null).map(k => [k, raw[k]]));
+}
+server.tool("stale_items", "Catalog items (and stack-comparison services) whose checked date is older than `days`, missing, or verified:false. Use before quoting any price or limit. refresh_plan=true adds, per item, the official URL, the current price/limit text to compare and the decisions that use it (sorted: used on the map first) — the input for a catalog refresh run (see propose_catalog_refresh). used_only limits to items that appear in a decision or comparison; domain filters one catalog area.", { days: z.number().int().nonnegative(), refresh_plan: z.boolean().optional(), used_only: z.boolean().optional(), domain: z.string().optional(), limit: z.number().int().positive().max(1000).optional() }, async ({ days, refresh_plan = false, used_only = false, domain, limit }) => {
     const all = [];
     for (const d of domains()) {
         try {
@@ -292,13 +309,25 @@ server.tool("stale_items", "Catalog items (and stack-comparison services) whose 
         for (const s of c.services ?? [])
             all.push({ domain: `stack_comparisons.${c.topic}`, id: s.id, name: s.name ?? null, checked: s.checked ?? null, verified: s.verified ?? null, url: s.url ?? null });
     const cutoff = Date.now() - days * 86400000;
-    const stale = all.filter(e => {
+    let stale = all.filter(e => {
         if (e.verified === false || !e.checked)
             return true;
         const t = Date.parse(String(e.checked));
         return isNaN(t) || t < cutoff;
     }).map(e => ({ ...e, reason: !e.checked ? "unchecked" : e.verified === false ? "unverified" : "older_than_days" }));
-    return json({ days, total_with_source: all.length, stale_count: stale.length, stale });
+    if (domain)
+        stale = stale.filter(e => e.domain === safe(domain) || e.domain === `stack_comparisons.${safe(domain)}`);
+    if (used_only || refresh_plan)
+        stale = stale.map(e => ({ ...e, used_by: e.id ? [...new Set(usedBy(e.id))] : [] }));
+    if (used_only)
+        stale = stale.filter(e => e.used_by.length);
+    if (refresh_plan)
+        stale = stale.map(e => ({ ...e, current: e.id ? currentText(e.id) : {},
+            next: e.url ? `open ${e.url}, compare with current, then propose_catalog_refresh(id, url, checked, verified, changes)` : "no official URL: find the vendor's official pricing/limits page first; until then it stays verified:false" }))
+            .sort((a, b) => b.used_by.length - a.used_by.length || String(a.checked ?? "").localeCompare(String(b.checked ?? "")));
+    const out = limit ? stale.slice(0, limit) : stale;
+    return json({ days, total_with_source: all.length, stale_count: stale.length, ...(limit ? { returned: out.length } : {}), stale: out,
+        ...(refresh_plan ? { how_to: "Recurring refresh: run stale_items(days: 90, refresh_plan: true, used_only: true) on a schedule; for each item read the official URL only (never a blog or memory); call propose_catalog_refresh with the text exactly as the page shows it and verified:true only if you read it there today. A person merges the inbox into the catalog. See skill/blueprint/reference/catalog-refresh.md." } : {}) });
 });
 // Lifecycle stages: five macro stages (idea → launch → operate → scale → exit) and the fine stages under them,
 // each with known_surprises (what always happens that the plan did not expect) and revisit_triggers (when to re-run Blueprint).
@@ -346,5 +375,296 @@ server.tool("propose_learning", "Propose a new learning. Appends to the inbox on
     fs.mkdirSync(path.dirname(INBOX), { recursive: true });
     fs.appendFileSync(INBOX, JSON.stringify(rec) + "\n");
     return json({ saved: true, inbox: "mcp/inbox/learnings.jsonl", record: rec });
+});
+const readYamlDir = (dir) => !fs.existsSync(dir) ? [] : fs.readdirSync(dir).filter(f => f.endsWith(".yaml")).sort()
+    .map(f => { try {
+    return { file: path.join(dir, f), doc: yaml.load(fs.readFileSync(path.join(dir, f), "utf8")) };
+}
+catch {
+    return { file: path.join(dir, f), doc: null };
+} });
+function profiles() {
+    const extra = process.env.BLUEPRINT_PREFERENCES_EXTRA;
+    const raw = [...readYamlDir(PREF), ...(extra ? readYamlDir(extra) : [])].filter(x => x.doc?.schema === "blueprint.preference-profile/v1")
+        .map(x => ({ ...x.doc, source_file: path.relative(path.resolve(ROOT, "../.."), x.file) }));
+    return core.resolveProfiles(raw);
+}
+const defaultProfile = () => profiles().find(p => p.default) ?? profiles()[0];
+const criteriaDoc = () => { try {
+    return yaml.load(fs.readFileSync(path.join(PREF, "criteria.yaml"), "utf8"));
+}
+catch {
+    return { criteria: [] };
+} };
+function index() {
+    const docs = {};
+    for (const d of domains())
+        docs[d] = loadFile(d);
+    const td = tacticsDoc();
+    return core.makeIndex({ tactics: td.tactics ?? [], comparisons: comparisons(), facts: core.collectFacts(docs), categories: loadFile("categories")?.categories ?? [], lanes: td.lanes, stages: td.stages });
+}
+const today = () => new Date().toISOString().slice(0, 10);
+const linkOf = (slug) => ({ link: `#/p/${slug}`, url: APP_URL ? `${APP_URL}/#/p/${slug}` : null, arch: `#/p/${slug}/arch` });
+function findMap(slug) {
+    for (const [where, dir] of [["draft", DRAFTS], ["committed", MAPS]]) {
+        const f = path.join(dir, slug + ".yaml");
+        if (fs.existsSync(f)) {
+            try {
+                return { where, file: f, map: yaml.load(fs.readFileSync(f, "utf8")) };
+            }
+            catch {
+                return null;
+            }
+        }
+    }
+    return null;
+}
+function allMaps() {
+    const seen = new Set();
+    const out = [];
+    for (const [where, dir] of [["draft", DRAFTS], ["committed", MAPS]])
+        for (const { file, doc } of readYamlDir(dir)) {
+            const slug = path.basename(file, ".yaml");
+            if (!doc || seen.has(slug))
+                continue;
+            seen.add(slug);
+            out.push({ slug, where, doc });
+        }
+    return out;
+}
+const counts = (m) => Object.fromEntries(core.STATUSES.map(s => [s, (m.choices ?? []).filter((c) => (c.status ?? "open") === s).length]));
+const profileById = (id) => { const ps = profiles(); return id ? ps.find(p => p.id === id) : undefined; };
+const unknownProfile = (id) => err(`Unknown preference profile "${id}". Available: ${profiles().map(p => p.id).join(", ")}`);
+server.tool("list_profiles", "Preference profiles a project can use (default lean-fast-full, all-in, plus org-defined ones from skill/blueprint/preferences/ or BLUEPRINT_PREFERENCES_EXTRA), with their weights over the 7 criteria and how each criterion is scored.", {}, async () => json({ default: defaultProfile()?.id ?? null,
+    profiles: profiles().map(p => ({ id: p.id, scope: p.scope, default: !!p.default, extends: p.extends ?? null, label_en: p.label_en, label_ja: p.label_ja, summary_en: p.summary_en, summary_ja: p.summary_ja, weights: p.weights, tie_break: p.tie_break, errors: core.validateProfile(p), source_file: p.source_file })),
+    criteria: criteriaDoc().criteria }));
+const evidenceSchema = z.array(z.object({ option: z.string(), criterion: z.enum(core.CRITERIA), score: z.number().min(0).max(1), note: z.string().min(3).max(400), url: z.string().url().optional() })).max(100);
+const extraSchema = z.array(z.object({ id: z.string().regex(/^[a-z0-9_.-]{2,64}$/), name: z.string().max(80), url: z.string().url().optional(), note: z.string().max(300).optional() })).max(10);
+server.tool("decide", "Score the realistic field of options for one decision under a preference profile and return a decision record: every option considered (tactic options, stack-comparison services, catalog providers) with per-criterion scores and the evidence behind each, the pick, why it won, a short reason for each rejected option, linkage reasons (same vendor, shared free tier, catalog pairings, conflicts) and visible gaps. Never decides for the owner: status is ai_selected (or gap when evidence is too thin). Pass project=<slug> to use that map's profile, intake answers and chosen parts; or pass profile / intake / chosen yourself. evidence lets you add scored facts (kept unverified); extra_options adds options the catalog lacks (scored as gaps until evidenced). also_under lists the pick under other profiles.", { topic: z.string().min(1), project: z.string().optional(), profile: z.string().optional(),
+    intake: z.object({ audience: z.string().optional(), platform: z.string().optional(), money: z.string().optional(), country: z.string().optional() }).optional(),
+    chosen: z.record(z.string()).optional(), evidence: evidenceSchema.optional(), extra_options: extraSchema.optional(), also_under: z.array(z.string()).max(10).optional() }, async ({ topic, project, profile, intake, chosen, evidence = [], extra_options = [], also_under = [] }) => {
+    const idx = index();
+    if (!idx.T[topic])
+        return err(`Unknown topic "${topic}". Use list_topics.`);
+    let map = null;
+    if (project) {
+        const f = findMap(safe(project));
+        if (!f)
+            return err(`No project map "${project}". Use list_project_maps or update_project_map to create one.`);
+        map = core.normalizeMap(f.map, idx);
+    }
+    const pid = profile ?? map?.preference_profile ?? defaultProfile()?.id;
+    const prof = profileById(pid);
+    if (!prof)
+        return unknownProfile(String(pid));
+    const parts = [...(map ? core.partsOf(map) : []), ...Object.entries(chosen ?? {}).map(([t, o]) => ({ topic: t, option: o, status: "given" }))];
+    for (const e of evidence)
+        if (!idx.F[e.option] && !extra_options.some(x => x.id === e.option))
+            return err(`evidence.option ${e.option} is neither in the catalog nor in extra_options`);
+    const stored = map?.choices.find((c) => c.topic === topic);
+    if (stored) {
+        evidence = [...(stored.overrides ?? []), ...evidence];
+        extra_options = [...(stored.extra_options ?? []).filter((x) => !extra_options.some(y => y.id === x.id)), ...extra_options];
+    }
+    const rec = core.decide({ topic, idx, profile: prof, intake: intake ?? map?.profile ?? {}, chosen: parts, evidence, extra_options, date: today() });
+    const others = also_under.map(id => {
+        const p = profileById(id);
+        if (!p)
+            return { profile: id, error: "unknown profile" };
+        const r = core.decide({ topic, idx, profile: p, intake: intake ?? map?.profile ?? {}, chosen: parts, evidence, extra_options, date: today() });
+        return { profile: id, ai_pick: r.ai_pick, status: r.status };
+    });
+    const table = (rec.considered ?? []).filter((r) => r.scores).map((r) => ({ rank: r.rank, option: r.option, total: r.total, ...Object.fromEntries(core.CRITERIA.map(c => [c, r.scores[c].basis === "gap" ? "gap" : r.scores[c].score])) }));
+    return json({ record: rec, scoring_table: table, chosen_context: parts, ...(others.length ? { also_under: others } : {}),
+        next: project ? `update_project_map({slug: "${safe(project)}", records: [{topic: "${topic}", status: "${rec.status}"}]}) records this; the owner reviews at #/p/${safe(project)}` : "pass project=<slug> to score against a project's parts, or record it with update_project_map" });
+});
+server.tool("list_project_maps", "Project maps: reviewed ones committed under skill/blueprint/project-maps/ and agent drafts in the inbox (mcp/inbox/project-maps/, or BLUEPRINT_PROJECTS). Each with its review link #/p/<slug> and status counts.", {}, async () => json({ maps: allMaps().map(({ slug, where, doc }) => ({ slug, where, name: doc.name ?? "", preference_profile: doc.preference_profile ?? null, updated: doc.updated ?? null, counts: counts(doc), ...linkOf(slug) })),
+    drafts_dir: path.relative(path.resolve(ROOT, "../.."), DRAFTS) }));
+server.tool("get_project_map", "One project map by slug, normalized to every decision (all tactics, six lanes), with progress per stage and per 12-category, the derived architecture (frontend ↔ backend ↔ data ↔ auth ↔ payments ↔ third-party; implemented vs proposed) and the review link. Maps are stored compact; topic=<topic> returns that record with its full scored field (every alternative, per-criterion scores and evidence, why the pick stands, rejected reasons, linkages, gaps) under the map's profile, whatever its status — status and pick are never changed. expand=true does that for every record. format yaml returns the file as stored.", { slug: z.string().min(1), format: z.enum(["json", "yaml"]).optional(), topic: z.string().optional(), expand: z.boolean().optional() }, async ({ slug, format = "json", topic, expand = false }) => {
+    const f = findMap(safe(slug));
+    if (!f)
+        return err(`No project map "${slug}". Available: ${allMaps().map(m => m.slug).join(", ") || "none"}`);
+    if (format === "yaml")
+        return text(fs.readFileSync(f.file, "utf8"));
+    const idx = index();
+    const m = core.normalizeMap(f.map, idx);
+    const prof = profileById(m.preference_profile) ?? defaultProfile();
+    if (topic) {
+        if (!idx.T[topic])
+            return err(`Unknown topic "${topic}".`);
+        return json({ where: f.where, ...linkOf(safe(slug)), node: `#/p/${safe(slug)}/n/${topic}`, preference_profile: prof.id, record: core.expandChoice(m, topic, idx, prof, { date: today() }) });
+    }
+    return json({ where: f.where, ...linkOf(safe(slug)), map: expand ? core.expandMap(m, idx, prof, { date: today() }) : m, counts: counts(m), progress: core.progressOf(m, idx), architecture: core.deriveArchitecture(m, idx),
+        gaps: m.choices.filter((c) => c.status === "gap" || c.gap_note).map((c) => ({ topic: c.topic, status: c.status, gap_note: c.gap_note ?? null })),
+        drift: m.choices.filter((c) => c.profile_drift).map((c) => ({ topic: c.topic, pick: c.pick, ...c.profile_drift })) });
+});
+server.tool("rescore_project_map", "Preview what changes if a project map moves to another preference profile: every ai_selected pick is re-scored; observed and decided picks are kept and flagged with profile_drift if the new profile would choose differently. Read-only; update_project_map(preference_profile) applies it.", { slug: z.string().min(1), profile: z.string().min(1) }, async ({ slug, profile }) => {
+    const f = findMap(safe(slug));
+    if (!f)
+        return err(`No project map "${slug}".`);
+    const prof = profileById(profile);
+    if (!prof)
+        return unknownProfile(profile);
+    const idx = index();
+    const { map, changes } = core.rescoreMap(f.map, idx, prof, { date: today() });
+    return json({ slug: safe(slug), from: f.map.preference_profile ?? null, to: prof.id, changes, drift: map.choices.filter((c) => c.profile_drift).map((c) => ({ topic: c.topic, pick: c.pick, would_pick: c.profile_drift.would_pick })) });
+});
+const recordSchema = z.object({
+    topic: z.string().min(1), status: z.enum(core.STATUSES).optional(),
+    pick: z.string().optional(), checked: z.array(z.string()).optional(), reason: z.string().max(1000).optional(),
+    rejected: z.array(z.object({ option: z.string(), why: z.string().max(400) })).optional(),
+    linkages: z.array(z.object({ kind: z.string(), with_topic: z.string().optional(), with_option: z.string().optional(), why: z.string().max(400) })).optional(),
+    evidence: z.array(z.object({ kind: z.enum(["file", "url", "config", "dependency", "note"]), path: z.string().optional(), url: z.string().optional(), line: z.number().int().optional(), note: z.string().max(400) })).max(30).optional(),
+    gap_note: z.string().max(600).optional(), decided_by: z.string().max(40).optional(), owner_confirmed: z.boolean().optional(), note: z.string().max(400).optional(),
+    verified: z.boolean().optional(), source: z.string().max(80).optional(),
+    observed_as: z.string().max(160).optional(), // what the repo actually uses when it is not a catalog option
+    overrides: evidenceSchema.optional(), // the agent's own scored facts (kept on disk, unverified)
+    extra_options: extraSchema.optional(), // options the catalog lacks
+});
+const componentSchema = z.object({ id: z.string().regex(/^[a-z0-9_-]{1,40}$/), role: z.enum([...Object.keys(core.ARCH_ROLES), ...Object.keys(core.ROLE_ALIAS)]).transform(r => core.ROLE_ALIAS[r] ?? r), name: z.string().max(80), topic: z.string().optional(), option: z.string().optional(),
+    state: z.enum(["implemented", "proposed"]), evidence: recordSchema.shape.evidence });
+const linkSchema = z.object({ from: z.string(), to: z.string(), label: z.string().max(80).optional(), state: z.enum(["implemented", "proposed"]), evidence: recordSchema.shape.evidence, note: z.string().max(200).optional() });
+server.tool("update_project_map", "Create or update a project map and get a shareable review link (#/p/<slug>). Writes only the draft file mcp/inbox/project-maps/<slug>.yaml (a person reviews it and moves it to skill/blueprint/project-maps/ to publish); committed maps are copied to a draft first. Use it to: set the preference profile (re-scores every ai_selected record); record decide() results (status ai_selected; omit pick and the record is scored for you); record facts seen in a real repo (status observed + evidence); flag missing evidence (status gap + gap_note); defer (deferred + reason); or record a big owner decision (status decided + owner_confirmed:true + decided_by). decide_topics runs decide for open/gap/ai_selected topics ('all' for every one). Every change is appended to history.", { slug: z.string().regex(/^[a-z0-9][a-z0-9-]{0,47}$/), name: z.string().max(120).optional(), goal: z.string().max(400).optional(),
+    intake: z.object({ audience: z.enum(["self", "public", "business"]).optional(), platform: z.enum(["web", "app", "both"]).optional(), money: z.enum(["free", "paid", "marketplace"]).optional(), country: z.enum(["us", "jp", "global"]).optional() }).optional(),
+    preference_profile: z.string().optional(), records: z.array(recordSchema).max(100).optional(), decide_topics: z.array(z.string()).max(100).optional(),
+    architecture: z.object({ components: z.array(componentSchema).max(40).optional(), links: z.array(linkSchema).max(80).optional() }).optional(),
+    by: z.string().max(40).optional(), note: z.string().max(400).optional() }, async ({ slug, name, goal, intake, preference_profile, records = [], decide_topics = [], architecture, by = "agent", note }) => {
+    const idx = index();
+    const found = findMap(slug);
+    if (!found && !name)
+        return err(`No project map "${slug}" yet: pass name (and ideally goal, intake, preference_profile) to create it.`);
+    let m = core.normalizeMap(found?.map ?? { schema: "blueprint.project-map/v2", slug, name, goal: goal ?? "", profile: {}, preference_profile: defaultProfile()?.id, elements: (loadFile("elements")?.elements ?? []).map((e) => e.id), choices: [] }, idx);
+    m.schema = "blueprint.project-map/v2";
+    m.slug = slug;
+    const history = Array.isArray(m.history) ? m.history : [];
+    const log = (h) => history.push({ date: today(), by, ...h, ...(note ? { note } : {}) });
+    if (!found)
+        log({ change: "created" });
+    if (name !== undefined)
+        m.name = name;
+    if (goal !== undefined)
+        m.goal = goal;
+    if (intake) {
+        m.profile = { ...(m.profile ?? {}), ...intake };
+        log({ change: "intake", value: m.profile });
+    }
+    // 1) records: validate everything first, write nothing on any error
+    const errors = [];
+    for (const r of records) {
+        errors.push(...core.validateRecord(r, idx));
+        if (r.checked) {
+            const t = idx.T[r.topic];
+            for (const x of r.checked)
+                if (t && !t.options.includes(x))
+                    errors.push(`${r.topic}: checked ${x} is not one of ${t.options.join(", ")}`);
+        }
+    }
+    for (const t of decide_topics)
+        if (t !== "all" && !idx.T[t])
+            errors.push(`decide_topics: unknown topic ${t}`);
+    let prof = profileById(preference_profile ?? m.preference_profile ?? defaultProfile()?.id);
+    if (!prof)
+        errors.push(`unknown preference profile ${preference_profile ?? m.preference_profile}. Available: ${profiles().map(p => p.id).join(", ")}`);
+    for (const c of architecture?.components ?? [])
+        if (c.state === "implemented" && !(c.evidence ?? []).length)
+            errors.push(`architecture.${c.id}: implemented needs evidence`);
+    for (const l of architecture?.links ?? [])
+        if (l.state === "implemented" && !(l.evidence ?? []).length)
+            errors.push(`architecture link ${l.from}→${l.to}: implemented needs evidence`);
+    if (errors.length)
+        return err("Nothing written.\n" + errors.join("\n"));
+    const at = (topic) => m.choices.find((c) => c.topic === topic);
+    for (const r of records) {
+        const c = at(r.topic);
+        const before = { status: c.status, pick: c.pick, ai_pick: c.ai_pick };
+        const { owner_confirmed, note: rnote, ...rest } = r;
+        const others = core.partsOf(m).filter(p => p.topic !== r.topic);
+        const ev = { evidence: r.overrides ?? c.overrides ?? [], extra_options: r.extra_options ?? c.extra_options ?? [] };
+        if (r.status === "ai_selected" && idx.T[r.topic].kind === "choose" && !r.pick) {
+            const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: others, ...ev, date: today() });
+            Object.assign(c, core.compactChoice(rec), { ...(r.reason ? { agent_reason: r.reason } : {}), ...(r.evidence ? { evidence: r.evidence } : {}), ...(r.gap_note ? { gap_note: r.gap_note } : {}),
+                ...(r.overrides ? { overrides: r.overrides } : {}), ...(r.extra_options ? { extra_options: r.extra_options } : {}) });
+        }
+        else if (r.status === "ai_selected" && r.pick) {
+            // an agent's own pick: keep its reason and rejected list, but score the field so alternatives are on record
+            const rec = core.decide({ topic: r.topic, idx, profile: prof, intake: m.profile ?? {}, chosen: others, ...ev, date: today() });
+            Object.assign(c, core.compactChoice(rec), rest, { ai_pick: r.pick, pick: "", decided_by: "ai", scored_pick: rec.ai_pick });
+        }
+        else {
+            Object.assign(c, rest, { date: today() });
+            if (r.status === "decided")
+                Object.assign(c, { owner_confirmed: true, confirmed_at: today(), profile: prof.id });
+            if (r.status === "observed")
+                Object.assign(c, { decided_by: "", source: r.source ?? "repo" });
+            // observed / decided / deferred keep their status and pick; the scored field's verdict is stored with them
+            // (rejected reasons, the scored winner, drift). The full considered[] is derived when the map is read.
+            if (["observed", "decided", "deferred"].includes(c.status) && idx.T[r.topic].kind === "choose") {
+                const sr = core.scoreRecord(c, m, idx, prof, { date: today() });
+                Object.assign(c, { scored_pick: sr.scored_pick, scored_under: prof.id, ...(r.rejected ? {} : { rejected: sr.rejected }) });
+                if (sr.profile_drift)
+                    c.profile_drift = sr.profile_drift;
+                else
+                    delete c.profile_drift;
+            }
+        }
+        log({ change: "record", topic: r.topic, from: before, to: { status: c.status, pick: c.pick, ai_pick: c.ai_pick }, ...(rnote ? { note: rnote } : {}) });
+    }
+    // 2) profile change re-scores every ai_selected / open-with-pick record
+    let changes = [];
+    const profileChanged = !!found && !!preference_profile && preference_profile !== m.preference_profile;
+    if (profileChanged || !found) {
+        if (profileChanged) {
+            const only = m.choices.filter((c) => c.status === "ai_selected" || c.status === "gap").map((c) => c.topic);
+            const r = core.rescoreMap(m, idx, prof, { date: today(), only: [...only, ...m.choices.filter((c) => c.status === "observed" || c.status === "decided").map((c) => c.topic)] });
+            m = r.map;
+            changes = r.changes;
+            log({ change: "preference_profile", from: found?.map?.preference_profile ?? null, to: prof.id, rescored: changes });
+        }
+        m.preference_profile = prof.id;
+    }
+    // 3) decide_topics
+    const targets = decide_topics.includes("all") ? idx.tactics.map((t) => t.topic) : decide_topics;
+    const decided_now = [];
+    if (targets.length) {
+        const r = core.rescoreMap(m, idx, prof, { date: today(), only: targets.filter((t) => ["open", "gap", "ai_selected"].includes(at(t)?.status)) });
+        m = r.map;
+        for (const t of targets) {
+            const c = m.choices.find((x) => x.topic === t);
+            decided_now.push({ topic: t, status: c.status, ai_pick: c.ai_pick || null });
+        }
+        log({ change: "decide", topics: targets.length > 10 ? `${targets.length} topics` : targets, picks_changed: r.changes });
+    }
+    if (architecture) {
+        m.architecture = { components: architecture.components ?? m.architecture?.components ?? [], links: architecture.links ?? m.architecture?.links ?? [] };
+        log({ change: "architecture" });
+    }
+    m.updated = today();
+    m.review = linkOf(slug);
+    m.history = history.slice(-200);
+    const ordered = { domain: "project_map", schema: m.schema, slug, name: m.name ?? "", goal: m.goal ?? "", profile: m.profile ?? {}, preference_profile: m.preference_profile, updated: m.updated, review: m.review,
+        elements: m.elements, architecture: m.architecture ?? { components: [], links: [] }, choices: core.compactMap(m).choices, history: m.history };
+    fs.mkdirSync(DRAFTS, { recursive: true });
+    const file = path.join(DRAFTS, slug + ".yaml");
+    fs.writeFileSync(file, `# Blueprint project map — draft written by update_project_map (MCP). Review, then move to skill/blueprint/project-maps/ to publish.\n# Statuses: open / observed (seen in the repo, with evidence) / ai_selected (agent pick, owner reviews later) / decided (owner said yes) / gap (evidence missing) / deferred.\n` + yaml.dump(ordered, { lineWidth: 140, noRefs: true }));
+    return json({ saved: true, path: path.relative(path.resolve(ROOT, "../.."), file), copied_from: found?.where === "committed" ? path.relative(path.resolve(ROOT, "../.."), found.file) : null,
+        ...linkOf(slug), preference_profile: m.preference_profile, counts: counts(ordered), rescored: changes, decided_now,
+        review: `Open ${APP_URL ? APP_URL + "/" : ""}#/p/${slug} after the map is in the app (committed maps ship with the build; drafts can be imported on the projects screen).` });
+});
+server.tool("propose_catalog_refresh", "Propose a price / limit / terms update for one catalog item after reading its official page. Appends to mcp/inbox/catalog-refresh.jsonl with a diff against the current catalog text; the master catalog is never edited here. verified:true is only allowed with the official url and a checked date (YYYY-MM-DD); anything read elsewhere or from memory must be verified:false.", { id: z.string().min(1), url: z.string().url().optional(), checked: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), verified: z.boolean(),
+    changes: z.array(z.object({ field: z.string().regex(/^[a-z_]+(\.[a-z0-9_]+)?$/), new_text: z.string().max(600) })).max(12), note: z.string().max(600).optional() }, async ({ id, url, checked, verified, changes, note }) => {
+    const known = findItem(id) || comparisons().some(c => (c.services ?? []).some((s) => s.id === id));
+    if (!known)
+        return err(`Unknown id "${id}". Use stale_items(refresh_plan: true) or search.`);
+    if (verified && !url)
+        return err("verified:true needs the official url you read it on.");
+    if (Date.parse(checked) > Date.now() + 86400000)
+        return err("checked is in the future.");
+    const cur = currentText(id);
+    const get = (f) => { const [a, b] = f.split("."); const v = cur[a]; return b ? (v && typeof v === "object" ? v[b] ?? null : null) : v ?? null; };
+    const diff = changes.map(c => ({ field: c.field, old: get(c.field), new: c.new_text, changed: JSON.stringify(get(c.field)) !== JSON.stringify(c.new_text) }));
+    const rec = { ts: new Date().toISOString(), kind: "catalog_refresh", id, source: { url: url ?? null, checked, verified }, diff, note: note ?? "", status: "proposed" };
+    fs.mkdirSync(path.dirname(REFRESH), { recursive: true });
+    fs.appendFileSync(REFRESH, JSON.stringify(rec) + "\n");
+    return json({ saved: true, inbox: path.relative(path.resolve(ROOT, "../.."), REFRESH), record: rec, unchanged: diff.filter(d => !d.changed).map(d => d.field) });
 });
 await server.connect(new StdioServerTransport());

@@ -9,7 +9,7 @@ Blueprint は「作り方の作り方」です。プロダクトを作る時に�
 | 層 | ファイル | 中身 |
 |---|---|---|
 | 要素 | `skill/blueprint/elements/elements.yaml` | 変わりにくい原則7つ（体験・プロダクト・ビジネス・マーケ・ブランド・保守・セキュリティ） |
-| 選択肢 | `skill/blueprint/elements/tactics.yaml` | 決めること60件。段・列・日英のラベル・選択肢（カタログの id）・決まりからのおすすめ・先に決めること |
+| 選択肢 | `skill/blueprint/elements/tactics.yaml` | 決めること64件（ブランド・見た目・操作感・動き・お金の取り方・倫理を含む）。段・列・日英のラベル・選択肢（カタログの id）・決まりからのおすすめ・先に決めること |
 | プロジェクトの地図 | アプリの書き出し、または `draft_project_map` | あなたのプロジェクト：決めることごとの状態・選んだもの・理由・選ばなかったもの |
 
 5つの段：構想（idea）→ 出す（launch）→ 回す（operate）→ 増やす（scale）→ 終える（exit）。6つの列：BRAND / UX / UI / TECH / BIZ・LEGAL / RULES。

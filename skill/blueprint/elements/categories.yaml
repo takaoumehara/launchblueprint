@@ -1,0 +1,76 @@
+# Blueprint 12 categories — walk-through index (draft) — CREATIVITY IS EVERYWHERE, LLC
+# The owner inspects a project map category by category, 01 → 12, then the cross-border pack.
+# topics: the decisions (tactics.yaml topic) whose home is this category. Every topic has exactly one home.
+# also: decisions that matter here too but live elsewhere. gap_note: what this category needs that no decision covers yet.
+# Human text: reference/12-categories.md (same numbers).
+domain: categories
+updated: '2026-11-18'
+status: draft
+categories:
+- id: '01'
+  label_en: Idea and market validation
+  label_ja: 構想・市場検証
+  topics: [problem_discovery, planning_pass, idea_validation, validation_rules, market_entry]
+  also: [i18n]
+- id: '02'
+  label_en: Branding and creative (brand, visuals, interactions, animation)
+  label_ja: ブランディング・クリエイティブ（ブランド・見た目・操作感・動き）
+  topics: [brand_basics, visual_system, interactions, motion, ui_copy]
+  also: [ui_library, launch_channels]
+- id: '03'
+  label_en: Requirements and product spec
+  label_ja: 要件定義・プロダクト仕様
+  topics: [rules_ledger, ui_patterns]
+  also: [build_vs_buy, i18n]
+  gap_note_en: "No decision yet for the PRD (Must / Nice per feature) or non-functional targets (nfr.yaml: concurrency, p95, devices, availability)."
+  gap_note_ja: "PRD（機能ごとの Must / Nice）と非機能要件（nfr.yaml：同時接続・p95・端末・可用性）を決める項目がまだない。"
+- id: '04'
+  label_en: AI development foundation
+  label_ja: AI開発基盤・コンテキスト設計
+  topics: []
+  also: [brand_basics, foresight_traps]
+  gap_note_en: "No decision yet for the AI rules file (conventions, structure, banned libraries, naming, commits), ignore files, or tool roles. See reference/12-categories.md §04."
+  gap_note_ja: "AI のルールファイル（規約・構成・禁止ライブラリ・命名・コミット）、除外ファイル、ツールの役割分担を決める項目がまだない。reference/12-categories.md §04。"
+- id: '05'
+  label_en: System design and architecture
+  label_ja: システム設計・アーキテクチャ
+  topics: [build_vs_buy, frontend, backend, database, auth, storage, search, realtime, ai, email, cms, i18n, hosting]
+  also: [payments]
+- id: '06'
+  label_en: AI-driven implementation and prototyping
+  label_ja: AI駆動実装・プロトタイピング
+  topics: [ui_library, editor_ui]
+  also: [ci]
+  gap_note_en: "No decision yet for test-first order (mock → logic → API/DB) or the any-count gate. See reference/12-categories.md §06."
+  gap_note_ja: "テストを先に書く順序（モック → ロジック → API/DB）や any 件数のゲートを決める項目がまだない。"
+- id: '07'
+  label_en: QA, security, legal and ethics
+  label_ja: 品質保証・セキュリティ・法務・倫理
+  topics: [protection, ai_defense, data_protection, legal_terms, legal_rules, legal_basics, ethics, store_rules, foresight_traps]
+- id: '08'
+  label_en: Infrastructure, CI/CD and deploy
+  label_ja: インフラ・CI/CD・デプロイ
+  topics: [ci, preview_rules, app_distribution]
+  also: [hosting, secrets_sharing]
+- id: '09'
+  label_en: Go-to-market and launch
+  label_ja: GTM・プロモーション（打ち上げ）
+  topics: [business_setup, payments, pricing_model, pricing_rules, analytics, launch_channels, launch_rules]
+- id: '10'
+  label_en: Operations and maintenance
+  label_ja: 運用・オブザーバビリティ・保守
+  topics: [monitoring, uptime, support, backup_dr, backup_rules, cost_control, cost_rules, secrets_sharing, handoff_rules, dd_metrics]
+- id: '11'
+  label_en: Growth
+  label_ja: グロース・マーケティング・反復
+  topics: [growth_channels, scale_plan]
+  also: [analytics, dd_metrics]
+- id: '12'
+  label_en: Sunset
+  label_ja: サンセット・終了
+  topics: [exit_dd, exit_route, sbom_tool, sunset_rules, sunset_plan]
+- id: xb
+  label_en: Cross-border pack
+  label_ja: 海外展開パック
+  topics: [cross_border]
+  also: [market_entry, i18n, payments, legal_terms]

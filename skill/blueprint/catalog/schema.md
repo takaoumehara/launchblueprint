@@ -69,3 +69,12 @@
 - MCP（`mcp/`）：`list_domains`（全ファイルと件数）/ `get_catalog(domain, format)`（elements/ も読める。`items` は lesson・rule・tier・group も1つの形に正規化）/ `get_item(id)`（catalog の id 1件）/ `list_topics(stage?)`（決めること一覧）/ `get_comparison(topic)`（スタック比較）/ `get_template(name)` / `draft_project_map(profile, decided?)`（始める画面の答えから地図を作り、次に決めることと段ごとの進み具合を返す。決定はしない）/ `search` / `stale_items(days)` / `ui_ux_checklist(phase?, lifecycle?)`（段階ゲートも返す）/ `lifecycle_stages(stage?)` / `propose_learning(text, category, kind?)`。正規化した item の形：id, domain, kind, name, summary, best_for, avoid, why, check, cost, verified, checked, url（＋tactics は stage, lane, options, depends_on）
 - 評価の記録：`reference/dry-run-sample.md`（見本プロジェクトを MCP だけで最初から最後まで通した記録と見つかった穴）、`reference/walkthrough-non-engineer.md`（アプリを使う人向けの手順）
 - `stack_comparisons.yaml`（R-030）：`comparisons[]`＝topic, services[{id, name?, free_tier, paid_entry, url, checked, verified}], combine{single, combined, risks}, switch_points[{when, upgrade_to, why}], recommendation{pick, reason, rejected[{option, why}]}。技術の topic は全部これを持つ（まず payments / database / auth / email / hosting）
+
+## 判断の好み・決定の記録・プロジェクトの地図 v2（2026-11-18 追加）
+- `preferences/*.yaml`（schema `blueprint.preference-profile/v1`）：`id, scope (default|org), default?, extends?, label_en/ja, summary_en/ja, weights{cost, speed, breadth, lock_in, scale, compliance, ecosystem: 0-5}, tie_break[]`。基準の定義と点数の出どころは `preferences/criteria.yaml`。説明は `preferences/README.md`
+- `elements/categories.yaml`：12 カテゴリー＋海外展開パック。`categories[]`＝id（'01'〜'12', 'xb'）, label_en/ja, topics（本拠。全 topic がちょうど 1 つ）, also, gap_note_en/ja（決めごとがまだない部分）
+- `project-maps/<slug>.yaml`：共有するプロジェクトの地図（schema `blueprint.project-map/v2`、書式は `elements/project-map.template.yaml`）。AI の下書きは `mcp/inbox/project-maps/`。status は open / observed / ai_selected / decided / gap / deferred。decided は `owner_confirmed: true`、observed は `evidence`、gap は `gap_note` が必須
+- 地図はコンパクトに保存する：`considered`・`field_size`・`gaps`・`gap_notes` は書かず、読む時に `expandChoice` で作る（どの status でも、選択肢全部・基準ごとの点と根拠・理由・落とした理由・つながり）。保存するのは pick・ai_pick・rejected・linkages・`overrides`（AI の採点）・`extra_options`・`scored_pick`／`scored_under`／`profile_drift`（observed・decided・deferred の判定）
+- アーキテクチャの列は 6 つ：frontend / backend / data / auth / payments / third_party（旧名 client・server・identity_money も読める）。見送りの部品も列に出す
+- 採点の中身（共通）：`shared/decide-core.mjs`（MCP とアプリが同じものを使う）。手順は `reference/decide.md`、料金の定期確認は `reference/catalog-refresh.md`
+- tactics に追加（2026-11-18）：`visual_system`・`interactions`・`motion`・`ethics`（checklist。中身は既存の ui_ux / legal_terms の項目だけ）。決めごとは 64
