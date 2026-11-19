@@ -156,6 +156,70 @@ lessons:
   see_also: [fs.F, ho.bus-factor-two]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+
+- id: fs.shared-disk-one-clone-worktree
+  principle: 共有マシンでは同一リモートのクローンを1つに限り、push 済みで未コミット変更が無い worktree はすぐ外す。残すのは現行の作業木1本まで。
+  anti_pattern: 短い別名のフルクローンや、終わったブランチの worktree を残したまま次の作業に進む。
+  why: メディア資産付きリポの重複クローンと完了済み worktree が数GBを占め、共有ディスクが逼迫して他作業の整理が必要になった。
+  check: 同一リモートURLのローカルクローンが1つで、終わった／push 済みの worktree がディスク上に残っていないか？
+  trigger: ブランチ実験・言語実験のあと、共有ディスク使用率が80%を超えた時、重いジョブの前
+  stage: operate
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
+- id: fs.cloud-agent-push-new-branch
+  principle: クラウドのコーディング画面で作業を始める前に「新しいブランチを切ってそこへだけ push する」と明示し、開始直後の表示が依頼した新規ブランチ名になっているかを確かめる。
+  anti_pattern: 既存の作業ブランチやベースを選んだだけで、エージェントがベースへ直接 push する設定のまま依頼を流す。
+  why: 画面の既定がベースへの直接 push だと、追加指示なしで共有ブランチを汚す寸前になる。依頼文のブランチ名より UI 側の push 先が優先されることがある。
+  check: 開始直後のブランチ表示が、依頼で指定した新規ブランチ名になっているか？
+  trigger: クラウドコーディングセッションを開始する直前
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
+- id: fs.cloud-job-external-asset-fallback
+  principle: 無人のクラウド制作ジョブには、ログイン不要・レート制限の緩い素材だけを使わせ、外部素材の取得が失敗したらすぐ代替（ローカル試作・テキスト出典）に切り替える条件と最大待ち時間を指示に入れる。
+  anti_pattern: ログイン必須の画像サイトや無料APIからの素材収集を前提に、再試行の上限も時間制限もなく長時間ジョブを投げる。
+  why: 外部サイトのログイン要求と429の再試行でジョブが約10時間止まり、納品が丸1日遅れた。
+  check: クラウドジョブの指示に、外部取得失敗時の代替手段と最大待ち時間が書いてあるか？
+  trigger: 無人のクラウド制作・収集ジョブを投げる前
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
+- id: fs.listing-api-url-must-match
+  principle: 地図・ビジネスプロフィール系APIの許可申請では、申請フォームのサイトURLを対象掲載の公式サイトURLと文字どおり一致させてから送る。却下後は同じ不一致URLで再送しない。
+  anti_pattern: 会社やグループの別サイトURLを書いて申請する／却下後に同じURLで再送する。
+  why: 不一致で却下され、書き込み開始が数日ずれた。
+  check: 申請のサイトURLは、対象掲載の公式サイト欄と文字どおり一致しているか？
+  trigger: 地図・ビジネスプロフィールAPIの許可申請の前、却下後の再申請の前
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
+- id: fs.static-share-redeploy-before-link
+  principle: 共有用の静的サイトに新しいパスを足したら、リンクを渡す前に本番へ再配備し、渡す予定の各URLをHTTPで確認する。
+  anti_pattern: 作業マシンの中だけ更新して、公開URLが404のままリンクを送る。
+  why: 相手が開けないリンクを渡し、説明のやり直しが必要になった。
+  check: 渡す予定の各URLは、配備後に200（または意図した認証）で開けるか？
+  trigger: 内部共有リンクを外に出す直前
+  stage: operate
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
+- id: fs.free-audit-lists-unscored
+  principle: 無料の診断・監査画面では、採点している項目とまだ見ていない項目を明示し、見ていない項目を満点や完了のように見せない。
+  anti_pattern: 一部の項目だけ一致を見て、残りの項目まで揃っているかのように見せる。
+  why: 受け手が「全部チェック済み」と誤解し、有料側で埋めるギャップの説明が弱くなる。
+  check: 無料画面に「今は見ていない項目」の一覧があるか？
+  trigger: 無料／有料の診断画面を設計・公開する前
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
+- id: fs.feature-copy-needs-source
+  principle: 機能説明を書き直す前に、各項目の出典（公式資料・リポジトリ・本人確認）を一覧にし、出典が無いものはプレースホルダのまま出さない。
+  anti_pattern: 口頭の名前だけでリポジトリを全検索し、見つからないまま説明文を推測で埋める／公式資料に無い項目を資料由来として書く。
+  why: 資料にもリポジトリにも無い項目の説明が止まり、確認待ちで出荷が遅れた。
+  check: ページに載せる各機能について、出典（資料・リポ・本人）が1行で紐づいているか？
+  trigger: ケース・機能セクションのコピーを書き直す前
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-06, generalized'
 procedures:
 - id: fs.A
   name_ja: 決定の先読み
