@@ -254,3 +254,40 @@ cross_rules:
   see_also: [fs.L06, fs.L11, fs.B]
   verified: true
   source: 'launch-blueprint v0.2 field lessons, generalized 2026-11-03'
+
+- id: fs.modules-standalone-pick
+  principle: 手法・ワークショップ型のツールは、各モジュールを単独で使える・選んで実行できる形にし、モジュールごとに結果を書き出せるようにする。
+  anti_pattern: 決まった順番で全部を通させ、最後の「確定」ゲートを通らないと何も成果物が出ない作りにする。
+  why: 現場では一部のモジュールだけ使いたい場面が多く、全部やらないと価値が出ない作りは途中で離脱され、やった分の成果も失われる。
+  check: どのモジュールも単独で開始でき、そのモジュールだけの結果を出力できるか？
+  trigger: 複数ステップの手法・診断・ワークショップをツール化する設計時
+  stage: idea
+  verified: false
+  source: 'PO field lessons 2026-11-18, generalized'
+- id: fs.ai-draft-grounded-per-item
+  principle: 顧客向けツールでAIに下書きを作らせるときは、プロジェクトに入力済みのデータだけを根拠にし、各項目に出典を付けるか「仮説」と明示し、項目ごとに人の確認を必須にする。モデル提供元は抽象化して、無料から有料への切り替えを設定だけで済むようにする。
+  anti_pattern: AIに統計・顧客・競合などを自由に書かせ、出典のないまま確定扱いで顧客に見せる。無料APIに実顧客データをそのまま送る。
+  why: 根拠のない生成は信頼を一度で壊す。無料のAPI枠は送ったデータを学習に使う規約のことがあり、実データを送るにはオーナーの判断が要る。
+  check: 生成された各項目に出典か「仮説」表示があり、人の確認を経ているか？ 実顧客データを送る先の規約をオーナーが確認したか？
+  trigger: AI下書き・自動生成機能を顧客向けに出す前、AI提供元を選ぶ時
+  stage: launch
+  verified: false
+  source: 'PO field lessons 2026-11-18, generalized'
+- id: fs.method-term-name-check
+  principle: 業界で使われている手法名・用語を製品名に使う前に、その用語が広く何を指すかを調べる。別の意味で定着していれば、補足の副題を付け、自社の手法を独自のものとして説明する。
+  anti_pattern: 一般的な用語を自社流の意味で製品名にし、業界標準の手法であるかのように打ち出す。
+  why: 用語の一般的な意味と違うと、見込み客が別物を期待して誤解し、説明の手間や信頼低下につながる。
+  check: 製品名の中の用語について、業界での一般的な意味を調べ、ずれがあれば副題か説明で補っているか？
+  trigger: 製品名・機能名を決める時、手法を外部に打ち出す前
+  stage: idea
+  verified: false
+  source: 'PO field lessons 2026-11-18, generalized'
+- id: fs.connector-build-not-committed
+  principle: ローカルで動くコネクタ（stdioのMCPサーバーなど）は、ビルド成果物の有無に依存せず、起動時やインストール時に自動でビルドされる形にする。
+  anti_pattern: コミットされた、または手元に残っているビルド出力に頼り、クリーンな取得や掃除で消えるとコネクタが起動しなくなる。
+  why: 「モジュールが見つからない」で止まると、それを使う全員の作業が止まる。復旧手順（依存を入れ直してビルド→再起動）を知らないと原因探しに時間を失う。
+  check: クリーンな取得から、手作業のビルドなしでコネクタが起動するか？ 起動失敗時の復旧手順が書いてあるか？
+  trigger: 社内向けコネクタ・ツールサーバーを配布・共有する時
+  stage: operate
+  verified: false
+  source: 'PO field lessons 2026-11-18, generalized'
