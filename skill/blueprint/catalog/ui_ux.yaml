@@ -1,5 +1,15 @@
 # UI/UX learnings v1 — generic rules from product iteration
 rules:
+  - id: no-rounded-side-accent
+    category: emphasis
+    severity: absolute
+    phase: [design, qa]
+    principle: "Keep accents flat: when a marker is needed, use a square-edged flat marker or text only."
+    anti_pattern: "A coloured one-side thick border (border-left / border-inline-start) on a rounded box, or rounded shapes stacked so a coloured crescent or sliver appears."
+    why: "It looked cheap and unpleasant, and the owner rejected it outright."
+    check: "Is there no element with border-radius that also has a coloured border on only one side?"
+    source: 'product iteration 2026-11'
+    date: '2026-11-04'
   - id: primary-action-color
     category: emphasis
     phase: [design, qa]
