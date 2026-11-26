@@ -1063,6 +1063,128 @@ rules:
     check: "After upgrading, is the badge gone with no extra action?"
     source: 'product iteration 2026-10'
     date: '2026-10-28'
+
+  - id: perf-speed-equals-quality
+    category: performance
+    phase: [requirements, qa]
+    principle: "Treat page speed as a quality bar equal to visual polish; a visually finished screen that misses the performance budget is not done."
+    anti_pattern: "Signing off a screen on how it looks while it is still slow on a mid-range phone."
+    why: "People notice delay before they notice polish; a slow first paint wastes the design work."
+    check: "Is a key page that misses the LCP, INP or CLS budget treated as unfinished, the same as a visual defect?"
+    see_also: "perf-core-web-vitals-budget"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-edge-image-variants
+    category: performance
+    phase: [design, qa]
+    principle: "Do not ship full-resolution originals as page images. Resize at the edge to a short ladder of display widths, serve AVIF or WebP, cap quality (around 80), and fall back to the original when the transform is larger than the source. Put a version in the cache key so a replaced file is not served stale."
+    anti_pattern: "Serving a multi-megabyte original into a small slot, or a transform that makes the file bigger than the original, or caching without a version so replacements never show."
+    why: "Unresized originals are often the heaviest bytes on a page and the main cause of a slow largest paint."
+    check: "Is every page image delivered from an edge resize at about display size, in a modern format, with a versioned cache key, and is the original used only when it is smaller than the transform?"
+    see_also: "perf-images-and-media, loading-without-layout-shift"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-no-duplicate-font-files
+    category: performance
+    phase: [design, qa]
+    principle: "Declare each font file once. A second definition of the same family and weight causes the file to download twice."
+    anti_pattern: "The same font registered in two stylesheets or in both a global import and a component."
+    why: "A double download wastes bandwidth and delays the first readable paint even when only one or two files were meant to be preloaded."
+    check: "Does the network log show each font file fetched only once on first load?"
+    see_also: "perf-fonts-no-reflow"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-reserve-late-widget-space
+    category: performance
+    phase: [design, qa]
+    principle: "Widgets that appear after first paint (challenges, banners, embeds) have their slot or height reserved in the initial layout so nothing already on screen moves when they arrive."
+    anti_pattern: "A third-party widget that inserts itself later and pushes the page down."
+    why: "Late insertions are a common cause of a high cumulative layout shift, and people tap the wrong control when the layout jumps."
+    check: "When a late widget appears, does anything already on screen stay in place, because its slot or height was reserved first?"
+    see_also: "loading-without-layout-shift, perf-core-web-vitals-budget"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-event-driven-updates
+    category: performance
+    phase: [design, qa]
+    principle: "UI that watches changing data updates only when the data changes, not on a short repeating timer."
+    anti_pattern: "A component that polls every fraction of a second and re-renders while the user is scrolling."
+    why: "Short-interval timers compete with scrolling and make the page feel janky even when the network is fine."
+    check: "Is there no repeating timer under about one second that re-renders on the open screen, and do updates run only when the data changes?"
+    see_also: "perf-respond-within-100ms"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-debounce-live-preview
+    category: performance
+    phase: [design, qa]
+    principle: "In a live editor, memoize the preview and delay full redraws so a single keystroke does not rebuild the entire preview."
+    anti_pattern: "Re-rendering the whole preview on every character typed."
+    why: "A full preview rebuild per keystroke makes typing feel laggy and hides other performance work."
+    check: "Does typing a character update only what changed, or wait briefly before a full preview redraw?"
+    see_also: "perf-respond-within-100ms, perf-ship-less-javascript"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-static-first-dynamic-small
+    category: performance
+    phase: [design, qa]
+    principle: "Pages that do not change per visitor are shipped as static files. Keep the dynamic handler bundle small so a cold start does not add a second or two to the first response."
+    anti_pattern: "Sending every public page through a large dynamic worker, including pages that never vary."
+    why: "A large handler pays a cold-start delay on the first request, which shows up as a slow first paint even when the page itself is simple."
+    check: "Are unchanging public pages served as static files, and is the dynamic bundle small enough that a cold start stays within the performance budget?"
+    see_also: "perf-ship-less-javascript, perf-core-web-vitals-budget"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: perf-public-cache-no-cookies
+    category: performance
+    phase: [design, qa]
+    principle: "Public pages must not read cookies on the server, because that prevents a shared cache. Load personalized data in the browser after the first paint."
+    anti_pattern: "A public marketing or content page that reads a session cookie, so every response is unique and uncacheable."
+    why: "A page that cannot be cached at the edge is slow for every visitor, even when the content is the same."
+    check: "Does the public page response stay cacheable at the edge, with any personal data loaded in the browser after first paint?"
+    see_also: "perf-static-first-dynamic-small, perf-core-web-vitals-budget"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: admin-one-filled-button
+    category: emphasis
+    phase: [design, qa]
+    principle: "On tool and admin screens, exactly one action uses a filled button; all other actions are text buttons. Priority is shown by fill versus text, not by giving every action the same thin outline."
+    anti_pattern: "A row of equally outlined buttons, so the main action does not stand out."
+    why: "When every button has the same weight, the screen looks dated and people hesitate about what to do next. Colour alone does not fix this."
+    check: "Is there exactly one filled button on the screen, and are the other actions text buttons?"
+    see_also: "primary-action-color, selected-vs-primary-color"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: section-tone-not-cards
+    category: visual
+    phase: [design, qa]
+    principle: "Separate sections with background tone and spacing, not a stack of outlined boxes."
+    anti_pattern: "Rows of bordered cards that make a tool screen look like a form or a document."
+    why: "A stack of outlined boxes reads as paperwork and hides hierarchy, even when the colours are fine."
+    check: "Are sections divided by tone and space, with boxes used only when the content is itself a pressable or a distinct object?"
+    see_also: "borders-only-on-pressables, admin-one-filled-button"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: headings-strong-hints-rare
+    category: copy
+    phase: [design, qa]
+    principle: "Headings are large and bold; grey explanatory copy is kept rare and short."
+    anti_pattern: "A small heading followed by a grey paragraph of helper text on every section."
+    why: "Grey helper text adds noise and makes a tool feel older; a strong heading is enough when the next action is clear."
+    check: "Is each section heading large and bold, and is grey helper text absent or limited to one short line that cannot move into a heading or an (i) tip?"
+    see_also: "hints-on-demand, short-scannable-copy"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+  - id: one-accent-color
+    category: visual
+    phase: [design, qa]
+    principle: "Use one accent colour, reserved for the primary button and status indicators (for example a saved state)."
+    anti_pattern: "Several accent colours, or an accent used as decoration on labels, borders and icons."
+    why: "One accent makes status and the main action easy to find; extra accents compete and make the tool look busy."
+    check: "Is there only one accent colour, and is it used only on the primary action and status?"
+    see_also: "primary-action-color, admin-one-filled-button, never-red-for-success"
+    source: 'product iteration 2026-11'
+    date: '2026-11-25'
+
 # phase_gate_checks: はい／いいえで答える段階ゲート。lifecycle は Blueprint の5段階（idea → launch → operate → scale → exit）、phase はその中のどの場面か。
 # MCP の ui_ux_checklist（lifecycle 引数）と reference/ui-ux.md の "Phase gates" に出る。全段階に少なくとも1つ置く。
 phase_gate_checks:
@@ -1100,7 +1222,7 @@ phase_gate_checks:
     phase: 公開前のゲート（08 インフラ・CI/CD）
     check: "主要ページの LCP・INP・CLS を中位スマホ・遅い回線で測って予算内に収め、CI が予算超えで落ちるようにしたか — はい／いいえ"
     why: "公開直後は一番人が来る時で、遅さは最初の印象を決めてしまうため"
-    rules: [perf-core-web-vitals-budget, perf-images-and-media, perf-fonts-no-reflow, perf-ship-less-javascript, theme-applied-before-first-paint]
+    rules: [perf-core-web-vitals-budget, perf-speed-equals-quality, perf-images-and-media, perf-edge-image-variants, perf-fonts-no-reflow, perf-no-duplicate-font-files, perf-ship-less-javascript, perf-static-first-dynamic-small, perf-public-cache-no-cookies, perf-reserve-late-widget-space, theme-applied-before-first-paint]
   - id: gate.ux_signals_operate
     lifecycle: operate
     phase: 運用のゲート（10 運用・保守。月1回）
