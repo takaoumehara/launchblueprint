@@ -1,7 +1,7 @@
 # Blueprint Tech Catalog — email_notifications
 # 提供：CREATIVITY IS EVERYWHERE, LLC ／ 価格は確認日時点。verified:false は使う前に要確認
 domain: email_notifications
-updated: '2026-11-03'
+updated: '2026-11-25'
 stale_after_days: 90
 freshness: freshness.yaml（フィールド別TTL。stale_after_days は料金の既定値）
 entries:
@@ -46,3 +46,179 @@ entries:
     url: https://firebase.google.com/pricing
     checked: '2026-11-03'
     verified: true
+
+# SMS and multi-channel notifications. Prices are unverified (secondary write-ups only) — do not compare on price until official pages are checked.
+- id: sms.twilio
+  name: Twilio
+  what: SMS and messaging API, including official MCP and agent skills, and a WhatsApp sandbox while sender registration is pending
+  best_for: Product SMS when you already use this vendor, or want official agent tooling
+  avoid_when: You have not prepared a public opt-in page (US A2P 10DLC review still applies with every vendor)
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 米国のビジネスSMSは A2P 10DLC などの送信者登録が必要
+  lock_in: 中
+  liability_compliance: 国ごとの送信者登録・同意記録。登録が通るまで本番送信はできないことが多い
+  security: 認証情報は秘密店に置く。Webhook は署名を検証する
+  source:
+    url: https://www.twilio.com/en-us/sms/pricing
+    checked: '2026-11-25'
+    verified: false
+- id: sms.telnyx
+  name: Telnyx
+  what: SMS API（送信者登録は利用者が申請する）
+  best_for: Twilio の代替として料金と番号コストを公式ページで比べたいとき
+  avoid_when: 料金を二次記事の数字だけで決めようとしているとき（公式未確認）
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 米国のビジネスSMSは A2P 10DLC などの送信者登録が必要
+  lock_in: 中
+  liability_compliance: 送信者登録と同意の記録は利用者の責任
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://telnyx.com/pricing
+    checked: '2026-11-25'
+    verified: false
+- id: sms.plivo
+  name: Plivo
+  what: SMS API。認証コード（OTP）の送信に使われることが多い
+  best_for: 認証コードなど取引SMS
+  avoid_when: 料金を二次記事の数字だけで決めようとしているとき（公式未確認）
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 米国のビジネスSMSは A2P 10DLC などの送信者登録が必要
+  lock_in: 中
+  liability_compliance: 送信者登録と同意の記録は利用者の責任
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://www.plivo.com/sms/pricing/
+    checked: '2026-11-25'
+    verified: false
+- id: sms.signalhouse
+  name: Signal House
+  what: SMS 送信。申請内容を人が見てからキャリア審査に出す、と自ら説明している
+  best_for: 送信者登録の申請サポートを求めているとき（主張は公式で要確認）
+  avoid_when: 会社自身の宣伝だけを根拠にするとき
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 米国のビジネスSMSは A2P 10DLC などの送信者登録が必要
+  lock_in: 中
+  liability_compliance: 承認時間の主張は公式と実績で確認する
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://www.signalhouse.io/
+    checked: '2026-11-25'
+    verified: false
+- id: sms.textbelt
+  name: Textbelt
+  what: 単純な SMS API。テスト送信の無料枠があると案内されている
+  best_for: 開発中のごく少量のテスト送信（公式の無料枠を確認してから）
+  avoid_when: 本番の顧客向け通知の主経路にしたいとき（規模と登録を公式で確認するまで）
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 要確認
+  lock_in: 低
+  liability_compliance: 送信者登録の要否は公式で確認する
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://textbelt.com/
+    checked: '2026-11-25'
+    verified: false
+- id: sms.splitsms
+  name: SplitSMS
+  what: 開発エージェント向けを標榜する SMS サービス（llms.txt とテスト環境があると案内）
+  best_for: 開発エージェントから試し打ちしたいとき（公式を確認してから）
+  avoid_when: 公式の料金・登録・データ取り扱いが未確認のまま本番に使うとき
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 要確認
+  lock_in: 中
+  liability_compliance: 公式の規約と送信者登録を確認するまで本番利用しない
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://splitsms.com/vibe-coders
+    checked: '2026-11-25'
+    verified: false
+- id: notify.novu
+  name: Novu
+  what: メール・SMS・アプリ内通知をまとめて扱う通知レイヤ
+  best_for: 複数チャネルの通知を一つの層で扱いたいとき
+  avoid_when: SMS だけが必要で、チャネル層の追加コストがまだ見合わないとき
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 要確認
+  lock_in: 中
+  liability_compliance: 各チャネルの送信者登録と同意は残る
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://novu.co/
+    checked: '2026-11-25'
+    verified: false
+- id: notify.knock
+  name: Knock
+  what: メール・SMS・アプリ内通知をまとめて扱う通知レイヤ
+  best_for: 複数チャネルの通知を一つの層で扱いたいとき
+  avoid_when: SMS だけが必要で、チャネル層の追加コストがまだ見合わないとき
+  pricing_bands:
+    free: 要確認（公式未確認）
+    usd5: 要確認（公式未確認）
+    usd10: 要確認（公式未確認）
+    usd100: 要確認（公式未確認）
+  limits: 要確認
+  lock_in: 中
+  liability_compliance: 各チャネルの送信者登録と同意は残る
+  security: 認証情報は秘密店に置く
+  source:
+    url: https://knock.app/
+    checked: '2026-11-25'
+    verified: false
+lessons:
+- id: mail.sms-a2p-required
+  principle: "For US business SMS, sender registration such as A2P 10DLC is required with every vendor. A public page where the recipient agrees to receive SMS (opt-in) is a common reason a registration is rejected."
+  anti_pattern: "Switching SMS vendors to skip registration, or submitting registration without a public opt-in page the reviewer can open."
+  why: "The registration is a carrier rule, not a vendor feature. Changing vendors does not remove it, and a missing opt-in page fails the review."
+  check: "Is there a public opt-in page, and is sender registration treated as required no matter which SMS vendor is used?"
+  see_also: [sms.twilio, sms.telnyx, sms.plivo]
+  verified: false
+- id: mail.sms-no-personal-path
+  principle: "Customer-facing SMS must not use a personal SIM, a consumer phone as a gateway, or an email-to-SMS path. Those routes can look like person-to-person traffic and risk the number being blocked."
+  anti_pattern: "Sending business messages through a personal SIM or an old phone in order to skip sender registration."
+  why: "Carriers treat this as a rules violation; delivery is also unreliable."
+  check: "Does the customer-facing stack use a registered business sender, with no personal SIM, phone gateway, or email-to-SMS path?"
+  see_also: [mail.sms-a2p-required, mail.sms-mock-first]
+  verified: false
+- id: mail.sms-mock-first
+  principle: "From the first development slice, include an SMS mock that shows the message on screen and does not send. Real sending waits for a registered sender and an approved path."
+  anti_pattern: "Wiring a live SMS vendor on day one, or blocking all notification work until registration is approved."
+  why: "A mock lets product and design review copy and timing without hitting registration, cost, or accidental sends to real people."
+  check: "Can a developer trigger the SMS flow and see the message on screen without a message leaving the app?"
+  see_also: [mail.sms-a2p-required, mail.sms-no-personal-path]
+  verified: false
+- id: mail.sms-official-before-ads
+  principle: "Do not add an SMS or messaging vendor found only in an advertisement to the catalog, and do not use it in a customer stack, until official documentation, pricing and terms are checked."
+  anti_pattern: "Putting an ad-found vendor next to verified options, or choosing it on a landing-page claim."
+  why: "Ad claims are not a source. Unchecked vendors hide registration, data-use and price surprises."
+  check: "Is every SMS vendor in the catalog backed by an official URL, and are unofficial prices marked unverified?"
+  see_also: [mail.sms-a2p-required]
+  verified: false
+
